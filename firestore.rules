@@ -29,6 +29,13 @@ service cloud.firestore {
       }
     }
 
+    // Queries - any user can create, only admin can read/write
+    match /queries/{queryId} {
+      allow create: if true;
+      allow read, write: if request.auth != null
+        && (request.auth.token.email == "deya58690@gmail.com" || request.auth.token.email == "tripti.arcade.25@gmail.com");
+    }
+
     // Config — public read
     match /config/{doc} {
       allow read: if true;

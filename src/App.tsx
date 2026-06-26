@@ -23,6 +23,8 @@ import { ScrollToTop } from './components/ScrollToTop';
 import { mockParticipants } from './data/sampleData';
 import { Participant } from './types';
 
+import { HelpSupportWidget } from './components/HelpSupportWidget';
+
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>(mockParticipants);
 
@@ -59,6 +61,8 @@ export default function App() {
           </div>
         )}
       </main>
+
+      <HelpSupportWidget />
 
       <Footer />
     </div>

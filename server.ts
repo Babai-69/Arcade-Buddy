@@ -2,14 +2,78 @@ import express from "express";
 import path from "path";
 import * as cheerio from "cheerio";
 import { createServer as createViteServer } from "vite";
+import nodemailer from "nodemailer";
 
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  app.use(express.json({ limit: '50mb' }));
+  app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
   // API Configuration
   app.get("/api/health", (req, res) => {
     res.json({ status: "ok" });
+  });
+
+  app.post("/api/notify-query", async (req, res) => {
+    try {
+      const { name, email, profileUrl, queryType, message, attachments } = req.body;
+      
+      // We check if SMTP credentials are provided, otherwise just mock it.
+      if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+        console.log("Mocking email send since SMTP_USER and SMTP_PASS are not set.");
+        console.log("Email Details:", req.body);
+        return res.json({ success: true, mocked: true });
+      }
+
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS?.replace(/\s+/g, ''),
+        }
+      });
+
+      const attachmentLinks = attachments && attachments.length > 0 
+        ? attachments.map((a: any) => a.filename).join(', ')
+        : 'None';
+
+      const mailOptions = {
+        from: `"Support Form" <${process.env.SMTP_USER}>`,
+        to: "pablo.incharge.boss@gmail.com",
+        replyTo: email,
+        subject: `[Support] ${queryType} - ${name}`,
+        text: `New Support Request
+
+Name: ${name}
+Email: ${email}
+Profile URL: ${profileUrl}
+Query Type: ${queryType}
+
+Message:
+${message}
+
+Attachments (Attached):
+${attachmentLinks}
+`,
+        attachments: attachments && attachments.length > 0 
+          ? attachments.map((a: any) => ({
+              filename: a.filename,
+              content: a.content,
+              encoding: 'base64'
+            }))
+          : []
+      };
+
+      await transporter.sendMail(mailOptions);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Failed to send email:", error);
+      res.status(500).json({ error: "Failed to send email notification" });
+    }
   });
 
   app.get("/api/arcade-spots", async (req, res) => {
