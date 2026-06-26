@@ -36,9 +36,11 @@ export function NavbarUserMenu() {
       await loginWithGoogle();
       navigate('/my-progress');
     } catch (error: any) {
-      console.error('Login error:', error);
-      if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/cancelled-popup-request') {
-        alert('Login popup was blocked or cancelled. Please allow popups for this site or open the app in a new tab to sign in.');
+      if (error?.code !== 'auth/popup-closed-by-user' && error?.code !== 'auth/cancelled-popup-request') {
+        console.error('Login error:', error);
+      }
+      if (error?.code === 'auth/popup-blocked') {
+        alert('Login popup was blocked. Please allow popups for this site or open the app in a new tab to sign in.');
       }
     }
   };
