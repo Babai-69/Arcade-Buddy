@@ -1,0 +1,6 @@
+{
+  "name": "Google Cloud Arcade Facilitator Dashboard",
+  "description": "A modern Dashboard for Google Cloud Arcade Facilitator program participants to track their daily progress, view leaderboards, and check their swag milestones.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

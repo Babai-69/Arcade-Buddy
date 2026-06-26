@@ -1,0 +1,478 @@
+import React, { useState } from 'react';
+import { Award, Gamepad2, Layers, Search, AlertCircle, Info, Calendar, CheckCircle2, Lock, ArrowRight, Loader2, Target } from 'lucide-react';
+
+export function FacilitatorCalculator() {
+  const [url, setUrl] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<{
+    name: string;
+    avatarUrl: string;
+    gameBadges: number;
+    skillBadges: number;
+  } | null>(null);
+
+  const handleCheck = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!url.trim()) return;
+    
+    setLoading(true);
+    setError(null);
+    setData(null);
+    
+    try {
+      const res = await fetch(`/api/calculator?url=${encodeURIComponent(url.trim())}`);
+      const json = await res.json();
+      
+      if (!res.ok) {
+        throw new Error(json.error || 'Failed to fetch profile');
+      }
+      
+      const START = new Date('2026-07-13T11:30:00Z');
+      const END = new Date('2026-09-14T18:29:00Z');
+      
+      let validGameBadges = 0;
+      let validSkillBadges = 0;
+      
+      json.badges.forEach((badge: any) => {
+        const dateStr = (badge.completedDate || badge.earnedDate || '').replace(/^Earned\s+(on\s+)?/i, '').trim();
+        const badgeDate = new Date(dateStr);
+        
+        if (badgeDate < START || badgeDate > END) {
+          // SKIP — do not count this badge at all
+          return;
+        }
+        
+        const t = badge.title.toLowerCase();
+        
+        const isGameBadge = t.includes("arcade base camp") ||
+                            t.includes("arcade adventure") ||
+                            t.includes("arcade voyage") ||
+                            t.includes("arcade trail") ||
+                            t.includes("arcade special") ||
+                            t.includes("level 1") ||
+                            t.includes("level 2") ||
+                            t.includes("level 3") ||
+                            t.includes("the arcade") ||
+                            t.includes("arcade sprint") ||
+                            t.includes("monthly game") ||
+                            t.includes("new arcade game");
+                            
+        const isTriviaBadge = t.includes("trivia") || t.includes("quiz");
+        const isLabFree = badge.category === "Lab-free"; 
+        const isSpecial = badge.category === "Special" && !isGameBadge;
+        
+        if (isGameBadge) {
+          validGameBadges++;
+        } else if (!isTriviaBadge && !isLabFree && !isSpecial) {
+          validSkillBadges++;
+        }
+      });
+      
+      setData({
+        name: json.name,
+        avatarUrl: json.avatarUrl,
+        gameBadges: validGameBadges,
+        skillBadges: validSkillBadges,
+      });
+      
+    } catch (err: any) {
+      setError(err.message === 'Profile not found or invalid URL' 
+        ? "Profile is private. Please set your profile to public on skills.google and try again." 
+        : err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getMilestoneStatus = (games: number, skills: number) => {
+    if (games >= 12 && skills >= 66) {
+      return {
+        name: "Ultimate Milestone",
+        base: (games * 1) + (skills * 0.5),
+        bonus: 35,
+        gamesNeeded: 12,
+        skillsNeeded: 66,
+        next: null
+      };
+    } else if (games >= 10 && skills >= 50) {
+      return {
+        name: "Milestone 3",
+        base: (games * 1) + (skills * 0.5),
+        bonus: 25,
+        gamesNeeded: 10,
+        skillsNeeded: 50,
+        next: { name: "Ultimate Milestone", g: 12, s: 66 }
+      };
+    } else if (games >= 8 && skills >= 34) {
+      return {
+        name: "Milestone 2",
+        base: (games * 1) + (skills * 0.5),
+        bonus: 15,
+        gamesNeeded: 8,
+        skillsNeeded: 34,
+        next: { name: "Milestone 3", g: 10, s: 50 }
+      };
+    } else if (games >= 6 && skills >= 18) {
+      return {
+        name: "Milestone 1",
+        base: (games * 1) + (skills * 0.5),
+        bonus: 5,
+        gamesNeeded: 6,
+        skillsNeeded: 18,
+        next: { name: "Milestone 2", g: 8, s: 34 }
+      };
+    } else {
+      return {
+        name: "No Milestone Yet",
+        base: (games * 1) + (skills * 0.5),
+        bonus: 0,
+        gamesNeeded: 0,
+        skillsNeeded: 0,
+        next: { name: "Milestone 1", g: 6, s: 18 }
+      };
+    }
+  };
+
+  return (
+    <div className="w-full max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8 font-sans">
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-full font-medium text-sm">
+          <Target className="w-4 h-4" />
+          <span>Facilitator Milestone Calculator</span>
+        </div>
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white tracking-tight">
+          Track Your Facilitator Progress
+        </h1>
+        <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+          Enter your public Google Cloud Skills Boost profile URL to see which milestone you've reached for the 2026 program.
+        </p>
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
+        <form onSubmit={handleCheck} className="flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-grow">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input
+              type="url"
+              placeholder="https://www.cloudskillsboost.google/public_profiles/..."
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-8 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 min-w-[140px]"
+          >
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Check Progress'}
+          </button>
+        </form>
+
+        {error && (
+          <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+            <p>{error}</p>
+          </div>
+        )}
+      </div>
+
+      {/* Info Box */}
+      <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900/30 rounded-xl p-4 sm:p-5 flex items-start gap-3">
+        <Calendar className="w-5 h-5 text-amber-600 dark:text-amber-500 shrink-0 mt-0.5" />
+        <p className="text-sm text-amber-800 dark:text-amber-200/80 leading-relaxed">
+          <strong>Eligible Date Window:</strong> Only badges earned between <strong>Jul 13 (5PM IST)</strong> and <strong>Sep 14 (11:59PM IST) 2026</strong> count. Only Arcade Game Badges and Skill Badges are eligible. Trivia and Lab-free courses do not count for the Facilitator bonus program.
+        </p>
+      </div>
+
+      {data && (
+        <div className="space-y-8 animate-in fade-in duration-500 pt-4">
+          
+          {/* Section 1: Header Info Bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-between bg-white dark:bg-slate-800 rounded-xl p-4 border border-slate-200 dark:border-slate-700 shadow-sm gap-4">
+            <div className="flex items-center gap-4">
+              {data.avatarUrl ? (
+                <img src={data.avatarUrl} alt="Profile" className="w-12 h-12 rounded-full bg-slate-100" />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xl">
+                  {data.name.charAt(0)}
+                </div>
+              )}
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-white">{data.name}</h3>
+                <p className="text-sm text-slate-500">Google Cloud Skills Boost Profile</p>
+              </div>
+            </div>
+            <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              Facilitator Window: Jul 13 – Sep 14
+            </div>
+          </div>
+
+          {new Date() < new Date('2026-07-13T11:30:00Z') ? (
+             <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-700 shadow-sm mt-8">
+                <AlertCircle className="w-12 h-12 text-[#EA4335] mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Program Not Started</h3>
+                <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+                  The facilitator program window has not started yet. It begins July 13, 2026 at 5:00 PM IST.
+                </p>
+             </div>
+          ) : new Date() > new Date('2026-09-14T18:29:00Z') ? (
+             <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-700 shadow-sm mt-8">
+                <AlertCircle className="w-12 h-12 text-[#4285F4] mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Program has Ended</h3>
+                <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+                  The facilitator program window ended on Sep 14, 2026 at 11:59 PM IST.
+                </p>
+             </div>
+          ) : data.gameBadges === 0 && data.skillBadges === 0 ? (
+             <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-700 shadow-sm mt-8">
+                <AlertCircle className="w-12 h-12 text-[#EA4335] mx-auto mb-4" />
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Eligible Badges Found</h3>
+                <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+                  No eligible badges found between Jul 13 – Sep 14, 2026 yet.
+                </p>
+             </div>
+          ) : (
+            <>
+            {/* Section 2: Eligible Badge Count Cards */}
+            <div className="space-y-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-[#4285F4]/10 p-3 rounded-xl text-[#4285F4]">
+                        <Gamepad2 className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-900 dark:text-white">Game Badges</h4>
+                        <p className="text-sm text-slate-500">{data.gameBadges} badges</p>
+                      </div>
+                    </div>
+                    <div className="text-2xl font-bold text-[#4285F4]">
+                      {(data.gameBadges * 1).toFixed(1)} pts
+                    </div>
+                  </div>
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="bg-[#7c3aed]/10 p-3 rounded-xl text-[#7c3aed]">
+                        <Layers className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-900 dark:text-white">Skill Badges</h4>
+                        <p className="text-sm text-slate-500">{data.skillBadges} badges</p>
+                      </div>
+                    </div>
+                    <div className="text-2xl font-bold text-[#7c3aed]">
+                      {(data.skillBadges * 0.5).toFixed(1)} pts
+                    </div>
+                  </div>
+                </div>
+                <p className="text-xs text-slate-500 text-center">
+                  * Trivia and Lab-free badges are not counted for the facilitator bonus.
+                </p>
+              </div>
+
+              {/* Section 4 & 5: Current Milestone & Progress */}
+              {(() => {
+                const status = getMilestoneStatus(data.gameBadges, data.skillBadges);
+                const hasMilestone = status.name !== "No Milestone Yet";
+                const isUltimate = status.name === "Ultimate Milestone";
+
+                return (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {/* Current Status Card */}
+                    <div className={`rounded-2xl p-6 border shadow-sm flex flex-col justify-center
+                      ${hasMilestone 
+                        ? 'bg-[#34A853]/5 dark:bg-[#34A853]/10 border-[#34A853]/20 dark:border-[#34A853]/30' 
+                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
+                    >
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">Current Status</h3>
+                      <h2 className={`text-3xl font-bold mb-4 ${hasMilestone ? 'text-[#34A853]' : 'text-slate-900 dark:text-white'}`}>
+                        {status.name}
+                      </h2>
+                      
+                      {hasMilestone ? (
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 text-[#34A853] font-medium">
+                            <CheckCircle2 className="w-5 h-5" />
+                            <span>✅ {data.gameBadges}/{status.gamesNeeded} Games · ✅ {data.skillBadges}/{status.skillsNeeded} Skills</span>
+                          </div>
+                          <div className="inline-block bg-[#34A853]/10 text-[#34A853] px-4 py-2 rounded-lg font-bold">
+                            🎉 +{status.bonus} bonus points earned!
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          <p className="text-slate-600 dark:text-slate-400">
+                            You haven't reached Milestone 1 yet. Keep completing badges!
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Progress to Next */}
+                    {!isUltimate && status.next && (
+                      <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">
+                          Progress to {status.next.name}
+                        </h3>
+                        
+                        <div className="space-y-5">
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span className="font-medium text-slate-700 dark:text-slate-300">Game Badges</span>
+                              <span className="font-bold text-[#4285F4]">{data.gameBadges} / {status.next.g}</span>
+                            </div>
+                            <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                              <div 
+                                className="bg-[#4285F4] h-2.5 rounded-full transition-all duration-1000" 
+                                style={{ width: `${Math.min(100, (data.gameBadges / status.next.g) * 100)}%` }}
+                              ></div>
+                            </div>
+                            {data.gameBadges < status.next.g && (
+                              <p className="text-xs text-slate-500 mt-1">Need {status.next.g - data.gameBadges} more</p>
+                            )}
+                          </div>
+                          
+                          <div>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span className="font-medium text-slate-700 dark:text-slate-300">Skill Badges</span>
+                              <span className="font-bold text-[#7c3aed]">{data.skillBadges} / {status.next.s}</span>
+                            </div>
+                            <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                              <div 
+                                className="bg-[#7c3aed] h-2.5 rounded-full transition-all duration-1000" 
+                                style={{ width: `${Math.min(100, (data.skillBadges / status.next.s) * 100)}%` }}
+                              ></div>
+                            </div>
+                            {data.skillBadges < status.next.s && (
+                              <p className="text-xs text-slate-500 mt-1">Need {status.next.s - data.skillBadges} more</p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
+              {/* Section 3: Points Breakdown & Bonus Card */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                {/* Breakdown Table */}
+                <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm font-mono text-sm">
+                  <h3 className="font-sans font-bold text-slate-900 dark:text-white text-lg mb-4">Points Breakdown</h3>
+                  
+                  <div className="space-y-3 text-slate-600 dark:text-slate-300">
+                    <div className="flex justify-between">
+                      <span>Game Badges ({data.gameBadges} × 1 pt):</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{(data.gameBadges * 1).toFixed(1)} pts</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Skill Badges ({data.skillBadges} × 0.5 pt):</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{(data.skillBadges * 0.5).toFixed(1)} pts</span>
+                    </div>
+                    
+                    <div className="h-px bg-slate-200 dark:bg-slate-700 my-2" />
+                    
+                    <div className="flex justify-between">
+                      <span>Base Total:</span>
+                      <span className="font-bold text-slate-900 dark:text-white">{getMilestoneStatus(data.gameBadges, data.skillBadges).base.toFixed(1)} pts</span>
+                    </div>
+                    <div className="flex justify-between text-[#34A853]">
+                      <span>Milestone Bonus:</span>
+                      <span className="font-bold">+{getMilestoneStatus(data.gameBadges, data.skillBadges).bonus} pts</span>
+                    </div>
+                    
+                    <div className="h-px bg-slate-200 dark:bg-slate-700 my-2" />
+                    
+                    <div className="flex justify-between text-base">
+                      <span className="font-bold text-slate-900 dark:text-white">Total Facilitator Points:</span>
+                      <span className="font-bold text-[#4285F4]">
+                        {(getMilestoneStatus(data.gameBadges, data.skillBadges).base + getMilestoneStatus(data.gameBadges, data.skillBadges).bonus).toFixed(1)} pts
+                      </span>
+                    </div>
+                    
+                    {/* Potential Total */}
+                    {getMilestoneStatus(data.gameBadges, data.skillBadges).bonus > 0 && (
+                      <div className="mt-4 bg-[#FBBC05]/10 rounded-lg p-3 border border-[#FBBC05]/30">
+                        <div className="flex justify-between text-amber-700 dark:text-amber-400 mb-1">
+                          <span>+ Bonus Milestone (if completed):</span>
+                          <span className="font-bold">+10.0 pts</span>
+                        </div>
+                        <div className="h-px bg-[#FBBC05]/20 my-1" />
+                        <div className="flex justify-between text-base font-bold text-amber-800 dark:text-amber-300 pt-1">
+                          <span>Potential Total:</span>
+                          <span>{(getMilestoneStatus(data.gameBadges, data.skillBadges).base + getMilestoneStatus(data.gameBadges, data.skillBadges).bonus + 10).toFixed(1)} pts</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Section 7: Bonus Milestone Card */}
+                {getMilestoneStatus(data.gameBadges, data.skillBadges).name !== "No Milestone Yet" ? (
+                  <div className="bg-gradient-to-br from-[#FBBC05]/20 to-yellow-50 dark:from-[#FBBC05]/20 dark:to-yellow-900/10 rounded-2xl p-6 border border-[#FBBC05]/40 shadow-sm flex flex-col justify-center text-center">
+                    <Award className="w-12 h-12 text-[#FBBC05] mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-amber-900 dark:text-amber-100 mb-2">🌟 Bonus Milestone Unlocked!</h3>
+                    <p className="text-amber-800 dark:text-amber-200/80 mb-4">
+                      You are eligible to earn +10 extra points by completing the Bonus Milestone tasks.
+                    </p>
+                    <div className="inline-block bg-[#FBBC05]/20 text-amber-900 dark:text-amber-100 px-4 py-2 rounded-lg font-bold">
+                      Potential Total: {(getMilestoneStatus(data.gameBadges, data.skillBadges).base + getMilestoneStatus(data.gameBadges, data.skillBadges).bonus + 10).toFixed(1)} pts
+                    </div>
+                  </div>
+                ) : (
+                  <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-center text-center">
+                    <Lock className="w-10 h-10 text-slate-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300 mb-2">🔒 Bonus Milestone Locked</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm">
+                      Complete Milestone 1 first (6 Games + 18 Skills) to unlock the opportunity for +10 bonus points.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Section 6: All Milestones Overview */}
+              <div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Milestones Overview</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {[
+                    { n: "Milestone 1", g: 6, s: 18, b: 5 },
+                    { n: "Milestone 2", g: 8, s: 34, b: 15 },
+                    { n: "Milestone 3", g: 10, s: 50, b: 25 },
+                    { n: "Ultimate", g: 12, s: 66, b: 35 }
+                  ].map((m, idx) => {
+                    const isReached = data.gameBadges >= m.g && data.skillBadges >= m.s;
+                    return (
+                      <div key={idx} className={`rounded-xl p-4 border ${isReached ? 'bg-[#34A853]/5 dark:bg-[#34A853]/10 border-[#34A853]/30' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className={`font-bold ${isReached ? 'text-[#34A853]' : 'text-slate-900 dark:text-white'}`}>{m.n}</h4>
+                          {isReached ? <CheckCircle2 className="w-5 h-5 text-[#34A853]" /> : <Lock className="w-4 h-4 text-slate-400" />}
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
+                          {m.g} Games + {m.s} Skills
+                        </p>
+                        <div className={`text-sm font-bold ${isReached ? 'text-[#34A853]' : 'text-slate-400'}`}>
+                          +{m.b} Bonus Pts
+                        </div>
+                        {!isReached && (
+                          <div className="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700/50 text-xs text-slate-500">
+                            Need {Math.max(0, m.g - data.gameBadges)}G, {Math.max(0, m.s - data.skillBadges)}S
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}

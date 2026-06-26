@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tier Waterfall Animation</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #0d1117;
+    color: #fff;
+    font-family: system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  .card {
+    background: #0d1117;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 800px;
+    height: 100vh;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .grid-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: 
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .toggle-bar {
+    display: flex;
+    padding: 16px;
+    gap: 12px;
+    z-index: 10;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .toggle-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #9ca3af;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .toggle-btn.active {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+    color: #fff;
+  }
+  .text-area {
+    padding: 20px;
+    text-align: center;
+    z-index: 10;
+  }
+  .step-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+  }
+  .step-sub {
+    font-size: 14px;
+    color: #9ca3af;
+    margin: 0;
+  }
+  .canvas-container {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    z-index: 10;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #1e2736;
+    cursor: pointer;
+  }
+  .dot.active {
+    background: #1a73e8;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="grid-bg"></div>
+  <div class="toggle-bar">
+    <button class="toggle-btn active" id="btn-s1">🟢 Scenario 1 — Slots Available</button>
+    <button class="toggle-btn" id="btn-s2">🔴 Scenario 2 — Slots Full (Waterfall)</button>
+  </div>
+  <div class="text-area">
+    <h2 class="step-title" id="title">You earned 120+ Arcade Points! 🎉</h2>
+    <p class="step-sub" id="sub">That puts you in Legend tier territory</p>
+  </div>
+  <div class="canvas-container">
+    <canvas id="anim"></canvas>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-btn" id="btn-back">‹ Back</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="btn-next">Next ›</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('anim');
+const ctx = canvas.getContext('2d');
+const titleEl = document.getElementById('title');
+const subEl = document.getElementById('sub');
+const dotsEl = document.getElementById('dots');
+const btnBack = document.getElementById('btn-back');
+const btnNext = document.getElementById('btn-next');
+const btnS1 = document.getElementById('btn-s1');
+const btnS2 = document.getElementById('btn-s2');
+
+let W = canvas.parentElement.clientWidth;
+let H = canvas.parentElement.clientHeight;
+let t = 0;
+let scenario = 1;
+let step = 0;
+
+const TIERS = {
+  legend:   { name: "Legend", col: "#F59E0B", bg: "#1a1505", pts: "120+", slots: 2500 },
+  champion: { name: "Champion", col: "#8B5CF6", bg: "#110d1f", pts: "95–119", slots: 3000 },
+  ranger:   { name: "Ranger", col: "#3B82F6", bg: "#060f22", pts: "75–94", slots: 4000 },
+  trooper:  { name: "Trooper", col: "#10B981", bg: "#041510", pts: "50–74", slots: 6000 }
+};
+
+const S1_TEXT = [
+  { t: "You earned 120+ Arcade Points! 🎉", s: "That puts you in Legend tier territory" },
+  { t: "Checking Legend slots…", s: "Legend tier has 2,500 spots globally" },
+  { t: "Slots available! ✅", s: "There are open spots in the Legend tier" },
+  { t: "You're in — Arcade Legend! 🏆", s: "You get first access to premium swag" },
+  { t: "Collect your rewards!", s: "Jackets, backpacks & exclusive gear are yours" }
+];
+
+const S2_TEXT = [
+  { t: "You earned 120+ Arcade Points! 🎉", s: "But are the Legend slots still available?" },
+  { t: "Checking Legend slots…", s: "Legend tier has 2,500 spots globally" },
+  { t: "Legend slots are FULL 🔒", s: "2,500 players already claimed them — waterfall triggers" },
+  { t: "Waterfall → Champion tier ⚡", s: "You drop down but jump to FRONT of Champion queue" },
+  { t: "Checking Champion slots…", s: "Champion tier has 3,000 spots globally" },
+  { t: "Champion slots available! ✅", s: "You land at #1 in the Champion queue" },
+  { t: "You're in — Arcade Champion! ⚡", s: "Premium swag — you still win big!" },
+  { t: "What if Champion was also full?", s: "The waterfall keeps going — Ranger → Trooper" }
+];
+
+let sparks = [];
+let coins = [];
+let bgStars = [];
+
+function init() {
+  resize();
+  window.addEventListener('resize', resize);
+  
+  for(let i=0; i<30; i++) {
+    bgStars.push({ x: Math.random(), y: Math.random(), r: Math.random()*1.5, a: Math.random(), va: (Math.random()-0.5)*0.05 });
+  }
+
+  btnBack.onclick = () => setStep(step - 1);
+  btnNext.onclick = () => setStep(step + 1);
+  btnS1.onclick = () => setScenario(1);
+  btnS2.onclick = () => setScenario(2);
+
+  setScenario(1);
+  loop();
+}
+
+function resize() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  W = rect.width;
+  H = rect.height;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  ctx.scale(dpr, dpr);
+}
+
+function clamp(x, min, max) { return Math.min(Math.max(x, min), max); }
+function ease(x) { x=clamp(x,0,1); return x<.5 ? 2*x*x : 1-Math.pow(-2*x+2,2)/2; }
+function p(start, dur) { return ease((t-start)/dur); }
+
+function setScenario(s) {
+  scenario = s;
+  btnS1.className = s === 1 ? 'toggle-btn active' : 'toggle-btn';
+  btnS2.className = s === 2 ? 'toggle-btn active' : 'toggle-btn';
+  setStep(0);
+}
+
+function setStep(newStep) {
+  const max = scenario === 1 ? S1_TEXT.length - 1 : S2_TEXT.length - 1;
+  step = clamp(newStep, 0, max);
+  t = 0;
+  sparks = [];
+  coins = [];
+  
+  const text = scenario === 1 ? S1_TEXT[step] : S2_TEXT[step];
+  titleEl.innerText = text.t;
+  subEl.innerText = text.s;
+  
+  btnBack.disabled = step === 0;
+  btnNext.disabled = step === max;
+  
+  updateDots(max);
+}
+
+function updateDots(max) {
+  dotsEl.innerHTML = '';
+  for(let i=0; i<=max; i++) {
+    const d = document.createElement('div');
+    d.className = i === step ? 'dot active' : 'dot';
+    d.onclick = () => setStep(i);
+    dotsEl.appendChild(d);
+  }
+}
+
+function drawRoundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r, y);
+  ctx.lineTo(x+w-r, y); ctx.quadraticCurveTo(x+w, y, x+w, y+r);
+  ctx.lineTo(x+w, y+h-r); ctx.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+  ctx.lineTo(x+r, y+h); ctx.quadraticCurveTo(x, y+h, x, y+h-r);
+  ctx.lineTo(x, y+r); ctx.quadraticCurveTo(x, y, x+r, y);
+  ctx.closePath();
+}
+
+function drawTierBlock(tier, x, y, w, h, isHighlighted, full, youAreOne, alpha=1) {
+  ctx.globalAlpha = alpha;
+  ctx.shadowColor = isHighlighted ? tier.col : 'transparent';
+  ctx.shadowBlur = isHighlighted ? 22 : 0;
+  
+  drawRoundRect(x, y, w, h, 8);
+  ctx.fillStyle = tier.bg;
+  ctx.fill();
+  ctx.lineWidth = isHighlighted ? 1.5 : 1;
+  ctx.strokeStyle = tier.col;
+  ctx.stroke();
+  
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = tier.col;
+  drawRoundRect(x, y, 4, h, 2);
+  ctx.fill();
+  ctx.fillRect(x+2, y, 2, h);
+  
+  ctx.fillStyle = tier.col;
+  ctx.font = '600 14px system-ui';
+  ctx.textAlign = 'left';
+  ctx.fillText(tier.name, x+12, y+18);
+  
+  ctx.fillStyle = '#6b7280';
+  ctx.font = '10px system-ui';
+  ctx.fillText(`${tier.pts} pts • ${tier.slots.toLocaleString()} slots`, x+12, y+34);
+  
+  if (full) {
+    ctx.fillStyle = '#ef4444';
+    ctx.font = '10px system-ui';
+    const fw = ctx.measureText("🔒 FULL").width;
+    drawRoundRect(x+w-fw-14, y+8, fw+8, 16, 4);
+    ctx.strokeStyle = '#ef4444'; ctx.stroke();
+    ctx.fillText("🔒 FULL", x+w-fw-10, y+19);
+  }
+  
+  if (youAreOne) {
+    ctx.fillStyle = tier.col;
+    ctx.font = '10px system-ui';
+    const mw = ctx.measureText("⭐ YOU'RE #1").width;
+    drawRoundRect(x+w-mw-14, y+8, mw+8, 16, 4);
+    ctx.strokeStyle = tier.col; ctx.stroke();
+    ctx.fillText("⭐ YOU'RE #1", x+w-mw-10, y+19);
+  }
+  
+  ctx.globalAlpha = 1;
+}
+
+function drawPerson(x, y, col, alpha=1, scale=1) {
+  ctx.globalAlpha = alpha;
+  ctx.shadowColor = col;
+  ctx.shadowBlur = 15;
+  ctx.strokeStyle = col;
+  ctx.lineWidth = 2 * scale;
+  
+  ctx.beginPath();
+  ctx.arc(x, y-20*scale, 5*scale, 0, Math.PI*2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y-15*scale); ctx.lineTo(x, y-5*scale);
+  ctx.moveTo(x-8*scale, y-12*scale); ctx.lineTo(x+8*scale, y-12*scale);
+  ctx.moveTo(x, y-5*scale); ctx.lineTo(x-6*scale, y+5*scale);
+  ctx.moveTo(x, y-5*scale); ctx.lineTo(x+6*scale, y+5*scale);
+  ctx.stroke();
+  
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = col;
+  ctx.font = `${9*scale}px system-ui`;
+  ctx.textAlign = 'center';
+  ctx.fillText("YOU", x, y+16*scale);
+  ctx.globalAlpha = 1;
+}
+
+function drawBadge(x, y, text, col, alpha=1) {
+  ctx.globalAlpha = alpha;
+  ctx.font = '600 12px system-ui';
+  ctx.textAlign = 'center';
+  const tw = ctx.measureText(text).width;
+  
+  ctx.shadowColor = col;
+  ctx.shadowBlur = 15;
+  drawRoundRect(x-tw/2-10, y-12, tw+20, 24, 12);
+  ctx.fillStyle = col + '1a';
+  ctx.fill();
+  ctx.strokeStyle = col;
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = col;
+  ctx.fillText(text, x, y+4);
+  ctx.globalAlpha = 1;
+}
+
+function addSparks(cx, cy, col, num) {
+  for(let i=0; i<num; i++) {
+    const angle = Math.random()*Math.PI*2;
+    const speed = Math.random()*4 + 2;
+    sparks.push({
+      x: cx, y: cy,
+      vx: Math.cos(angle)*speed,
+      vy: Math.sin(angle)*speed,
+      life: 1, col, r: Math.random()*2+1
+    });
+  }
+}
+
+function addCoins(cx, cy, col, num) {
+  for(let i=0; i<num; i++) {
+    coins.push({
+      x: cx, y: cy,
+      vx: (Math.random()-0.5)*8,
+      vy: -Math.random()*6 - 4,
+      life: 1, col
+    });
+  }
+}
+
+function updateParticles() {
+  for(let i=sparks.length-1; i>=0; i--) {
+    let s = sparks[i];
+    s.x += s.vx; s.y += s.vy;
+    s.vy += 0.08; s.life -= 0.025;
+    if(s.life<=0) sparks.splice(i, 1);
+  }
+  for(let i=coins.length-1; i>=0; i--) {
+    let c = coins[i];
+    c.x += c.vx; c.y += c.vy;
+    c.vy += 0.1; c.life -= 0.022;
+    if(c.life<=0) coins.splice(i, 1);
+  }
+  for(let b of bgStars) {
+    b.a += b.va;
+    if(b.a > 1 || b.a < 0) b.va *= -1;
+  }
+}
+
+function drawParticles() {
+  for(let b of bgStars) {
+    ctx.globalAlpha = b.a * 0.5;
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(b.x*W, b.y*H, b.r, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  for(let s of sparks) {
+    ctx.globalAlpha = s.life;
+    ctx.fillStyle = s.col;
+    ctx.shadowColor = s.col; ctx.shadowBlur = 5;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+  for(let c of coins) {
+    ctx.globalAlpha = c.life;
+    ctx.fillStyle = c.col;
+    ctx.strokeStyle = c.col; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(c.x, c.y, 8, 0, Math.PI*2); ctx.stroke();
+    ctx.font = '10px system-ui'; ctx.textAlign = 'center';
+    ctx.fillText("⭐", c.x, c.y+3);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function drawArrow(x, y1, y2, col, alpha, label) {
+  ctx.globalAlpha = alpha;
+  ctx.strokeStyle = col;
+  ctx.lineWidth = 2;
+  ctx.setLineDash([5, 5]);
+  ctx.lineDashOffset = -(t*2)%10;
+  
+  ctx.beginPath();
+  ctx.moveTo(x, y1);
+  ctx.lineTo(x, y2-8);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  
+  ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(x-4, y2-8);
+  ctx.lineTo(x+4, y2-8);
+  ctx.lineTo(x, y2);
+  ctx.fill();
+  
+  if (label) {
+    ctx.font = '10px system-ui';
+    ctx.textAlign = 'left';
+    ctx.fillText(label, x+10, (y1+y2)/2 + 3);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function loop() {
+  ctx.clearRect(0, 0, W, H);
+  updateParticles();
+  drawParticles();
+  
+  const cx = W/2;
+  const cy = H/2;
+  
+  if (scenario === 1) {
+    if (step === 0) {
+      drawPerson(cx, cy-30, '#F59E0B', p(0, 20), 1.5);
+      drawBadge(cx, cy+40, "120+ Points Earned!", "#F59E0B", p(15, 20));
+      ctx.globalAlpha = p(30, 20);
+      ctx.fillStyle = '#fff'; ctx.font = '14px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText("You're aiming for the Legend tier.", cx, cy+80);
+      ctx.globalAlpha = 1;
+    } 
+    else if (step === 1) {
+      drawTierBlock(TIERS.legend, cx-100, cy-40, 200, 48, false, false, false);
+      const scanY = cy-40 + (t%60)/60 * 48;
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.8)'; ctx.lineWidth = 2;
+      ctx.shadowColor = '#F59E0B'; ctx.shadowBlur = 10;
+      ctx.beginPath(); ctx.moveTo(cx-100, scanY); ctx.lineTo(cx+100, scanY); ctx.stroke();
+      ctx.shadowBlur = 0;
+      
+      const count = Math.min(2500, Math.floor((t/50)*2500));
+      ctx.fillStyle = '#F59E0B'; ctx.font = '16px monospace'; ctx.textAlign = 'center';
+      ctx.fillText(`Scanning: ${count} / 2500`, cx, cy+40);
+    }
+    else if (step === 2) {
+      drawTierBlock(TIERS.legend, cx-100, cy-40, 200, 48, true, false, false);
+      drawBadge(cx, cy+40, "✅ Slots Available!", "#10B981", p(10, 20));
+      ctx.globalAlpha = p(20, 20);
+      ctx.fillStyle = '#fff'; ctx.font = '14px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText("There are open spots — you qualify!", cx, cy+70);
+      ctx.globalAlpha = 1;
+    }
+    else if (step === 3) {
+      if(t===20) { addSparks(cx, cy-16, '#F59E0B', 40); addCoins(cx, cy-16, '#F59E0B', 15); }
+      drawTierBlock(TIERS.legend, cx-100, cy-60, 200, 48, true, false, false);
+      drawPerson(cx, cy+40, '#F59E0B', 1, 1.2);
+      const crownY = cy - 80 - p(0,20)*20;
+      ctx.globalAlpha = p(0,20);
+      ctx.font = '24px system-ui'; ctx.textAlign = 'center'; ctx.fillText("👑", cx, crownY);
+      ctx.fillStyle = '#F59E0B'; ctx.font = '700 18px system-ui'; ctx.fillText("ARCADE LEGEND", cx, cy+15);
+      ctx.globalAlpha = 1;
+    }
+    else if (step === 4) {
+      drawTierBlock(TIERS.legend, cx-80, cy-90, 160, 40, true, false, false);
+      ctx.globalAlpha = p(10,20);
+      ctx.font = '32px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText("🧥 🎒 👕 ☕ ⌚ 🎧", cx, cy+10);
+      drawBadge(cx, cy+60, "🏆 First Access to ALL inventory", "#F59E0B");
+      ctx.globalAlpha = 1;
+    }
+  } 
+  else if (scenario === 2) {
+    if (step === 0) {
+      drawPerson(cx, cy-30, '#F59E0B', 1, 1.5);
+      drawBadge(cx, cy+40, "120+ Points Earned!", "#F59E0B", 1);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = '#fff'; ctx.font = '14px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText("But are the Legend slots still available?", cx, cy+80);
+    }
+    else if (step === 1) {
+      drawTierBlock(TIERS.legend, cx-100, cy-40, 200, 48, false, false, false);
+      const scanY = cy-40 + (t%60)/60 * 48;
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.8)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx-100, scanY); ctx.lineTo(cx+100, scanY); ctx.stroke();
+      const count = Math.min(2500, Math.floor((t/50)*2500));
+      ctx.fillStyle = '#F59E0B'; ctx.font = '16px monospace'; ctx.textAlign = 'center';
+      ctx.fillText(`Scanning: ${count} / 2500`, cx, cy+40);
+    }
+    else if (step === 2) {
+      if(t===10) addSparks(cx, cy-16, '#ef4444', 30);
+      const flash = t < 15 && t%4<2;
+      drawTierBlock(TIERS.legend, cx-100, cy-40, 200, 48, flash, true, false);
+      drawBadge(cx, cy+40, "🔒 All 2,500 slots are taken!", "#ef4444", p(10,20));
+      ctx.globalAlpha = p(20,20);
+      ctx.fillStyle = '#ef4444'; ctx.font = '14px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText("Waterfall triggered automatically…", cx, cy+70);
+      ctx.globalAlpha = 1;
+    }
+    else if (step === 3) {
+      drawTierBlock(TIERS.legend, cx-100, cy-80, 200, 48, false, true, false, 0.4);
+      drawTierBlock(TIERS.champion, cx-100, cy+20, 200, 48, false, false, false, p(10,20));
+      drawArrow(cx+120, cy-50, cy+30, '#F59E0B', p(10,20), "WATERFALL");
+      
+      const fallProgress = p(10, 35);
+      const px = cx - 140;
+      const py = cy - 50 + fallProgress*70;
+      drawPerson(px, py, '#F59E0B', 1, 0.8);
+    }
+    else if (step === 4) {
+      drawTierBlock(TIERS.legend, cx-100, cy-80, 200, 48, false, true, false, 0.4);
+      drawTierBlock(TIERS.champion, cx-100, cy+20, 200, 48, true, false, false);
+      drawPerson(cx - 140, cy+20, '#F59E0B', 1, 0.8);
+      const scanY = cy+20 + (t%60)/60 * 48;
+      ctx.strokeStyle = 'rgba(139, 92, 246, 0.8)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx-100, scanY); ctx.lineTo(cx+100, scanY); ctx.stroke();
+      ctx.fillStyle = '#8B5CF6'; ctx.font = '14px system-ui'; ctx.textAlign = 'center';
+      ctx.fillText("3,000 slots available checking…", cx, cy+90);
+    }
+    else if (step === 5) {
+      if(t===12) { addSparks(cx, cy+44, '#10B981', 30); addCoins(cx, cy+44, '#8B5CF6', 10); }
+      drawTierBlock(TIERS.legend, cx-100, cy-80, 200, 48, false, true, false, 0.4);
+      drawTierBlock(TIERS.champion, cx-100, cy+20, 200, 48, true, false, true);
+      drawPerson(cx, cy+110, '#8B5CF6', 1, 1);
+      drawBadge(cx, cy-15, "✅ You're #1 in Champion queue!", "#10B981", p(5,20));
+    }
+    else if (step === 6) {
+      if(t===8) addSparks(cx, cy+20, '#8B5CF6', 40);
+      drawTierBlock(TIERS.legend, cx-80, cy-100, 160, 36, false, true, false, 0.3);
+      drawTierBlock(TIERS.champion, cx-100, cy-40, 200, 48, true, false, true);
+      const boltY = cy - 60 - p(0,20)*20;
+      ctx.globalAlpha = p(0,20);
+      ctx.font = '24px system-ui'; ctx.textAlign = 'center'; ctx.fillText("⚡", cx, boltY);
+      ctx.fillStyle = '#8B5CF6'; ctx.font = '700 18px system-ui'; ctx.fillText("ARCADE CHAMPION", cx, cy+35);
+      ctx.font = '32px system-ui'; ctx.fillText("🎒 👕 ☕ ⌚", cx, cy+80);
+      ctx.globalAlpha = 1;
+    }
+    else if (step === 7) {
+      const startY = cy - 100;
+      drawTierBlock(TIERS.legend, cx-100, startY, 200, 40, false, true, false, 0.3);
+      drawTierBlock(TIERS.champion, cx-100, startY+55, 200, 40, false, true, false, 0.3);
+      drawTierBlock(TIERS.ranger, cx-100, startY+110, 200, 40, true, false, false);
+      drawTierBlock(TIERS.trooper, cx-100, startY+165, 200, 40, true, false, false);
+      
+      drawArrow(cx+120, startY+20, startY+45, '#ef4444', 0.5);
+      drawArrow(cx+120, startY+75, startY+100, '#ef4444', 0.5);
+      drawArrow(cx+120, startY+130, startY+155, '#3B82F6', 1);
+      
+      drawPerson(cx-130, startY+130, '#3B82F6', 1, 0.8);
+      drawBadge(cx, cy+130, "The waterfall always finds the best available tier", "#10B981");
+    }
+  }
+
+  t++;
+  requestAnimationFrame(loop);
+}
+
+init();
+</script>
+</body>
+</html>
