@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { MessageSquare, X, AlertCircle, HelpCircle, Send, Info, Edit, Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { MessageSquare, X, AlertCircle, HelpCircle, Send, Info, Edit, Loader2, CheckCircle2 } from 'lucide-react';
 import { submitSupportQuery, uploadAttachments } from '../lib/queriesService';
 
 export function HelpSupportWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -13,6 +14,16 @@ export function HelpSupportWidget() {
     message: '',
     attachments: null as unknown as FileList
   });
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (showToast) {
+      timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [showToast]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
@@ -40,13 +51,14 @@ export function HelpSupportWidget() {
         attachments: attachmentData
       });
       
+      setIsOpen(false);
+      
       if (emailSuccess === false) {
         alert('Your query was saved, but the email notification failed. Please ensure SMTP_PASS is a valid App Password (not your normal Google password) and SMTP_USER is correct.');
       } else {
-        alert('Your query has been submitted. It will be reviewed, and you will get the answer within 48 hours.');
+        setShowToast(true);
       }
       
-      setIsOpen(false);
       setFormData({
         name: '',
         email: '',
@@ -65,6 +77,13 @@ export function HelpSupportWidget() {
 
   return (
     <>
+      {showToast && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-[200] bg-emerald-900 border border-emerald-500 text-emerald-100 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300 max-w-md w-[90%]">
+          <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />
+          <p className="text-sm font-medium">Your query has been submitted. It will be reviewed, and you will get the answer within 48 hours.</p>
+        </div>
+      )}
+
       <button
         onClick={() => setIsOpen(true)}
         className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-[#8b5cf6] hover:bg-[#7c3aed] text-white shadow-lg shadow-purple-500/30 transition-all hover:scale-110"
