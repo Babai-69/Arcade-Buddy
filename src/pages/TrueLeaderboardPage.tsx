@@ -22,7 +22,7 @@ export function TrueLeaderboardPage() {
   const [milestoneFilter, setMilestoneFilter] = useState('');
   const [tierFilter, setTierFilter] = useState('');
   const [accessFilter, setAccessFilter] = useState('');
-  const [sortKey, setSortKey] = useState('points');
+  const [sortKey, setSortKey] = useState('rank');
   const [sortDir, setSortDir] = useState(-1);
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 20;
