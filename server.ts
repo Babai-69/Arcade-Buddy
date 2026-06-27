@@ -1,5 +1,12 @@
 import dotenv from 'dotenv';
-dotenv.config();
+import fs from 'fs';
+import path from 'path';
+
+if (fs.existsSync(path.resolve(process.cwd(), '.env'))) {
+  dotenv.config();
+} else if (fs.existsSync(path.resolve(process.cwd(), '.env.example'))) {
+  dotenv.config({ path: '.env.example' });
+}
 
 import express from "express";
 import path from "path";

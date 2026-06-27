@@ -47,6 +47,7 @@ export async function uploadAttachments(files: FileList): Promise<{filename: str
 
 export const submitSupportQuery = async (queryData: Omit<SupportQuery, 'id' | 'createdAt' | 'status'>) => {
   let emailSuccess = false;
+  let errorMessage = '';
 
   // Call our backend API to send an email notification FIRST
   try {
@@ -67,10 +68,18 @@ export const submitSupportQuery = async (queryData: Omit<SupportQuery, 'id' | 'c
     if (!response.ok) {
       throw new Error(`Email notification failed with status ${response.status}`);
     }
-    emailSuccess = true;
-  } catch (e) {
+    
+    const data = await response.json();
+    if (data.success && data.emailSent !== false) {
+      emailSuccess = true;
+    } else {
+      emailSuccess = false;
+      errorMessage = data.message || 'Unknown email error';
+    }
+  } catch (e: any) {
     console.error("Failed to send email notification", e);
     emailSuccess = false;
+    errorMessage = e.message;
   }
 
   // Then try writing to Firestore, but don't let it hang forever
@@ -102,7 +111,7 @@ export const submitSupportQuery = async (queryData: Omit<SupportQuery, 'id' | 'c
     // so the user knows their query went through via email.
   }
 
-  return emailSuccess;
+  return { emailSuccess, errorMessage };
 };
 
 export const getSupportQueries = async (): Promise<SupportQuery[]> => {
