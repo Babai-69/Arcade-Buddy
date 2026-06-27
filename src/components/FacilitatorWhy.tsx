@@ -17,14 +17,14 @@ export function FacilitatorWhy() {
         
         <div className="flex flex-col md:flex-row gap-6 justify-start py-2">
           {/* Default Unsplash images to be replaced by the user */}
-          <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <img src="https://services.google.com/fh/files/misc/gcaf26_game_badge.png" alt="Game Badge" className="w-full h-full object-cover" />
+          <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-transparent shadow-none flex items-center justify-center">
+            <img src="https://services.google.com/fh/files/misc/gcaf26_game_badge.png" alt="Game Badge" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-plus-lighter" />
           </div>
-          <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <img src="https://services.google.com/fh/files/misc/gcaf_site_skill_badge_image.png" alt="Skill Badge" className="w-full h-full object-cover" />
+          <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center">
+            <img src="https://services.google.com/fh/files/misc/gcaf_site_skill_badge_image.png" alt="Skill Badge" className="w-full h-full object-contain" />
           </div>
-          <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <img src="https://services.google.com/fh/files/misc/gcaf26_bc_game_badge.png" alt="Base Camp Badge" className="w-full h-full object-cover" />
+          <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-transparent shadow-none flex items-center justify-center">
+            <img src="https://services.google.com/fh/files/misc/gcaf26_bc_game_badge.png" alt="Base Camp Badge" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-plus-lighter" />
           </div>
         </div>
       </div>

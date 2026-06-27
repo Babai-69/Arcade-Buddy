@@ -81,7 +81,7 @@ export function SupportPage() {
         </div>
       )}
 
-      <div className="bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-700">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 transition-colors">
         {/* Header */}
         <div className="relative bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 p-8 md:p-12 text-center text-white">
           <div className="inline-block p-4 bg-white/10 rounded-full border border-white/20 mb-6 backdrop-blur-sm">
@@ -96,17 +96,17 @@ export function SupportPage() {
         <div className="p-6 md:p-8 space-y-12">
           {/* How can we help */}
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-center text-white">How Can We Help You?</h2>
+            <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white">How Can We Help You?</h2>
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
-                <div className="flex items-center gap-3 mb-4 text-red-400 font-semibold">
+              <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center gap-3 mb-4 text-red-500 dark:text-red-400 font-semibold">
                   <AlertCircle className="w-6 h-6" />
-                  <h4 className="text-lg">Technical Issues</h4>
+                  <h4 className="text-lg text-slate-900 dark:text-white">Technical Issues</h4>
                 </div>
-                <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
                   Report calculation errors, missing badges, or technical problems with the points system.
                 </p>
-                <ul className="text-sm space-y-2 text-slate-400 list-disc list-inside ml-2">
+                <ul className="text-sm space-y-2 text-slate-600 dark:text-slate-400 list-disc list-inside ml-2">
                   <li>Points calculation errors</li>
                   <li>Missing badges</li>
                   <li>System malfunctions</li>
@@ -114,15 +114,15 @@ export function SupportPage() {
                 </ul>
               </div>
 
-              <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-slate-600 transition-colors">
-                <div className="flex items-center gap-3 mb-4 text-blue-400 font-semibold">
+              <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+                <div className="flex items-center gap-3 mb-4 text-blue-500 dark:text-blue-400 font-semibold">
                   <HelpCircle className="w-6 h-6" />
-                  <h4 className="text-lg">General Support</h4>
+                  <h4 className="text-lg text-slate-900 dark:text-white">General Support</h4>
                 </div>
-                <p className="text-sm text-slate-400 mb-4 leading-relaxed">
+                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
                   For general inquiries about the Arcade program, join our community platforms for quick assistance.
                 </p>
-                <ul className="text-sm space-y-2 text-slate-400 list-disc list-inside ml-2">
+                <ul className="text-sm space-y-2 text-slate-600 dark:text-slate-400 list-disc list-inside ml-2">
                   <li>Program questions</li>
                   <li>How-to guides</li>
                   <li>General inquiries</li>
@@ -132,10 +132,10 @@ export function SupportPage() {
             </div>
           </div>
 
-          <div className="bg-blue-900/20 border border-blue-500/20 rounded-xl p-6 flex gap-4 text-blue-200">
-            <Info className="w-6 h-6 shrink-0 text-blue-400 mt-1" />
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/20 rounded-xl p-6 flex gap-4 text-slate-700 dark:text-blue-200 transition-colors">
+            <Info className="w-6 h-6 shrink-0 text-blue-500 dark:text-blue-400 mt-1" />
             <div>
-              <strong className="font-semibold text-blue-300 flex items-center gap-2 text-lg mb-2">Before Submitting a Query</strong>
+              <strong className="font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-2 text-lg mb-2">Before Submitting a Query</strong>
               <p className="text-sm leading-relaxed opacity-90">
                 Please check our FAQ section below for common questions. For technical issues like missing badges or calculation errors, use the form below with detailed information for faster resolution.
               </p>
@@ -143,19 +143,19 @@ export function SupportPage() {
           </div>
 
           {/* Form Section */}
-          <div className="bg-slate-800 p-6 md:p-8 rounded-xl border border-slate-700">
+          <div className="bg-slate-50 dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors">
             <div className="text-center mb-8">
-              <div className="inline-block p-3 bg-blue-500/10 rounded-xl text-blue-400 mb-4">
+              <div className="inline-block p-3 bg-blue-100 dark:bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400 mb-4">
                 <Edit className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Submit Your Query</h3>
-              <p className="text-sm text-slate-400">Please provide detailed information about the issue you're experiencing</p>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Submit Your Query</h3>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Please provide detailed information about the issue you're experiencing</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Full Name</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
                   <input 
                     type="text"
                     name="name"
@@ -163,12 +163,12 @@ export function SupportPage() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your full name" 
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-medium text-slate-300 mb-2">Email Address</label>
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
                   <input 
                     type="email"
                     name="email"
@@ -176,13 +176,13 @@ export function SupportPage() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter your email address" 
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                    className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                   />
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Public Profile URL</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Public Profile URL</label>
                 <input 
                   type="url"
                   name="profileUrl"
@@ -190,18 +190,18 @@ export function SupportPage() {
                   value={formData.profileUrl}
                   onChange={handleChange}
                   placeholder="https://www.cloudskillsboost.google/public_profiles/PROFILE_ID" 
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Type of Query</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Type of Query</label>
                 <select 
                   name="queryType"
                   required
                   value={formData.queryType}
                   onChange={handleChange}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 >
                   <option value="" disabled>Select query type...</option>
                   <option value="Website Glitch">Website Glitch</option>
@@ -214,19 +214,19 @@ export function SupportPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Proof Attachments</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Proof Attachments</label>
                 <input 
                   type="file"
                   name="attachments"
                   accept="image/*,video/*"
                   multiple
                   onChange={handleChange}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500/10 file:text-blue-400 hover:file:bg-blue-500/20 transition-all"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 dark:file:bg-blue-500/10 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-200 dark:hover:file:bg-blue-500/20 transition-all"
                 />
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">Detailed Message</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Detailed Message</label>
                 <textarea 
                   name="message"
                   required
@@ -234,7 +234,7 @@ export function SupportPage() {
                   onChange={handleChange}
                   placeholder="Please describe your issue in detail. Include badge names, completion dates, or any error messages you encountered..." 
                   rows={5}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-y"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-y"
                 />
                 <p className="text-xs text-slate-500 mt-2">The more details you provide, the better we can assist you.</p>
               </div>

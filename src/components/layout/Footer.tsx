@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageCircle, Send, BookOpen, Star, HelpCircle, Gamepad2, Cloud, Shield } from 'lucide-react';
+import footerLogo from '../../assets/images/regenerated_image_1782574219934.png';
 
 export function Footer() {
   return (
@@ -9,7 +10,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2 mb-4">
-              <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1781944755/Logo-google-cloud-icon-vector-PNG_dbugwo.png" alt="Google Cloud" className="w-[30px] h-[26px] object-contain" />
+              <img src={footerLogo} alt="Google Cloud" className="w-[30px] h-[26px] object-contain" />
               <span className="font-display font-bold text-lg">Google Cloud Arcade Buddy</span>
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 max-w-sm">
