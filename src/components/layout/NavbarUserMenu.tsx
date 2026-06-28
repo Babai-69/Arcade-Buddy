@@ -105,7 +105,7 @@ export function NavbarUserMenu() {
             top: '-50%',
             left: '-50%',
             background: 'conic-gradient(#4285F4,#34A853,#FBBC05,#EA4335,#7c3aed,#4285F4)',
-            animation: 'spinCW 8s linear infinite'
+            animation: 'spinCW 3s linear infinite'
           }}/>
         </div>
 

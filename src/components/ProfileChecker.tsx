@@ -153,6 +153,8 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
               const isBeforeStart = new Date() < new Date('2026-07-13T11:30:00Z');
               const isAfterEnd = new Date() > new Date('2026-09-14T18:29:00Z');
               const basePoints = isBeforeStart ? 0 : result.arcadePoints;
+              const displaySkillBadges = isBeforeStart ? 0 : result.skillBadges;
+              const displayGameBadges = isBeforeStart ? 0 : result.gameBadges;
               const bonusPoints = 0; // Assuming 0 bonus for now
               const totalPoints = basePoints + bonusPoints;
 
@@ -209,7 +211,6 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
 
                     {/* CARD 2 - Total Points */}
                     <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] static flex flex-col justify-center relative">
-                      <div className="absolute top-6 right-6 text-2xl">🏆</div>
                       <p className="text-[#6b7280] text-sm font-medium mb-1">Total Points</p>
                       <h2 className="text-[48px] font-[800] text-gray-900 leading-none mb-2">{totalPoints}</h2>
                       
@@ -354,16 +355,16 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                           <div className="flex-1 flex items-center gap-2 font-medium text-gray-900">
                             <span className="text-lg">🏅</span> Skill Badges
                           </div>
-                          <div className="w-16 text-center text-gray-600 font-medium">{result.skillBadges}</div>
-                          <div className="w-16 text-right font-bold text-gray-900">{result.skillBadges * 0.5}</div>
+                          <div className="w-16 text-center text-gray-600 font-medium">{displaySkillBadges}</div>
+                          <div className="w-16 text-right font-bold text-gray-900">{displaySkillBadges * 0.5}</div>
                         </div>
 
                         <div className="flex justify-between items-center py-2">
                           <div className="flex-1 flex items-center gap-2 font-medium text-gray-900">
                             <span className="text-lg">🏅</span> Game Badges
                           </div>
-                          <div className="w-16 text-center text-gray-600 font-medium">{result.gameBadges}</div>
-                          <div className={`w-16 text-right font-bold ${result.gameBadges > 0 ? 'text-[#2563eb]' : 'text-gray-900'}`}>{result.gameBadges}</div>
+                          <div className="w-16 text-center text-gray-600 font-medium">{displayGameBadges}</div>
+                          <div className={`w-16 text-right font-bold ${displayGameBadges > 0 ? 'text-[#2563eb]' : 'text-gray-900'}`}>{displayGameBadges}</div>
                         </div>
                       </div>
                     </div>

@@ -10,7 +10,6 @@ if (fs.existsSync(path.resolve(process.cwd(), '.env'))) {
 
 import express from "express";
 import cors from "cors";
-import path from "path";
 import * as cheerio from "cheerio";
 import { createServer as createViteServer } from "vite";
 import nodemailer from "nodemailer";
@@ -126,26 +125,37 @@ async function startServer() {
       });
       const html = await response.text();
       
-      const extractSpots = (total: number) => {
-        const regex = new RegExp(`(\\d+)\\s*/\\s*${total}\\s*spots? left`, 'i');
-        const match = html.match(regex);
+      const jsMatch = html.match(/src="(\/assets\/index-[^"]+\.js)"/);
+      let jsContent = '';
+      if (jsMatch) {
+        const jsRes = await fetch(`https://arcadepointscalci.in${jsMatch[1]}`);
+        jsContent = await jsRes.text();
+      }
+      
+      const extractSpots = (name: string, fallback: any) => {
+        if (!jsContent) return fallback;
+        const regex = new RegExp(`"${name}".{0,30}?"(\\d+)\\s*/\\s*(\\d+)\\s*spots? left"`, 'i');
+        const match = jsContent.match(regex);
         if (match) {
-          return parseInt(match[1].replace(/,/g, ''), 10);
+          return {
+            spotsLeft: parseInt(match[1].replace(/,/g, ''), 10),
+            total: parseInt(match[2].replace(/,/g, ''), 10)
+          };
         }
-        return null;
+        return fallback;
       };
 
-      const trooperSpots = extractSpots(6000) ?? fallbackData.trooper.spotsLeft;
-      const rangerSpots = extractSpots(4000) ?? fallbackData.ranger.spotsLeft;
-      const championSpots = extractSpots(3000) ?? fallbackData.champion.spotsLeft;
-      const legendSpots = extractSpots(2500) ?? fallbackData.legend.spotsLeft;
+      const trooper = extractSpots("Trooper", fallbackData.trooper);
+      const ranger = extractSpots("Ranger", fallbackData.ranger);
+      const champion = extractSpots("Champion", fallbackData.champion);
+      const legend = extractSpots("Legend", fallbackData.legend);
 
       res.setHeader('Cache-Control', 's-maxage=1800');
       res.json({
-        trooper: { spotsLeft: trooperSpots, total: 6000 },
-        ranger: { spotsLeft: rangerSpots, total: 4000 },
-        champion: { spotsLeft: championSpots, total: 3000 },
-        legend: { spotsLeft: legendSpots, total: 2500 }
+        trooper,
+        ranger,
+        champion,
+        legend
       });
     } catch (e) {
       res.setHeader('Cache-Control', 's-maxage=1800');

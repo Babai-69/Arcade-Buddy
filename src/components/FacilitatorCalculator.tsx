@@ -211,154 +211,163 @@ export function FacilitatorCalculator() {
             </div>
           </div>
 
-          {new Date() < new Date('2026-07-13T11:30:00Z') ? (
-             <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-700 shadow-sm mt-8">
-                <AlertCircle className="w-12 h-12 text-[#EA4335] mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Program Not Started</h3>
-                <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
-                  The facilitator program window has not started yet. It begins July 13, 2026 at 5:00 PM IST.
-                </p>
-             </div>
-          ) : new Date() > new Date('2026-09-14T18:29:00Z') ? (
-             <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-700 shadow-sm mt-8">
-                <AlertCircle className="w-12 h-12 text-[#4285F4] mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Program has Ended</h3>
-                <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
-                  The facilitator program window ended on Sep 14, 2026 at 11:59 PM IST.
-                </p>
-             </div>
-          ) : data.gameBadges === 0 && data.skillBadges === 0 ? (
-             <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-700 shadow-sm mt-8">
-                <AlertCircle className="w-12 h-12 text-[#EA4335] mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Eligible Badges Found</h3>
-                <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
-                  No eligible badges found between Jul 13 – Sep 14, 2026 yet.
-                </p>
-             </div>
-          ) : (
-            <>
-            {/* Section 2: Eligible Badge Count Cards */}
-            <div className="space-y-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-[#4285F4]/10 p-3 rounded-xl text-[#4285F4]">
-                        <Gamepad2 className="w-6 h-6" />
+          {/* Removed conditionals to always display the breakdown */}
+          {(() => {
+            const isBeforeStart = new Date() < new Date('2026-07-13T11:30:00Z');
+            const isAfterEnd = new Date() > new Date('2026-09-14T18:29:00Z');
+            const displayGameBadges = isBeforeStart ? 0 : data.gameBadges;
+            const displaySkillBadges = isBeforeStart ? 0 : data.skillBadges;
+            
+            const status = getMilestoneStatus(displayGameBadges, displaySkillBadges);
+            const hasMilestone = status.name !== "No Milestone Yet";
+            const isUltimate = status.name === "Ultimate Milestone";
+
+            return (
+              <>
+                {/* Status Message (if any) */}
+                {isBeforeStart ? (
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center border border-slate-200 dark:border-slate-700 shadow-sm mb-6 mt-8">
+                    <AlertCircle className="w-8 h-8 text-[#EA4335] mx-auto mb-2" />
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Program Not Started</h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto">
+                      The facilitator program window begins July 13, 2026 at 5:00 PM IST.
+                    </p>
+                  </div>
+                ) : isAfterEnd ? (
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center border border-slate-200 dark:border-slate-700 shadow-sm mb-6 mt-8">
+                    <AlertCircle className="w-8 h-8 text-[#4285F4] mx-auto mb-2" />
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Program has Ended</h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto">
+                      The facilitator program window ended on Sep 14, 2026 at 11:59 PM IST.
+                    </p>
+                  </div>
+                ) : displayGameBadges === 0 && displaySkillBadges === 0 ? (
+                  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 text-center border border-slate-200 dark:border-slate-700 shadow-sm mb-6 mt-8">
+                    <AlertCircle className="w-8 h-8 text-[#EA4335] mx-auto mb-2" />
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">No Eligible Badges Found</h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm max-w-md mx-auto">
+                      No eligible badges found between Jul 13 – Sep 14, 2026 yet.
+                    </p>
+                  </div>
+                ) : null}
+
+                {/* Section 2: Eligible Badge Count Cards */}
+                <div className="space-y-2 mb-8 mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-[#4285F4]/10 p-3 rounded-xl text-[#4285F4]">
+                          <Gamepad2 className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-900 dark:text-white">Game Badges</h4>
+                          <p className="text-sm text-slate-500">{displayGameBadges} badges</p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-bold text-slate-900 dark:text-white">Game Badges</h4>
-                        <p className="text-sm text-slate-500">{data.gameBadges} badges</p>
+                      <div className="text-2xl font-bold text-[#4285F4]">
+                        {(displayGameBadges * 1).toFixed(1)} pts
                       </div>
                     </div>
-                    <div className="text-2xl font-bold text-[#4285F4]">
-                      {(data.gameBadges * 1).toFixed(1)} pts
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="bg-[#7c3aed]/10 p-3 rounded-xl text-[#7c3aed]">
+                          <Layers className="w-6 h-6" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-slate-900 dark:text-white">Skill Badges</h4>
+                          <p className="text-sm text-slate-500">{displaySkillBadges} badges</p>
+                        </div>
+                      </div>
+                      <div className="text-2xl font-bold text-[#7c3aed]">
+                        {(displaySkillBadges * 0.5).toFixed(1)} pts
+                      </div>
                     </div>
                   </div>
-                  <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-[#7c3aed]/10 p-3 rounded-xl text-[#7c3aed]">
-                        <Layers className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-slate-900 dark:text-white">Skill Badges</h4>
-                        <p className="text-sm text-slate-500">{data.skillBadges} badges</p>
-                      </div>
-                    </div>
-                    <div className="text-2xl font-bold text-[#7c3aed]">
-                      {(data.skillBadges * 0.5).toFixed(1)} pts
-                    </div>
-                  </div>
+                  <p className="text-xs text-slate-500 text-center">
+                    * Trivia and Lab-free badges are not counted for the facilitator bonus.
+                  </p>
                 </div>
-                <p className="text-xs text-slate-500 text-center">
-                  * Trivia and Lab-free badges are not counted for the facilitator bonus.
-                </p>
-              </div>
 
-              {/* Section 4 & 5: Current Milestone & Progress */}
-              {(() => {
-                const status = getMilestoneStatus(data.gameBadges, data.skillBadges);
-                const hasMilestone = status.name !== "No Milestone Yet";
-                const isUltimate = status.name === "Ultimate Milestone";
+                {/* Section 4 & 5: Current Milestone & Progress */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Current Status Card */}
+                  <div className={`rounded-2xl p-6 border shadow-sm flex flex-col justify-center
+                    ${hasMilestone 
+                      ? 'bg-[#34A853]/5 dark:bg-[#34A853]/10 border-[#34A853]/20 dark:border-[#34A853]/30' 
+                      : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
+                  >
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">Current Status</h3>
+                    <h2 className={`text-3xl font-bold mb-4 ${hasMilestone ? 'text-[#34A853]' : 'text-slate-900 dark:text-white'}`}>
+                      {status.name}
+                    </h2>
+                    
+                    {hasMilestone ? (
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2 text-[#34A853] font-medium">
+                          <CheckCircle2 className="w-5 h-5" />
+                          <span>✅ {displayGameBadges}/{status.gamesNeeded} Games · ✅ {displaySkillBadges}/{status.skillsNeeded} Skills</span>
+                        </div>
+                        <div className="inline-block bg-[#34A853]/10 text-[#34A853] px-4 py-2 rounded-lg font-bold">
+                          🎉 +{status.bonus} bonus points earned!
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <p className="text-slate-600 dark:text-slate-400">
+                          You haven't reached Milestone 1 yet. Keep completing badges!
+                        </p>
+                      </div>
+                    )}
+                  </div>
 
-                return (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Current Status Card */}
-                    <div className={`rounded-2xl p-6 border shadow-sm flex flex-col justify-center
-                      ${hasMilestone 
-                        ? 'bg-[#34A853]/5 dark:bg-[#34A853]/10 border-[#34A853]/20 dark:border-[#34A853]/30' 
-                        : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700'}`}
-                    >
-                      <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-2">Current Status</h3>
-                      <h2 className={`text-3xl font-bold mb-4 ${hasMilestone ? 'text-[#34A853]' : 'text-slate-900 dark:text-white'}`}>
-                        {status.name}
-                      </h2>
+                  {/* Progress to Next */}
+                  {!isUltimate && status.next && (
+                    <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
+                      <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">
+                        Progress to {status.next.name}
+                      </h3>
                       
-                      {hasMilestone ? (
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-2 text-[#34A853] font-medium">
-                            <CheckCircle2 className="w-5 h-5" />
-                            <span>✅ {data.gameBadges}/{status.gamesNeeded} Games · ✅ {data.skillBadges}/{status.skillsNeeded} Skills</span>
+                      <div className="space-y-5">
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="font-medium text-slate-700 dark:text-slate-300">Game Badges</span>
+                            <span className="font-bold text-[#4285F4]">{displayGameBadges} / {status.next.g}</span>
                           </div>
-                          <div className="inline-block bg-[#34A853]/10 text-[#34A853] px-4 py-2 rounded-lg font-bold">
-                            🎉 +{status.bonus} bonus points earned!
+                          <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                            <div 
+                              className="bg-[#4285F4] h-2.5 rounded-full transition-all duration-1000" 
+                              style={{ width: `${Math.min(100, (displayGameBadges / status.next.g) * 100)}%` }}
+                            ></div>
                           </div>
+                          {displayGameBadges < status.next.g && (
+                            <p className="text-xs text-slate-500 mt-1">Need {status.next.g - displayGameBadges} more</p>
+                          )}
                         </div>
-                      ) : (
-                        <div className="space-y-2">
-                          <p className="text-slate-600 dark:text-slate-400">
-                            You haven't reached Milestone 1 yet. Keep completing badges!
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Progress to Next */}
-                    {!isUltimate && status.next && (
-                      <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm">
-                        <h3 className="text-sm font-bold uppercase tracking-wider text-slate-500 mb-4">
-                          Progress to {status.next.name}
-                        </h3>
                         
-                        <div className="space-y-5">
-                          <div>
-                            <div className="flex justify-between text-sm mb-1">
-                              <span className="font-medium text-slate-700 dark:text-slate-300">Game Badges</span>
-                              <span className="font-bold text-[#4285F4]">{data.gameBadges} / {status.next.g}</span>
-                            </div>
-                            <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                              <div 
-                                className="bg-[#4285F4] h-2.5 rounded-full transition-all duration-1000" 
-                                style={{ width: `${Math.min(100, (data.gameBadges / status.next.g) * 100)}%` }}
-                              ></div>
-                            </div>
-                            {data.gameBadges < status.next.g && (
-                              <p className="text-xs text-slate-500 mt-1">Need {status.next.g - data.gameBadges} more</p>
-                            )}
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="font-medium text-slate-700 dark:text-slate-300">Skill Badges</span>
+                            <span className="font-bold text-[#7c3aed]">{displaySkillBadges} / {status.next.s}</span>
                           </div>
-                          
-                          <div>
-                            <div className="flex justify-between text-sm mb-1">
-                              <span className="font-medium text-slate-700 dark:text-slate-300">Skill Badges</span>
-                              <span className="font-bold text-[#7c3aed]">{data.skillBadges} / {status.next.s}</span>
-                            </div>
-                            <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
-                              <div 
-                                className="bg-[#7c3aed] h-2.5 rounded-full transition-all duration-1000" 
-                                style={{ width: `${Math.min(100, (data.skillBadges / status.next.s) * 100)}%` }}
-                              ></div>
-                            </div>
-                            {data.skillBadges < status.next.s && (
-                              <p className="text-xs text-slate-500 mt-1">Need {status.next.s - data.skillBadges} more</p>
+                          <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                            <div 
+                              className="bg-[#7c3aed] h-2.5 rounded-full transition-all duration-1000" 
+                              style={{ width: `${Math.min(100, (displaySkillBadges / status.next.s) * 100)}%` }}
+                            ></div>
+                          </div>
+                          {displaySkillBadges < status.next.s && (
+                              <p className="text-xs text-slate-500 mt-1">Need {status.next.s - displaySkillBadges} more</p>
                             )}
                           </div>
                         </div>
                       </div>
                     )}
                   </div>
-                );
-              })()}
+                </>
+              );
+            })()}
 
-              {/* Section 3: Points Breakdown & Bonus Card */}
+            {/* Section 3: Points Breakdown & Bonus Card */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 {/* Breakdown Table */}
@@ -468,9 +477,6 @@ export function FacilitatorCalculator() {
                   })}
                 </div>
               </div>
-
-            </>
-          )}
         </div>
       )}
     </div>

@@ -15,27 +15,36 @@ export function Hero({ participants }: { participants: Participant[] }) {
     minutes: 0,
     seconds: 0,
   });
-  const [isLive, setIsLive] = useState(false);
+  const [timerState, setTimerState] = useState<'upcoming' | 'live' | 'ended'>('upcoming');
 
   useEffect(() => {
     // Target date: July 13, 2026 17:00:00 GMT+0530 (IST) -> 11:30:00Z
-    const targetDate = new Date('2026-07-13T11:30:00Z').getTime();
+    const startDate = new Date('2026-07-13T11:30:00Z').getTime();
+    // End date: September 14, 2026 23:59:00 GMT+0530 (IST) -> 18:29:00Z
+    const endDate = new Date('2026-09-14T18:29:00Z').getTime();
 
     const interval = setInterval(() => {
       const now = new Date().getTime();
-      const distance = targetDate - now;
-
-      if (distance < 0) {
-        clearInterval(interval);
-        setIsLive(true);
+      
+      let distance = 0;
+      if (now < startDate) {
+        setTimerState('upcoming');
+        distance = startDate - now;
+      } else if (now >= startDate && now <= endDate) {
+        setTimerState('live');
+        distance = endDate - now;
       } else {
-        setTimeLeft({
-          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((distance % (1000 * 60)) / 1000),
-        });
+        setTimerState('ended');
+        clearInterval(interval);
+        return;
       }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000),
+      });
     }, 1000);
 
     return () => clearInterval(interval);
@@ -62,7 +71,7 @@ export function Hero({ participants }: { participants: Participant[] }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {!isLive && (
+          {timerState === 'upcoming' && (
             <div style={{
               position: 'relative',
               borderRadius: '999px',
@@ -151,12 +160,12 @@ export function Hero({ participants }: { participants: Participant[] }) {
             </a>
           </div>
 
-          {!isLive && (
+          {timerState !== 'ended' && (
             <div className="max-w-4xl mx-auto bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 mb-8">
               <div className="flex items-center gap-2 mb-6 justify-center">
                 <Clock className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                 <h4 className="font-bold font-display text-slate-800 dark:text-slate-200">
-                  Facilitator Program Starts In:
+                  {timerState === 'upcoming' ? 'Facilitator Program Starts In:' : 'Time Left to Complete the Program:'}
                 </h4>
               </div>
 
@@ -177,6 +186,16 @@ export function Hero({ participants }: { participants: Participant[] }) {
                   <div className="text-3xl lg:text-4xl font-bold font-display text-[#4285F4] mb-1">{timeLeft.seconds}</div>
                   <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">SECONDS</div>
                 </div>
+              </div>
+            </div>
+          )}
+          {timerState === 'ended' && (
+            <div className="max-w-4xl mx-auto bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 mb-8">
+              <div className="flex items-center gap-2 justify-center">
+                <Clock className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+                <h4 className="font-bold font-display text-slate-800 dark:text-slate-200">
+                  Facilitator Program has ended.
+                </h4>
               </div>
             </div>
           )}
