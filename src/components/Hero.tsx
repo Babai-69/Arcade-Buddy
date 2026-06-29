@@ -74,7 +74,7 @@ export function Hero({ participants }: { participants: Participant[] }) {
                   position: 'absolute',
                   width: '200%', height: '200%',
                   top: '-50%', left: '-50%',
-                  background: 'conic-gradient(from 0deg, transparent 0%, #4285F4 25%, #EA4335 50%, #FBBC05 75%, #34A853 100%)',
+                  background: 'conic-gradient(#4285F4, #34A853, #FBBC05, #EA4335, #7c3aed, #4285F4)',
                   animation: 'spinCW 3s linear infinite'
                 }}/>
               </div>
