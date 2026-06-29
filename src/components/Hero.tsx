@@ -52,19 +52,6 @@ export function Hero({ participants }: { participants: Participant[] }) {
 
   return (
     <section className="relative pt-20 pb-10 overflow-hidden" id="about">
-      {/* Floating left social bar */}
-      <div className="hidden lg:flex fixed left-6 top-1/2 -translate-y-1/2 flex-col gap-4 z-50">
-        <a href="https://www.instagram.com/dey_babai001/" target="_blank" rel="noreferrer" className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center justify-center text-slate-500 hover:text-pink-600 hover:-translate-y-1 transition-all duration-300 group">
-          <Instagram className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        </a>
-        <a href="https://github.com/Arcade-With-Us/" target="_blank" rel="noreferrer" className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white hover:-translate-y-1 transition-all duration-300 group">
-          <Github className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        </a>
-        <a href="https://www.linkedin.com/in/abir-dey-a34914254/" target="_blank" rel="noreferrer" className="w-12 h-12 bg-white dark:bg-slate-800 rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.1)] flex items-center justify-center text-slate-500 hover:text-[#0a66c2] hover:-translate-y-1 transition-all duration-300 group">
-          <Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
-        </a>
-      </div>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

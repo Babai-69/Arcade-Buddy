@@ -8,6 +8,8 @@ import { TrueLeaderboardPage } from './pages/TrueLeaderboardPage';
 import { LeaderboardPage as DashboardPage } from './pages/LeaderboardPage';
 import { FacilitatorPage } from './pages/FacilitatorPage';
 import { ResourcesPage } from './pages/ResourcesPage';
+import { QuickStartPage } from './pages/QuickStartPage';
+import { FreeCreditsPage } from './pages/FreeCreditsPage';
 import { SwagsPage } from './pages/SwagsPage';
 import { SyllabusPage } from './pages/SyllabusPage';
 import { PublicProfileHelpPage } from './pages/PublicProfileHelpPage';
@@ -41,6 +43,8 @@ export default function App() {
           <Route path="/facilitator" element={<FacilitatorPage />} />
           <Route path="/syllabus" element={<SyllabusPage />} />
           <Route path="/resources" element={<ResourcesPage />} />
+          <Route path="/quick-start" element={<QuickStartPage />} />
+          <Route path="/free-credits" element={<FreeCreditsPage />} />
           <Route path="/public-profile-help" element={<PublicProfileHelpPage />} />
           <Route path="/swags" element={<SwagsPage />} />
           <Route path="/about" element={<AboutPage />} />

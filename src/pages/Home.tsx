@@ -4,6 +4,7 @@ import { Community } from '../components/Community';
 import { Registration } from '../components/Registration';
 import { RegistrationSteps } from '../components/RegistrationSteps';
 import { RegistrationGuideWidget } from '../components/RegistrationGuideWidget';
+import { SubmitQueryWidget } from '../components/SubmitQueryWidget';
 import { CommunityWelcomeModal } from '../components/CommunityWelcomeModal';
 
 export function Home({ participants }: { participants: any[] }) {
@@ -16,6 +17,7 @@ export function Home({ participants }: { participants: any[] }) {
       <RegistrationSteps />
       
       <RegistrationGuideWidget />
+      <SubmitQueryWidget />
       <CommunityWelcomeModal />
     </div>
   );

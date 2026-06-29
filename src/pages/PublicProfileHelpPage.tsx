@@ -75,6 +75,45 @@ export function PublicProfileHelpPage() {
           </div>
         </div>
 
+        {/* URL Format Example */}
+        <div className="bg-slate-800 border border-slate-700 rounded-2xl p-8 flex flex-col items-center">
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            📝 URL Format Example
+          </h2>
+          <div className="w-full max-w-3xl bg-slate-700/50 rounded-xl p-8 flex flex-col items-center text-center">
+            <h3 className="text-white font-medium mb-4">
+              Your URL should look like this:
+            </h3>
+            <div className="bg-slate-600/50 text-slate-300 px-6 py-4 rounded-lg w-full mb-4 font-mono text-sm break-all">
+              <span className="text-blue-400">https://www.cloudskillsboost.google/public_profiles/</span><span className="text-green-400">PROFILE_ID</span>
+            </div>
+            <p className="text-slate-300 text-sm">
+              The unique ID at the end is specific to your profile and allows the calculator to access your badge information.
+            </p>
+          </div>
+        </div>
+
+        {/* What's Next */}
+        <div className="flex flex-col items-center mt-12 mb-8">
+          <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            🎯 What's Next?
+          </h2>
+          <div className="w-full border border-green-800 bg-[#0a1914] rounded-2xl p-8 text-center flex flex-col items-center">
+            <h3 className="text-xl font-bold text-white mb-4">
+              Ready to Calculate Your Points?
+            </h3>
+            <p className="text-green-400 mb-8 max-w-2xl text-sm leading-relaxed">
+              Now that you have your public profile URL, you can use it with our Arcade Points Calculator to track your progress and see how many points you've earned!
+            </p>
+            <a 
+              href="/facilitator"
+              className="inline-flex items-center gap-2 bg-[#1a7f37] hover:bg-[#1a7f37]/80 text-white font-medium px-6 py-3 rounded-xl transition-colors"
+            >
+              🔗 Go to Points Calculator
+            </a>
+          </div>
+        </div>
+
         {/* Important Reminder */}
         <div className="bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-900/50 rounded-2xl p-6 flex flex-col md:flex-row items-start gap-6">
           <div className="bg-red-100 dark:bg-red-900/50 p-3 rounded-full shrink-0">

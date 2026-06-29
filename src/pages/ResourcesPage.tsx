@@ -8,9 +8,9 @@ const resources = [
     category: "GUIDE",
     title: "Quick-Start Guide 2026",
     description: "Step-by-step guide to quickly get started with Google Arcade, including account setup, navigation tips, and earn your first badges.",
-    linkText: "View Slide ➠",
-    link: "https://docs.google.com/document/d/1qsUsSBboyJ1Y1-TJJw0W8JH5WTppdcqfkeo5qw4KD8Q/edit?usp=sharing",
-    internal: false,
+    linkText: "CHECK IT ➡",
+    link: "/quick-start",
+    internal: true,
     image: "https://res.cloudinary.com/dxzxw29ix/image/upload/q_auto/f_auto/v1776604089/pre_assess_light_1_eoihas.png",
     bg: "bg-blue-50 dark:bg-slate-800",
   },
@@ -49,8 +49,8 @@ const resources = [
     title: "Arcade Facilitator Program",
     description: "Join the Arcade Facilitator Program under my guidance to earn bonus points, enhance your Google Cloud skills, and get exclusive learning opportunities.",
     linkText: "Join Now→",
-    link: "https://arcade-buddy.vercel.app/facilitator",
-    internal: false,
+    link: "/facilitator",
+    internal: true,
     image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1781892327/1_w99okg.png",
     bg: "bg-red-50 dark:bg-slate-800",
   },
@@ -76,12 +76,11 @@ const resources = [
     bg: "bg-blue-50 dark:bg-slate-800",
   },
   {
-    id: "free-credits",
     category: "VIDEO",
     title: "How to Claim Free Credits",
     description: "Learn how to get free credits to complete your labs.",
     linkText: "CHECK IT ➡",
-    link: "#",
+    link: "/free-credits",
     internal: true,
     image: "https://res.cloudinary.com/dxzxw29ix/image/upload/q_auto/f_auto/v1776605639/free_credits_jw8ean.png",
     bg: "bg-emerald-50 dark:bg-slate-800",
@@ -182,33 +181,6 @@ export function ResourcesPage() {
         </div>
       )}
 
-      {activeModal === 'free-credits' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={() => setActiveModal(null)} />
-          <div className="relative bg-white dark:bg-slate-900 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl z-50 border border-slate-200 dark:border-slate-800">
-            <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 p-2 bg-black/50 hover:bg-black/70 rounded-full text-white transition-colors z-10">
-              <X className="w-5 h-5" />
-            </button>
-            <div className="aspect-video w-full relative bg-black">
-              <iframe 
-                className="w-full h-full"
-                src="https://www.youtube.com/embed/JA4RqST1DMQ?autoplay=1" 
-                title="YouTube video player" 
-                frameBorder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowFullScreen>
-              </iframe>
-            </div>
-            <div className="p-6 md:p-8">
-              <div className="inline-flex text-xs font-bold text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400 px-2 py-1 rounded-md mb-4 tracking-wide items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> Video
-              </div>
-              <h2 className="text-2xl md:text-3xl font-bold font-display text-slate-900 dark:text-white mb-3">How to Claim Free Credits</h2>
-              <p className="text-slate-600 dark:text-slate-400 text-lg">Watch this step-by-step video to learn how to get free credits for your Arcade journey. Follow along to ensure you never run out of credits while completing your labs.</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

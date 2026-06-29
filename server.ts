@@ -345,6 +345,53 @@ async function startServer() {
     }
   });
 
+  app.post("/api/notify-query", async (req, res) => {
+    try {
+      const { name, email, profileUrl, queryType, message, attachments } = req.body;
+      
+      const smtpUser = process.env.SMTP_USER;
+      const smtpPass = process.env.SMTP_PASS;
+
+      if (!smtpUser || !smtpPass) {
+        return res.json({ success: true, emailSent: false, message: 'SMTP credentials not configured on server. Query saved to database.' });
+      }
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      });
+
+      const mailOptions = {
+        from: smtpUser,
+        to: smtpUser, // Send to self or configured admin
+        subject: `[Support Query] ${queryType} - ${name}`,
+        html: `
+          <h2>New Support Query</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Profile URL:</strong> <a href="${profileUrl}">${profileUrl}</a></p>
+          <p><strong>Query Type:</strong> ${queryType}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message}</p>
+        `,
+        attachments: attachments ? attachments.map((att: any) => ({
+          filename: att.filename,
+          content: att.content,
+          encoding: 'base64'
+        })) : []
+      };
+
+      await transporter.sendMail(mailOptions);
+      res.json({ success: true, emailSent: true });
+    } catch (error: any) {
+      console.error('Email sending failed:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({

@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/images/regenerated_image_1782145505916.png';
 
 import { NavbarUserMenu } from './NavbarUserMenu';
+import { NavbarNotifications } from './NavbarNotifications';
 
 export function Navbar() {
   const location = useLocation();
@@ -74,6 +75,7 @@ export function Navbar() {
             <Link to="/dashboard#calculator" className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full font-bold transition-all shadow-md">
               Calculator
             </Link>
+            <NavbarNotifications />
             <NavbarUserMenu />
           </div>
           <div className="md:hidden flex items-center gap-2">
@@ -84,6 +86,7 @@ export function Navbar() {
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
+            <NavbarNotifications />
             <NavbarUserMenu />
             <button 
               className="p-2 text-slate-800 dark:text-white"

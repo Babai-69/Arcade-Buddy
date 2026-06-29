@@ -54,7 +54,7 @@ export const submitSupportQuery = async (queryData: Omit<SupportQuery, 'id' | 'c
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 20000);
     
-    const response = await fetch('https://arcade-buddy-385186531056.asia-southeast1.run.app/api/notify-query', {
+    const response = await fetch('/api/notify-query', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

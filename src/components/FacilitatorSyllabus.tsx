@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { ExternalLink, Beaker, Coins, Gamepad2, Layers, ChevronDown, ChevronUp } from 'lucide-react';
+import { ExternalLink, Beaker, Coins, Gamepad2, Layers, ChevronDown, ChevronUp, Lock, Copy, Check } from 'lucide-react';
+import { motion } from 'motion/react';
 
 const arcadeGames = [
   { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_adventure_july.png", code: "Coming Soon!" },
@@ -141,49 +142,212 @@ export function FacilitatorSyllabus() {
 
         {/* Arcade Games Section */}
         <div className="mb-20">
-          <h2 className="text-3xl font-display font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-            <Gamepad2 className="w-8 h-8 text-[#4285F4]" />
-            Arcade Games
-          </h2>
-          <div className="prose prose-slate dark:prose-invert max-w-none mb-10">
-            <p className="text-lg">
-              <strong>Every month we release 6 new Arcade games</strong> that you can complete to earn "Arcade Points" - 1) Arcade Base Camp, 2) Arcade Adventure, 3) Arcade Voyage, 4) Arcade Trail, 5) Arcade Special Game &amp; 6) New Arcade Game (coming soon!).
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-slate-50 dark:bg-[#0f1117] w-full rounded-2xl p-10 mb-8 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-blue-500/30 dark:border-blue-500/50 shadow-sm dark:shadow-[0_0_15px_rgba(66,133,244,0.3)] mb-4">
+              <span className="text-sm font-medium text-blue-600 dark:text-blue-400">🎮 Updated Monthly</span>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-4">
+              <span className="bg-gradient-to-r from-[#4285F4] to-[#7c3aed] bg-clip-text text-transparent">Arcade</span> Games
+            </h2>
+            
+            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 text-lg">
+              Complete these games to earn Arcade Points. 6 new games release every month!
             </p>
-            <p>
-              Hence, in a single cohort of 2 months under the Facilitator Program from July - September, you can earn a total of <strong>18 game badges</strong>. See the current active games for this month below. We will update these as and when new games will be released in the following months. <strong>Note:</strong> Games have limited seats, so enrol and complete them ASAP.
-            </p>
-            <br />
-            <p>
-              <strong>Note:</strong> While there are a total of 6 games that are released every month and you can complete 18 games in total in the 2 months of the facilitator program, any 12 game completions will be counted towards the ultimate milestone.
-            </p>
+            
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
+                <span className="text-blue-500 dark:text-blue-400 text-lg">🎮</span> 6 Games/Month
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
+                <span className="text-amber-500 dark:text-amber-400 text-lg">⏱️</span> Limited Seats
+              </div>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
+                <span className="text-green-500 dark:text-green-400 text-lg">⭐</span> 1 Point Each
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="bg-[#4285F4]/5 border border-[#4285F4]/20 rounded-2xl p-5 md:p-6 mb-10"
+          >
+            <div className="space-y-4">
+              <div className="flex items-start gap-4 border-l-4 border-amber-500 pl-4 py-1">
+                <p className="text-slate-700 dark:text-slate-300">
+                  <span className="font-bold text-slate-900 dark:text-white mr-2">💡 Recommended:</span>
+                  Complete Arcade Games first — they have monthly deadlines. Skill badges can be done anytime.
+                </p>
+              </div>
+              <div className="flex items-start gap-4 border-l-4 border-blue-500 pl-4 py-1">
+                <p className="text-slate-700 dark:text-slate-300">
+                  <span className="font-bold text-slate-900 dark:text-white mr-2">📌</span>
+                  In 2 months you can earn up to 18 game badges. Any 12 completions count toward Ultimate Milestone.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
+          >
+            <div className="flex items-center gap-3">
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">July 2026 Games</h3>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-wider">
+                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                Active Now
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <div className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-medium">
+                August 2026 <span className="opacity-70 ml-1">— Coming Soon</span>
+              </div>
+              <div className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-medium">
+                September 2026 <span className="opacity-70 ml-1">— Coming Soon</span>
+              </div>
+            </div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {arcadeGames.map((game, idx) => {
+              const titles = ["Arcade Base Camp", "Arcade Adventure", "Arcade Voyage", "Arcade Trail", "Arcade Special Game", "New Arcade Game"];
+              const gameName = titles[idx] || `Game ${idx + 1}`;
+              
+              return (
+                <motion.div 
+                  key={idx}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col items-center group hover:border-[#4285F4] dark:hover:border-[#4285F4] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(66,133,244,0.15)] dark:hover:shadow-[0_8px_30px_rgba(66,133,244,0.2)] transition-all duration-300"
+                >
+                  <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#0d1117] flex items-center justify-center mb-6">
+                    <img 
+                      src={game.img} 
+                      alt={gameName} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  <div className="w-full mt-auto">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-bold text-slate-900 dark:text-white text-lg">{gameName}</h4>
+                      <span className="px-2.5 py-1 rounded bg-blue-50 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 text-xs font-bold">
+                        JUL 2026
+                      </span>
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Access Code</p>
+                      {game.code === "Coming Soon!" ? (
+                        <p className="text-amber-600 dark:text-amber-400 font-medium">{game.code}</p>
+                      ) : (
+                        <div className="flex items-center justify-between bg-slate-50 dark:bg-[#0f1117] px-3 py-2 rounded-lg border border-slate-200 dark:border-white/5 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
+                          <code className="text-green-600 dark:text-green-400 font-mono text-sm">{game.code}</code>
+                          <button 
+                            className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
+                            onClick={() => navigator.clipboard.writeText(game.code)}
+                            title="Copy code"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {arcadeGames.map((game, idx) => (
-              <div key={idx} className="flex flex-col items-center">
-                <img 
-                  src={game.img} 
-                  alt={`Arcade Game ${idx + 1}`} 
-                  className="w-full max-w-[280px] h-auto object-contain hover:scale-105 transition-transform duration-300 drop-shadow-xl"
-                />
-                <div className="mt-6 text-center">
-                  <p className="text-sm font-bold text-slate-900 dark:text-white">Access Code:</p>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">{game.code}</p>
+          <div className="flex items-center gap-4 my-10">
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">August 2026 — coming soon</span>
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {/* Coming Soon Cards for August */}
+            {[1, 2, 3, 4, 5, 6].map((_, idx) => (
+              <motion.div 
+                key={`soon-${idx}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 + (idx * 0.1) }}
+                className="bg-slate-50/80 dark:bg-[#1a1d27]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-5 flex flex-col items-center justify-center relative overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-100/90 dark:to-[#1a1d27]/80 pointer-events-none" />
+                
+                <div className="w-full aspect-square bg-slate-200/50 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-2 mb-6 z-10">
+                  <Lock className="w-8 h-8 text-slate-400" />
+                  <span className="text-xs font-medium text-slate-500">Aug 2026</span>
                 </div>
-              </div>
+
+                <div className="w-full mt-auto z-10 text-center">
+                  <h4 className="font-medium text-slate-500 dark:text-slate-400 text-lg mb-2">Coming soon</h4>
+                  <span className="inline-block px-2.5 py-1 rounded bg-slate-200/50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs font-bold">
+                    AUG 2026
+                  </span>
+                </div>
+              </motion.div>
             ))}
+          </div>
+          
+          <div className="flex flex-col items-center">
+            <p className="text-sm font-medium text-slate-500 mb-3">
+              This month: 6 of 6 games shown · More releasing throughout July
+            </p>
+            <div className="w-full max-w-md h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-blue-500 rounded-full w-full" />
+            </div>
           </div>
         </div>
 
         {/* Learning Path Header */}
-        <div className="mb-16 text-center">
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-6">
-            🎯 Google Cloud Skill Badges 🎯
-          </h1>
-          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-3xl mx-auto">
-            Choose your learning path based on your experience level and master Google Cloud and AI technologies while earning skill badges.
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="bg-slate-50 dark:bg-[#0f1117] w-full rounded-2xl p-10 mb-10 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-amber-500/30 dark:border-amber-500/50 shadow-sm dark:shadow-[0_0_15px_rgba(251,188,5,0.3)] mb-4">
+            <span className="text-sm font-medium text-amber-600 dark:text-amber-400">🎯 Learning Paths</span>
+          </div>
+          
+          <h2 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-4">
+            Google Cloud <span className="bg-gradient-to-r from-[#4285F4] to-[#34A853] bg-clip-text text-transparent">Skill</span> Badges
+          </h2>
+          
+          <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 text-lg">
+            Choose your learning path based on your experience level and master Google Cloud and AI technologies.
           </p>
-        </div>
+
+          <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
+              <span className="text-blue-500 dark:text-blue-400 text-lg">📈</span> 3 Levels
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
+              <span className="text-amber-500 dark:text-amber-400 text-lg">🏆</span> 51 Badges Total
+            </div>
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
+              <span className="text-green-500 dark:text-green-400 text-lg">⭐</span> 2 Badges = 1 Point
+            </div>
+          </div>
+        </motion.div>
 
         <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden mb-10">
           
