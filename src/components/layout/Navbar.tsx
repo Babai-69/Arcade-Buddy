@@ -36,7 +36,7 @@ export function Navbar() {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Facilitator Program', path: '/facilitator' },
+    { name: 'Facilitator', path: '/facilitator' },
     { name: 'Syllabus', path: '/syllabus' },
     { name: 'Resources', path: '/resources' },
     { name: 'Swags', path: '/swags' },
@@ -46,25 +46,32 @@ export function Navbar() {
   return (
     <nav className="fixed w-full z-50 glass-card border-b-0 backdrop-blur-xl bg-white/60 dark:bg-slate-950/60 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <Link to="/" className="flex items-center gap-2">
+        <div className="flex justify-between h-16 items-center relative">
+          {/* Logo - Left */}
+          <Link to="/" className="flex items-center gap-2 z-10">
             <img src={logoImage} alt="Google Cloud" className="w-[43px] h-[37px] object-contain" />
-            <span className="font-display font-bold text-xl tracking-tight text-[#4285F4] ml-1">Arcade Buddy</span>
+            <span className="font-display font-bold text-xl tracking-tight text-[#4285F4] ml-1 hidden lg:block">Arcade Buddy</span>
           </Link>
-          <div className="hidden md:flex items-center space-x-6">
+          
+          {/* Navigation - Center */}
+          <div className="hidden xl:flex items-center space-x-6 absolute left-1/2 -translate-x-1/2">
             {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.path}
-                  className={`text-sm font-medium transition-colors ${
-                    location.pathname === link.path
-                      ? 'text-[#4285F4]'
-                      : 'text-slate-600 dark:text-slate-300 hover:text-[#4285F4]'
-                  }`}
-                >
-                  {link.name}
-                </Link>
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === link.path
+                    ? 'text-[#4285F4]'
+                    : 'text-slate-600 dark:text-slate-300 hover:text-[#4285F4]'
+                }`}
+              >
+                {link.name}
+              </Link>
             ))}
+          </div>
+
+          {/* Actions - Right */}
+          <div className="hidden xl:flex items-center space-x-4 z-10">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
@@ -72,13 +79,15 @@ export function Navbar() {
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <Link to="/dashboard#calculator" className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full font-bold transition-all shadow-md">
+            <Link to="/dashboard#calculator" className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full font-bold transition-all shadow-md text-sm">
               Calculator
             </Link>
             <NavbarNotifications />
             <NavbarUserMenu />
           </div>
-          <div className="md:hidden flex items-center gap-2">
+
+          {/* Mobile Actions */}
+          <div className="xl:hidden flex items-center gap-2 z-10">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 text-slate-800 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
@@ -100,7 +109,7 @@ export function Navbar() {
       
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-xl absolute w-full left-0 top-16">
+        <div className="xl:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-xl absolute w-full left-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="px-4 pt-2 pb-6 space-y-1">
             {navLinks.map((link) => (
               <Link
@@ -116,7 +125,7 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 px-3">
-              <Link to="/dashboard#calculator" className="block text-center w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-xl font-bold transition-all shadow-md">
+              <Link onClick={() => setIsMobileMenuOpen(false)} to="/dashboard#calculator" className="block text-center w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-xl font-bold transition-all shadow-md">
                 Calculator
               </Link>
             </div>

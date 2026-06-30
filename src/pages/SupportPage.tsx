@@ -41,20 +41,21 @@ export function SupportPage() {
         attachmentData = await uploadAttachments(formData.attachments);
       }
       
-      const { emailSuccess, errorMessage } = await submitSupportQuery({
+      // Fire and forget to make the UI respond instantly
+      submitSupportQuery({
         name: formData.name as string,
         email: formData.email as string,
         profileUrl: formData.profileUrl as string,
         queryType: formData.queryType as string,
         message: formData.message as string,
         attachments: attachmentData
+      }).then(({ emailSuccess, errorMessage }) => {
+        if (emailSuccess === false) {
+          console.error('Email notification failed:', errorMessage);
+        }
       });
       
-      if (emailSuccess === false) {
-        alert(errorMessage || 'Your query was saved, but the email notification failed. Please ensure SMTP_PASS is a valid App Password (not your normal Google password) and SMTP_USER is correct.');
-      } else {
-        setShowToast(true);
-      }
+      setShowToast(true);
       
       setFormData({
         name: '',

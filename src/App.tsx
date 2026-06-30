@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'motion/react';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
+import { PageTransition } from './components/layout/PageTransition';
 import { Home } from './pages/Home';
 import { AboutPage } from './pages/AboutPage';
 import { TrueLeaderboardPage } from './pages/TrueLeaderboardPage';
@@ -28,6 +30,7 @@ import { Participant } from './types';
 
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>(mockParticipants);
+  const location = useLocation();
 
   return (
     <div className="min-h-screen flex flex-col font-sans transition-colors duration-300">
@@ -36,27 +39,30 @@ export default function App() {
       <Navbar />
       
       <main className="flex-grow pt-16">
-        <Routes>
-          <Route path="/" element={<Home participants={participants} />} />
-          <Route path="/leaderboard" element={<TrueLeaderboardPage />} />
-          <Route path="/dashboard" element={<DashboardPage participants={participants} />} />
-          <Route path="/facilitator" element={<FacilitatorPage />} />
-          <Route path="/syllabus" element={<SyllabusPage />} />
-          <Route path="/resources" element={<ResourcesPage />} />
-          <Route path="/quick-start" element={<QuickStartPage />} />
-          <Route path="/free-credits" element={<FreeCreditsPage />} />
-          <Route path="/public-profile-help" element={<PublicProfileHelpPage />} />
-          <Route path="/swags" element={<SwagsPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/my-progress" element={<MyProgressPage />} />
-          <Route path="/admin-progress" element={<AdminProgressPage />} />
-          <Route path="/faq" element={<FaqPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/code-of-conduct" element={<CodeOfConductPage />} />
-          <Route path="/program-tncs" element={<ProgramTnCsPage />} />
-          <Route path="/support" element={<SupportPage />} />
-        </Routes>
+        <AnimatePresence mode="wait">
+          {/* @ts-ignore */}
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition><Home participants={participants} /></PageTransition>} />
+            <Route path="/leaderboard" element={<PageTransition><TrueLeaderboardPage /></PageTransition>} />
+            <Route path="/dashboard" element={<PageTransition><DashboardPage participants={participants} /></PageTransition>} />
+            <Route path="/facilitator" element={<PageTransition><FacilitatorPage /></PageTransition>} />
+            <Route path="/syllabus" element={<PageTransition><SyllabusPage /></PageTransition>} />
+            <Route path="/resources" element={<PageTransition><ResourcesPage /></PageTransition>} />
+            <Route path="/quick-start" element={<PageTransition><QuickStartPage /></PageTransition>} />
+            <Route path="/free-credits" element={<PageTransition><FreeCreditsPage /></PageTransition>} />
+            <Route path="/public-profile-help" element={<PageTransition><PublicProfileHelpPage /></PageTransition>} />
+            <Route path="/swags" element={<PageTransition><SwagsPage /></PageTransition>} />
+            <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
+            <Route path="/my-progress" element={<PageTransition><MyProgressPage /></PageTransition>} />
+            <Route path="/admin-progress" element={<PageTransition><AdminProgressPage /></PageTransition>} />
+            <Route path="/faq" element={<PageTransition><FaqPage /></PageTransition>} />
+            <Route path="/privacy" element={<PageTransition><PrivacyPage /></PageTransition>} />
+            <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />
+            <Route path="/code-of-conduct" element={<PageTransition><CodeOfConductPage /></PageTransition>} />
+            <Route path="/program-tncs" element={<PageTransition><ProgramTnCsPage /></PageTransition>} />
+            <Route path="/support" element={<PageTransition><SupportPage /></PageTransition>} />
+          </Routes>
+        </AnimatePresence>
         
         {/* Hidden Admin Route using hash for easy access by the creator */}
         {window.location.hash === '#admin' && (

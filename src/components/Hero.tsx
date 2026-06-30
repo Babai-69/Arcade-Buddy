@@ -60,19 +60,51 @@ export function Hero({ participants }: { participants: Participant[] }) {
         >
           {(timerState === 'upcoming' || timerState === 'live') && (
             <div style={{
+              position: 'relative',
               borderRadius: '999px',
               padding: '2px',
               display: 'inline-flex',
               marginBottom: '24px'
             }}>
+              {/* Traveling comet glow ring */}
+              <div style={{
+                position: 'absolute',
+                inset: 0,
+                borderRadius: '999px',
+                overflow: 'hidden'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  width: '200%',
+                  height: '200%',
+                  top: '-50%',
+                  left: '-50%',
+                  background: `conic-gradient(
+                    from 0deg,
+                    transparent 0%,
+                    transparent 62%,
+                    #4285F4 70%,
+                    #7c3aed 78%,
+                    #EA4335 85%,
+                    #FBBC05 91%,
+                    #34A853 96%,
+                    transparent 100%
+                  )`,
+                  animation: 'spinCW 6s linear infinite'
+                }}/>
+              </div>
+
+              {/* Inner pill content */}
               <div 
-                className="bg-white dark:bg-[#0f1117] border border-slate-200 dark:border-slate-800"
+                className="bg-white dark:bg-[#0f1117]"
                 style={{
+                  position: 'relative',
                   borderRadius: '999px',
-                  padding: '10px 20px',
+                  padding: '9px 18px',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '10px'
+                  gap: '9px',
+                  zIndex: 1
                 }}
               >
                 <span style={{
@@ -81,9 +113,9 @@ export function Hero({ participants }: { participants: Participant[] }) {
                   background: '#34A853',
                   display: 'inline-block',
                   flexShrink: 0,
-                  animation: 'pulse 2.5s ease-in-out infinite'
+                  animation: 'pulse 2s ease-in-out infinite'
                 }}/>
-                <span className="text-[13px] text-slate-800 dark:text-white/85 whitespace-nowrap">
+                <span className="text-[13px] font-medium text-slate-800 dark:text-white/85 whitespace-nowrap">
                   {timerState === 'upcoming' 
                     ? 'Arcade 2026 is starting soon — get ready!' 
                     : 'Arcade 2026 is now live — start playing!'}

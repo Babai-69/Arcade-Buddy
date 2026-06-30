@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Send, BookOpen, Star, HelpCircle, Gamepad2, Cloud, Shield, Instagram, Github, Linkedin } from 'lucide-react';
+import { MessageCircle, Send, BookOpen, Star, HelpCircle, Gamepad2, Cloud, Shield, Instagram, Github, Linkedin, Twitter } from 'lucide-react';
 import footerLogo from '../../assets/images/regenerated_image_1782574219934.png';
 
 export function Footer() {
@@ -42,6 +42,9 @@ export function Footer() {
               </a>
               <a href="https://t.me/arcadebuddy" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors">
                 <Send className="w-5 h-5" />
+              </a>
+              <a href="https://x.com/abir_dey18" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors">
+                <Twitter className="w-5 h-5" />
               </a>
             </div>
           </div>

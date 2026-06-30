@@ -31,80 +31,51 @@ async function startServer() {
     try {
       const { name, email, profileUrl, queryType, message, attachments } = req.body;
       
-      // We check if SMTP credentials are provided, otherwise just mock it.
-      if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-        console.log("Mocking email send since SMTP_USER and SMTP_PASS are not set.");
-        console.log("Email Details:", req.body);
-        return res.json({ success: true, mocked: true });
+      const smtpUser = process.env.SMTP_USER;
+      const smtpPass = process.env.SMTP_PASS;
+
+      if (!smtpUser || !smtpPass) {
+        return res.json({ success: true, emailSent: false, message: 'SMTP credentials not configured on server. Query saved to database.' });
       }
 
       const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST || 'smtp.gmail.com',
-        port: parseInt(process.env.SMTP_PORT || '587'),
-        secure: false,         // MUST be false for port 587
+        service: 'gmail',
         auth: {
-          user: process.env.SMTP_USER,
-          pass: process.env.SMTP_PASS,  // App Password here
+          user: smtpUser,
+          pass: smtpPass,
         },
-        tls: {
-          rejectUnauthorized: false     // prevents TLS errors
-        }
       });
 
       const mailOptions = {
-        from: `"Arcade Buddy Contact" <${process.env.SMTP_USER}>`,
-        to: process.env.SMTP_USER,  // sends to yourself
-        replyTo: email,          // user's email for easy reply
-        subject: `New Query from ${name} — Arcade Buddy`,
+        from: smtpUser,
+        to: smtpUser, // Send to self or configured admin
+        replyTo: email,
+        subject: `[Support Query] ${queryType} - ${name}`,
         html: `
-          <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
-            <h2 style="color:#4285F4">New Contact Form Submission</h2>
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Message:</strong></p>
-            <div style="background:#f5f5f5;padding:16px;border-radius:8px">
-              ${message}
-            </div>
-            <hr/>
-            <p style="color:#999;font-size:12px">
-              Sent from Arcade Buddy contact form
-            </p>
-          </div>
+          <h2>New Support Query</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Profile URL:</strong> <a href="${profileUrl}">${profileUrl}</a></p>
+          <p><strong>Query Type:</strong> ${queryType}</p>
+          <p><strong>Message:</strong></p>
+          <p>${message}</p>
         `,
-        attachments: attachments && attachments.length > 0 
-          ? attachments.map((a: any) => ({
-              filename: a.filename,
-              content: a.content,
-              encoding: 'base64'
-            }))
-          : []
+        attachments: attachments ? attachments.map((att: any) => ({
+          filename: att.filename,
+          content: att.content,
+          encoding: 'base64'
+        })) : []
       };
 
-      try {
-        await transporter.verify();
-        await transporter.sendMail(mailOptions);
-        return res.json({ 
-          success: true, 
-          message: 'Query saved and email sent!' 
-        });
-      } catch (emailErr: any) {
-        console.error('Email error:', emailErr.message);
-        
-        // Still return success for the saved query
-        // but with a specific email error message
-        return res.json({
-          success: true,
-          emailSent: false,
-          message: emailErr.message.includes('Invalid login')
-            ? 'Query saved! Email failed — invalid Gmail App Password.'
-            : emailErr.message.includes('ECONNREFUSED') 
-            ? 'Query saved! Email failed — cannot connect to Gmail SMTP.'
-            : 'Query saved! Email notification failed: ' + emailErr.message
-        });
-      }
-    } catch (error) {
-      console.error("Failed to process request:", error);
-      res.status(500).json({ error: "Failed to process request" });
+      // Send email in background to avoid blocking the response
+      transporter.sendMail(mailOptions).catch(err => {
+        console.error('Background email sending failed:', err);
+      });
+      
+      return res.json({ success: true, emailSent: true });
+    } catch (error: any) {
+      console.error('Failed to process request:', error);
+      res.status(500).json({ success: false, message: error.message });
     }
   });
 
@@ -197,10 +168,18 @@ async function startServer() {
         const dateText = $(el).find(".ql-body-medium.l-mbs, .ql-body-medium").text().trim();
         let earnedDate = dateText;
         if (dateText) {
-          const match = dateText.match(/(20\d\d)/);
-          if (match) {
-            const year = parseInt(match[1], 10);
-            if (year < 2026) return;
+          let cleanDateStr = dateText.replace("Earned ", "").replace(/ EDT| EST| PDT| PST/g, "").trim();
+          let parsedDate = new Date(cleanDateStr);
+          const START_DATE = new Date('2026-07-13T17:30:00-04:00'); // EDT
+          const END_DATE = new Date('2026-09-14T23:59:59-04:00'); // EDT
+          if (!isNaN(parsedDate.getTime())) {
+            if (parsedDate < START_DATE || parsedDate > END_DATE) return;
+          } else {
+            const match = dateText.match(/(20\d\d)/);
+            if (match) {
+              const year = parseInt(match[1], 10);
+              if (year !== 2026) return;
+            }
           }
         }
 
@@ -342,53 +321,6 @@ async function startServer() {
     } catch (e) {
       console.error(e);
       res.status(500).json({ error: "Failed to fetch spots left" });
-    }
-  });
-
-  app.post("/api/notify-query", async (req, res) => {
-    try {
-      const { name, email, profileUrl, queryType, message, attachments } = req.body;
-      
-      const smtpUser = process.env.SMTP_USER;
-      const smtpPass = process.env.SMTP_PASS;
-
-      if (!smtpUser || !smtpPass) {
-        return res.json({ success: true, emailSent: false, message: 'SMTP credentials not configured on server. Query saved to database.' });
-      }
-
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: smtpUser,
-          pass: smtpPass,
-        },
-      });
-
-      const mailOptions = {
-        from: smtpUser,
-        to: smtpUser, // Send to self or configured admin
-        subject: `[Support Query] ${queryType} - ${name}`,
-        html: `
-          <h2>New Support Query</h2>
-          <p><strong>Name:</strong> ${name}</p>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Profile URL:</strong> <a href="${profileUrl}">${profileUrl}</a></p>
-          <p><strong>Query Type:</strong> ${queryType}</p>
-          <p><strong>Message:</strong></p>
-          <p>${message}</p>
-        `,
-        attachments: attachments ? attachments.map((att: any) => ({
-          filename: att.filename,
-          content: att.content,
-          encoding: 'base64'
-        })) : []
-      };
-
-      await transporter.sendMail(mailOptions);
-      res.json({ success: true, emailSent: true });
-    } catch (error: any) {
-      console.error('Email sending failed:', error);
-      res.status(500).json({ success: false, message: error.message });
     }
   });
 

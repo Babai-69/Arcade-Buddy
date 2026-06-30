@@ -1,29 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, LogOut, ChartBar, Settings, Upload } from 'lucide-react';
-import { auth, loginWithGoogle, loginWithGoogleRedirect, logout } from '../../lib/firebase';
+import { User, LogOut, ChartBar, Settings, Upload, Award } from 'lucide-react';
+import { auth, loginWithGoogleRedirect, logout } from '../../lib/firebase';
 import { ensureUserExists } from '../../lib/userProgressService';
-import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { LoginModal } from '../auth/LoginModal';
+import { CertificateModal } from '../auth/CertificateModal';
 
 export function NavbarUserMenu() {
   const [user, setUser] = useState<any>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkRedirect = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result?.user) {
-          await ensureUserExists(result.user);
-        }
-      } catch (error) {
-        console.error("Redirect login error:", error);
-      }
-    };
-    checkRedirect();
-
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
@@ -43,21 +35,6 @@ export function NavbarUserMenu() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleLogin = async () => {
-    try {
-      await loginWithGoogle();
-    } catch (error: any) {
-      if (error?.code !== 'auth/popup-closed-by-user' && error?.code !== 'auth/cancelled-popup-request') {
-        console.error('Login error:', error);
-      }
-      if (error?.code === 'auth/popup-blocked' || error?.code === 'auth/popup-closed-by-user' || error?.code === 'auth/cancelled-popup-request') {
-        // Fallback to redirect if popup fails
-        console.log('Falling back to redirect login...');
-        await loginWithGoogleRedirect();
-      }
-    }
-  };
-
   const handleLogout = async () => {
     await logout();
     setIsOpen(false);
@@ -66,13 +43,19 @@ export function NavbarUserMenu() {
 
   if (!user) {
     return (
-      <button 
-        onClick={handleLogin}
-        className="relative p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-sm border border-slate-200 dark:border-slate-700"
-        title="Sign In with Google to Track Progress"
-      >
-        <User className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-      </button>
+      <>
+        <button 
+          onClick={() => setIsLoginModalOpen(true)}
+          className="relative p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-sm border border-slate-200 dark:border-slate-700"
+          title="Sign In to Track Progress"
+        >
+          <User className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+        </button>
+        <LoginModal 
+          isOpen={isLoginModalOpen} 
+          onClose={() => setIsLoginModalOpen(false)} 
+        />
+      </>
     );
   }
 
@@ -181,6 +164,16 @@ export function NavbarUserMenu() {
             <button
               onClick={() => {
                 setIsOpen(false);
+                setIsCertificateModalOpen(true);
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-colors"
+            >
+              <Award className="w-4 h-4 text-green-500" />
+              Download Certificate
+            </button>
+            <button
+              onClick={() => {
+                setIsOpen(false);
                 navigate('/my-progress');
               }}
               className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-colors"
@@ -226,6 +219,12 @@ export function NavbarUserMenu() {
           </div>
         </div>
       )}
+
+      <CertificateModal 
+        isOpen={isCertificateModalOpen}
+        onClose={() => setIsCertificateModalOpen(false)}
+        userEmail={user?.email}
+      />
     </div>
   );
 }

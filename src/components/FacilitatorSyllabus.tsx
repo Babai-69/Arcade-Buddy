@@ -3,12 +3,9 @@ import { ExternalLink, Beaker, Coins, Gamepad2, Layers, ChevronDown, ChevronUp, 
 import { motion } from 'motion/react';
 
 const arcadeGames = [
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_adventure_july.png", code: "Coming Soon!" },
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_voyage_july.png", code: "Coming Soon!" },
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_trail_july.png", code: "Coming Soon!" },
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_basecamp_july.png", code: "Coming Soon!" },
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_special_game_july.png", code: "Coming Soon!" },
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_new_game_july.png", code: "Coming Soon!" }
+  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_level1_july.png", title: "Level 1 (July)", code: "Coming Soon!" },
+  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_level2_july.png", title: "Level 2 (July)", code: "Coming Soon!" },
+  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_level3_july.png", title: "Level 3 (July)", code: "Coming Soon!" }
 ];
 
 const beginnerBadges = [
@@ -176,12 +173,12 @@ export function FacilitatorSyllabus() {
             </h2>
             
             <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 text-lg">
-              Complete these games to earn Arcade Points. 6 new games release every month!
+              Complete these games to earn Arcade Points. 3 new games release every month!
             </p>
             
             <div className="flex flex-wrap justify-center gap-4">
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
-                <span className="text-blue-500 dark:text-blue-400 text-lg">🎮</span> 6 Games/Month
+                <span className="text-blue-500 dark:text-blue-400 text-lg">🎮</span> 3 Games/Month
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
                 <span className="text-amber-500 dark:text-amber-400 text-lg">⏱️</span> Limited Seats
@@ -209,7 +206,7 @@ export function FacilitatorSyllabus() {
               <div className="flex items-start gap-4 border-l-4 border-blue-500 pl-4 py-1">
                 <p className="text-slate-700 dark:text-slate-300">
                   <span className="font-bold text-slate-900 dark:text-white mr-2">📌</span>
-                  In 2 months you can earn up to 18 game badges. Any 12 completions count toward Ultimate Milestone.
+                  In 2 months you can earn up to 6 game badges (Level 1, Level 2, Level 3 for each month).
                 </p>
               </div>
             </div>
@@ -250,8 +247,7 @@ export function FacilitatorSyllabus() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             {(isJulyActive && activeGames.length > 0 ? activeGames : arcadeGames).map((game, idx) => {
-              const titles = ["Arcade Base Camp", "Arcade Adventure", "Arcade Voyage", "Arcade Trail", "Arcade Special Game", "New Arcade Game"];
-              const gameName = game.title || titles[idx] || `Game ${idx + 1}`;
+              const gameName = game.title || `Game ${idx + 1}`;
               
               if (isJulyActive) {
                 return (
@@ -398,7 +394,7 @@ export function FacilitatorSyllabus() {
                   </div>
                 </div>
               </motion.div>
-            )) : [1, 2, 3, 4, 5, 6].map((_, idx) => (
+            )) : [1, 2, 3].map((_, idx) => (
               <motion.div 
                 key={`soon-${idx}`}
                 initial={{ opacity: 0, scale: 0.95 }}
