@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Menu, X, Moon, Sun } from 'lucide-react';
+import { Menu, X, Moon, Sun, Home, LayoutGrid, User, BookOpen, Folder, Gift, Info, Trophy } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import logoImage from '../../assets/images/regenerated_image_1782145505916.png';
 
@@ -34,44 +34,58 @@ export function Navbar() {
   }, [location.pathname]);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Dashboard', path: '/dashboard' },
-    { name: 'Facilitator', path: '/facilitator' },
-    { name: 'Syllabus', path: '/syllabus' },
-    { name: 'Resources', path: '/resources' },
-    { name: 'Swags', path: '/swags' },
-    { name: 'About', path: '/about' },
+    { name: 'Home', path: '/', icon: <Home className="w-[18px] h-[18px]" /> },
+    { name: 'Dashboard', path: '/dashboard', icon: <LayoutGrid className="w-[18px] h-[18px]" /> },
+    { name: 'Leaderboard', path: '/leaderboard', icon: <Trophy className="w-[18px] h-[18px]" /> },
+    { name: 'Facilitator', path: '/facilitator', icon: <User className="w-[18px] h-[18px]" /> },
+    { name: 'Syllabus', path: '/syllabus', icon: <BookOpen className="w-[18px] h-[18px]" /> },
+    { name: 'Resources', path: '/resources', icon: <Folder className="w-[18px] h-[18px]" /> },
+    { name: 'Swags', path: '/swags', icon: <Gift className="w-[18px] h-[18px]" /> },
+    { name: 'About', path: '/about', icon: <Info className="w-[18px] h-[18px]" /> },
   ];
 
   return (
     <nav className="fixed w-full z-50 glass-card border-b-0 backdrop-blur-xl bg-white/60 dark:bg-slate-950/60 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center relative">
           {/* Logo - Left */}
-          <Link to="/" className="flex items-center gap-2 z-10">
+          <Link to="/" className="flex items-center gap-2 z-10 w-[180px]">
             <img src={logoImage} alt="Google Cloud" className="w-[43px] h-[37px] object-contain" />
-            <span className="font-display font-bold text-xl tracking-tight text-[#4285F4] ml-1 hidden lg:block">Arcade Buddy</span>
+            <span className="font-display font-bold text-xl tracking-tight text-[#4285F4] ml-1 hidden lg:block whitespace-nowrap">Arcade Buddy</span>
           </Link>
           
-          {/* Navigation - Center */}
-          <div className="hidden xl:flex items-center space-x-6 absolute left-1/2 -translate-x-1/2">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`text-sm font-medium transition-colors ${
-                  location.pathname === link.path
-                    ? 'text-[#4285F4]'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-[#4285F4]'
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
+          {/* Navigation - Center Pill Style */}
+          <div className="hidden xl:flex items-center absolute left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 shadow-[0_4px_16px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] rounded-full p-2 gap-1.5 border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+            {navLinks.map((link) => {
+              const isActive = location.pathname === link.path;
+              return (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`flex items-center gap-2 h-10 px-[14px] rounded-full border-none cursor-pointer text-sm font-medium whitespace-nowrap transition-all duration-300 ease-out overflow-hidden ${
+                    isActive
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
+                >
+                  <span className="shrink-0">{link.icon}</span>
+                  <span 
+                    className="transition-all duration-300 ease-out inline-block"
+                    style={{
+                      maxWidth: isActive ? '160px' : '0',
+                      opacity: isActive ? 1 : 0,
+                    }}
+                  >
+                    {link.name}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
 
           {/* Actions - Right */}
-          <div className="hidden xl:flex items-center space-x-4 z-10">
+          <div className="hidden xl:flex items-center space-x-4 z-10 w-[240px] justify-end">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"

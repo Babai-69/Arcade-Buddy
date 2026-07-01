@@ -4,12 +4,15 @@ import { auth } from '../lib/firebase';
 import { SKILL_BADGES, GAME_BADGES } from '../lib/badgeLinks';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { useArcadeGames } from '../utils/arcadeApi';
 
 export function UserProgressDashboard() {
   const [profileUrl, setProfileUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState('');
+  
+  const { activeGames } = useArcadeGames();
   
   // Load saved profile URL if any
   useEffect(() => {
@@ -42,6 +45,8 @@ export function UserProgressDashboard() {
     }
   };
 
+  const gamesToTrack = activeGames.length > 0 ? activeGames : Object.entries(GAME_BADGES).map(([title, link]) => ({ title, link }));
+
   const downloadPDF = () => {
     if (!data) return;
     
@@ -63,11 +68,11 @@ export function UserProgressDashboard() {
     const tableData: any[] = [];
     
     // Process Game Badges
-    Object.keys(GAME_BADGES).forEach(badgeName => {
-      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase());
+    gamesToTrack.forEach(game => {
+      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()));
       if (isCompleted) completedGameBadges++;
       tableData.push([
-        badgeName,
+        game.title,
         'Game Badge',
         isCompleted ? 'Completed' : 'Not Touched',
         isCompleted ? 'Yes' : '-'
@@ -86,7 +91,7 @@ export function UserProgressDashboard() {
       ]);
     });
 
-    doc.text(`Game Badges Completed: ${completedGameBadges} / ${Object.keys(GAME_BADGES).length}`, 14, 54);
+    doc.text(`Game Badges Completed: ${completedGameBadges} / ${gamesToTrack.length}`, 14, 54);
     doc.text(`Skill Badges Completed: ${completedSkillBadges} / ${Object.keys(SKILL_BADGES).length}`, 14, 60);
 
     autoTable(doc, {
@@ -187,13 +192,13 @@ export function UserProgressDashboard() {
                 🎮 Game Badges
               </h3>
               <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800">
-                {Object.entries(GAME_BADGES).map(([badgeName, url]) => {
-                  const isCompleted = data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase());
+                {gamesToTrack.map(game => {
+                  const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()));
                   return (
-                    <div key={badgeName} className="p-4 flex items-start justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <div key={game.title} className="p-4 flex items-start justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                       <div>
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="font-medium text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1.5 transition-colors group">
-                          {badgeName}
+                        <a href={game.link} target="_blank" rel="noopener noreferrer" className="font-medium text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1.5 transition-colors group">
+                          {game.title}
                           <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100" />
                         </a>
                       </div>

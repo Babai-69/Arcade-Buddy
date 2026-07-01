@@ -337,14 +337,23 @@ async function startServer() {
         const img = $(el).find('img').attr('src');
         if (link && link.includes('skills.google/games/') && img) {
            let title = "Arcade Game";
-           if (img.includes('bc')) title = "Arcade Base Camp";
+           if (img.includes('bc') || img.includes('base')) title = "Arcade Base Camp";
            else if (img.includes('adv')) title = "Arcade Adventure";
            else if (img.includes('voy')) title = "Arcade Voyage";
            else if (img.includes('trail')) title = "Arcade Trail";
-           else if (img.includes('work')) title = "Cloud Canvas / Work Meets Play";
-           else if (img.includes('logic')) title = "Logic Log / Special Game";
+           else if (img.includes('work')) title = "New Monthly Game";
+           else if (img.includes('logic')) title = "Special Monthly Game";
            
-           games.push({ link, img, title });
+           let code = "Coming Soon!";
+           const cardText = $(el).text();
+           const parentText = $(el).parent().text();
+           const match = cardText.match(/(?:access\s*code|code)[\s:]+([a-zA-Z0-9-]+)/i) || 
+                         parentText.match(/(?:access\s*code|code)[\s:]+([a-zA-Z0-9-]+)/i);
+           if (match && match[1]) {
+             code = match[1];
+           }
+
+           games.push({ link, img, title, code });
         }
       });
 

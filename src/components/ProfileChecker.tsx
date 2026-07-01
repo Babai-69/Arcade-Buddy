@@ -147,7 +147,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mx-auto max-w-5xl text-left bg-[#f3f4f6] p-4 sm:p-8 rounded-[24px] mt-8"
+            className="mx-auto max-w-5xl text-left bg-[#f3f4f6] dark:bg-slate-800/50 p-4 sm:p-8 rounded-[24px] mt-8"
           >
             {(() => {
               const isBeforeStart = new Date() < new Date('2026-07-13T11:30:00Z');
@@ -173,36 +173,36 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                   {/* TOP ROW */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* CARD 1 - User Profile */}
-                    <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] flex flex-col justify-between">
+                    <div className="bg-white dark:bg-slate-800 rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] flex flex-col justify-between">
                       <div>
                         <div className="flex items-center gap-4 mb-4">
                           {result.avatarUrl ? (
                             <img src={result.avatarUrl} alt="Avatar" className="w-12 h-12 rounded-full object-cover" />
                           ) : (
-                            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-[#2563eb] font-bold text-lg">
+                            <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-[#2563eb] dark:text-blue-400 font-bold text-lg">
                               {avatarInitials}
                             </div>
                           )}
                           <div>
-                            <h3 className="font-bold text-[20px] text-gray-900 leading-tight">{result.name}</h3>
+                            <h3 className="font-bold text-[20px] text-gray-900 dark:text-white leading-tight">{result.name}</h3>
                             <div className="mt-1 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-bold shadow-sm border" style={{ 
                               color: currentTierObj ? currentTierObj.colorClass.replace('bg-[', '').replace(']', '') : '#6b7280',
                               borderColor: currentTierObj ? currentTierObj.colorClass.replace('bg-[', '').replace(']', '') : '#d1d5db',
-                              backgroundColor: 'white'
+                              backgroundColor: 'transparent'
                             }}>
                               {currentTierName}
                             </div>
                           </div>
                         </div>
-                        <p className="text-[#6b7280] text-sm mb-6">Member since {new Date().getFullYear()}</p>
+                        <p className="text-[#6b7280] dark:text-slate-400 text-sm mb-6">Member since {new Date().getFullYear()}</p>
                       </div>
                       <div className="flex flex-col gap-2">
-                        <a href={result.profileUrl} target="_blank" rel="noopener noreferrer" className="w-full text-center py-2 px-3 rounded-full border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                        <a href={result.profileUrl} target="_blank" rel="noopener noreferrer" className="w-full text-center py-2 px-3 rounded-full border border-gray-200 dark:border-slate-700 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                           View Profile
                         </a>
                         <button 
                           onClick={() => setIsFacilitatorBadgeTrackerOpen(true)}
-                          className="w-full text-center py-2 px-3 rounded-full border border-amber-500 text-sm font-semibold text-amber-600 hover:bg-amber-50 transition-colors cursor-pointer"
+                          className="w-full text-center py-2 px-3 rounded-full border border-amber-500 text-sm font-semibold text-amber-600 dark:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors cursor-pointer"
                         >
                           🗓️ Badge Tracker
                         </button>
@@ -210,9 +210,9 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                     </div>
 
                     {/* CARD 2 - Total Points */}
-                    <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] static flex flex-col justify-center relative">
-                      <p className="text-[#6b7280] text-sm font-medium mb-1">Total Points</p>
-                      <h2 className="text-[48px] font-[800] text-gray-900 leading-none mb-2">{totalPoints}</h2>
+                    <div className="bg-white dark:bg-slate-800 rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] static flex flex-col justify-center relative">
+                      <p className="text-[#6b7280] dark:text-slate-400 text-sm font-medium mb-1">Total Points</p>
+                      <h2 className="text-[48px] font-[800] text-gray-900 dark:text-white leading-none mb-2">{totalPoints}</h2>
                       
                       {isBeforeStart ? (
                         <p className="text-[#EA4335] font-bold text-sm">Program Not Started</p>
@@ -220,23 +220,23 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                         <>
                           <p className="text-[#4285F4] font-bold text-sm mb-1">Program has Ended</p>
                           <p className="text-sm font-medium">
-                            <span className="text-[#6b7280]">Base: {basePoints} + </span>
-                            <span className={bonusPoints > 0 ? 'text-[#2563eb]' : 'text-[#6b7280]'}>{bonusPoints} bonus</span>
+                            <span className="text-[#6b7280] dark:text-slate-400">Base: {basePoints} + </span>
+                            <span className={bonusPoints > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-[#6b7280] dark:text-slate-400'}>{bonusPoints} bonus</span>
                           </p>
                         </>
                       ) : (
                         <p className="text-sm font-medium">
-                          <span className="text-[#6b7280]">Base: {basePoints} + </span>
-                          <span className={bonusPoints > 0 ? 'text-[#2563eb]' : 'text-[#6b7280]'}>{bonusPoints} bonus</span>
+                          <span className="text-[#6b7280] dark:text-slate-400">Base: {basePoints} + </span>
+                          <span className={bonusPoints > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-[#6b7280] dark:text-slate-400'}>{bonusPoints} bonus</span>
                         </p>
                       )}
                     </div>
                   </div>
 
                   {/* MIDDLE ROW - Tier Progress Stepper */}
-                  <div className="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
+                  <div className="bg-white dark:bg-slate-800 rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
                     <div className="flex flex-col sm:flex-row justify-between relative gap-8 sm:gap-0 mt-4 mb-2">
-                      <div className="hidden sm:block absolute top-[20px] left-0 w-full border-t-2 border-dashed border-gray-300 -z-10"></div>
+                      <div className="hidden sm:block absolute top-[20px] left-0 w-full border-t-2 border-dashed border-gray-300 dark:border-slate-700 -z-10"></div>
                       
                       {MILESTONES.map((milestone, idx) => {
                         const isComplete = totalPoints >= milestone.requiredPoints;
@@ -246,25 +246,26 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                         // Extract hex from milestone colorClass (e.g., 'bg-[#4285F4]' -> '#4285F4')
                         const circleColor = milestone.colorClass.replace('bg-[', '').replace(']', '');
                         
+                        let circleClass = "bg-white dark:bg-slate-800";
                         let circleStyle: React.CSSProperties = {
-                          backgroundColor: 'white',
                           borderColor: '#d1d5db',
                           color: '#9ca3af'
                         };
                         
                         if (isComplete) {
                           circleStyle = { backgroundColor: circleColor, borderColor: circleColor, color: 'white' };
+                          circleClass = "";
                         } else if (isNext) {
-                          circleStyle = { backgroundColor: 'white', borderColor: circleColor, color: circleColor };
+                          circleStyle = { borderColor: circleColor, color: circleColor };
                         }
 
                         return (
-                          <div key={milestone.id} className="flex flex-row sm:flex-col items-center flex-1 relative bg-white sm:bg-transparent text-left sm:text-center z-10 sm:px-2">
+                          <div key={milestone.id} className="flex flex-row sm:flex-col items-center flex-1 relative bg-white dark:bg-slate-800 sm:bg-transparent sm:dark:bg-transparent text-left sm:text-center z-10 sm:px-2">
                             {idx > 0 && isComplete && (
                               <div className="hidden sm:block absolute top-[20px] right-1/2 w-full h-[2px] -z-10" style={{ backgroundColor: circleColor }}></div>
                             )}
 
-                            <div className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center sm:mb-4 mr-4 sm:mr-0 border-2 shadow-sm bg-white" style={circleStyle}>
+                            <div className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center sm:mb-4 mr-4 sm:mr-0 border-2 shadow-sm ${circleClass}`} style={circleStyle}>
                               {isComplete ? (
                                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
@@ -281,14 +282,14 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                             </div>
                             
                             <div className="flex-1">
-                              <div className={`font-bold text-[15px] ${isComplete ? 'text-gray-900' : 'text-gray-500'}`}>
+                              <div className={`font-bold text-[15px] ${isComplete ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-slate-400'}`}>
                                 {milestone.name}
                               </div>
-                              <div className="text-[12px] text-[#6b7280] mt-0.5">
+                              <div className="text-[12px] text-[#6b7280] dark:text-slate-400 mt-0.5">
                                 {milestone.requiredPoints} pts
                               </div>
                               
-                              <div className="text-[10px] bg-gray-100 rounded px-1.5 py-0.5 inline-block mt-1 text-gray-500 font-medium">
+                              <div className="text-[10px] bg-gray-100 dark:bg-slate-700 rounded px-1.5 py-0.5 inline-block mt-1 text-gray-500 dark:text-slate-400 font-medium">
                                 {spotsLoading ? (
                                    <span className="animate-pulse">— / — spots left</span>
                                 ) : (
@@ -301,7 +302,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                               ) : isNext ? (
                                 <div className="text-[12px] font-bold mt-1" style={{ color: circleColor }}>{Number((milestone.requiredPoints - totalPoints).toFixed(1))} pts to unlock</div>
                               ) : !isComplete ? (
-                                <div className="text-[12px] font-medium text-gray-400 mt-1">{Number((milestone.requiredPoints - totalPoints).toFixed(1))} pts to unlock</div>
+                                <div className="text-[12px] font-medium text-gray-400 dark:text-slate-500 mt-1">{Number((milestone.requiredPoints - totalPoints).toFixed(1))} pts to unlock</div>
                               ) : null}
                             </div>
                           </div>
@@ -313,20 +314,20 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                   {/* BOTTOM ROW */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* BOTTOM LEFT - Next Goal */}
-                    <div className="w-full bg-white rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] flex flex-col justify-center">
-                      <h3 className="font-bold text-gray-900 mb-2 flex items-center gap-2">
+                    <div className="w-full bg-white dark:bg-slate-800 rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] flex flex-col justify-center">
+                      <h3 className="font-bold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
                         <span className="text-xl">📌</span> Next Goal
                       </h3>
                       {nextTierObj ? (
                         <>
-                          <p className="text-gray-700 font-medium mb-4">
+                          <p className="text-gray-700 dark:text-slate-300 font-medium mb-4">
                             Earn <span className="font-bold text-[#4285F4]">{Number((nextTierObj.requiredPoints - totalPoints).toFixed(1))}</span> more points to reach <span style={{ color: nextTierObj.colorClass.replace('bg-[', '').replace(']', '') }} className="font-bold">{nextTierObj.name}</span>.
                           </p>
-                          <p className="text-sm text-gray-500 mb-2">You need:</p>
-                          <ul className="text-sm font-medium text-gray-700 space-y-1.5 ml-1">
+                          <p className="text-sm text-gray-500 dark:text-slate-400 mb-2">You need:</p>
+                          <ul className="text-sm font-medium text-gray-700 dark:text-slate-300 space-y-1.5 ml-1">
                             <li className="flex items-center gap-2">
                               <span className="text-[#34A853]">→</span> 
-                              <span>{Math.ceil(nextTierObj.requiredPoints - totalPoints)} more Game Badges <span className="text-gray-400 font-normal">OR</span></span>
+                              <span>{Math.ceil(nextTierObj.requiredPoints - totalPoints)} more Game Badges <span className="text-gray-400 dark:text-slate-500 font-normal">OR</span></span>
                             </li>
                             <li className="flex items-center gap-2">
                               <span className="text-[#34A853]">→</span> 
@@ -335,36 +336,36 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                           </ul>
                         </>
                       ) : (
-                        <p className="text-gray-700 font-medium my-auto text-center">
+                        <p className="text-gray-700 dark:text-slate-300 font-medium my-auto text-center">
                           Congratulations! You have reached the maximum tier.
                         </p>
                       )}
                     </div>
 
                     {/* BOTTOM RIGHT - Badge Breakdown */}
-                    <div id="badge-breakdown" className="bg-white rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
-                      <h3 className="font-bold text-gray-900 mb-4">Badge Breakdown</h3>
+                    <div id="badge-breakdown" className="bg-white dark:bg-slate-800 rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
+                      <h3 className="font-bold text-gray-900 dark:text-white mb-4">Badge Breakdown</h3>
                       <div className="w-full">
-                        <div className="flex justify-between text-[#6b7280] text-sm font-medium border-b border-gray-100 pb-2 mb-2">
+                        <div className="flex justify-between text-[#6b7280] dark:text-slate-400 text-sm font-medium border-b border-gray-100 dark:border-slate-700 pb-2 mb-2">
                           <div className="flex-1">Category</div>
                           <div className="w-16 text-center">Badges</div>
                           <div className="w-16 text-right">Points</div>
                         </div>
                         
-                        <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                          <div className="flex-1 flex items-center gap-2 font-medium text-gray-900">
+                        <div className="flex justify-between items-center py-2 border-b border-gray-50 dark:border-slate-700/50">
+                          <div className="flex-1 flex items-center gap-2 font-medium text-gray-900 dark:text-white">
                             <span className="text-lg">🏅</span> Skill Badges
                           </div>
-                          <div className="w-16 text-center text-gray-600 font-medium">{displaySkillBadges}</div>
-                          <div className="w-16 text-right font-bold text-gray-900">{displaySkillBadges * 0.5}</div>
+                          <div className="w-16 text-center text-gray-600 dark:text-slate-400 font-medium">{displaySkillBadges}</div>
+                          <div className="w-16 text-right font-bold text-gray-900 dark:text-white">{displaySkillBadges * 0.5}</div>
                         </div>
 
                         <div className="flex justify-between items-center py-2">
-                          <div className="flex-1 flex items-center gap-2 font-medium text-gray-900">
+                          <div className="flex-1 flex items-center gap-2 font-medium text-gray-900 dark:text-white">
                             <span className="text-lg">🏅</span> Game Badges
                           </div>
-                          <div className="w-16 text-center text-gray-600 font-medium">{displayGameBadges}</div>
-                          <div className={`w-16 text-right font-bold ${displayGameBadges > 0 ? 'text-[#2563eb]' : 'text-gray-900'}`}>{displayGameBadges}</div>
+                          <div className="w-16 text-center text-gray-600 dark:text-slate-400 font-medium">{displayGameBadges}</div>
+                          <div className={`w-16 text-right font-bold ${displayGameBadges > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>{displayGameBadges}</div>
                         </div>
                       </div>
                     </div>

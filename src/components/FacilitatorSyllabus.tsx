@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { ExternalLink, Beaker, Coins, Gamepad2, Layers, ChevronDown, ChevronUp, Lock, Copy, Check } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useArcadeGames } from '../utils/arcadeApi';
+
+import gameImg1 from '../assets/images/regenerated_image_1782888752935.png';
+import gameImg2 from '../assets/images/regenerated_image_1782888756917.png';
+import gameImg3 from '../assets/images/regenerated_image_1782888761352.png';
+import gameImg4 from '../assets/images/regenerated_image_1782888765760.png';
+import gameImg5 from '../assets/images/regenerated_image_1782888769231.png';
+import gameImg6 from '../assets/images/regenerated_image_1782888773547.png';
 
 const arcadeGames = [
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_level1_july.png", title: "Level 1 (July)", code: "Coming Soon!" },
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_level2_july.png", title: "Level 2 (July)", code: "Coming Soon!" },
-  { img: "https://res.cloudinary.com/dqj9yaa0g/image/fetch/f_auto,q_auto,e_make_transparent:10/https://services.google.com/fh/files/misc/gcaf26_level3_july.png", title: "Level 3 (July)", code: "Coming Soon!" }
+  { img: gameImg1, title: "Arcade Base Camp", code: "Coming Soon!", link: "#" },
+  { img: gameImg2, title: "Arcade Adventure", code: "Coming Soon!", link: "#" },
+  { img: gameImg3, title: "Arcade Voyage", code: "Coming Soon!", link: "#" },
+  { img: gameImg4, title: "Arcade Trail", code: "Coming Soon!", link: "#" },
+  { img: gameImg5, title: "Special Monthly Game", code: "Coming Soon!", link: "#" },
+  { img: gameImg6, title: "New Monthly Game", code: "Coming Soon!", link: "#" }
 ];
 
 const beginnerBadges = [
@@ -120,18 +131,29 @@ function AccordionSection({ title, isOpen, onToggle, children }: { title: React.
 
 export function FacilitatorSyllabus() {
   const [openSections, setOpenSections] = useState<string[]>([]);
-  const [activeGames, setActiveGames] = useState<any[]>([]);
+  const { activeGames, loading, error } = useArcadeGames();
 
-  useEffect(() => {
-    fetch('/api/active-games')
-      .then(res => res.json())
-      .then(data => {
-        if (data && data.games) {
-          setActiveGames(data.games);
-        }
-      })
-      .catch(console.error);
-  }, []);
+  const mergedGames = arcadeGames.map(defaultGame => {
+    const fetchedGame = activeGames.find(g => g.title === defaultGame.title);
+    if (fetchedGame) {
+      return {
+        ...defaultGame,
+        link: fetchedGame.link || defaultGame.link,
+        img: defaultGame.img || fetchedGame.img,
+        code: fetchedGame.code || defaultGame.code
+      };
+    }
+    return defaultGame;
+  });
+
+  activeGames.forEach(fetchedGame => {
+    if (!mergedGames.find(g => g.title === fetchedGame.title)) {
+      mergedGames.push({
+        ...fetchedGame,
+        code: fetchedGame.code || "Coming Soon!"
+      });
+    }
+  });
 
   const currentMonth = new Date().getMonth(); // 0 = Jan ... 5 = Jun, 6 = Jul, 7 = Aug
   
@@ -206,7 +228,7 @@ export function FacilitatorSyllabus() {
               <div className="flex items-start gap-4 border-l-4 border-blue-500 pl-4 py-1">
                 <p className="text-slate-700 dark:text-slate-300">
                   <span className="font-bold text-slate-900 dark:text-white mr-2">📌</span>
-                  In 2 months you can earn up to 6 game badges (Level 1, Level 2, Level 3 for each month).
+                  In 2 months you can earn up to 12 game badges (Adventure, Trail, Voyage, Base Camp for each month).
                 </p>
               </div>
             </div>
@@ -219,7 +241,7 @@ export function FacilitatorSyllabus() {
             className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
           >
             <div className="flex items-center gap-3">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">July 2026 Games</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">June 2026 Games</h3>
               {isJulyActive ? (
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-wider">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
@@ -235,7 +257,7 @@ export function FacilitatorSyllabus() {
             
             <div className="flex items-center gap-3">
               <div className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-medium">
-                August 2026 
+                July 2026 
                 {isAugustActive ? (
                   <span className="text-green-600 dark:text-green-400 ml-1">— Active Now</span>
                 ) : (
@@ -246,7 +268,7 @@ export function FacilitatorSyllabus() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {(isJulyActive && activeGames.length > 0 ? activeGames : arcadeGames).map((game, idx) => {
+            {mergedGames.map((game, idx) => {
               const gameName = game.title || `Game ${idx + 1}`;
               
               if (isJulyActive) {
@@ -278,20 +300,22 @@ export function FacilitatorSyllabus() {
                       
                       <div className="space-y-1.5 mb-4">
                         <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Access Code</p>
-                        {arcadeGames[idx]?.code === "Coming Soon!" ? (
-                          <p className="text-amber-600 dark:text-amber-400 font-medium">{arcadeGames[idx].code}</p>
-                        ) : (
-                          <div className="flex items-center justify-between bg-slate-50 dark:bg-[#0f1117] px-3 py-2 rounded-lg border border-slate-200 dark:border-white/5 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
-                            <code className="text-green-600 dark:text-green-400 font-mono text-sm">{arcadeGames[idx]?.code || "Coming Soon!"}</code>
-                            <button 
-                              className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
-                              onClick={() => navigator.clipboard.writeText(arcadeGames[idx]?.code || "")}
-                              title="Copy code"
-                            >
-                              <Copy className="w-4 h-4" />
-                            </button>
-                          </div>
-                        )}
+                        <div className="flex items-center justify-between bg-slate-50 dark:bg-[#0f1117] px-3 py-2 rounded-lg border border-slate-200 dark:border-white/5 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
+                          <code className={`font-mono text-sm ${game.code === "Coming Soon!" ? "text-amber-600 dark:text-amber-400 font-sans font-medium" : "text-green-600 dark:text-green-400"}`}>
+                            {game.code || "Coming Soon!"}
+                          </code>
+                          <button 
+                            className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
+                            onClick={() => {
+                              if (game.code && game.code !== "Coming Soon!") {
+                                navigator.clipboard.writeText(game.code);
+                              }
+                            }}
+                            title="Copy code"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
 
                       <div className="space-y-1.5">
@@ -299,6 +323,11 @@ export function FacilitatorSyllabus() {
                           href={game.link || "#"}
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={() => {
+                            if (game.code && game.code !== "Coming Soon!") {
+                              navigator.clipboard.writeText(game.code);
+                            }
+                          }}
                           className="inline-flex w-full items-center justify-center gap-2 bg-[#4285F4] hover:bg-[#3367d6] text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
                         >
                           Start Challenge <ExternalLink className="w-4 h-4" />
