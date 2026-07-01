@@ -210,7 +210,7 @@ export function CertificateModal({ isOpen, onClose, userEmail }: CertificateModa
                       value={profileUrl}
                       onChange={(e) => setProfileUrl(e.target.value)}
                       className="pl-9 w-full bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-2.5 pr-4 focus:ring-2 focus:ring-[#4285F4] focus:border-transparent transition-all outline-none"
-                      placeholder="https://www.cloudskillsboost.google/public_profiles/..."
+                      placeholder="https://www.skills.google/public_profiles/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
                       disabled={isEligible === true}
                       required
                     />

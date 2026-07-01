@@ -5,6 +5,7 @@ import { SKILL_BADGES, GAME_BADGES } from '../lib/badgeLinks';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useArcadeGames } from '../utils/arcadeApi';
+import { AdminCertificatePreview } from './AdminCertificatePreview';
 
 export function UserProgressDashboard() {
   const [profileUrl, setProfileUrl] = useState('');
@@ -13,6 +14,7 @@ export function UserProgressDashboard() {
   const [error, setError] = useState('');
   
   const { activeGames } = useArcadeGames();
+  const isAdmin = auth.currentUser?.email === 'deya58690@gmail.com' || auth.currentUser?.email === 'tripti.arcade.25@gmail.com';
   
   useEffect(() => {
     // Left intentionally blank as requested
@@ -248,6 +250,10 @@ export function UserProgressDashboard() {
             </div>
           </div>
         </div>
+      )}
+      
+      {isAdmin && (
+        <AdminCertificatePreview />
       )}
     </div>
   );
