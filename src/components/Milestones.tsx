@@ -30,7 +30,11 @@ export function Milestones() {
       if (data && data.trooper) {
         setSpotsData(data);
       }
-      setLastUpdated(new Date());
+      if (data.last_updated_at) {
+        setLastUpdated(new Date(data.last_updated_at));
+      } else {
+        setLastUpdated(new Date());
+      }
     } catch {
       // keep fallback values silently
     } finally {
@@ -43,6 +47,16 @@ export function Milestones() {
     const interval = setInterval(fetchSpots, 30 * 60 * 1000); // 30 mins
     return () => clearInterval(interval);
   }, []);
+
+  const getTimeAgo = (date: Date) => {
+    const minutes = Math.floor((new Date().getTime() - date.getTime()) / 60000);
+    if (minutes < 1) return 'just now';
+    if (minutes === 1) return '1 minute ago';
+    if (minutes < 60) return `${minutes} minutes ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours === 1) return '1 hour ago';
+    return `${hours} hours ago`;
+  };
 
   return (
     <section id="milestones" className="py-10">
@@ -124,7 +138,7 @@ export function Milestones() {
         {lastUpdated && !spotsLoading && (
           <div className="text-center mt-8">
             <p className="text-xs text-slate-500 font-medium">
-              Last updated: {lastUpdated.toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')}
+              Last synced {getTimeAgo(lastUpdated)}
             </p>
           </div>
         )}

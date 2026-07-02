@@ -79,54 +79,114 @@ async function startServer() {
     }
   });
 
-  app.get("/api/arcade-spots", async (req, res) => {
-    const fallbackData = {
+  // Background scraper for Arcade spots
+  let cachedSpots = {
+    lastUpdated: null as string | null,
+    data: {
       trooper:  { spotsLeft: 5227, total: 6000 },
       ranger:   { spotsLeft: 3927, total: 4000 },
       champion: { spotsLeft: 2989, total: 3000 },
       legend:   { spotsLeft: 2500, total: 2500 }
-    };
+    },
+    rawSpotsLeft: {} as Record<string, { text: string, percent: string }>
+  };
 
+  const DB_FILE = path.join(process.cwd(), 'milestones.json');
+  try {
+    if (fs.existsSync(DB_FILE)) {
+      cachedSpots = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+    }
+  } catch (e) {
+    console.error("Failed to load milestones db:", e);
+  }
+
+  async function scrapeArcadeSpots() {
     try {
       const response = await fetch('https://go.cloudskillsboost.google/arcade');
       let html = await response.text();
       html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
       const $ = cheerio.load(html);
       
-      const extractSpots = (name: string, fallback: any) => {
-        let spotsInfo = fallback;
-        $(".tier-card").each((i, el) => {
-           const title = $(el).find(".tier-header .tier-card-title").text().trim();
-           if (title.toLowerCase().includes(name.toLowerCase())) {
-             const spotsText = $(el).find(".tier-points").text().trim();
-             const match = spotsText.match(/(\d+)\s*\/\s*(\d+)/);
-             if (match) {
-               spotsInfo = {
+      let updated = false;
+      const newData = JSON.parse(JSON.stringify(cachedSpots.data));
+      const newRawSpots = JSON.parse(JSON.stringify(cachedSpots.rawSpotsLeft || {}));
+
+      // A resilient selector strategy: find any element that looks like a tier card
+      // by looking for the milestone names, and then finding the spots fraction.
+      const contentText = $("body").text();
+      
+      const milestonesToMatch = [
+        { name: "Trooper", key: "trooper", milestoneKey: "milestone-1" },
+        { name: "Ranger", key: "ranger", milestoneKey: "milestone-2" },
+        { name: "Champion", key: "champion", milestoneKey: "milestone-3" },
+        { name: "Legend", key: "legend", milestoneKey: "milestone-4" }
+      ];
+
+      // fallback class-based search first (fastest)
+      let foundViaClasses = false;
+      $(".tier-card, .card").each((i, el) => {
+         const text = $(el).text();
+         for (const tier of milestonesToMatch) {
+            if (text.toLowerCase().includes(tier.name.toLowerCase())) {
+               // find fraction like "5,227 / 6,000"
+               const match = text.match(/([\d,]+)\s*\/\s*([\d,]+)/);
+               if (match) {
+                 newData[tier.key] = {
+                   spotsLeft: parseInt(match[1].replace(/,/g, ''), 10),
+                   total: parseInt(match[2].replace(/,/g, ''), 10)
+                 };
+                 // get percent text if available, e.g. "87%"
+                 const pctMatch = text.match(/(\d+)%/);
+                 newRawSpots[tier.milestoneKey] = { 
+                   text: match[0], 
+                   percent: pctMatch ? pctMatch[0] : '' 
+                 };
+                 updated = true;
+                 foundViaClasses = true;
+               }
+            }
+         }
+      });
+
+      // if completely failed to find via cards, try regex over whole body
+      if (!foundViaClasses) {
+         for (const tier of milestonesToMatch) {
+            // Very naive regex looking for the milestone name followed closely by a fraction
+            const regex = new RegExp(`${tier.name}[\\s\\S]{0,200}?([\\d,]+)\\s*\\/\\s*([\\d,]+)`, 'i');
+            const match = contentText.match(regex);
+            if (match) {
+               newData[tier.key] = {
                  spotsLeft: parseInt(match[1].replace(/,/g, ''), 10),
                  total: parseInt(match[2].replace(/,/g, ''), 10)
                };
-             }
-           }
-        });
-        return spotsInfo;
-      };
+               newRawSpots[tier.milestoneKey] = { text: `${match[1]} / ${match[2]}`, percent: '' };
+               updated = true;
+            }
+         }
+      }
 
-      const trooper = extractSpots("Trooper", fallbackData.trooper);
-      const ranger = extractSpots("Ranger", fallbackData.ranger);
-      const champion = extractSpots("Champion", fallbackData.champion);
-      const legend = extractSpots("Legend", fallbackData.legend);
-
-      res.setHeader('Cache-Control', 's-maxage=1800');
-      res.json({
-        trooper,
-        ranger,
-        champion,
-        legend
-      });
-    } catch (e) {
-      res.setHeader('Cache-Control', 's-maxage=1800');
-      res.json({ ...fallbackData, source: 'fallback' });
+      if (updated) {
+        cachedSpots.data = newData;
+        cachedSpots.rawSpotsLeft = newRawSpots;
+        cachedSpots.lastUpdated = new Date().toISOString();
+        fs.writeFileSync(DB_FILE, JSON.stringify(cachedSpots, null, 2), 'utf8');
+        console.log(`[Scraper] Successfully updated spots at ${cachedSpots.lastUpdated}`);
+      }
+    } catch (err) {
+      console.error("[Scraper] Failed to scrape arcade spots:", err);
     }
+  }
+
+  // Run scraper immediately, then every 2 hours
+  scrapeArcadeSpots();
+  setInterval(scrapeArcadeSpots, 2 * 60 * 60 * 1000);
+
+  app.get("/api/arcade-spots", async (req, res) => {
+    res.setHeader('Cache-Control', 'no-cache');
+    res.json({
+      ...cachedSpots.data,
+      last_updated_at: cachedSpots.lastUpdated
+    });
   });
 
   app.get("/api/calculator", async (req, res) => {
@@ -245,13 +305,114 @@ async function startServer() {
             "gen ai agents: transform your organization"
           ];
 
+          const halfPointSkillBadges = [
+            "analyze bigquery data in connected sheets",
+            "analyze images with the cloud vision api",
+            "analyze sentiment with natural language api",
+            "app building with appsheet",
+            "build a website on google cloud",
+            "cloud speech api: 3 ways",
+            "create and manage cloud sql for postgresql instances",
+            "derive insights from bigquery data",
+            "develop ai-powered prototypes in google ai studio",
+            "develop with apps script and appsheet",
+            "explore generative ai with the gemini api in vertex ai",
+            "get started with api gateway",
+            "get started with cloud storage",
+            "get started with dataplex",
+            "get started with eventarc",
+            "get started with google workspace tools",
+            "get started with looker",
+            "get started with pub/sub",
+            "get started with sensitive data protection",
+            "kickstarting application development with gemini code assist",
+            "monitor and manage google cloud resources",
+            "monitoring in google cloud",
+            "networking fundamentals on google cloud",
+            "prepare data for looker dashboards and reports",
+            "prepare data for ml apis on google cloud",
+            "prompt design in vertex ai",
+            "set up a google cloud network",
+            "set up an app dev environment on google cloud",
+            "share data using google data cloud",
+            "store, process, and manage data on google cloud - console",
+            "tag and discover biglake data",
+            "the basics of google cloud compute",
+            "use apis to work with cloud storage",
+            "use functions, formulas, and charts in google sheets",
+            "use machine learning apis on google cloud",
+            "using the google cloud speech api",
+            "analyze speech and language with google apis",
+            "app engine: 3 ways",
+            "automate data capture at scale with document ai",
+            "build google cloud infrastructure for aws professionals",
+            "build infrastructure with terraform on google cloud",
+            "build lookml objects in looker",
+            "build a data warehouse with bigquery",
+            "build a smart cloud application with vibe coding and mcp",
+            "cloud run functions: 3 ways",
+            "configure service accounts and iam roles for google cloud",
+            "create ml models with bigquery ml",
+            "create a secure data lake on cloud storage",
+            "create a streaming data lake on cloud storage",
+            "create and manage bigtable instances",
+            "create and manage cloud spanner instances",
+            "develop gen ai apps with gemini and streamlit",
+            "develop serverless applications on cloud run",
+            "develop serverless apps with firebase",
+            "develop your google cloud network",
+            "enhance gemini model capabilities",
+            "implement ci/cd pipelines on google cloud",
+            "implement cloud security fundamentals on google cloud",
+            "implement devops workflows in google cloud",
+            "implement load balancing on compute engine",
+            "implementing cloud load balancing for compute engine",
+            "integrate bigquery data and google workspace using apps script",
+            "manage data models in looker",
+            "migrate mysql data to cloud sql using database migration service",
+            "monitor and log with google cloud observability",
+            "optimize costs for google kubernetes engine",
+            "perform predictive data analysis in bigquery",
+            "privileged access with iam",
+            "secure biglake data",
+            "store, process, and manage data on google cloud - command line",
+            "streaming analytics into bigquery",
+            "build custom processors with document ai",
+            "build real world ai applications with gemini and imagen",
+            "build a data mesh with dataplex",
+            "build a secure google cloud network",
+            "connecting cloud networks with ncc",
+            "deploy kubernetes applications on google cloud",
+            "deploy and manage apigee x",
+            "designing network security in google cloud",
+            "detect manufacturing defects using visual inspection ai",
+            "develop and secure apis with apigee x",
+            "discover and protect sensitive data across your ecosystem",
+            "engineer data for predictive modeling with bigquery ml",
+            "implement multimodal vector search with bigquery",
+            "inspect rich documents with gemini multimodality and multimodal rag",
+            "manage kubernetes in google cloud",
+            "mitigate threats and vulnerabilities with security command center",
+            "protect cloud traffic with chrome enterprise premium security",
+            "secure software delivery",
+            "analyze and reason on multimodal data with gemini",
+            "build and deploy machine learning solutions on vertex ai",
+            "cloud architecture: design, implement, and manage",
+            "deploy multi-agent architectures",
+            "google deepmind: train a small language model"
+          ];
+
           if (labFreeTitles.includes(titleLower)) {
             category = "Lab-free";
             points = 0;
+          } else if (halfPointSkillBadges.includes(titleLower)) {
+            skillBadges += 0.5;
+            category = "Skill";
+            points = 0.5;
           } else {
             skillBadges++;
             category = "Skill";
-            points = 0.5;
+            points = 1;
           }
         }
 
@@ -285,38 +446,8 @@ async function startServer() {
     }
   });
   app.get("/api/milestones/spots", async (req, res) => {
-    try {
-      const response = await fetch("https://go.cloudskillsboost.google/arcade");
-      let html = await response.text();
-      
-      // The page seems to escape HTML inside its content for some reason, so let's unescape it
-      html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
-      
-      const $ = cheerio.load(html);
-
-      const spotsLeft: Record<string, { text: string, percent: string }> = {};
-
-      $(".tier-card").each((i, el) => {
-        const title = $(el).find(".tier-header .tier-card-title").text().trim();
-        const spotsText = $(el).find(".tier-points").text().trim();
-        const percent = $(el).find(".tier-percent-text").text().trim();
-
-        if (title.includes("Trooper")) {
-          spotsLeft["milestone-1"] = { text: spotsText, percent };
-        } else if (title.includes("Ranger")) {
-          spotsLeft["milestone-2"] = { text: spotsText, percent };
-        } else if (title.includes("Champion")) {
-          spotsLeft["milestone-3"] = { text: spotsText, percent };
-        } else if (title.includes("Legend")) {
-          spotsLeft["milestone-4"] = { text: spotsText, percent };
-        }
-      });
-
-      res.json(spotsLeft);
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ error: "Failed to fetch spots left" });
-    }
+    res.setHeader('Cache-Control', 'no-cache');
+    res.json(cachedSpots.rawSpotsLeft);
   });
 
   app.get("/api/active-games", async (req, res) => {
@@ -337,6 +468,7 @@ async function startServer() {
            else if (img.includes('adv')) title = "Arcade Adventure";
            else if (img.includes('voy')) title = "Arcade Voyage";
            else if (img.includes('trail')) title = "Arcade Trail";
+           else if (img.includes('Spaces')) title = "Safe Spaces";
            else if (img.includes('work') || img.includes('special')) {
              title = "Arcade Simulator";
              finalImg = "https://services.google.com/fh/files/misc/special-july.png";
@@ -350,6 +482,11 @@ async function startServer() {
                          parentText.match(/(?:access\s*code|code)[\s:]+([a-zA-Z0-9-]+)/i);
            if (match && match[1]) {
              code = match[1];
+           }
+
+           if (code === "1q-security-19110") {
+             title = "Safe Spaces";
+             finalImg = "https://services.google.com/fh/files/misc/new-special-game.png";
            }
 
            games.push({ link, img: finalImg, title, code });
