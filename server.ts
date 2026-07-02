@@ -332,12 +332,16 @@ async function startServer() {
         const img = $(el).find('img').attr('src');
         if (link && link.includes('skills.google/games/') && img) {
            let title = "Arcade Game";
+           let finalImg = img;
            if (img.includes('bc') || img.includes('base')) title = "Arcade Base Camp";
            else if (img.includes('adv')) title = "Arcade Adventure";
            else if (img.includes('voy')) title = "Arcade Voyage";
            else if (img.includes('trail')) title = "Arcade Trail";
-           else if (img.includes('work')) title = "New Monthly Game";
-           else if (img.includes('logic')) title = "Special Monthly Game";
+           else if (img.includes('work') || img.includes('special')) {
+             title = "Arcade Simulator";
+             finalImg = "https://services.google.com/fh/files/misc/special-july.png";
+           }
+           else if (img.includes('logic')) return; // Ignore Special Monthly Game
            
            let code = "Coming Soon!";
            const cardText = $(el).text();
@@ -348,7 +352,7 @@ async function startServer() {
              code = match[1];
            }
 
-           games.push({ link, img, title, code });
+           games.push({ link, img: finalImg, title, code });
         }
       });
 

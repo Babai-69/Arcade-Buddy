@@ -189,10 +189,10 @@ export function UserProgressDashboard() {
                 🎮 Game Badges
               </h3>
               <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800">
-                {gamesToTrack.map(game => {
+                {gamesToTrack.map((game, idx) => {
                   const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()));
                   return (
-                    <div key={game.title} className="p-4 flex items-start justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <div key={`${game.title}-${idx}`} className="p-4 flex items-start justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                       <div>
                         <a href={game.link} target="_blank" rel="noopener noreferrer" className="font-medium text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1.5 transition-colors group">
                           {game.title}

@@ -3,22 +3,6 @@ import { ExternalLink, Beaker, Coins, Gamepad2, Layers, ChevronDown, ChevronUp, 
 import { motion } from 'motion/react';
 import { useArcadeGames } from '../utils/arcadeApi';
 
-import gameImg1 from '../assets/images/regenerated_image_1782888752935.png';
-import gameImg2 from '../assets/images/regenerated_image_1782888756917.png';
-import gameImg3 from '../assets/images/regenerated_image_1782888761352.png';
-import gameImg4 from '../assets/images/regenerated_image_1782888765760.png';
-import gameImg5 from '../assets/images/regenerated_image_1782888769231.png';
-import gameImg6 from '../assets/images/regenerated_image_1782888773547.png';
-
-const arcadeGames = [
-  { img: gameImg1, title: "Arcade Base Camp", code: "Coming Soon!", link: "#" },
-  { img: gameImg2, title: "Arcade Adventure", code: "Coming Soon!", link: "#" },
-  { img: gameImg3, title: "Arcade Voyage", code: "Coming Soon!", link: "#" },
-  { img: gameImg4, title: "Arcade Trail", code: "Coming Soon!", link: "#" },
-  { img: gameImg5, title: "Special Monthly Game", code: "Coming Soon!", link: "#" },
-  { img: gameImg6, title: "New Monthly Game", code: "Coming Soon!", link: "#" }
-];
-
 const beginnerBadges = [
   { title: "Create Your First Gemini Enterprise Application", labs: 1, credits: 0, link: "https://www.skills.google/paths/3546/course_templates/1586" },
   { title: "Develop AI-Powered Prototypes in Google AI Studio", labs: 4, credits: 0, link: "https://www.skills.google/course_templates/1426" },
@@ -133,28 +117,6 @@ export function FacilitatorSyllabus() {
   const [openSections, setOpenSections] = useState<string[]>([]);
   const { activeGames, loading, error } = useArcadeGames();
 
-  const mergedGames = arcadeGames.map(defaultGame => {
-    const fetchedGame = activeGames.find(g => g.title === defaultGame.title);
-    if (fetchedGame) {
-      return {
-        ...defaultGame,
-        link: fetchedGame.link || defaultGame.link,
-        img: defaultGame.img || fetchedGame.img,
-        code: fetchedGame.code || defaultGame.code
-      };
-    }
-    return defaultGame;
-  });
-
-  activeGames.forEach(fetchedGame => {
-    if (!mergedGames.find(g => g.title === fetchedGame.title)) {
-      mergedGames.push({
-        ...fetchedGame,
-        code: fetchedGame.code || "Coming Soon!"
-      });
-    }
-  });
-
   const currentMonth = new Date().getMonth(); // 0 = Jan ... 5 = Jun, 6 = Jul, 7 = Aug
   
   const isJulyActive = currentMonth === 6;
@@ -241,7 +203,7 @@ export function FacilitatorSyllabus() {
             className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
           >
             <div className="flex items-center gap-3">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">June 2026 Games</h3>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">July 2026 Games</h3>
               {isJulyActive ? (
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-wider">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
@@ -257,7 +219,7 @@ export function FacilitatorSyllabus() {
             
             <div className="flex items-center gap-3">
               <div className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-medium">
-                July 2026 
+                August 2026 
                 {isAugustActive ? (
                   <span className="text-green-600 dark:text-green-400 ml-1">— Active Now</span>
                 ) : (
@@ -268,7 +230,7 @@ export function FacilitatorSyllabus() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {mergedGames.map((game, idx) => {
+            {activeGames.map((game, idx) => {
               const gameName = game.title || `Game ${idx + 1}`;
               
               if (isJulyActive) {
@@ -450,7 +412,7 @@ export function FacilitatorSyllabus() {
           
           <div className="flex flex-col items-center">
             <p className="text-sm font-medium text-slate-500 mb-3">
-              This month: 6 of 6 games shown · More releasing throughout July
+              This month: {activeGames.length} of {activeGames.length} games shown · More releasing throughout August
             </p>
             <div className="w-full max-w-md h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
               <div className="h-full bg-blue-500 rounded-full w-full" />
