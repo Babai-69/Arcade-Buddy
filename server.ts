@@ -406,13 +406,13 @@ async function startServer() {
             category = "Lab-free";
             points = 0;
           } else if (halfPointSkillBadges.includes(titleLower)) {
-            skillBadges += 0.5;
+            skillBadges += 1;
             category = "Skill";
             points = 0.5;
           } else {
-            skillBadges++;
+            skillBadges += 1;
             category = "Skill";
-            points = 1;
+            points = 0.5;
           }
         }
 
@@ -425,7 +425,7 @@ async function startServer() {
         });
       });
 
-      const arcadePoints = gameBadges + triviaBadges + specialBadges + (skillBadges / 2);
+      const arcadePoints = gameBadges + triviaBadges + specialBadges + (skillBadges * 0.5);
 
       // Determine avatar URL
       const avatarUrl = $("ql-avatar").attr("src") || "";

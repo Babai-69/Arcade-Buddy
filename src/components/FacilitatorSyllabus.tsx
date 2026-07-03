@@ -190,7 +190,7 @@ export function FacilitatorSyllabus() {
               <div className="flex items-start gap-4 border-l-4 border-blue-500 pl-4 py-1">
                 <p className="text-slate-700 dark:text-slate-300">
                   <span className="font-bold text-slate-900 dark:text-white mr-2">📌</span>
-                  In 2 months you can earn up to 12 game badges (Adventure, Trail, Voyage, Base Camp for each month).
+                  In 2 months you can earn up to 18 game badges (Adventure, Trail, Voyage, Base Camp for each month).
                 </p>
               </div>
             </div>
