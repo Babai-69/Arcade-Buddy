@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, CheckCircle, ExternalLink, Download, AlertCircle, Share2, Calendar } from 'lucide-react';
-import { auth } from '../lib/firebase';
+import { Search, CheckCircle, ExternalLink, Download, AlertCircle, Share2, Calendar, BellRing, X } from 'lucide-react';
+import { auth, db } from '../lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { SKILL_BADGES, GAME_BADGES } from '../lib/badgeLinks';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -13,37 +14,143 @@ import {
 import { toPng } from 'html-to-image';
 import confetti from 'canvas-confetti';
 
+import { CheckProgress } from './CheckProgress';
+import { WeeklyProgress } from './WeeklyProgress';
+
 export function UserProgressDashboard() {
   const [profileUrl, setProfileUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState('');
+  const [toastMessage, setToastMessage] = useState<{title: string, desc: string} | null>(null);
+  const [prevGameCount, setPrevGameCount] = useState<number | null>(null);
+  const [prevSkillCount, setPrevSkillCount] = useState<number | null>(null);
+  const [recentUrls, setRecentUrls] = useState<string[]>([]);
+  const [isEditingUrl, setIsEditingUrl] = useState(false);
   
   // Custom Date Range
   const [startDate, setStartDate] = useState('2026-07-13T17:30');
   const [endDate, setEndDate] = useState('2026-09-14T23:59');
-  
+
   const [isSharing, setIsSharing] = useState(false);
   const shareCardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (toastMessage) {
+      const timer = setTimeout(() => setToastMessage(null), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [toastMessage]);
+
+  useEffect(() => {
+    if (!data) return;
+    
+    let gameCount = 0;
+    let skillCount = 0;
+    gamesToTrack.forEach(game => {
+      if (data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()))) {
+        gameCount++;
+      }
+    });
+    Object.keys(SKILL_BADGES).forEach(badgeName => {
+      if (data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase())) {
+        skillCount++;
+      }
+    });
+
+    if (prevGameCount !== null && gameCount > prevGameCount) {
+        if (gameCount === 12) setToastMessage({ title: 'Milestone Unlocked! 🎮', desc: 'You have completed 100% of the Game Badges!' });
+        else if (gameCount === 6) setToastMessage({ title: 'Milestone Unlocked! 🎮', desc: 'You are halfway there with 50% Game Badges completed!' });
+        else if (gameCount === 3) setToastMessage({ title: 'Milestone Unlocked! 🎮', desc: 'You have completed 25% of the Game Badges!' });
+    }
+    
+    if (prevSkillCount !== null && skillCount > prevSkillCount) {
+        if (skillCount === 66) setToastMessage({ title: 'Milestone Unlocked! 🏆', desc: 'You have completed 100% of the Skill Badges!' });
+        else if (skillCount === 33) setToastMessage({ title: 'Milestone Unlocked! 🏆', desc: 'You are halfway there with 50% Skill Badges completed!' });
+        else if (skillCount === 17) setToastMessage({ title: 'Milestone Unlocked! 🏆', desc: 'You have completed 25% of the Skill Badges!' });
+    }
+
+    setPrevGameCount(gameCount);
+    setPrevSkillCount(skillCount);
+  }, [data]);
+
   
   const { activeGames } = useArcadeGames();
   const isAdmin = auth.currentUser?.email === 'deya58690@gmail.com' || auth.currentUser?.email === 'tripti.arcade.25@gmail.com';
   
   useEffect(() => {
-    // Left intentionally blank as requested
-  }, []);
+    let isMounted = true;
+    const fetchSavedUrl = async () => {
+      // First try to load from local storage
+      const savedRecent = localStorage.getItem('arcadeRecentUrls');
+      if (savedRecent) {
+        try {
+          setRecentUrls(JSON.parse(savedRecent));
+        } catch (e) {}
+      }
 
-  const fetchProgress = async (e?: React.FormEvent) => {
+      const savedUrl = localStorage.getItem('arcadeProfileUrl');
+      const savedData = localStorage.getItem('arcadeProgressData');
+      
+      let initialUrl = savedUrl;
+
+      // Then check Firestore for authenticated user
+      if (auth.currentUser) {
+        try {
+          const userRef = doc(db, 'users', auth.currentUser.uid);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists() && userSnap.data().profileUrl) {
+            initialUrl = userSnap.data().profileUrl;
+          }
+        } catch (e) {
+          console.error('Failed to load profile from Firestore', e);
+        }
+      }
+
+      if (!isMounted) return;
+
+      if (initialUrl) {
+        setProfileUrl(initialUrl);
+        setIsEditingUrl(false);
+        // If we have local storage data for this exact URL, use it temporarily
+        if (initialUrl === savedUrl && savedData) {
+          try {
+            setData(JSON.parse(savedData));
+          } catch (e) {
+            console.error('Failed to parse saved progress data', e);
+          }
+        }
+        
+        // Auto-fetch fresh data
+        fetchProgress(undefined, initialUrl);
+      } else {
+        setIsEditingUrl(true);
+      }
+    };
+
+    fetchSavedUrl();
+
+    return () => { isMounted = false; };
+  }, [auth.currentUser]);
+
+  const fetchProgress = async (e?: React.FormEvent, urlOverride?: string) => {
     if (e) e.preventDefault();
-    if (!profileUrl) return;
+    const targetUrl = urlOverride || profileUrl;
+    if (!targetUrl) return;
 
     setLoading(true);
     setError('');
+    setIsEditingUrl(false);
     
     try {
+      if (auth.currentUser) {
+        const userRef = doc(db, 'users', auth.currentUser.uid);
+        await setDoc(userRef, { profileUrl: targetUrl }, { merge: true });
+      }
+
       // Create date objects taking timezone into account or pass directly
       // appending Z or offset if needed, but since server expects ISO we can just pass
-      let queryStr = `url=${encodeURIComponent(profileUrl)}`;
+      let queryStr = `url=${encodeURIComponent(targetUrl)}`;
       if (startDate) queryStr += `&startDate=${encodeURIComponent(new Date(startDate).toISOString())}`;
       if (endDate) queryStr += `&endDate=${encodeURIComponent(new Date(endDate).toISOString())}`;
       
@@ -54,8 +161,18 @@ export function UserProgressDashboard() {
       if (result.error) throw new Error(result.error);
       
       setData(result);
+      // Save progress to local storage
+      localStorage.setItem('arcadeProfileUrl', targetUrl);
+      localStorage.setItem('arcadeProgressData', JSON.stringify(result));
+      
+      setRecentUrls(prev => {
+        const newRecent = [targetUrl, ...prev.filter(u => u !== targetUrl)].slice(0, 5);
+        localStorage.setItem('arcadeRecentUrls', JSON.stringify(newRecent));
+        return newRecent;
+      });
     } catch (err: any) {
       setError(err.message || 'Error fetching progress');
+      setIsEditingUrl(true);
     } finally {
       setLoading(false);
     }
@@ -189,6 +306,11 @@ export function UserProgressDashboard() {
     }
   }, [completedGameBadgesCount, completedSkillBadgesCount]);
 
+  // Calculate remaining for ultimate milestone
+  const gameBadgesRemaining = Math.max(0, 12 - completedGameBadgesCount);
+  const skillBadgesRemaining = Math.max(0, 66 - completedSkillBadgesCount);
+  const isUltimateReached = gameBadgesRemaining === 0 && skillBadgesRemaining === 0;
+
   return (
     <div className="w-full max-w-7xl mx-auto pt-8 pb-20 px-4 font-sans">
       <div className="mb-8">
@@ -200,58 +322,97 @@ export function UserProgressDashboard() {
         </p>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 mb-8">
-        <form onSubmit={fetchProgress} className="flex flex-col gap-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="flex-grow">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Public Profile URL</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                <input
-                  type="url"
-                  value={profileUrl}
-                  onChange={(e) => setProfileUrl(e.target.value)}
-                  placeholder="https://www.skills.google/public_profiles/xxxxxxxx"
-                  className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                  required
-                />
+      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-sm border border-slate-200 dark:border-slate-700 mb-8">
+        {!isEditingUrl && data ? (
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {data.avatar && <img src={data.avatar} alt="Profile" className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700" />}
+              <div>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">{data.name || 'Student'}</h2>
+                <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-500 hover:underline break-all max-w-[200px] sm:max-w-md block truncate">
+                  {profileUrl}
+                </a>
+              </div>
+            </div>
+            <button 
+              onClick={() => setIsEditingUrl(true)}
+              className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-lg transition-colors shrink-0"
+            >
+              Change URL
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={(e) => fetchProgress(e)} className="flex flex-col gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="flex-grow">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Public Profile URL</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type="url"
+                    value={profileUrl}
+                    onChange={(e) => setProfileUrl(e.target.value)}
+                    placeholder="https://www.skills.google/public_profiles/xxxxxxxx"
+                    className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
+                    required
+                  />
+                </div>
+                {recentUrls.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <span className="text-xs text-slate-500 py-1">Recent:</span>
+                    {recentUrls.map((url, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => {
+                          setProfileUrl(url);
+                          fetchProgress(undefined, url);
+                        }}
+                        className="text-xs px-2 py-1 bg-slate-100 dark:bg-slate-700 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-slate-600 dark:text-slate-300 rounded transition-colors truncate max-w-[150px]"
+                        title={url}
+                      >
+                        {url.split('/').pop() || url}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Start Timeline</label>
+                  <input
+                    type="datetime-local"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">End Timeline</label>
+                  <input
+                    type="datetime-local"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
+                  />
+                </div>
               </div>
             </div>
             
-            <div className="flex gap-4">
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Start Timeline</label>
-                <input
-                  type="datetime-local"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                />
-              </div>
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">End Timeline</label>
-                <input
-                  type="datetime-local"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                />
-              </div>
+            <div className="sm:self-end mt-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : 'Check Progress'}
+              </button>
             </div>
-          </div>
-          
-          <div className="sm:self-end mt-2">
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full sm:w-auto px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-colors disabled:opacity-70 flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : 'Check Progress'}
-            </button>
-          </div>
-        </form>
+          </form>
+        )}
         {error && (
           <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm flex items-start gap-2">
             <AlertCircle className="w-5 h-5 shrink-0" />
@@ -294,9 +455,32 @@ export function UserProgressDashboard() {
             </div>
           </div>
           
+          {/* Daily Reminder / Recommendations */}
+          <div className={`p-5 rounded-xl border flex gap-4 items-start ${isUltimateReached ? 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/20 dark:border-indigo-800' : 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800'}`}>
+            <div className={`p-2 rounded-full shrink-0 ${isUltimateReached ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400' : 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'}`}>
+              {isUltimateReached ? <CheckCircle className="w-6 h-6" /> : <BellRing className="w-6 h-6" />}
+            </div>
+            <div>
+              <h3 className={`font-bold text-lg mb-1 ${isUltimateReached ? 'text-indigo-900 dark:text-indigo-300' : 'text-blue-900 dark:text-blue-300'}`}>
+                {isUltimateReached ? 'Ultimate Milestone Achieved! 🎉' : 'Daily Progress Reminder'}
+              </h3>
+              <p className={`text-sm mb-2 ${isUltimateReached ? 'text-indigo-800 dark:text-indigo-400' : 'text-blue-800 dark:text-blue-400'}`}>
+                {isUltimateReached 
+                  ? 'Incredible work! You have completed enough game and skill badges to reach the Ultimate Milestone.'
+                  : `You need ${gameBadgesRemaining} more Game Badge${gameBadgesRemaining !== 1 ? 's' : ''} and ${skillBadgesRemaining} more Skill Badge${skillBadgesRemaining !== 1 ? 's' : ''} to reach the Ultimate Milestone (12 Game + 66 Skill Badges).`
+                }
+              </p>
+              {!isUltimateReached && (
+                <div className="bg-white/60 dark:bg-slate-800/50 rounded-lg p-3 text-sm text-slate-700 dark:text-slate-300 border border-blue-100 dark:border-blue-800/50">
+                  <span className="font-semibold text-blue-700 dark:text-blue-400">Recommendation:</span> Focus on {gameBadgesRemaining > 0 ? 'Arcade Games' : 'Skill Badges'} today to stay on track!
+                </div>
+              )}
+            </div>
+          </div>
+          
           {/* Progress Chart Visualization */}
           <div className="grid lg:grid-cols-2 gap-8">
-            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Badges Distribution</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -319,7 +503,7 @@ export function UserProgressDashboard() {
               </div>
             </div>
             
-            <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
               <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Completion Progress</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -342,73 +526,9 @@ export function UserProgressDashboard() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Game Badges Section */}
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                🎮 Game Badges <span className="text-sm font-normal text-slate-500">({completedGameBadgesCount}/{gamesToTrack.length})</span>
-              </h3>
-              <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800">
-                {gamesToTrack.map((game, idx) => {
-                  const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()));
-                  return (
-                    <div key={`${game.title}-${idx}`} className="p-4 flex items-start justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                      <div>
-                        <a href={game.link} target="_blank" rel="noopener noreferrer" className="font-medium text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1.5 transition-colors group">
-                          {game.title}
-                          <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100" />
-                        </a>
-                      </div>
-                      <div className="shrink-0 pt-0.5">
-                        {isCompleted ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
-                            <CheckCircle className="w-3.5 h-3.5" /> Completed
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-500">
-                            Not Earned
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Skill Badges Section */}
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                🏆 Skill Badges <span className="text-sm font-normal text-slate-500">({completedSkillBadgesCount}/{Object.keys(SKILL_BADGES).length})</span>
-              </h3>
-              <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800 max-h-[600px] overflow-y-auto">
-                {Object.entries(SKILL_BADGES).map(([badgeName, url]) => {
-                  const isCompleted = data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase());
-                  return (
-                    <div key={badgeName} className="p-4 flex items-start justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
-                      <div className="min-w-0 flex-1">
-                        <a href={url} target="_blank" rel="noopener noreferrer" className="font-medium text-slate-800 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-1.5 transition-colors group truncate w-full">
-                          <span className="truncate">{badgeName}</span>
-                          <ExternalLink className="w-3.5 h-3.5 shrink-0 opacity-50 group-hover:opacity-100" />
-                        </a>
-                      </div>
-                      <div className="shrink-0 pt-0.5 ml-2">
-                        {isCompleted ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
-                            <CheckCircle className="w-3.5 h-3.5" /> Completed
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-500">
-                            Not Earned
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <CheckProgress completedBadges={data.badges} />
+          
+          <WeeklyProgress profileUrl={profileUrl} />
           
           {/* Hidden Share Card (Rendered only for html2canvas) */}
           <div className="fixed top-[-9999px] left-[-9999px]">
@@ -453,6 +573,30 @@ export function UserProgressDashboard() {
       
       {isAdmin && (
         <AdminCertificatePreview />
+      )}
+
+      {toastMessage && (
+        <div className="fixed bottom-4 right-4 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 p-4 max-w-sm flex items-start gap-3 relative">
+            <div className="flex-shrink-0 mt-0.5 text-blue-500">
+              <CheckCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1">
+                {toastMessage.title}
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {toastMessage.desc}
+              </p>
+            </div>
+            <button 
+              onClick={() => setToastMessage(null)}
+              className="absolute top-2 right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
