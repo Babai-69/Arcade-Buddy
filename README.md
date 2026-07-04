@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://arcade-buddy-385186531056.asia-southeast1.run.app/favicon.ico" width="80" height="80" alt="Arcade Buddy Logo"/>
+<img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782148621/Logo-google-cloud-icon-vector-PNG_ow9y9y.png" width="80" height="80" alt="Arcade Buddy Logo"/>
 
 # 🕹️ Arcade Buddy
 
