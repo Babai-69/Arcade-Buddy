@@ -67,11 +67,8 @@ async function startServer() {
         })) : []
       };
 
-      // Send email in background to avoid blocking the response
-      transporter.sendMail(mailOptions).catch(err => {
-        console.error('Background email sending failed:', err);
-      });
-      
+      // Send email
+      await transporter.sendMail(mailOptions);
       return res.json({ success: true, emailSent: true });
     } catch (error: any) {
       console.error('Failed to process request:', error);
@@ -190,10 +187,13 @@ async function startServer() {
   });
 
   app.get("/api/calculator", async (req, res) => {
-    const { url } = req.query;
+    const { url, startDate, endDate } = req.query;
     if (!url || typeof url !== "string") {
       return res.status(400).json({ error: "Missing url parameter" });
     }
+
+    const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T17:30:00-04:00');
+    const END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T23:59:59-04:00');
 
     try {
       const response = await fetch(url);
@@ -225,8 +225,6 @@ async function startServer() {
         if (dateText) {
           let cleanDateStr = dateText.replace("Earned ", "").replace(/ EDT| EST| PDT| PST/g, "").trim();
           let parsedDate = new Date(cleanDateStr);
-          const START_DATE = new Date('2026-07-13T17:30:00-04:00'); // EDT
-          const END_DATE = new Date('2026-09-14T23:59:59-04:00'); // EDT
           if (!isNaN(parsedDate.getTime())) {
             if (parsedDate < START_DATE || parsedDate > END_DATE) return;
           } else {

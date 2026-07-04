@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, AlertCircle, HelpCircle, Send, Info, Edit, Loader2, CheckCircle2 } from 'lucide-react';
 import { submitSupportQuery, uploadAttachments } from '../lib/queriesService';
+import { auth } from '../lib/firebase';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
 export function SupportPage() {
+  const [user, setUser] = useState<User | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [formData, setFormData] = useState({
@@ -13,6 +16,20 @@ export function SupportPage() {
     message: '',
     attachments: null as unknown as FileList
   });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        setFormData(prev => ({
+          ...prev,
+          name: currentUser.displayName || '',
+          email: currentUser.email || ''
+        }));
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -33,6 +50,8 @@ export function SupportPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
+    
     setIsSubmitting(true);
     
     try {
@@ -58,8 +77,8 @@ export function SupportPage() {
       setShowToast(true);
       
       setFormData({
-        name: '',
-        email: '',
+        name: user.displayName || '',
+        email: user.email || '',
         profileUrl: '',
         queryType: '',
         message: '',
@@ -153,34 +172,44 @@ export function SupportPage() {
               <p className="text-sm text-slate-600 dark:text-slate-400">Please provide detailed information about the issue you're experiencing</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
-                  <input 
-                    type="text"
-                    name="name"
-                    required
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Enter your full name" 
-                    className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
-                  <input 
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email address" 
-                    className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                  />
+            {!user ? (
+              <div className="text-center py-8">
+                <p className="text-lg text-slate-600 dark:text-slate-400 mb-4">You must be logged in to submit a query.</p>
+                <div className="inline-flex items-center justify-center p-4 bg-slate-100 dark:bg-slate-900 rounded-full">
+                  <AlertCircle className="w-8 h-8 text-amber-500" />
                 </div>
               </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
+                    <input 
+                      type="text"
+                      name="name"
+                      required
+                      readOnly
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Enter your full name" 
+                      className="w-full bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed transition-all"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
+                    <input 
+                      type="email"
+                      name="email"
+                      required
+                      readOnly
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="Enter your email address" 
+                      className="w-full bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed transition-all"
+                    />
+                  </div>
+                </div>
               
               <div>
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Public Profile URL</label>
@@ -251,6 +280,7 @@ export function SupportPage() {
                 </button>
               </div>
             </form>
+            )}
           </div>
 
           {/* Response Time Section */}

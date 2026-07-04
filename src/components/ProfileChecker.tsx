@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Search, Trophy, Medal, Star, ChevronRight, Activity } from 'lucide-react';
+import { Search, Trophy, Medal, Star, ChevronRight, Activity, AlertCircle, Lock } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Participant, MILESTONES } from '../types';
 import { BadgeTracker } from './BadgeTracker';
 import { FacilitatorBadgeTracker } from './FacilitatorBadgeTracker';
+import { auth } from '../lib/firebase';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
 interface ProfileCheckerProps {
   participants: Participant[];
 }
 
 export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
+  const [user, setUser] = useState<User | null>(null);
   const [url, setUrl] = useState('');
   const [result, setResult] = useState<Participant | null>(null);
   const [error, setError] = useState('');
@@ -25,6 +28,13 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
     champion: { spotsLeft: 3000, total: 3000 },
     legend:   { spotsLeft: 2500, total: 2500 },
   });
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     setSpotsLoading(true);
@@ -118,30 +128,42 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
           <p className="text-slate-500 dark:text-slate-400">Enter your Public Profile URL or Name to check your real-time milestone progress.</p>
         </div>
 
-        <form onSubmit={handleCheck} className="relative max-w-2xl mx-auto mb-10">
-          <div className="flex items-center relative z-10 bg-white dark:bg-slate-900 rounded-full p-2 pl-6 shadow-xl border border-slate-200 dark:border-slate-800">
-            <Search className="h-5 w-5 text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="e.g. https://www.cloudskillsboost.google/public_profiles/xxxxx" 
-              className="flex-1 bg-transparent border-none focus:outline-none px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
-            <button 
-              type="submit" 
-              disabled={isLoading}
-              className="bg-[#4285F4] hover:bg-blue-600 outline-none focus:outline-none text-white px-6 py-3 rounded-full font-medium transition-colors shadow-md disabled:bg-slate-400 flex items-center justify-center min-w-[100px]"
-            >
-              {isLoading ? (
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                'Check'
-              )}
-            </button>
+        {!user ? (
+          <div className="max-w-2xl mx-auto mb-10 bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 text-center">
+            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Login Required</h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-6">
+              You must be signed in to check your Arcade points and track your progress.
+            </p>
           </div>
-          {error && <p className="text-[#EA4335] mt-4 text-center font-medium">{error}</p>}
-        </form>
+        ) : (
+          <form onSubmit={handleCheck} className="relative max-w-2xl mx-auto mb-10">
+            <div className="flex items-center relative z-10 bg-white dark:bg-slate-900 rounded-full p-2 pl-6 shadow-xl border border-slate-200 dark:border-slate-800">
+              <Search className="h-5 w-5 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="e.g. https://www.cloudskillsboost.google/public_profiles/xxxxx" 
+                className="flex-1 bg-transparent border-none focus:outline-none px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+              />
+              <button 
+                type="submit" 
+                disabled={isLoading}
+                className="bg-[#4285F4] hover:bg-blue-600 outline-none focus:outline-none text-white px-6 py-3 rounded-full font-medium transition-colors shadow-md disabled:bg-slate-400 flex items-center justify-center min-w-[100px]"
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  'Check'
+                )}
+              </button>
+            </div>
+            {error && <p className="text-[#EA4335] mt-4 text-center font-medium">{error}</p>}
+          </form>
+        )}
 
         {result && (
           <motion.div 

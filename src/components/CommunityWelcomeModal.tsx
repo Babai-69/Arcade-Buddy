@@ -80,7 +80,7 @@ export function CommunityWelcomeModal() {
                   </div>
                   <div className="bg-white p-1.5 rounded-lg shrink-0">
                     <QRCodeSVG 
-                      value="https://whatsapp.com/channel/0029VaFls0z6WaKl79w42K1N"
+                      value="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s"
                       size={64}
                       level="Q"
                       imageSettings={{
@@ -95,7 +95,7 @@ export function CommunityWelcomeModal() {
                   </div>
                 </div>
                 <a
-                  href="https://whatsapp.com/channel/0029VaFls0z6WaKl79w42K1N"
+                  href="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-[#25D366] hover:bg-[#1fae53] text-white py-2.5 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors text-sm"
