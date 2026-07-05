@@ -7,10 +7,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useArcadeGames } from '../utils/arcadeApi';
 import { AdminCertificatePreview } from './AdminCertificatePreview';
-import {
-  PieChart, Pie, Cell, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
-  BarChart, Bar, XAxis, YAxis, CartesianGrid
-} from 'recharts';
+
 import { toPng } from 'html-to-image';
 import confetti from 'canvas-confetti';
 
@@ -280,11 +277,6 @@ export function UserProgressDashboard() {
     });
   }
 
-  const chartData = [
-    { name: 'Game Badges (1pt each)', value: completedGameBadgesCount, color: '#3b82f6', max: gamesToTrack.length },
-    { name: 'Skill Badges (0.5pt each)', value: completedSkillBadgesCount, color: '#10b981', max: Object.keys(SKILL_BADGES).length }
-  ];
-
   useEffect(() => {
     if (completedGameBadgesCount >= 12 && completedSkillBadgesCount >= 66) {
       const duration = 3 * 1000;
@@ -478,53 +470,7 @@ export function UserProgressDashboard() {
             </div>
           </div>
           
-          {/* Progress Chart Visualization */}
-          <div className="grid lg:grid-cols-2 gap-8">
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Badges Distribution</h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={chartData}
-                      innerRadius={60}
-                      outerRadius={80}
-                      paddingAngle={5}
-                      dataKey="value"
-                    >
-                      {chartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <RechartsTooltip />
-                    <Legend verticalAlign="bottom" height={36} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6">
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6">Completion Progress</h3>
-              <div className="h-64">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#334155" opacity={0.2} />
-                    <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" width={150} tick={{ fill: '#64748b', fontSize: 12 }} />
-                    <RechartsTooltip cursor={{fill: 'transparent'}} />
-                    <Bar dataKey="value" radius={[0, 4, 4, 0]}>
-                      {chartData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              <p className="text-xs text-center text-slate-500 mt-2">
-                Calculation Logic: Game Badges (1 pt) | Skill Badges (0.5 pt)
-              </p>
-            </div>
-          </div>
+
 
           <CheckProgress completedBadges={data.badges} />
           

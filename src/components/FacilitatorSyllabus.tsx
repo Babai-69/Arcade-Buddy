@@ -146,7 +146,7 @@ export function FacilitatorSyllabus() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="bg-slate-50 dark:bg-[#0f1117] w-full rounded-2xl p-10 mb-8 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
+            className="bg-slate-50 dark:bg-slate-900 w-full rounded-2xl p-10 mb-8 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-blue-500/30 dark:border-blue-500/50 shadow-sm dark:shadow-[0_0_15px_rgba(66,133,244,0.3)] mb-4">
               <span className="text-sm font-medium text-blue-600 dark:text-blue-400">🎮 Updated Monthly</span>
@@ -262,7 +262,7 @@ export function FacilitatorSyllabus() {
                       
                       <div className="space-y-1.5 mb-4">
                         <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Access Code</p>
-                        <div className="flex items-center justify-between bg-slate-50 dark:bg-[#0f1117] px-3 py-2 rounded-lg border border-slate-200 dark:border-white/5 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
+                        <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-white/5 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
                           <code className={`font-mono text-sm ${game.code === "Coming Soon!" ? "text-amber-600 dark:text-amber-400 font-sans font-medium" : "text-green-600 dark:text-green-400"}`}>
                             {game.code || "Coming Soon!"}
                           </code>
@@ -425,7 +425,7 @@ export function FacilitatorSyllabus() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-slate-50 dark:bg-[#0f1117] w-full rounded-2xl p-10 mb-10 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
+          className="bg-slate-50 dark:bg-slate-900 w-full rounded-2xl p-10 mb-10 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
         >
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-amber-500/30 dark:border-amber-500/50 shadow-sm dark:shadow-[0_0_15px_rgba(251,188,5,0.3)] mb-4">
             <span className="text-sm font-medium text-amber-600 dark:text-amber-400">🎯 Learning Paths</span>

@@ -4,7 +4,7 @@ import { FacilitatorCards } from '../components/FacilitatorCards';
 
 export function AboutPage() {
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0f1117] font-sans flex flex-col font-medium">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans flex flex-col font-medium">
       <div className="flex-grow flex flex-col items-center pt-24 pb-12 px-4 max-w-5xl mx-auto w-full">
         
         {/* Important Note */}
@@ -52,7 +52,7 @@ export function AboutPage() {
         {/* Section 4 */}
         <div className="w-full text-center mb-16">
           <h2 className="text-3xl font-bold font-display text-slate-900 dark:text-white mb-8">About Google Cloud Arcade Buddy</h2>
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-left shadow-sm max-w-4xl mx-auto">
+          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-8 text-left shadow-sm max-w-4xl mx-auto">
              <div className="flex items-center gap-2 mb-4 text-slate-900 dark:text-white font-bold">
                <Cloud className="w-5 h-5 text-blue-500" /> Arcade Buddy Platform
              </div>
@@ -74,7 +74,7 @@ export function AboutPage() {
 
 function FeatureCard({ icon: Icon, title, desc }: any) {
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-2xl text-left shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-6 rounded-2xl text-left shadow-sm hover:shadow-md transition-shadow">
        <div className="flex items-center gap-2 mb-3 text-slate-900 dark:text-white font-bold text-[15px]">
          <Icon className="w-4 h-4 text-blue-500" /> {title}
        </div>

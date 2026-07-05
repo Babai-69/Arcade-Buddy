@@ -18,8 +18,8 @@ export function Hero({ participants }: { participants: Participant[] }) {
   const [timerState, setTimerState] = useState<'upcoming' | 'live' | 'ended'>('upcoming');
 
   useEffect(() => {
-    // Target date: July 13, 2026 17:30:00 GMT+0530 (IST) -> 12:00:00Z
-    const startDate = new Date('2026-07-13T12:00:00Z').getTime();
+    // Target date: July 13, 2026 17:00:00 GMT+0530 (IST) -> 11:30:00Z
+    const startDate = new Date('2026-07-13T11:30:00Z').getTime();
     // End date: September 14, 2026 23:59:00 GMT+0530 (IST) -> 18:29:00Z
     const endDate = new Date('2026-09-14T18:29:00Z').getTime();
 
@@ -96,7 +96,7 @@ export function Hero({ participants }: { participants: Participant[] }) {
 
               {/* Inner pill content */}
               <div 
-                className="bg-white dark:bg-[#0f1117]"
+                className="bg-white dark:bg-slate-900"
                 style={{
                   position: 'relative',
                   borderRadius: '999px',
