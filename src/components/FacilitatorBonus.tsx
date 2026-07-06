@@ -66,7 +66,7 @@ const milestones = [
 
 export function FacilitatorBonus() {
   return (
-    <section id="point-system" className="py-20 bg-transparent">
+    <section id="milestones" className="py-20 bg-transparent">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-4xl font-display font-bold mb-8 text-slate-900 dark:text-white text-center">
           See the milestones of the program below!

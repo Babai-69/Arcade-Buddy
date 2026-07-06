@@ -122,7 +122,7 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
                     }`}>
                       {badge.type}
                     </span>
-                    {badge.name.includes('July') || badge.name.includes('JULY') ? (
+                    {(badge.name.toLowerCase().includes('july') || (badge.link && badge.link.toLowerCase().includes('july'))) ? (
                       <span className="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 dark:bg-slate-900 text-white">
                         JULY
                       </span>

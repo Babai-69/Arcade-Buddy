@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { LabLimitAnimation } from '../components/LabLimitAnimation';
 
 const resources = [
@@ -103,16 +104,42 @@ export function ResourcesPage() {
 
   return (
     <div className="pt-32 pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-16">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-16"
+      >
         <h1 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-4">Resources & Guides</h1>
         <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
           Explore guides, tutorials, and community resources to enhance your Google Cloud Arcade journey.
         </p>
-      </div>
+      </motion.div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <motion.div 
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: {
+              staggerChildren: 0.1
+            }
+          }
+        }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      >
         {resources.map((item, idx) => (
-          <div key={idx} className={`glass-card flex flex-col h-full ${item.bg} overflow-hidden`}>
+          <motion.div 
+            key={idx} 
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0 }
+            }}
+            transition={{ duration: 0.4 }}
+            className={`glass-card flex flex-col h-full ${item.bg} overflow-hidden`}
+          >
             {item.image && (
               <div className="w-full h-48 md:h-56 relative overflow-hidden bg-slate-100 dark:bg-slate-900">
                 <img src={item.image} alt={item.title} className="absolute inset-0 w-full h-full object-cover" />
@@ -143,9 +170,9 @@ export function ResourcesPage() {
                 </a>
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
       {/* Modals */}
       {activeModal === 'tier-waterfall' && (

@@ -18,11 +18,22 @@ export function FacilitatorDetails() {
       <div className="space-y-4 mb-10">
         <div className="flex items-start gap-4">
           <Calendar className="w-6 h-6 text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0" />
-          <p className="text-slate-700 dark:text-slate-300 font-medium text-lg">July 13, 2026 at 5:00 PM - September 14, 2026 at 11:59 PM GMT+5:30</p>
+          <p className="text-slate-700 dark:text-slate-300 font-medium text-lg">
+          Program Timeline: <strong>13th July 2026 05:00 PM - 14th September 2026 11:59 PM (GMT +5:30)</strong></p>
         </div>
         <div className="flex items-start gap-4">
           <Calendar className="w-6 h-6 text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0" />
-          <p className="text-slate-700 dark:text-slate-300 font-medium text-lg">Registration opens on July 13, 2026 at 5:00 PM GMT+5:30</p>
+          <p className="text-slate-700 dark:text-slate-300 font-medium text-lg">Registration opens on <strong>July 13, 2026 at 5:00 PM GMT+5:30</strong></p>
+        </div>
+        <div className="flex items-start gap-4">
+          <Calendar className="w-6 h-6 text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0" />
+          <p className="text-slate-700 dark:text-slate-300 font-medium text-lg">
+          (<strong>Note:</strong> The enrolment form will close on 20th July 2026 11:59 PM GMT +5:30 <strong>or once all the seats are filled</strong>, whichever's earlier)</p>
+        </div>
+        <div className="flex items-start gap-4">
+          <Calendar className="w-6 h-6 text-slate-700 dark:text-slate-300 mt-0.5 flex-shrink-0" />
+          <p className="text-slate-700 dark:text-slate-300 font-medium text-lg">
+          Once you fill the form, <strong>you will receive an email within 24-48 hours</strong> with the instructions to avail <strong>your FREE credits pass</strong>.</p>
         </div>
       </div>
       

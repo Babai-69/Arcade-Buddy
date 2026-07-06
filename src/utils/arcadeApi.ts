@@ -9,9 +9,15 @@ export interface ArcadeGame {
 
 export const fetchArcadeGames = async (): Promise<ArcadeGame[]> => {
   try {
-    const response = await fetch('/api/active-games');
+    const response = await fetch('/api/arcade-activity');
     if (!response.ok) {
       throw new Error('Failed to fetch arcade games');
+    }
+    const contentType = response.headers.get("content-type");
+    if (!contentType || contentType.indexOf("application/json") === -1) {
+      const text = await response.text();
+      console.error("API returned non-JSON:", text.substring(0, 100));
+      return [];
     }
     const data = await response.json();
     return data.games || [];

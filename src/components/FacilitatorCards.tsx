@@ -1,7 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { ExternalLink, Code } from 'lucide-react';
+import { ExternalLink, Code, Linkedin, Github, Instagram, Globe, Youtube, Send as SendIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import developerImage from '../assets/images/regenerated_image_1782030896719.jpg';
+const getIcon = (title: string) => {
+  const baseClass = "w-6 h-6";
+  switch (title.toLowerCase()) {
+    case 'linkedin': return <Linkedin className={`${baseClass} text-[#0077b5]`} />;
+    case 'github': return <Github className={`${baseClass} text-slate-900 dark:text-white`} />;
+    case 'instagram': return <Instagram className={`${baseClass} text-[#e1306c]`} />;
+    case 'youtube': return <Youtube className={`${baseClass} text-[#ff0000]`} />;
+    case 'telegram': return <SendIcon className={`${baseClass} text-[#0088cc]`} />;
+    case 'portfolio': return <Globe className={`${baseClass} text-emerald-500`} />;
+    default: return <ExternalLink className={`${baseClass} text-slate-500`} />;
+  }
+};
 
 const facilitators = [
   {
@@ -28,7 +40,7 @@ const facilitators = [
     links: [
       { title: "Instagram", sub: "@studywith_tripti", href: "https://www.instagram.com/_.studywith_tripti._?igsh=MW4xZ3U1NTYzdnplcQ==" },
       { title: "LinkedIn", sub: "Tripti Gupta", href: "https://www.linkedin.com/in/tripti-gupta-a28a6832b" },
-      {title: "YouTube", sub: "Arcade With Us", href: "https://www.youtube.com/@ARCADEWITHUS_We"},
+      { title: "YouTube", sub: "Arcade With Us", href: "https://www.youtube.com/@ARCADEWITHUS_We" },
     ]
   }
 ];
@@ -101,9 +113,12 @@ export function FacilitatorCards() {
                         rel="noopener noreferrer" 
                         className="bg-[#f8f9fc] dark:bg-slate-800/50 hover:bg-[#f0f4ff] dark:hover:bg-slate-800 transition-colors rounded-xl p-4 flex justify-between items-center group border border-transparent hover:border-blue-100 dark:hover:border-slate-700"
                       >
-                        <div>
-                          <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">{link.title}</div>
-                          <div className="text-sm font-semibold text-slate-900 dark:text-white">{link.sub}</div>
+                        <div className="flex items-center gap-3">
+                          {getIcon(link.title)}
+                          <div>
+                            <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">{link.title}</div>
+                            <div className="text-sm font-semibold text-slate-900 dark:text-white">{link.sub}</div>
+                          </div>
                         </div>
                         <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors" />
                       </a>

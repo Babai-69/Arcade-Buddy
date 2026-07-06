@@ -443,19 +443,61 @@ async function startServer() {
       res.status(500).json({ error: "Failed to fetch profile" });
     }
   });
+
+  app.post("/api/notify-query", async (req, res) => {
+    try {
+      const { userEmail, userName, queryType, message } = req.body;
+      const smtpUser = process.env.SMTP_USER;
+      const smtpPass = process.env.SMTP_PASS;
+      
+      if (!smtpUser || !smtpPass) {
+        console.warn("SMTP credentials not configured. Skipping email notification.");
+        return res.status(200).json({ success: true, warning: "Email skipped due to no config" });
+      }
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: smtpUser,
+          pass: smtpPass
+        }
+      });
+
+      const mailOptions = {
+        from: smtpUser,
+        to: [smtpUser, userEmail].filter(Boolean).join(", "),
+        replyTo: userEmail,
+        subject: `New Support Query: ${queryType} from ${userName}`,
+        text: `You have received a new support query.\n\nFrom: ${userName} (${userEmail})\nType: ${queryType}\nMessage:\n${message}`
+      };
+
+      await transporter.sendMail(mailOptions);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error sending email:", error);
+      res.status(500).json({ error: "Failed to send email" });
+    }
+  });
+
   app.get("/api/milestones/spots", async (req, res) => {
     res.setHeader('Cache-Control', 'no-cache');
     res.json(cachedSpots.rawSpotsLeft);
   });
 
-  app.get("/api/active-games", async (req, res) => {
+let cachedGames = null;
+  let cachedGamesTime = 0;
+
+  app.get("/api/arcade-activity", async (req, res) => {
     try {
+      if (cachedGames && Date.now() - cachedGamesTime < 5 * 60 * 1000) {
+        return res.json({ games: cachedGames });
+      }
       const response = await fetch("https://go.cloudskillsboost.google/arcade");
       let html = await response.text();
       html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
       const $ = cheerio.load(html);
 
-      const games: any[] = [];
+      const games = [];
       $('.card').each((i, el) => {
         const link = $(el).find('a').attr('href');
         const img = $(el).find('img').attr('src');
@@ -491,11 +533,18 @@ async function startServer() {
         }
       });
 
+      cachedGames = games;
+      cachedGamesTime = Date.now();
       res.json({ games });
     } catch (e) {
       console.error(e);
       res.status(500).json({ error: "Failed to fetch active games" });
     }
+  });
+
+  // API 404 fallback to prevent index.html being sent for API requests
+  app.all('/api/*', (req, res) => {
+    res.status(404).json({ error: 'API route not found' });
   });
 
   // Vite middleware for development

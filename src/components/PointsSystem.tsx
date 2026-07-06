@@ -3,7 +3,7 @@ import { Award, Gamepad2, Info } from 'lucide-react';
 
 export function PointsSystem() {
   return (
-    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-16">
+    <div id="points-system" className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-16">
       <div className="mb-8">
         <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Points System</h2>
         <p className="text-slate-600 dark:text-slate-300 text-lg mb-4">
