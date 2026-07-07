@@ -8,10 +8,10 @@ export function PrivacyPage() {
         <p className="text-sm text-slate-500 mb-8">Updated • May 22, 2026</p>
         
         <div className="prose prose-slate dark:prose-invert max-w-none space-y-6">
-          <p>This Privacy Policy explains how ArcadePointsCalci collects, uses, and protects information when you use our website.</p>
+          <p>This Privacy Policy explains how ArcadeBuddy collects, uses, and protects information when you use our website.</p>
           
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-8 mb-4">Introduction</h2>
-          <p>This Privacy Policy describes how GArcade collects, uses, and shares your personal information when you use our website arcadepointscalci.in. By using our website, you consent to the data practices described in this policy.</p>
+          <p>This Privacy Policy describes how GArcade collects, uses, and shares your personal information when you use our website arcade-buddy.vercel.app. By using our website, you consent to the data practices described in this policy.</p>
           
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-8 mb-4">Information We Collect</h2>
           <p>When you visit the Site, we automatically collect certain information about your device, including information about your web browser, IP address, time zone, and some of the cookies that are installed on your device.</p>
@@ -34,7 +34,7 @@ export function PrivacyPage() {
           <p>We use both session cookies and persistent cookies. Session cookies are temporary and expire when you close your browser, while persistent cookies remain on your device until they expire or you delete them. We use cookies for various purposes, including to enable certain functions of the Site, to provide analytics, and to store your preferences.</p>
           
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-8 mb-4">Third-Party Services</h2>
-          <p>ArcadePointsCalci may use Firebase, analytics providers, advertising networks, and CDN services for better performance and functionality.</p>
+          <p>ArcadeBuddy may use Firebase, analytics providers, advertising networks, and CDN services for better performance and functionality.</p>
           
           <h2 className="text-xl font-bold text-slate-900 dark:text-white mt-8 mb-4">Data Security</h2>
           <p>We implement reasonable security practices, but no internet-based platform can guarantee complete protection of data.</p>

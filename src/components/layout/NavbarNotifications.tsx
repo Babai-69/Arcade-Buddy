@@ -22,6 +22,14 @@ const initialNotifications: Notification[] = [
     pinned: true,
   },
   {
+    id: 'infocus-july',
+    title: 'InFocus This Week: Google Skills Arcade July 2026',
+    date: '15 June 2026',
+    description: 'The Google Skills Arcade Team has kicked off July with six brand-new games designed to help learners build practical cloud skills across application development, AI, security, data engineering, and ...',
+    linkText: 'View Post',
+    linkUrl: 'https://discuss.google.dev/t/infocus-this-week-google-skills-arcade-july-2026',
+  },
+  {
     id: 'infocus-june',
     title: 'InFocus This Week: Google Skills Arcade June 2026',
     date: '15 June 2026',
@@ -126,10 +134,9 @@ export function NavbarNotifications() {
   const fetchLatestNotifications = async () => {
     setIsFetching(true);
     try {
-      // Using allorigins to bypass CORS for client-side fetching from Discourse
-      const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://discuss.google.dev/c/learning/320.json')}`);
-      const data = await response.json();
-      const parsedData = JSON.parse(data.contents);
+      // Using local API endpoint to bypass CORS and prevent caching issues
+      const response = await fetch(`/api/discourse-notifications`);
+      const parsedData = await response.json();
       
       if (parsedData && parsedData.topic_list && parsedData.topic_list.topics) {
         const fetchedTopics = parsedData.topic_list.topics.slice(0, 10).map((topic: any) => {
@@ -147,9 +154,11 @@ export function NavbarNotifications() {
         // Merge fetched topics with pinned/existing ones, avoiding duplicates by title
         setNotifications(prev => {
           const newNotifs = [...prev];
+          let insertIdx = 1; // Insert right after pinned item
           fetchedTopics.forEach((ft: Notification) => {
             if (!newNotifs.some(n => n.title === ft.title)) {
-              newNotifs.splice(1, 0, ft); // Insert right after pinned item
+              newNotifs.splice(insertIdx, 0, ft);
+              insertIdx++;
             } else {
               // Update existing link if matched by title
               const existingIdx = newNotifs.findIndex(n => n.title === ft.title);

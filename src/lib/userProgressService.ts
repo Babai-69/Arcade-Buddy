@@ -21,20 +21,24 @@ export interface UserBadgeProgress extends BadgeData {
 // Ensure the user document exists.
 export const ensureUserExists = async (user: any) => {
   if (!user?.uid) return;
-  const userRef = doc(db, 'users', user.uid);
-  const userSnap = await getDoc(userRef);
+  try {
+    const userRef = doc(db, 'users', user.uid);
+    const userSnap = await getDoc(userRef);
 
-  if (!userSnap.exists()) {
-    const profile: UserProfile = {
-      uid: user.uid,
-      email: user.email || '',
-      name: user.displayName || 'Student',
-      photoURL: user.photoURL || '',
-      createdAt: new Date().toISOString(),
-      lastUpdated: new Date().toISOString(),
-    };
-    await setDoc(userRef, profile);
-    await initializeUserBadges(user.uid);
+    if (!userSnap.exists()) {
+      const profile: UserProfile = {
+        uid: user.uid,
+        email: user.email || '',
+        name: user.displayName || 'Student',
+        photoURL: user.photoURL || '',
+        createdAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
+      };
+      await setDoc(userRef, profile);
+      await initializeUserBadges(user.uid);
+    }
+  } catch (error) {
+    console.warn('Failed to ensure user exists (offline):', error);
   }
 };
 
@@ -46,13 +50,17 @@ export const initializeUserBadges = async (uid: string) => {
 
 // Fetch user's badges
 export const getUserProgress = async (uid: string): Promise<UserBadgeProgress[]> => {
-  const badgesRef = collection(db, 'users', uid, 'badges');
-  const snap = await getDocs(badgesRef);
-  
   const existingBadgesMap = new Map<string, UserBadgeProgress>();
-  snap.docs.forEach(doc => {
-    existingBadgesMap.set(doc.id, doc.data() as UserBadgeProgress);
-  });
+  try {
+    const badgesRef = collection(db, 'users', uid, 'badges');
+    const snap = await getDocs(badgesRef);
+    
+    snap.docs.forEach(doc => {
+      existingBadgesMap.set(doc.id, doc.data() as UserBadgeProgress);
+    });
+  } catch (error) {
+    console.warn('Failed to fetch user progress (offline), returning defaults:', error);
+  }
 
   const fullProgress: UserBadgeProgress[] = initialBadges.map(badge => {
     if (existingBadgesMap.has(badge.id)) {
@@ -85,16 +93,26 @@ export const updateBadgeStatus = async (
   badgeId: string,
   updates: Partial<Pick<UserBadgeProgress, 'status' | 'completionDate' | 'notes'>>
 ) => {
-  const docRef = doc(db, 'users', uid, 'badges', badgeId);
-  await setDoc(docRef, {
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  }, { merge: true });
+  try {
+    const docRef = doc(db, 'users', uid, 'badges', badgeId);
+    await setDoc(docRef, {
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    }, { merge: true });
+  } catch (error) {
+    console.warn('Failed to update badge status (offline):', error);
+    // Optionally throw error so UI can show failure
+  }
 };
 
 // Admin: Get all students
 export const getAdminAllStudents = async () => {
-  const usersRef = collection(db, 'users');
-  const snap = await getDocs(usersRef);
-  return snap.docs.map(doc => doc.data() as UserProfile);
+  try {
+    const usersRef = collection(db, 'users');
+    const snap = await getDocs(usersRef);
+    return snap.docs.map(doc => doc.data() as UserProfile);
+  } catch (error) {
+    console.warn('Failed to fetch admin all students:', error);
+    return [];
+  }
 };

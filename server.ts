@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import dns from 'dns';
+dns.setDefaultResultOrder('ipv4first');
 
 if (fs.existsSync(path.resolve(process.cwd(), '.env'))) {
   dotenv.config();
@@ -39,7 +41,9 @@ async function startServer() {
       }
 
       const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
         auth: {
           user: smtpUser,
           pass: smtpPass,
@@ -48,7 +52,7 @@ async function startServer() {
 
       const mailOptions = {
         from: smtpUser,
-        to: smtpUser, // Send to self or configured admin
+        to: [smtpUser, email].filter(Boolean).join(", "), // Send to self/admin and user
         replyTo: email,
         subject: `[Support Query] ${queryType} - ${name}`,
         html: `
@@ -444,41 +448,6 @@ async function startServer() {
     }
   });
 
-  app.post("/api/notify-query", async (req, res) => {
-    try {
-      const { userEmail, userName, queryType, message } = req.body;
-      const smtpUser = process.env.SMTP_USER;
-      const smtpPass = process.env.SMTP_PASS;
-      
-      if (!smtpUser || !smtpPass) {
-        console.warn("SMTP credentials not configured. Skipping email notification.");
-        return res.status(200).json({ success: true, warning: "Email skipped due to no config" });
-      }
-
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: smtpUser,
-          pass: smtpPass
-        }
-      });
-
-      const mailOptions = {
-        from: smtpUser,
-        to: [smtpUser, userEmail].filter(Boolean).join(", "),
-        replyTo: userEmail,
-        subject: `New Support Query: ${queryType} from ${userName}`,
-        text: `You have received a new support query.\n\nFrom: ${userName} (${userEmail})\nType: ${queryType}\nMessage:\n${message}`
-      };
-
-      await transporter.sendMail(mailOptions);
-      res.json({ success: true });
-    } catch (error) {
-      console.error("Error sending email:", error);
-      res.status(500).json({ error: "Failed to send email" });
-    }
-  });
-
   app.get("/api/milestones/spots", async (req, res) => {
     res.setHeader('Cache-Control', 'no-cache');
     res.json(cachedSpots.rawSpotsLeft);
@@ -542,7 +511,23 @@ let cachedGames = null;
     }
   });
 
+
+  app.get("/api/discourse-notifications", async (req, res) => {
+    try {
+      const response = await fetch("https://discuss.google.dev/tag/learning.json");
+      if (!response.ok) {
+        throw new Error("Failed to fetch notifications from Discourse");
+      }
+      const data = await response.json();
+      res.json(data);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to fetch notifications" });
+    }
+  });
+
   // API 404 fallback to prevent index.html being sent for API requests
+
   app.all('/api/*', (req, res) => {
     res.status(404).json({ error: 'API route not found' });
   });

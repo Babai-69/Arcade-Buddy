@@ -3,7 +3,8 @@ import Papa from 'papaparse';
 import { collection, doc, writeBatch, onSnapshot, getDocs } from 'firebase/firestore';
 import { db, auth, loginWithGoogle, loginWithGoogleRedirect, logout } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { Search, ChevronUp, ChevronDown, Lock, Unlock, UploadCloud, FileText, Trash2 } from 'lucide-react';
+import { Search, ChevronUp, ChevronDown, Lock, Unlock, UploadCloud, FileText, Trash2, Trophy, Medal, Crown } from 'lucide-react';
+import { motion } from 'motion/react';
 
 const ADMIN_EMAILS = ["deya58690@gmail.com", "tripti.arcade.25@gmail.com"];
 
@@ -472,35 +473,60 @@ function TopCard({ participant, rank }: { participant: any; rank: number }) {
   const isSecond = rank === 2;
   
   const bgClass = isFirst 
-    ? 'bg-[#F8E2AC] border-[#E8D490]' // Gold
+    ? 'bg-gradient-to-br from-[#FFF3D6] via-[#F8E2AC] to-[#E8D490] dark:from-[#4a3f15] dark:via-[#7c631b] dark:to-[#a18121] border-[#DCA821] dark:border-[#F8E2AC] shadow-[0_0_20px_rgba(234,179,8,0.3)] dark:shadow-[0_0_30px_rgba(234,179,8,0.5)]'
     : isSecond
-      ? 'bg-[#D1D4DA] border-[#BFC3CA]' // Silver
-      : 'bg-[#E3C2A4] border-[#D6A982]'; // Bronze
+      ? 'bg-gradient-to-br from-[#F8FAFC] via-[#E2E8F0] to-[#CBD5E1] dark:from-[#1E293B] dark:via-[#334155] dark:to-[#475569] border-[#94A3B8] dark:border-[#CBD5E1] shadow-[0_0_20px_rgba(148,163,184,0.2)] dark:shadow-[0_0_25px_rgba(148,163,184,0.3)]'
+      : 'bg-gradient-to-br from-[#FDF2E9] via-[#EED3BC] to-[#E3C2A4] dark:from-[#432311] dark:via-[#6B3718] dark:to-[#8B4513] border-[#CE7424] dark:border-[#EED3BC] shadow-[0_0_20px_rgba(217,119,6,0.2)] dark:shadow-[0_0_25px_rgba(217,119,6,0.3)]';
       
-  const rankColor = isFirst ? 'text-[#DCA821]' : isSecond ? 'text-[#7B8394]' : 'text-[#CE7424]';
+  const rankColor = isFirst ? 'text-[#B45309] dark:text-[#FFF3D6]' : isSecond ? 'text-[#475569] dark:text-[#F8FAFC]' : 'text-[#9A3412] dark:text-[#FDF2E9]';
+  const rankBg = isFirst ? 'bg-amber-100 dark:bg-yellow-900/60' : isSecond ? 'bg-slate-200 dark:bg-slate-800/80' : 'bg-orange-100 dark:bg-orange-900/60';
+
   const avatarBgColor = isFirst ? 'E91E63' : isSecond ? '111111' : '607D8B';
   const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}&background=${avatarBgColor}&color=fff&size=128`;
   
-  const sizeClass = isFirst ? 'w-[280px] h-[220px]' : 'w-[260px] h-[200px]';
+  const sizeClass = isFirst ? 'w-[280px] h-[220px] md:scale-105 z-10' : 'w-[260px] h-[200px]';
+  
+  // Animation settings
+  const delay = isFirst ? 0 : isSecond ? 0.2 : 0.4;
+  const yOffset = isFirst ? -20 : -10;
 
   return (
-    <div className={`relative rounded-xl flex flex-col items-center justify-center p-6 border shadow-sm ${bgClass} ${sizeClass} mx-auto md:mx-0`}>
-      <div className={`absolute top-4 right-4 w-7 h-7 rounded-full bg-white flex items-center justify-center text-xs font-bold shadow-sm ${rankColor}`}>
+    <motion.div 
+      initial={{ opacity: 0, y: 50, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.6, delay: delay, type: "spring", bounce: 0.4 }}
+      whileHover={{ y: yOffset, scale: 1.05, transition: { duration: 0.2 } }}
+      className={`relative rounded-2xl flex flex-col items-center justify-center p-6 border shadow-lg hover:shadow-2xl transition-all duration-300 ${bgClass} ${sizeClass} mx-auto md:mx-0`}
+    >
+      {isFirst && (
+        <motion.div 
+          initial={{ rotate: -15, scale: 0 }}
+          animate={{ rotate: 0, scale: 1 }}
+          transition={{ delay: 0.6, type: "spring", bounce: 0.6 }}
+          className="absolute -top-4 text-4xl drop-shadow-md"
+        >
+          👑
+        </motion.div>
+      )}
+      <div className={`absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-sm ${rankColor} ${rankBg}`}>
         #{rank}
       </div>
       
-      <div className={`rounded-full p-1 bg-white mb-3 ${isFirst ? 'w-24 h-24' : 'w-20 h-20'} shadow-sm flex items-center justify-center`}>
+      <motion.div 
+        whileHover={{ rotate: 5, scale: 1.1 }}
+        className={`rounded-full p-1 bg-white dark:bg-slate-800 mb-3 ${isFirst ? 'w-24 h-24' : 'w-20 h-20'} shadow-md flex items-center justify-center`}
+      >
          <div className="w-full h-full rounded-full border-[3px] border-[#A87CFA] overflow-hidden">
             <img src={avatarUrl} alt={participant.name} className="w-full h-full object-cover" />
          </div>
-      </div>
+      </motion.div>
       
-      <h3 className="font-bold text-slate-900 text-[15px] mb-2 text-center w-full truncate px-2">
+      <h3 className="font-bold text-slate-900 dark:text-white text-[15px] mb-2 text-center w-full truncate px-2">
         {participant.name}
       </h3>
-      <div className="px-3 py-1 bg-[#DBCDF7]/80 rounded-full text-[#7B46F1] font-semibold text-[11px]">
+      <div className="px-3 py-1 bg-[#DBCDF7]/80 dark:bg-[#7B46F1]/20 rounded-full text-[#7B46F1] dark:text-[#DBCDF7] font-semibold text-[11px]">
         {participant.points} points
       </div>
-    </div>
+    </motion.div>
   );
 }
