@@ -18,6 +18,7 @@ import nodemailer from "nodemailer";
 import { gameBadges as syllabusGameBadges } from "./src/data/badgesData";
 
 async function startServer() {
+  const app = express();
   const PORT = 3000;
 
   app.use(cors());
