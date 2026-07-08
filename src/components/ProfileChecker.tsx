@@ -122,21 +122,27 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
 
   return (
     <section id="calculator" className="py-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="glass-panel rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
+      <div className={user ? "glass-panel rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden" : "rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden bg-transparent"}>
         <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Check Your Arcade Profile</h2>
-          <p className="text-slate-500 dark:text-slate-400">Enter your Public Profile URL or Name to check your real-time milestone progress.</p>
+          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-slate-900 dark:text-white">Check Your Arcade Profile</h2>
+          <p className="text-slate-500 dark:text-[#8B8FA3]">Enter your Public Profile URL or Name to check your real-time milestone progress.</p>
         </div>
 
         {!user ? (
-          <div className="max-w-2xl mx-auto mb-10 bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-8 border border-slate-200 dark:border-slate-700 text-center">
-            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Lock className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+          <div className="max-w-[400px] mx-auto mb-10 bg-white dark:bg-[#12172A] rounded-[16px] p-8 border border-[#E5E7EB] dark:border-[#2A3352] shadow-sm dark:shadow-none text-center">
+            <div className="w-[56px] h-[56px] bg-gradient-to-br from-[#5B6CF9] to-[#8B5CF6] rounded-full flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-[26px] h-[26px] text-white" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Login Required</h3>
-            <p className="text-slate-600 dark:text-slate-400 mb-6">
-              You must be signed in to check your Arcade points and track your progress.
+            <h3 className="text-xl font-bold text-[#1A1F36] dark:text-[#F5F5F7] mb-3">Login required</h3>
+            <p className="text-[15px] leading-relaxed text-[#6B7280] dark:text-[#8B8FA3] mb-8">
+              Sign in to check your arcade points and track your progress.
             </p>
+            <button 
+              onClick={() => window.dispatchEvent(new CustomEvent('open-login-modal'))}
+              className="w-full h-[44px] rounded-[10px] bg-gradient-to-br from-[#5B6CF9] to-[#8B5CF6] text-white font-medium hover:brightness-110 active:scale-[0.98] transition-all duration-200 border-none"
+            >
+              Sign in to continue
+            </button>
           </div>
         ) : (
           <form onSubmit={handleCheck} className="relative max-w-2xl mx-auto mb-10">
