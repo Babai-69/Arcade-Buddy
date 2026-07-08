@@ -15,9 +15,9 @@ import cors from "cors";
 import * as cheerio from "cheerio";
 import { createServer as createViteServer } from "vite";
 import nodemailer from "nodemailer";
+import { gameBadges as syllabusGameBadges } from "./src/data/badgesData";
 
 async function startServer() {
-  const app = express();
   const PORT = 3000;
 
   app.use(cors());
@@ -246,8 +246,13 @@ async function startServer() {
         let category = "Other";
         let points = 0;
 
+        const isSyllabusGame = syllabusGameBadges.some(
+          gb => gb.name.toLowerCase().trim() === titleLower
+        );
+
         // Classify badges
         if (
+          isSyllabusGame ||
           titleLower.includes("the arcade") ||
           titleLower.includes("level 1") ||
           titleLower.includes("level 2") ||
