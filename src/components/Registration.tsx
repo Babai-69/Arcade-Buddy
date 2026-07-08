@@ -4,7 +4,7 @@ import { Copy, CheckCircle2, ArrowRight } from 'lucide-react';
 
 export function Registration() {
   const [copied, setCopied] = useState(false);
-  const code = "Available soon";
+  const code = "GCAF26-IN-C5V-KYM";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code);

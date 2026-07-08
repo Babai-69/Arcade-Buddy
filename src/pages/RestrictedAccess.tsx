@@ -43,7 +43,7 @@ export function RestrictedAccess({ user }: RestrictedAccessProps) {
         ) : (
           <>
             <p className="text-[15px] leading-relaxed text-slate-600 dark:text-[#8b8fa3] mb-8">
-              Your account doesn't have admin access. Contact the ArcadeCalc team if you believe this is a mistake.
+              Your account doesn't have admin access. Contact the Arcade Buddy team if you believe this is a mistake.
             </p>
             <button 
               onClick={() => navigate('/')}
