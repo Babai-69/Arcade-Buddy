@@ -5,6 +5,7 @@ import { db, auth, loginWithGoogle, loginWithGoogleRedirect, logout } from '../l
 import { onAuthStateChanged } from 'firebase/auth';
 import { Search, ChevronUp, ChevronDown, Lock, Unlock, UploadCloud, FileText, Trash2, Trophy, Medal, Crown } from 'lucide-react';
 import { motion } from 'motion/react';
+import { ArcadeLoader } from '../components/ArcadeLoader';
 
 const ADMIN_EMAILS = ["deya58690@gmail.com", "tripti.arcade.25@gmail.com"];
 
@@ -356,7 +357,11 @@ export function TrueLeaderboardPage() {
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
               {isLoading ? (
-                <tr><td colSpan={7} className="text-center py-12 text-slate-500">Loading leaderboard data...</td></tr>
+                <tr>
+                  <td colSpan={7} className="text-center py-12">
+                    <ArcadeLoader />
+                  </td>
+                </tr>
               ) : paginated.length === 0 ? (
                 <tr><td colSpan={7} className="text-center py-12 text-slate-500">No participants match filters.</td></tr>
               ) : (

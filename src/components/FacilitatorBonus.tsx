@@ -81,20 +81,19 @@ export function FacilitatorBonus() {
               <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                 Introducing the Bonus Milestone 🏆
               </h2>
-              <span className="px-3 py-1 rounded-full bg-[#f0ebff] dark:bg-purple-500/20 text-purple-700 dark:text-purple-300 text-xs font-bold">
-                Coming Soon
+              <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-700 dark:text-green-300 text-xs font-bold">
+                Live Now
               </span>
             </div>
             <div className="space-y-4 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
               <p>
-                For the first time ever, there is more than one way to earn <span className="font-bold text-purple-600 dark:text-purple-400">"Bonus Points"</span> in the Arcade Facilitator program and this time we want to make sure that you actually step away with some industry-ready skills after completing this.
+                The Bonus Milestone is now live! Complete it to earn an extra <span className="font-bold text-purple-600 dark:text-purple-400">10 Bonus Points</span> and build your first AI agent.
               </p>
-              <p>
-                More details about the new <span className="font-bold text-purple-600 dark:text-purple-400">"Bonus Milestone"</span>, its eligibility criteria and how will you be able to earn an extra <span className="font-bold">10 Bonus Points</span> will be posted here soon.
-              </p>
-              <p className="text-purple-600 dark:text-purple-400 font-medium">
-                So please stay tuned and keep an eye out here! 🥽
-              </p>
+              <div>
+                <a href="/resources/bonus-milestone" className="inline-block px-5 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition-colors">
+                  View Bonus Milestone Details
+                </a>
+              </div>
             </div>
           </div>
         </div>

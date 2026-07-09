@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Award, Gamepad2, Layers, Search, AlertCircle, Info, Calendar, CheckCircle2, Lock, ArrowRight, Loader2, Target } from 'lucide-react';
+import { ArcadeLoader } from './ArcadeLoader';
 
 export function FacilitatorCalculator() {
   const [url, setUrl] = useState('');
@@ -10,7 +11,16 @@ export function FacilitatorCalculator() {
     avatarUrl: string;
     gameBadges: number;
     skillBadges: number;
+    gearBadgesCount: number;
   } | null>(null);
+
+  const [bonusMilestone, setBonusMilestone] = useState({
+    enrolled: false,
+    gearProfileBadge: false,
+    freeTrialSignedUp: false,
+    firstAgentBuilt: false,
+    submitted: false,
+  });
 
   const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +43,14 @@ export function FacilitatorCalculator() {
       
       let validGameBadges = 0;
       let validSkillBadges = 0;
+      let gearBadgesCount = 0;
+
+      const gearBadgeTitles = [
+        "create your first gemini enterprise application",
+        "engineer ai agents with agent development kit (adk)",
+        "deploy multi-agent architectures",
+        "orchestrate multi-agent workflows with gemini enterprise"
+      ];
       
       json.badges.forEach((badge: any) => {
         const dateStr = (badge.completedDate || badge.earnedDate || '').replace(/^Earned\s+(on\s+)?/i, '').trim();
@@ -43,7 +61,11 @@ export function FacilitatorCalculator() {
           return;
         }
         
-        const t = badge.title.toLowerCase();
+        const t = badge.title.toLowerCase().trim();
+
+        if (gearBadgeTitles.includes(t)) {
+           gearBadgesCount++;
+        }
         
         const isGameBadge = t.includes("arcade base camp") ||
                             t.includes("arcade adventure") ||
@@ -74,6 +96,7 @@ export function FacilitatorCalculator() {
         avatarUrl: json.avatarUrl,
         gameBadges: validGameBadges,
         skillBadges: validSkillBadges,
+        gearBadgesCount: Math.min(gearBadgesCount, 4), // cap at 4
       });
       
     } catch (err: any) {
@@ -171,7 +194,13 @@ export function FacilitatorCalculator() {
           </button>
         </form>
 
-        {error && (
+        {loading && (
+          <div className="mt-8 mb-4">
+            <ArcadeLoader />
+          </div>
+        )}
+
+        {error && !loading && (
           <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-xl flex items-start gap-3">
             <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
             <p>{error}</p>
@@ -403,45 +432,95 @@ export function FacilitatorCalculator() {
                         {(getMilestoneStatus(data.gameBadges, data.skillBadges).base + getMilestoneStatus(data.gameBadges, data.skillBadges).bonus).toFixed(1)} pts
                       </span>
                     </div>
-                    
-                    {/* Potential Total */}
-                    {getMilestoneStatus(data.gameBadges, data.skillBadges).bonus > 0 && (
-                      <div className="mt-4 bg-[#FBBC05]/10 rounded-lg p-3 border border-[#FBBC05]/30">
-                        <div className="flex justify-between text-amber-700 dark:text-amber-400 mb-1">
-                          <span>+ Bonus Milestone (if completed):</span>
-                          <span className="font-bold">+10.0 pts</span>
-                        </div>
-                        <div className="h-px bg-[#FBBC05]/20 my-1" />
-                        <div className="flex justify-between text-base font-bold text-amber-800 dark:text-amber-300 pt-1">
-                          <span>Potential Total:</span>
-                          <span>{(getMilestoneStatus(data.gameBadges, data.skillBadges).base + getMilestoneStatus(data.gameBadges, data.skillBadges).bonus + 10).toFixed(1)} pts</span>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
 
                 {/* Section 7: Bonus Milestone Card */}
-                {getMilestoneStatus(data.gameBadges, data.skillBadges).name !== "No Milestone Yet" ? (
-                  <div className="bg-gradient-to-br from-[#FBBC05]/20 to-yellow-50 dark:from-[#FBBC05]/20 dark:to-yellow-900/10 rounded-2xl p-6 border border-[#FBBC05]/40 shadow-sm flex flex-col justify-center text-center">
-                    <Award className="w-12 h-12 text-[#FBBC05] mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-amber-900 dark:text-amber-100 mb-2">🌟 Bonus Milestone Unlocked!</h3>
-                    <p className="text-amber-800 dark:text-amber-200/80 mb-4">
-                      You are eligible to earn +10 extra points by completing the Bonus Milestone tasks.
-                    </p>
-                    <div className="inline-block bg-[#FBBC05]/20 text-amber-900 dark:text-amber-100 px-4 py-2 rounded-lg font-bold">
-                      Potential Total: {(getMilestoneStatus(data.gameBadges, data.skillBadges).base + getMilestoneStatus(data.gameBadges, data.skillBadges).bonus + 10).toFixed(1)} pts
+                {(() => {
+                  const milestone1Achieved = data.gameBadges >= 6 && data.skillBadges >= 18;
+                  const eligible = bonusMilestone.enrolled && bonusMilestone.gearProfileBadge && milestone1Achieved;
+                  const allStepsComplete = eligible && data.gearBadgesCount === 4 && bonusMilestone.freeTrialSignedUp && bonusMilestone.firstAgentBuilt && bonusMilestone.submitted;
+                  const basePoints = getMilestoneStatus(data.gameBadges, data.skillBadges).base;
+                  const milestoneBonus = getMilestoneStatus(data.gameBadges, data.skillBadges).bonus;
+                  const potentialTotal = basePoints + milestoneBonus + (allStepsComplete ? 10 : 0);
+
+                  return (
+                    <div className="bg-gradient-to-br from-[#FBBC05]/10 to-yellow-50 dark:from-[#FBBC05]/10 dark:to-yellow-900/10 rounded-2xl p-6 border border-[#FBBC05]/40 shadow-sm flex flex-col justify-center">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-3">
+                          <Award className="w-8 h-8 text-[#FBBC05]" />
+                          <h3 className="text-xl font-bold text-amber-900 dark:text-amber-100">Bonus Milestone</h3>
+                        </div>
+                        <a href="/resources/bonus-milestone" className="text-sm font-medium text-[#2563eb] hover:underline flex items-center gap-1">
+                          <Info className="w-4 h-4" /> How to earn +10
+                        </a>
+                      </div>
+                      
+                      <div className="space-y-3 mb-6">
+                        <label className="flex items-start gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
+                          <input type="checkbox" className="mt-1 w-5 h-5 rounded text-[#FBBC05] focus:ring-[#FBBC05]" checked={bonusMilestone.enrolled} onChange={e => setBonusMilestone({...bonusMilestone, enrolled: e.target.checked})} />
+                          <div>
+                            <p className="font-bold text-slate-900 dark:text-white">1. Enrolled in Facilitator Cohort</p>
+                            <p className="text-sm text-slate-500">I have received my official enrollment email.</p>
+                          </div>
+                        </label>
+
+                        <div className={`flex items-start gap-3 p-3 rounded-lg border ${milestone1Achieved ? 'border-[#34A853]/30 bg-[#34A853]/5' : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800'}`}>
+                          <div className="mt-1">
+                            {milestone1Achieved ? <CheckCircle2 className="w-5 h-5 text-[#34A853]" /> : <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600" />}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-900 dark:text-white">2. Reach Milestone 1</p>
+                            <p className="text-sm text-slate-500">Auto-detected ({milestone1Achieved ? 'Complete' : 'Pending'})</p>
+                          </div>
+                        </div>
+
+                        <label className="flex items-start gap-3 p-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
+                          <input type="checkbox" className="mt-1 w-5 h-5 rounded text-[#FBBC05] focus:ring-[#FBBC05]" checked={bonusMilestone.gearProfileBadge} onChange={e => setBonusMilestone({...bonusMilestone, gearProfileBadge: e.target.checked})} />
+                          <div>
+                            <p className="font-bold text-slate-900 dark:text-white">3. GEAR Badge on Developer Profile</p>
+                            <p className="text-sm text-slate-500">I have the GEAR badge on my primary Google Developer profile.</p>
+                          </div>
+                        </label>
+                      </div>
+
+                      {eligible ? (
+                        <div className="space-y-3 mb-6 p-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-900/30">
+                          <h4 className="font-bold text-amber-900 dark:text-amber-100 mb-2">Final Verification Steps</h4>
+                          
+                          <div className={`flex items-center gap-3 p-2 rounded-md ${data.gearBadgesCount === 4 ? 'text-[#34A853]' : 'text-slate-700 dark:text-slate-300'}`}>
+                            {data.gearBadgesCount === 4 ? <CheckCircle2 className="w-5 h-5" /> : <div className="w-5 h-5 rounded-full border-2 border-slate-300 dark:border-slate-600" />}
+                            <span className="font-medium text-sm">4 GEAR Skill Badges ({data.gearBadgesCount}/4 detected)</span>
+                          </div>
+
+                          <label className="flex items-center gap-3 p-2 rounded-md cursor-pointer hover:bg-black/5 dark:hover:bg-white/5">
+                            <input type="checkbox" className="w-5 h-5 rounded text-[#FBBC05]" checked={bonusMilestone.freeTrialSignedUp} onChange={e => setBonusMilestone({...bonusMilestone, freeTrialSignedUp: e.target.checked})} />
+                            <span className="font-medium text-sm text-slate-700 dark:text-slate-300">Signed up for Google Cloud Free Trial</span>
+                          </label>
+
+                          <label className="flex items-center gap-3 p-2 rounded-md cursor-pointer hover:bg-black/5 dark:hover:bg-white/5">
+                            <input type="checkbox" className="w-5 h-5 rounded text-[#FBBC05]" checked={bonusMilestone.firstAgentBuilt} onChange={e => setBonusMilestone({...bonusMilestone, firstAgentBuilt: e.target.checked})} />
+                            <span className="font-medium text-sm text-slate-700 dark:text-slate-300">Built first AI agent</span>
+                          </label>
+
+                          <label className="flex items-center gap-3 p-2 rounded-md cursor-pointer hover:bg-black/5 dark:hover:bg-white/5">
+                            <input type="checkbox" className="w-5 h-5 rounded text-[#FBBC05]" checked={bonusMilestone.submitted} onChange={e => setBonusMilestone({...bonusMilestone, submitted: e.target.checked})} />
+                            <span className="font-medium text-sm text-slate-700 dark:text-slate-300">Submitted Project/Billing ID (Opening Soon)</span>
+                          </label>
+                        </div>
+                      ) : (
+                        <div className="mb-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center text-slate-500 dark:text-slate-400 text-sm">
+                          Complete the top 3 requirements to unlock the final verification steps.
+                        </div>
+                      )}
+
+                      <div className="flex justify-between items-center text-lg font-bold p-4 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                        <span className="text-slate-900 dark:text-white">Potential Total:</span>
+                        <span className={allStepsComplete ? 'text-[#34A853]' : 'text-slate-500'}>{potentialTotal.toFixed(1)} pts</span>
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-6 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-center text-center">
-                    <Lock className="w-10 h-10 text-slate-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-slate-700 dark:text-slate-300 mb-2">🔒 Bonus Milestone Locked</h3>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">
-                      Complete Milestone 1 first (6 Games + 18 Skills) to unlock the opportunity for +10 bonus points.
-                    </p>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
 
               {/* Section 6: All Milestones Overview */}

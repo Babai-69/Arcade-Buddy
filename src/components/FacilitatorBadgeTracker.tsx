@@ -313,7 +313,6 @@ export function FacilitatorBadgeTracker({ isOpen, onClose, participant }: Facili
                 <p>Milestone 2:  8 games + 34 skills → +15 bonus</p>
                 <p>Milestone 3: 10 games + 50 skills → +25 bonus</p>
                 <p>Ultimate:    12 games + 66 skills → +35 bonus</p>
-                <p className="pt-1 text-amber-600 dark:text-amber-500">+ Bonus Milestone (if M1+):        +10 bonus</p>
               </div>
             </>
           )}

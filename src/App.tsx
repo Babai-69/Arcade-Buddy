@@ -23,6 +23,7 @@ import { FaqPage } from './pages/FaqPage';
 import { MyProgressPage } from './pages/MyProgressPage';
 import { AdminProgressPage } from './pages/AdminProgressPage';
 import { SupportPage } from './pages/SupportPage';
+import { BonusMilestonePage } from './pages/BonusMilestonePage';
 import { NotFound404 } from './pages/NotFound404';
 import { AdminPanel } from './components/AdminPanel';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -51,6 +52,7 @@ export default function App() {
               <Route path="/facilitator" element={<PageTransition><FacilitatorPage /></PageTransition>} />
               <Route path="/syllabus" element={<PageTransition><SyllabusPage /></PageTransition>} />
               <Route path="/resources" element={<PageTransition><ResourcesPage /></PageTransition>} />
+              <Route path="/resources/bonus-milestone" element={<PageTransition><BonusMilestonePage /></PageTransition>} />
               <Route path="/quick-start" element={<PageTransition><QuickStartPage /></PageTransition>} />
               <Route path="/free-credits" element={<PageTransition><FreeCreditsPage /></PageTransition>} />
               <Route path="/public-profile-help" element={<PageTransition><PublicProfileHelpPage /></PageTransition>} />

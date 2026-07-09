@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Info, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ArcadeLoader } from './ArcadeLoader';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 export function WeeklyProgress({ profileUrl }: { profileUrl: string }) {
@@ -151,7 +152,7 @@ export function WeeklyProgress({ profileUrl }: { profileUrl: string }) {
       <div className="h-[300px] w-full relative">
         {loading && (
           <div className="absolute inset-0 z-10 bg-white/50 dark:bg-slate-800/50 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+            <ArcadeLoader />
           </div>
         )}
         <ResponsiveContainer width="100%" height="100%">
