@@ -8,9 +8,9 @@ export function WeeklyProgress({ profileUrl }: { profileUrl: string }) {
   const [error, setError] = useState('');
   const [badgeDates, setBadgeDates] = useState<Date[]>([]);
   
-  // Window: July 13, 2026 17:30 to Sept 14, 2026 23:59
-  const TRACKING_START = new Date('2026-07-13T17:30:00');
-  const TRACKING_END = new Date('2026-09-14T23:59:59');
+  // Window: July 13, 2026 17:00 IST to Sept 14, 2026 23:59 IST (using UTC)
+  const TRACKING_START = new Date('2026-07-13T11:30:00Z');
+  const TRACKING_END = new Date('2026-09-14T18:29:00Z');
   
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
     const now = new Date();

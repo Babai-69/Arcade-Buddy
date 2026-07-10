@@ -12,6 +12,8 @@ export function FacilitatorCalculator() {
     gameBadges: number;
     skillBadges: number;
     gearBadgesCount: number;
+    allSkillBadges: { title: string; earnedDate: string; validForProgram: boolean }[];
+    allGameBadges: { title: string; earnedDate: string; validForProgram: boolean }[];
   } | null>(null);
 
   const [bonusMilestone, setBonusMilestone] = useState({
@@ -44,6 +46,9 @@ export function FacilitatorCalculator() {
       let validGameBadges = 0;
       let validSkillBadges = 0;
       let gearBadgesCount = 0;
+      
+      const allSkillBadges: { title: string; earnedDate: string; validForProgram: boolean }[] = [];
+      const allGameBadges: { title: string; earnedDate: string; validForProgram: boolean }[] = [];
 
       const gearBadgeTitles = [
         "create your first gemini enterprise application",
@@ -55,17 +60,9 @@ export function FacilitatorCalculator() {
       json.badges.forEach((badge: any) => {
         const dateStr = (badge.completedDate || badge.earnedDate || '').replace(/^Earned\s+(on\s+)?/i, '').trim();
         const badgeDate = new Date(dateStr);
-        
-        if (badgeDate < START || badgeDate > END) {
-          // SKIP — do not count this badge at all
-          return;
-        }
+        const isWithinTimeline = badgeDate >= START && badgeDate <= END;
         
         const t = badge.title.toLowerCase().trim();
-
-        if (gearBadgeTitles.includes(t)) {
-           gearBadgesCount++;
-        }
         
         const isGameBadge = t.includes("arcade base camp") ||
                             t.includes("arcade adventure") ||
@@ -83,11 +80,24 @@ export function FacilitatorCalculator() {
         const isTriviaBadge = t.includes("trivia") || t.includes("quiz");
         const isLabFree = badge.category === "Lab-free"; 
         const isSpecial = badge.category === "Special" && !isGameBadge;
-        
+        const isSkillBadge = !isGameBadge && !isTriviaBadge && !isLabFree && !isSpecial;
+
+        if (isSkillBadge) {
+          allSkillBadges.push({ title: badge.title, earnedDate: dateStr, validForProgram: isWithinTimeline });
+        }
         if (isGameBadge) {
-          validGameBadges++;
-        } else if (!isTriviaBadge && !isLabFree && !isSpecial) {
-          validSkillBadges++;
+          allGameBadges.push({ title: badge.title, earnedDate: dateStr, validForProgram: isWithinTimeline });
+        }
+
+        if (isWithinTimeline) {
+          if (gearBadgeTitles.includes(t)) {
+             gearBadgesCount++;
+          }
+          if (isGameBadge) {
+            validGameBadges++;
+          } else if (isSkillBadge) {
+            validSkillBadges++;
+          }
         }
       });
       
@@ -97,6 +107,8 @@ export function FacilitatorCalculator() {
         gameBadges: validGameBadges,
         skillBadges: validSkillBadges,
         gearBadgesCount: Math.min(gearBadgesCount, 4), // cap at 4
+        allSkillBadges,
+        allGameBadges
       });
       
     } catch (err: any) {
@@ -555,6 +567,86 @@ export function FacilitatorCalculator() {
                     );
                   })}
                 </div>
+              </div>
+
+              {/* Section 7: Completed Skill Badges */}
+              <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-[#4285F4]" />
+                  Completed Skill Badges
+                </h3>
+                <p className="text-sm text-slate-500 mb-6 max-w-3xl">
+                  Showing all skill badges you have earned. Badges completed within the active program timeline (July 13 - Sep 14, 2026) are highlighted in green and count towards your milestones. Badges earned outside this timeline are shown in gray.
+                </p>
+                
+                {data.allSkillBadges.length === 0 ? (
+                  <div className="text-sm text-slate-500 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+                    No skill badges found on this profile.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {data.allSkillBadges.map((badge, idx) => (
+                      <div key={idx} className={`p-4 rounded-xl border text-sm flex flex-col justify-between transition-colors ${badge.validForProgram ? 'bg-[#34A853]/5 dark:bg-[#34A853]/10 border-[#34A853]/30 hover:border-[#34A853]/50' : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'}`}>
+                        <div className={`font-medium mb-3 line-clamp-3 ${badge.validForProgram ? 'text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400'}`}>
+                          {badge.title}
+                        </div>
+                        <div className="flex items-center justify-between mt-auto">
+                          <span className="text-xs font-medium text-slate-500 dark:text-slate-500">{badge.earnedDate}</span>
+                          {badge.validForProgram ? (
+                            <div className="flex items-center gap-1 text-xs font-bold text-[#34A853] bg-[#34A853]/10 px-2 py-0.5 rounded-md">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              Counted
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1 text-xs font-bold text-slate-500 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-md">
+                              Not Counted
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Section 8: Completed Game Badges */}
+              <div className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-800">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                  <Gamepad2 className="w-5 h-5 text-[#EA4335]" />
+                  Completed Game Badges
+                </h3>
+                <p className="text-sm text-slate-500 mb-6 max-w-3xl">
+                  Showing all arcade game badges you have earned. Like skill badges, those completed within the timeline are highlighted and counted.
+                </p>
+                
+                {data.allGameBadges.length === 0 ? (
+                  <div className="text-sm text-slate-500 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+                    No game badges found on this profile.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                    {data.allGameBadges.map((badge, idx) => (
+                      <div key={idx} className={`p-4 rounded-xl border text-sm flex flex-col justify-between transition-colors ${badge.validForProgram ? 'bg-[#34A853]/5 dark:bg-[#34A853]/10 border-[#34A853]/30 hover:border-[#34A853]/50' : 'bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'}`}>
+                        <div className={`font-medium mb-3 line-clamp-3 ${badge.validForProgram ? 'text-slate-900 dark:text-slate-100' : 'text-slate-600 dark:text-slate-400'}`}>
+                          {badge.title}
+                        </div>
+                        <div className="flex items-center justify-between mt-auto">
+                          <span className="text-xs font-medium text-slate-500 dark:text-slate-500">{badge.earnedDate}</span>
+                          {badge.validForProgram ? (
+                            <div className="flex items-center gap-1 text-xs font-bold text-[#34A853] bg-[#34A853]/10 px-2 py-0.5 rounded-md">
+                              <CheckCircle2 className="w-3.5 h-3.5" />
+                              Counted
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1 text-xs font-bold text-slate-500 bg-slate-200 dark:bg-slate-700 px-2 py-0.5 rounded-md">
+                              Not Counted
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
         </div>
       )}

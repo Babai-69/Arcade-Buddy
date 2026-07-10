@@ -1,33 +1,70 @@
 import React, { useState, useMemo } from 'react';
 import { gameBadges, skillBadges } from '../data/badgesData';
-import { Search, Copy } from 'lucide-react';
+import { Search, Copy, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface CheckProgressProps {
-  completedBadges: { title: string }[];
+  completedBadges: { title: string; earnedDate?: string; category?: string; points?: number; validForProgram?: boolean }[];
 }
 
 export function CheckProgress({ completedBadges }: CheckProgressProps) {
   const [activeTab, setActiveTab] = useState('All');
+  const [viewMode, setViewMode] = useState<'incomplete' | 'completed'>('incomplete');
   const [searchQuery, setSearchQuery] = useState('');
   const [visibleCount, setVisibleCount] = useState(9);
 
   const tabs = ['All', 'Game', 'Skills'];
 
   const allBadges = useMemo(() => {
+    const isCompleted = (b: {name: string}) => completedBadges.some(cb => 
+      cb.title.toLowerCase().includes(b.name.toLowerCase()) || 
+      b.name.toLowerCase().includes(cb.title.toLowerCase())
+    );
+    
     const game = gameBadges
-      .filter(b => !completedBadges.some(cb => cb.title.toLowerCase().includes(b.name.toLowerCase())))
+      .filter(b => !isCompleted(b))
       .map(b => ({ ...b, category: 'Game', points: 1, type: 'GAME' }));
       
     const skill = skillBadges
-      .filter(b => !completedBadges.some(cb => cb.title.toLowerCase().includes(b.name.toLowerCase())))
+      .filter(b => !isCompleted(b))
       .map(b => ({ ...b, category: 'Skill', points: 0.5, type: 'SKILL' }));
       
     return [...game, ...skill];
   }, [completedBadges]);
 
+  const completedBadgesData = useMemo(() => {
+    const START = new Date('2026-07-13T11:30:00Z');
+    const END = new Date('2026-09-14T18:29:00Z');
+
+    return completedBadges
+      .filter(b => b.category === 'Skill' || b.category === 'Game')
+      .map(b => {
+        const foundInDb = [...gameBadges, ...skillBadges].find(dbBadge => 
+          dbBadge.name.toLowerCase().includes(b.title.toLowerCase()) ||
+          b.title.toLowerCase().includes(dbBadge.name.toLowerCase())
+        );
+        
+        const dateStr = (b.earnedDate || '').replace(/^Earned\s+(on\s+)?/i, '').trim();
+        const badgeDate = new Date(dateStr);
+        const validForProgram = b.validForProgram !== undefined ? b.validForProgram : (badgeDate >= START && badgeDate <= END);
+
+        return {
+          name: b.title,
+          category: b.category,
+          points: b.points || (b.category === 'Skill' ? 0.5 : 1),
+          type: (b.category || '').toUpperCase() === 'GAME' ? 'GAME' : 'SKILL',
+          earnedDate: dateStr,
+          validForProgram,
+          image: foundInDb ? foundInDb.image : 'No Image',
+          link: foundInDb ? foundInDb.link : '#',
+        };
+      });
+  }, [completedBadges]);
+
   const filteredBadges = useMemo(() => {
-    return allBadges.filter(badge => {
+    const sourceBadges = viewMode === 'incomplete' ? allBadges : completedBadgesData;
+
+    return sourceBadges.filter(badge => {
       // Filter by tab
       if (activeTab === 'Game' && badge.category !== 'Game') return false;
       if (activeTab === 'Skills' && badge.category !== 'Skill') return false;
@@ -38,7 +75,7 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
       
       return true;
     });
-  }, [allBadges, activeTab, searchQuery]);
+  }, [allBadges, completedBadgesData, activeTab, searchQuery, viewMode]);
 
   const displayedBadges = filteredBadges.slice(0, visibleCount);
   const remainingCount = filteredBadges.length - visibleCount;
@@ -53,9 +90,24 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
 
   return (
     <div className="bg-white dark:bg-slate-800 rounded-[16px] border border-slate-200 dark:border-slate-700 shadow-sm p-6 font-sans mt-8 transition-colors">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Incomplete Badges</h2>
-        <div className="relative">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 border-b border-slate-200 dark:border-slate-700 pb-4">
+        <div className="flex items-center gap-6">
+          <button
+            onClick={() => { setViewMode('incomplete'); setVisibleCount(9); }}
+            className={`text-xl md:text-2xl font-bold transition-all relative ${viewMode === 'incomplete' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
+          >
+            Incomplete Badges
+            {viewMode === 'incomplete' && <motion.div layoutId="tab-indicator" className="absolute -bottom-[18px] left-0 right-0 h-0.5 bg-blue-500" />}
+          </button>
+          <button
+            onClick={() => { setViewMode('completed'); setVisibleCount(9); }}
+            className={`text-xl md:text-2xl font-bold transition-all relative ${viewMode === 'completed' ? 'text-slate-900 dark:text-white' : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300'}`}
+          >
+            Completed Badges
+            {viewMode === 'completed' && <motion.div layoutId="tab-indicator" className="absolute -bottom-[18px] left-0 right-0 h-0.5 bg-blue-500" />}
+          </button>
+        </div>
+        <div className="relative mt-4 md:mt-0">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input
             type="text"
@@ -70,9 +122,10 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
       <div className="flex flex-wrap items-center gap-2 mb-8">
         {tabs.map(tab => {
           let count = 0;
-          if (tab === 'All') count = allBadges.length;
-          else if (tab === 'Game') count = allBadges.filter(b => b.category === 'Game').length;
-          else if (tab === 'Skills') count = allBadges.filter(b => b.category === 'Skill').length;
+          const sourceBadges = viewMode === 'incomplete' ? allBadges : completedBadgesData;
+          if (tab === 'All') count = sourceBadges.length;
+          else if (tab === 'Game') count = sourceBadges.filter(b => b.category === 'Game').length;
+          else if (tab === 'Skills') count = sourceBadges.filter(b => b.category === 'Skill').length;
 
           const isActive = activeTab === tab;
 
@@ -113,8 +166,20 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.2 }}
                   key={badge.name} 
-                  className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[16px] overflow-hidden flex flex-col hover:shadow-md transition-shadow"
+                  className={`bg-white dark:bg-slate-800 border ${viewMode === 'completed' ? ((badge as any).validForProgram ? 'border-[#34A853]/50 ring-1 ring-[#34A853]/50' : 'border-slate-200 dark:border-slate-700 opacity-70 grayscale') : 'border-slate-200 dark:border-slate-700'} rounded-[16px] overflow-hidden flex flex-col hover:shadow-md transition-shadow relative`}
                 >
+                  {viewMode === 'completed' && (
+                    <div className="absolute top-3 right-3 z-10 flex flex-col items-end gap-1">
+                       <span className={`text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-sm ${
+                         (badge as any).validForProgram 
+                         ? 'bg-[#34A853] text-white' 
+                         : 'bg-slate-500 text-white'
+                       }`}>
+                          {(badge as any).validForProgram && <CheckCircle2 className="w-3 h-3" />}
+                          {(badge as any).validForProgram ? 'COUNTED' : 'NOT COUNTED'}
+                       </span>
+                    </div>
+                  )}
                   <div className="p-4 flex-1 flex flex-col">
                   <div className="flex items-start justify-between mb-4">
                     <span className={`text-[10px] font-bold px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 ${
@@ -162,16 +227,24 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
                   </div>
                 </div>
 
-                <div className="px-4 pb-4">
-                  <a
-                    href={badge.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center justify-center gap-2 w-full bg-[#1a2b4c] dark:bg-blue-600 hover:bg-[#111d33] dark:hover:bg-blue-700 text-white py-3 rounded-xl text-sm font-medium transition-colors"
-                  >
-                    Start Challenge &rarr;
-                  </a>
-                </div>
+                {viewMode === 'incomplete' ? (
+                  <div className="px-4 pb-4 mt-auto">
+                    <a
+                      href={badge.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-2 w-full bg-[#1a2b4c] dark:bg-blue-600 hover:bg-[#111d33] dark:hover:bg-blue-700 text-white py-3 rounded-xl text-sm font-medium transition-colors"
+                    >
+                      Start Challenge &rarr;
+                    </a>
+                  </div>
+                ) : (
+                  <div className="px-4 pb-4 mt-auto border-t border-slate-100 dark:border-slate-700 pt-3">
+                    <p className="text-xs text-slate-500 text-center font-medium">
+                      Earned: {(badge as any).earnedDate}
+                    </p>
+                  </div>
+                )}
               </motion.div>
             ))}
             </AnimatePresence>

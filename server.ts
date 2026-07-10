@@ -197,8 +197,8 @@ async function startServer() {
       return res.status(400).json({ error: "Missing url parameter" });
     }
 
-    const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T17:30:00-04:00');
-    const END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T23:59:59-04:00');
+    const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T11:30:00Z');
+    const END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T18:29:00Z');
 
     try {
       const response = await fetch(url);
@@ -224,19 +224,20 @@ async function startServer() {
         const title = $(el).find(".badge-title, .ql-title-medium").text().trim() || $(el).attr('alt') || rawText || "";
         const titleLower = title.toLowerCase();
 
-        // Extract the year and filter out badges from before 2026
+        // Extract the year and check timeline
         const dateText = $(el).find(".ql-body-medium.l-mbs, .ql-body-medium").text().trim();
         let earnedDate = dateText;
+        let validForProgram = true;
         if (dateText) {
           let cleanDateStr = dateText.replace("Earned ", "").replace(/ EDT| EST| PDT| PST/g, "").trim();
           let parsedDate = new Date(cleanDateStr);
           if (!isNaN(parsedDate.getTime())) {
-            if (parsedDate < START_DATE || parsedDate > END_DATE) return;
+            if (parsedDate < START_DATE || parsedDate > END_DATE) validForProgram = false;
           } else {
             const match = dateText.match(/(20\d\d)/);
             if (match) {
               const year = parseInt(match[1], 10);
-              if (year !== 2026) return;
+              if (year !== 2026) validForProgram = false;
             }
           }
         }
@@ -266,11 +267,11 @@ async function startServer() {
           titleLower.includes("monthly game") ||
           titleLower.includes("base camp")
         ) {
-          gameBadges++;
+          if (validForProgram) gameBadges++;
           category = "Game";
           points = 1;
         } else if (titleLower.includes("trivia") || titleLower.includes("quiz")) {
-          triviaBadges++;
+          if (validForProgram) triviaBadges++;
           category = "Trivia";
           points = 1;
         } else if (
@@ -281,7 +282,7 @@ async function startServer() {
           titleLower.includes("bonus") ||
           titleLower.includes("event")
         ) {
-          specialBadges++;
+          if (validForProgram) specialBadges++;
           category = "Special";
           points = 1;
         } else {
@@ -414,11 +415,11 @@ async function startServer() {
             category = "Lab-free";
             points = 0;
           } else if (halfPointSkillBadges.includes(titleLower)) {
-            skillBadges += 1;
+            if (validForProgram) skillBadges += 1;
             category = "Skill";
             points = 0.5;
           } else {
-            skillBadges += 1;
+            if (validForProgram) skillBadges += 1;
             category = "Skill";
             points = 0.5;
           }
@@ -429,7 +430,8 @@ async function startServer() {
           title: title,
           earnedDate: earnedDate,
           category: category,
-          points: points
+          points: points,
+          validForProgram
         });
       });
 

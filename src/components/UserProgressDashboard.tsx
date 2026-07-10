@@ -26,7 +26,7 @@ export function UserProgressDashboard() {
   const [isEditingUrl, setIsEditingUrl] = useState(false);
   
   // Custom Date Range
-  const [startDate, setStartDate] = useState('2026-07-13T17:30');
+  const [startDate, setStartDate] = useState('2026-07-13T17:00');
   const [endDate, setEndDate] = useState('2026-09-14T23:59');
 
   const [isSharing, setIsSharing] = useState(false);
@@ -45,12 +45,12 @@ export function UserProgressDashboard() {
     let gameCount = 0;
     let skillCount = 0;
     gamesToTrack.forEach(game => {
-      if (data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()))) {
+      if (data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()) && b.validForProgram)) {
         gameCount++;
       }
     });
     Object.keys(SKILL_BADGES).forEach(badgeName => {
-      if (data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase())) {
+      if (data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase() && b.validForProgram)) {
         skillCount++;
       }
     });
@@ -148,8 +148,8 @@ export function UserProgressDashboard() {
       // Create date objects taking timezone into account or pass directly
       // appending Z or offset if needed, but since server expects ISO we can just pass
       let queryStr = `url=${encodeURIComponent(targetUrl)}`;
-      if (startDate) queryStr += `&startDate=${encodeURIComponent(new Date(startDate).toISOString())}`;
-      if (endDate) queryStr += `&endDate=${encodeURIComponent(new Date(endDate).toISOString())}`;
+      // Removed frontend startDate
+      // Removed frontend endDate
       
       const res = await fetch(`/api/calculator?${queryStr}`);
       if (!res.ok) throw new Error("Could not fetch profile. Ensure your profile is public.");
@@ -199,7 +199,7 @@ export function UserProgressDashboard() {
     
     // Process Game Badges
     gamesToTrack.forEach(game => {
-      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()));
+      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()) && b.validForProgram);
       if (isCompleted) completedGameBadges++;
       tableData.push([
         game.title,
@@ -211,7 +211,7 @@ export function UserProgressDashboard() {
     
     // Process Skill Badges
     Object.keys(SKILL_BADGES).forEach(badgeName => {
-      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase());
+      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase() && b.validForProgram);
       if (isCompleted) completedSkillBadges++;
       tableData.push([
         badgeName,
@@ -266,19 +266,38 @@ export function UserProgressDashboard() {
   let completedSkillBadgesCount = 0;
   if (data) {
     gamesToTrack.forEach(game => {
-      if (data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()))) {
+      if (data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()) && b.validForProgram)) {
         completedGameBadgesCount++;
       }
     });
     Object.keys(SKILL_BADGES).forEach(badgeName => {
-      if (data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase())) {
+      if (data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase() && b.validForProgram)) {
         completedSkillBadgesCount++;
       }
     });
   }
 
+  const milestones = [
+    { name: 'Milestone 1', games: 6, skills: 18 },
+    { name: 'Milestone 2', games: 8, skills: 34 },
+    { name: 'Milestone 3', games: 10, skills: 50 },
+    { name: 'Ultimate Milestone', games: 12, skills: 66 }
+  ];
+  
+  let currentMilestone: any = null;
+  let nextMilestone: any = null;
+  
+  for (let i = 0; i < milestones.length; i++) {
+    if (completedGameBadgesCount >= milestones[i].games && completedSkillBadgesCount >= milestones[i].skills) {
+      currentMilestone = milestones[i];
+    } else {
+      nextMilestone = milestones[i];
+      break;
+    }
+  }
+
   useEffect(() => {
-    if (completedGameBadgesCount >= 12 && completedSkillBadgesCount >= 66) {
+    if (currentMilestone) {
       const duration = 3 * 1000;
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
@@ -296,31 +315,12 @@ export function UserProgressDashboard() {
       
       return () => clearInterval(interval);
     }
-  }, [completedGameBadgesCount, completedSkillBadgesCount]);
+  }, [currentMilestone?.name]);
 
 // Calculate remaining for ultimate milestone
   const gameBadgesRemaining = Math.max(0, 12 - completedGameBadgesCount);
   const skillBadgesRemaining = Math.max(0, 66 - completedSkillBadgesCount);
   const isUltimateReached = gameBadgesRemaining === 0 && skillBadgesRemaining === 0;
-
-  const milestones = [
-    { name: 'Milestone 1', games: 6, skills: 18 },
-    { name: 'Milestone 2', games: 8, skills: 34 },
-    { name: 'Milestone 3', games: 10, skills: 50 },
-    { name: 'Ultimate Milestone', games: 12, skills: 66 }
-  ];
-  
-  let currentMilestone = null;
-  let nextMilestone = null;
-  
-  for (let i = 0; i < milestones.length; i++) {
-    if (completedGameBadgesCount >= milestones[i].games && completedSkillBadgesCount >= milestones[i].skills) {
-      currentMilestone = milestones[i];
-    } else {
-      nextMilestone = milestones[i];
-      break;
-    }
-  }
 
   const nextMilestoneGamesRemaining = nextMilestone ? Math.max(0, nextMilestone.games - completedGameBadgesCount) : 0;
   const nextMilestoneSkillsRemaining = nextMilestone ? Math.max(0, nextMilestone.skills - completedSkillBadgesCount) : 0;
@@ -390,27 +390,6 @@ export function UserProgressDashboard() {
                     ))}
                   </div>
                 )}
-              </div>
-              
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Start Timeline</label>
-                  <input
-                    type="datetime-local"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">End Timeline</label>
-                  <input
-                    type="datetime-local"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-900 dark:text-white"
-                  />
-                </div>
               </div>
             </div>
             
@@ -490,8 +469,8 @@ export function UserProgressDashboard() {
               </p>
               {nextMilestone && (
                 <div className="mt-3 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden flex">
-                   <div className="bg-purple-500 h-2.5" style={{ width: `${Math.min(100, (completedGameBadgesCount / nextMilestone.games) * 100)}%` }}></div>
-                   <div className="bg-blue-500 h-2.5" style={{ width: `${Math.min(100, (completedSkillBadgesCount / nextMilestone.skills) * 100)}%` }}></div>
+                   <div className="bg-purple-500 h-full" style={{ width: `${(Math.min(completedGameBadgesCount, nextMilestone.games) / (nextMilestone.games + nextMilestone.skills)) * 100}%` }}></div>
+                   <div className="bg-blue-500 h-full" style={{ width: `${(Math.min(completedSkillBadgesCount, nextMilestone.skills) / (nextMilestone.games + nextMilestone.skills)) * 100}%` }}></div>
                 </div>
               )}
             </div>
