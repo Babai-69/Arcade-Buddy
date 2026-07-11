@@ -60,7 +60,11 @@ export function Milestones() {
 
   return (
     <section id="milestones" className="py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div 
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      >
         <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-4">
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-slate-900 dark:text-white">Swag Milestones</h2>
@@ -142,7 +146,7 @@ export function Milestones() {
             </p>
           </div>
         )}
-      </div>
+      </motion.div>
     </section>
   );
 }
