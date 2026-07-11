@@ -124,7 +124,7 @@ export function BonusMilestonePage() {
           <div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-3">
               <Layers className="w-6 h-6 text-[#34A853]" />
-              The 4 steps to earn the +10
+              The 4 steps to earn the +10 points
             </h2>
 
             <div className="space-y-6 relative before:absolute before:inset-0 before:ml-6 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 dark:before:via-slate-700 before:to-transparent">

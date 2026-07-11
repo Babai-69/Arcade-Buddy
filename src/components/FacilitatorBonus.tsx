@@ -1,5 +1,6 @@
 import React from 'react';
 import { Award, CheckCircle2, Info } from 'lucide-react';
+import { motion } from 'motion/react';
 
 const milestones = [
   {
@@ -67,7 +68,11 @@ const milestones = [
 export function FacilitatorBonus() {
   return (
     <section id="milestones" className="py-20 bg-transparent">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div 
+        className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"
+        animate={{ y: [0, -8, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      >
         <h2 className="text-3xl md:text-4xl font-display font-bold mb-8 text-slate-900 dark:text-white text-center">
           See the milestones of the program below!
           </h2>
@@ -172,7 +177,7 @@ export function FacilitatorBonus() {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
