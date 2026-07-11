@@ -69,8 +69,8 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="https://chat.whatsapp.com/JRvoPJxMibzLPnqWcASG0I" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-[#34A853] transition-colors">
-                  <MessageCircle className="h-4 w-4 text-[#34A853]" /> WhatsApp Channel
+                <a href="https://chat.whatsapp.com/JBPTktVT9sHHZ60mHlpk0l" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-[#34A853] transition-colors">
+                  <MessageCircle className="h-4 w-4 text-[#34A853]" /> WhatsApp Group
                 </a>
               </li>
               <li>

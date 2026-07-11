@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, CheckCircle, ExternalLink, Download, AlertCircle, Share2, Calendar, BellRing, X } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { SKILL_BADGES, GAME_BADGES } from '../lib/badgeLinks';
 import jsPDF from 'jspdf';
@@ -15,6 +16,17 @@ import { CheckProgress } from './CheckProgress';
 import { WeeklyProgress } from './WeeklyProgress';
 
 export function UserProgressDashboard() {
+  const [user, setUser] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const [profileUrl, setProfileUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<any>(null);
@@ -73,7 +85,7 @@ export function UserProgressDashboard() {
 
   
   const { activeGames } = useArcadeGames();
-  const isAdmin = auth.currentUser?.email === 'deya58690@gmail.com' || auth.currentUser?.email === 'tripti.arcade.25@gmail.com';
+  const isAdmin = user?.email === 'deya58690@gmail.com' || user?.email === 'tripti.arcade.25@gmail.com';
   
   useEffect(() => {
     let isMounted = true;
@@ -92,9 +104,9 @@ export function UserProgressDashboard() {
       let initialUrl = savedUrl;
 
       // Then check Firestore for authenticated user
-      if (auth.currentUser) {
+      if (user) {
         try {
-          const userRef = doc(db, 'users', auth.currentUser.uid);
+          const userRef = doc(db, 'users', user.uid);
           const userSnap = await getDoc(userRef);
           if (userSnap.exists() && userSnap.data().profileUrl) {
             initialUrl = userSnap.data().profileUrl;
@@ -128,7 +140,7 @@ export function UserProgressDashboard() {
     fetchSavedUrl();
 
     return () => { isMounted = false; };
-  }, [auth.currentUser]);
+  }, [user]);
 
   const fetchProgress = async (e?: React.FormEvent, urlOverride?: string) => {
     if (e) e.preventDefault();
@@ -140,8 +152,8 @@ export function UserProgressDashboard() {
     setIsEditingUrl(false);
     
     try {
-      if (auth.currentUser) {
-        const userRef = doc(db, 'users', auth.currentUser.uid);
+      if (user) {
+        const userRef = doc(db, 'users', user.uid);
         await setDoc(userRef, { profileUrl: targetUrl }, { merge: true });
       }
 
@@ -181,7 +193,7 @@ export function UserProgressDashboard() {
     if (!data) return;
     
     const doc = new jsPDF();
-    const studentName = auth.currentUser?.displayName || data.name || 'Student';
+    const studentName = user?.displayName || data.name || 'Student';
     const dateStr = new Date().toLocaleDateString();
     
     doc.setFontSize(20);
@@ -189,7 +201,7 @@ export function UserProgressDashboard() {
     
     doc.setFontSize(12);
     doc.text(`Student: ${studentName}`, 14, 32);
-    if (auth.currentUser?.email) doc.text(`Email: ${auth.currentUser.email}`, 14, 38);
+    if (user?.email) doc.text(`Email: ${user.email}`, 14, 38);
     doc.text(`Date: ${dateStr}`, 14, 44);
 
     let completedGameBadges = 0;
@@ -252,14 +264,6 @@ export function UserProgressDashboard() {
     }
   };
 
-  if (!auth.currentUser) {
-    return (
-      <div className="w-full max-w-7xl mx-auto pt-24 pb-20 px-4 text-center">
-        <h2 className="text-2xl font-bold mb-4 text-slate-800 dark:text-white">Please Sign In</h2>
-        <p className="text-slate-500">You need to sign in to view your progress tracker.</p>
-      </div>
-    );
-  }
 
   // Calculate stats for charts
   let completedGameBadgesCount = 0;
@@ -324,6 +328,23 @@ export function UserProgressDashboard() {
 
   const nextMilestoneGamesRemaining = nextMilestone ? Math.max(0, nextMilestone.games - completedGameBadgesCount) : 0;
   const nextMilestoneSkillsRemaining = nextMilestone ? Math.max(0, nextMilestone.skills - completedSkillBadgesCount) : 0;
+
+  if (authLoading) {
+    return (
+      <div className="w-full h-[60vh] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#4285F4] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="w-full max-w-7xl mx-auto pt-24 pb-20 px-4 text-center">
+        <h2 className="text-2xl font-bold mb-4 text-slate-800 dark:text-white">Please Sign In</h2>
+        <p className="text-slate-500">You need to sign in to view your progress tracker.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-7xl mx-auto pt-8 pb-20 px-4 font-sans">

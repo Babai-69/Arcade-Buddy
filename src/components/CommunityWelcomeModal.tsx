@@ -80,7 +80,7 @@ export function CommunityWelcomeModal() {
                   </div>
                   <div className="bg-white p-1.5 rounded-lg shrink-0">
                     <QRCodeSVG 
-                      value="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s"
+                      value="https://chat.whatsapp.com/JBPTktVT9sHHZ60mHlpk0l"
                       size={64}
                       level="Q"
                       imageSettings={{
@@ -95,7 +95,7 @@ export function CommunityWelcomeModal() {
                   </div>
                 </div>
                 <a
-                  href="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s"
+                  href="https://chat.whatsapp.com/JBPTktVT9sHHZ60mHlpk0l"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-[#25D366] hover:bg-[#1fae53] text-white py-2.5 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors text-sm"
@@ -116,7 +116,7 @@ export function CommunityWelcomeModal() {
               {/* Group Buttons */}
               <div className="space-y-3 mb-6">
                 <a
-                  href="https://chat.whatsapp.com/JRvoPJxMibzLPnqWcASG0I"
+                  href="https://chat.whatsapp.com/JBPTktVT9sHHZ60mHlpk0l"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-[#1da851] hover:bg-[#188c43] text-white py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors"

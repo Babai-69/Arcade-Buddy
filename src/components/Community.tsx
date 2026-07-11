@@ -29,7 +29,7 @@ export function Community() {
           </a>
 
           <a
-            href="https://chat.whatsapp.com/JRvoPJxMibzLPnqWcASG0I"
+            href="https://chat.whatsapp.com/JBPTktVT9sHHZ60mHlpk0l"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-4 bg-[#0F9D58] hover:bg-[#0b8549] transition-colors px-6 py-4 rounded-xl shadow-lg flex-1 sm:max-w-[280px]"
