@@ -9,11 +9,12 @@ export function ProgramInformation() {
     minutes: 0,
     seconds: 0,
   });
-  const [timerState, setTimerState] = useState<'upcoming' | 'live' | 'ended'>('upcoming');
+  const [timerState, setTimerState] = useState<'upcoming' | 'registration' | 'live' | 'ended'>('upcoming');
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
     const startDate = new Date('2026-07-13T11:30:00Z').getTime();
+    const registrationEndDate = new Date('2026-07-20T18:29:00Z').getTime();
     const endDate = new Date('2026-09-14T18:29:00Z').getTime();
 
     const interval = setInterval(() => {
@@ -23,7 +24,10 @@ export function ProgramInformation() {
       if (now < startDate) {
         setTimerState('upcoming');
         distance = startDate - now;
-      } else if (now >= startDate && now <= endDate) {
+      } else if (now >= startDate && now < registrationEndDate) {
+        setTimerState('registration');
+        distance = registrationEndDate - now;
+      } else if (now >= registrationEndDate && now <= endDate) {
         setTimerState('live');
         distance = endDate - now;
       } else {
@@ -121,7 +125,7 @@ export function ProgramInformation() {
               <div className="flex items-center gap-2 mb-4">
                 <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />
                 <h4 className="font-bold text-sm font-display text-slate-800 dark:text-slate-200">
-                  {timerState === 'upcoming' ? 'Facilitator Program Starts In:' : timerState === 'live' ? 'Time Left to Complete Program:' : 'Facilitator Program Status:'}
+                  {timerState === 'upcoming' ? 'Facilitator Program Starts In:' : timerState === 'registration' ? 'Deadline to fill the registration form:' : timerState === 'live' ? 'Time Left to Complete Program:' : 'Facilitator Program Status:'}
                 </h4>
               </div>
 

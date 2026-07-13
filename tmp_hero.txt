@@ -1,69 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
-import { Cloud, Award, Sparkles, ChevronRight, Users, Activity, TrendingUp, Clock, Instagram, Github, Linkedin } from 'lucide-react';
-import { Participant } from '../types';
-
-export function Hero({ participants }: { participants: Participant[] }) {
-  const safeParticipants = participants || [];
-  const totalParticipants = safeParticipants.length;
-  const totalPoints = safeParticipants.reduce((sum, p) => sum + p.arcadePoints, 0);
-  const activeToday = safeParticipants.filter(p => p.arcadePoints > 0).length;
-
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-  const [timerState, setTimerState] = useState<'upcoming' | 'registration' | 'live' | 'ended'>('upcoming');
-
-  useEffect(() => {
-    // Target date: July 13, 2026 17:00:00 GMT+0530 (IST) -> 11:30:00Z
-    const startDate = new Date('2026-07-13T11:30:00Z').getTime();
-    // Registration end date: July 20, 2026 23:59:00 GMT+0530 (IST) -> 18:29:00Z
-    const registrationEndDate = new Date('2026-07-20T18:29:00Z').getTime();
-    // End date: September 14, 2026 23:59:00 GMT+0530 (IST) -> 18:29:00Z
-    const endDate = new Date('2026-09-14T18:29:00Z').getTime();
-
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      
-      let distance = 0;
-      if (now < startDate) {
-        setTimerState('upcoming');
-        distance = startDate - now;
-      } else if (now >= startDate && now < registrationEndDate) {
-        setTimerState('registration');
-        distance = registrationEndDate - now;
-      } else if (now >= registrationEndDate && now <= endDate) {
-        setTimerState('live');
-        distance = endDate - now;
-      } else {
-        setTimerState('ended');
-        clearInterval(interval);
-        return;
-      }
-
-      setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <section className="relative pt-20 pb-10 overflow-hidden" id="about">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {(timerState === 'upcoming' || timerState === 'registration' || timerState === 'live') && (
+          {(timerState === 'upcoming' || timerState === 'live') && (
             <div style={{
               position: 'relative',
               borderRadius: '999px',
@@ -123,7 +64,7 @@ export function Hero({ participants }: { participants: Participant[] }) {
                 <span className="text-[13px] font-medium text-slate-800 dark:text-white/85 whitespace-nowrap">
                   {timerState === 'upcoming' 
                     ? 'Arcade 2026 is starting soon — get ready!' 
-                    : 'Arcade Facilitator 2026 is live now'}
+                    : 'Arcade 2026 is now live — start playing!'}
                 </span>
               </div>
             </div>
@@ -167,7 +108,7 @@ export function Hero({ participants }: { participants: Participant[] }) {
               <div className="flex items-center gap-2 mb-6 justify-center">
                 <Clock className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                 <h4 className="font-bold font-display text-slate-800 dark:text-slate-200">
-                  {timerState === 'upcoming' ? 'Facilitator Program Starts In:' : timerState === 'registration' ? 'Deadline to fill the registration form:' : 'Time Left to Complete the Program:'}
+                  {timerState === 'upcoming' ? 'Facilitator Program Starts In:' : 'Time Left to Complete the Program:'}
                 </h4>
               </div>
 
@@ -193,37 +134,3 @@ export function Hero({ participants }: { participants: Participant[] }) {
           )}
           {timerState === 'ended' && (
             <div className="max-w-4xl mx-auto bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 mb-8">
-              <div className="flex items-center gap-2 justify-center">
-                <Clock className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-                <h4 className="font-bold font-display text-slate-800 dark:text-slate-200">
-                  Facilitator Program has ended.
-                </h4>
-              </div>
-            </div>
-          )}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-8"
-        >
-          {[
-            { icon: Cloud, color: 'text-[#4285F4]', bg: 'bg-[#4285F4]/10', title: 'Learn Cloud Tech', desc: 'Complete hands-on labs and skill badges on Cloud Skills Boost.' },
-            { icon: Sparkles, color: 'text-[#FBBC05]', bg: 'bg-[#FBBC05]/10', title: 'Earn Points', desc: 'Every badge earns you Arcade Points. Climb the leaderboard daily.' },
-            { icon: Award, color: 'text-[#34A853]', bg: 'bg-[#34A853]/10', title: 'Unlock Swag', desc: 'Reach milestones to claim exclusive Google Cloud merchandise.' }
-          ].map((feature, idx) => (
-            <div key={idx} className="glass-panel p-6 rounded-3xl text-left border border-white/50 dark:border-slate-800 backdrop-blur-xl">
-              <div className={`w-12 h-12 rounded-2xl ${feature.bg} flex items-center justify-center mb-4`}>
-                <feature.icon className={`h-6 w-6 ${feature.color}`} />
-              </div>
-              <h3 className="font-display font-semibold text-lg mb-2">{feature.title}</h3>
-              <p className="text-slate-500 dark:text-slate-400 text-sm">{feature.desc}</p>
-            </div>
-          ))}
-        </motion.div>
-      </div>
-    </section>
-  );
-}
