@@ -30,7 +30,7 @@ export function Registration() {
           <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-sm">
             Register to participate in the Google Cloud Arcade Facilitator Program 2026. Make sure to use the referral code below!
           </p>
-          <a href="https://docs.google.com/forms/?authuser=0" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#4285F4] hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-medium transition-colors w-full sm:w-auto justify-center shadow-lg shadow-blue-500/20">
+          <a href="https://forms.gle/Z2TX54F8bQ4ooV5c9" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-[#4285F4] hover:bg-blue-600 text-white px-6 py-3 rounded-xl font-medium transition-colors w-full sm:w-auto justify-center shadow-lg shadow-blue-500/20">
             Open Registration Form <ArrowRight className="h-4 w-4" />
           </a>
           <p className="text-xs text-slate-500 mt-3 text-center sm:text-left">
