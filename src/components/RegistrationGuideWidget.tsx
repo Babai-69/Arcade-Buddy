@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BookOpen, X } from 'lucide-react';
+import { BookOpen, X, Youtube } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export function RegistrationGuideWidget() {
@@ -42,12 +42,23 @@ export function RegistrationGuideWidget() {
                   <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   <h3 className="font-bold text-slate-900 dark:text-white">Registration Guide</h3>
                 </div>
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                <div className="flex items-center gap-4">
+                  <a 
+                    href="https://youtu.be/J1tm4HRSHjc?si=sGCaxHDgTVkk-CiQ" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg transition-colors"
+                  >
+                    <Youtube className="w-4 h-4" />
+                    Watch Video Guide
+                  </a>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
               </div>
               <div className="flex-1 w-full relative bg-slate-100 dark:bg-slate-950">
                 {/* Loader placeholder behind iframe */}
