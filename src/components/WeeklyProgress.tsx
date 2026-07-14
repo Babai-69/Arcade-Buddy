@@ -1,15 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Info, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { ArcadeLoader } from './ArcadeLoader';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
+import { BadgeRecord } from '../types';
 
-export function WeeklyProgress({ profileUrl }: { profileUrl: string }) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+interface WeeklyProgressProps {
+  badges?: BadgeRecord[];
+}
+
+export function WeeklyProgress({ badges = [] }: WeeklyProgressProps) {
   const [badgeDates, setBadgeDates] = useState<Date[]>([]);
   
   // Window: July 13, 2026 17:00 IST to Sept 14, 2026 23:59 IST (using UTC)
-  const TRACKING_START = new Date('2026-07-13T11:30:00Z');
+  const TRACKING_START = new Date('2026-07-13T00:00:00Z');
   const TRACKING_END = new Date('2026-09-14T18:29:00Z');
   
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
@@ -22,45 +25,22 @@ export function WeeklyProgress({ profileUrl }: { profileUrl: string }) {
     return startOfWeek;
   });
 
-  const handleTrack = async (targetUrl: string) => {
-    if (!targetUrl) return;
-    setLoading(true);
-    setError('');
-    try {
-      const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-      const response = await fetch(proxyUrl);
-      if (!response.ok) throw new Error('Failed to fetch profile');
-      const html = await response.text();
-      
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, 'text/html');
-      
-      const dates: Date[] = [];
-      const regex = /Earned\s+([A-Z][a-z]{2,8}\s+\d{1,2},\s+\d{4}\s+[A-Z]+)/g;
-      let match;
-      while ((match = regex.exec(html)) !== null) {
-        const dateStr = match[1];
-        const date = new Date(dateStr);
-        if (!isNaN(date.getTime())) {
-          if (date >= TRACKING_START && date <= TRACKING_END) {
-            dates.push(date);
-          }
+  useEffect(() => {
+    const dates: Date[] = [];
+    badges.forEach(badge => {
+      // In ProfileChecker/UserProgressDashboard, badges are parsed and we have earnedDate
+      // However, we can use _debugParsedDate if available, or parse earnedDate.
+      const dateStr = (badge as any)._debugParsedDate || badge.earnedDate.replace(/^Earned\s+/i, '');
+      if (!dateStr) return;
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        if (date >= TRACKING_START && date <= TRACKING_END) {
+          dates.push(date);
         }
       }
-      
-      setBadgeDates(dates);
-    } catch (err: any) {
-      setError(err.message || 'Error tracking profile');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  React.useEffect(() => {
-    if (profileUrl) {
-      handleTrack(profileUrl);
-    }
-  }, [profileUrl]);
+    });
+    setBadgeDates(dates);
+  }, [badges]);
 
   const nextWeek = () => {
     setCurrentWeekStart(prev => {
@@ -133,10 +113,6 @@ export function WeeklyProgress({ profileUrl }: { profileUrl: string }) {
         </div>
       </div>
 
-      {error && (
-        <div className="text-red-500 text-sm mb-4">{error}</div>
-      )}
-
       <div className="flex items-center justify-between mb-4">
         <button onClick={prevWeek} className="text-slate-500 hover:text-slate-800 dark:hover:text-white text-sm flex items-center transition-colors">
           <ChevronLeft className="w-4 h-4 mr-1" /> Previous week
@@ -150,11 +126,6 @@ export function WeeklyProgress({ profileUrl }: { profileUrl: string }) {
       </div>
 
       <div className="h-[300px] w-full relative">
-        {loading && (
-          <div className="absolute inset-0 z-10 bg-white/50 dark:bg-slate-800/50 flex items-center justify-center">
-            <ArcadeLoader />
-          </div>
-        )}
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 20, right: 30, left: -20, bottom: 5 }}>
             <XAxis dataKey="name" tick={<CustomizedAxisTick />} axisLine={{ stroke: '#94a3b8' }} tickLine={false} />

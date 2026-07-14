@@ -4,6 +4,7 @@ export interface BadgeRecord {
   earnedDate: string;
   category: 'Game' | 'Skill' | 'Lab-free' | 'Special' | 'Other';
   points: number;
+  validForProgram?: boolean;
 }
 
 export interface Participant {

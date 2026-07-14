@@ -13,54 +13,24 @@ export function FacilitatorBadgeTracker({ isOpen, onClose, participant }: Facili
   const [activeTab, setActiveTab] = useState<'game' | 'skill'>('game');
   const [showExcluded, setShowExcluded] = useState(false);
 
-  const START_DATE = new Date('2026-07-13T11:30:00Z');
-  const END_DATE = new Date('2026-09-14T18:29:00Z');
-
-  const { gameBadges, skillBadges, excludedBadges } = useMemo(() => {
+    const { gameBadges, skillBadges, excludedBadges } = useMemo(() => {
     const games: BadgeRecord[] = [];
     const skills: BadgeRecord[] = [];
     const excluded: { badge: BadgeRecord, reason: string }[] = [];
 
     if (participant && participant.badges) {
       participant.badges.forEach(badge => {
-        const dateStr = (badge.earnedDate || '').replace(/^Earned\s+(on\s+)?/i, '').trim();
-        const parsedDate = new Date(dateStr);
-        parsedDate.setUTCHours(12, 0, 0, 0); // Normalize to noon UTC
-
-        if (isNaN(parsedDate.getTime()) || parsedDate < START_DATE || parsedDate > END_DATE) {
-          excluded.push({ badge, reason: 'Outside Jul 13–Sep 14 window' });
+        if (!badge.validForProgram) {
+          excluded.push({ badge, reason: 'Outside program timeline or invalid' });
           return;
         }
 
-        const t = badge.title.toLowerCase();
-        
-        const isGameBadge = t.includes("arcade base camp") ||
-                            t.includes("arcade adventure") ||
-                            t.includes("arcade voyage") ||
-                            t.includes("arcade trail") ||
-                            t.includes("arcade special") ||
-                            t.includes("level 1") ||
-                            t.includes("level 2") ||
-                            t.includes("level 3") ||
-                            t.includes("the arcade") ||
-                            t.includes("arcade sprint") ||
-                            t.includes("monthly game") ||
-                            t.includes("new arcade game");
-                            
-        const isTriviaBadge = t.includes("trivia") || t.includes("quiz");
-        const isLabFree = badge.category === "Lab-free"; 
-        const isSpecial = badge.category === "Special" && !isGameBadge;
-
-        if (isGameBadge) {
+        if (badge.category === 'Game') {
           games.push(badge);
-        } else if (!isTriviaBadge && !isLabFree && !isSpecial) {
+        } else if (badge.category === 'Skill') {
           skills.push(badge);
-        } else if (isTriviaBadge) {
-          excluded.push({ badge, reason: 'Trivia badge — not eligible type' });
-        } else if (isLabFree) {
-          excluded.push({ badge, reason: 'Lab-free course — not eligible type' });
         } else {
-          excluded.push({ badge, reason: 'Special/event badge — not eligible type' });
+          excluded.push({ badge, reason: 'Not eligible type (' + badge.category + ')' });
         }
       });
     }

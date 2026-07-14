@@ -91,7 +91,8 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
         dailyPoints: 0,
         totalPoints: data.arcadePoints,
         lastUpdated: '',
-        previousRank: 0
+        previousRank: 0,
+        badges: data.badges
       };
 
       setResult(newResult);
@@ -178,7 +179,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
             className="mx-auto max-w-5xl text-left bg-[#f3f4f6] dark:bg-slate-800/50 p-4 sm:p-8 rounded-[24px] mt-8"
           >
             {(() => {
-              const isBeforeStart = new Date() < new Date('2026-07-13T11:30:00Z');
+              const isBeforeStart = new Date() < new Date('2026-07-13T00:00:00Z');
               const isAfterEnd = new Date() > new Date('2026-09-14T18:29:00Z');
               const basePoints = isBeforeStart ? 0 : result.arcadePoints;
               const displaySkillBadges = isBeforeStart ? 0 : result.skillBadges;

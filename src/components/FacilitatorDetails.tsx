@@ -12,7 +12,7 @@ export function FacilitatorDetails() {
       </p>
       
       <p className="text-lg font-bold text-slate-900 dark:text-white mb-8">
-        Enrolments will OPEN soon!
+        Enrol in the program
       </p>
       
       <div className="space-y-4 mb-10">

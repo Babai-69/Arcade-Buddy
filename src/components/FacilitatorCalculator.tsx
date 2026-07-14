@@ -40,7 +40,7 @@ export function FacilitatorCalculator() {
         throw new Error(json.error || 'Failed to fetch profile');
       }
       
-      const START = new Date('2026-07-13T11:30:00Z');
+      const START = new Date('2026-07-13T00:00:00Z');
       const END = new Date('2026-09-14T18:29:00Z');
       
       let validGameBadges = 0;
@@ -254,7 +254,7 @@ export function FacilitatorCalculator() {
 
           {/* Removed conditionals to always display the breakdown */}
           {(() => {
-            const isBeforeStart = new Date() < new Date('2026-07-13T11:30:00Z');
+            const isBeforeStart = new Date() < new Date('2026-07-13T00:00:00Z');
             const isAfterEnd = new Date() > new Date('2026-09-14T18:29:00Z');
             const displayGameBadges = isBeforeStart ? 0 : data.gameBadges;
             const displaySkillBadges = isBeforeStart ? 0 : data.skillBadges;

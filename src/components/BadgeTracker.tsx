@@ -11,13 +11,7 @@ interface BadgeTrackerProps {
 export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps) {
   const [showExcluded, setShowExcluded] = useState(false);
 
-  // Constants for Date Boundaries (UTC based)
-  // July 13, 2026 at 5:00 PM IST is 11:30 AM UTC
-  const START_DATE = new Date('2026-07-13T11:30:00Z');
-  // September 14, 2026 at 11:59 PM IST is 6:29 PM UTC
-  const END_DATE = new Date('2026-09-14T18:29:00Z');
-
-  const { eligibleBadges, excludedBadges, stats } = useMemo(() => {
+    const { eligibleBadges, excludedBadges, stats } = useMemo(() => {
     const eligible: BadgeRecord[] = [];
     const excluded: BadgeRecord[] = [];
     let gameCount = 0;
@@ -26,12 +20,7 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
 
     if (participant && participant.badges) {
       participant.badges.forEach(badge => {
-        // Parse date. The format from scraping is like "Earned Jul 16, 2026 EDT" or similar
-        // Let's remove "Earned" and attempt to parse.
-        const dateStr = badge.earnedDate.replace(/Earned\s+/i, '').trim();
-        const parsedDate = new Date(dateStr);
-
-        if (!isNaN(parsedDate.getTime()) && parsedDate >= START_DATE && parsedDate <= END_DATE) {
+        if (badge.validForProgram) {
           eligible.push(badge);
           if (badge.category === 'Game') {
             gameCount++;
@@ -39,8 +28,6 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
           } else if (badge.category === 'Skill') {
             skillCount++;
             eligiblePoints += 0.5;
-          } else if (badge.category === 'Lab-free') {
-            eligiblePoints += 0;
           }
         } else {
           excluded.push(badge);

@@ -33,7 +33,7 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
   }, [completedBadges]);
 
   const completedBadgesData = useMemo(() => {
-    const START = new Date('2026-07-13T11:30:00Z');
+    const START = new Date('2026-07-13T00:00:00Z');
     const END = new Date('2026-09-14T18:29:00Z');
 
     return completedBadges

@@ -501,7 +501,7 @@ export function UserProgressDashboard() {
 
           <CheckProgress completedBadges={data.badges} />
           
-          <WeeklyProgress profileUrl={profileUrl} />
+          <WeeklyProgress badges={data.badges} />
           
           {/* Hidden Share Card (Rendered only for html2canvas) */}
           <div className="fixed top-[-9999px] left-[-9999px]">

@@ -197,7 +197,7 @@ async function startServer() {
       return res.status(400).json({ error: "Missing url parameter" });
     }
 
-    const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T11:30:00Z');
+    const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T00:00:00Z');
     const END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T18:29:00Z');
 
     try {
@@ -228,10 +228,14 @@ async function startServer() {
         const dateText = $(el).find(".ql-body-medium.l-mbs, .ql-body-medium").text().trim();
         let earnedDate = dateText;
         let validForProgram = true;
+        let cleanDateStr = "";
+        let parsedDate = null;
         if (dateText) {
-          let cleanDateStr = dateText.replace("Earned ", "").replace(/ EDT| EST| PDT| PST/g, "").trim();
-          let parsedDate = new Date(cleanDateStr);
+          cleanDateStr = dateText.replace("Earned ", "").replace(/ EDT| EST| PDT| PST/g, "").trim();
+          parsedDate = new Date(cleanDateStr + " UTC");
           if (!isNaN(parsedDate.getTime())) {
+            console.log("title", title, "cleanDateStr", cleanDateStr, "parsedDate", parsedDate.toISOString(), "START_DATE", START_DATE.toISOString(), "parsedDate < START_DATE", parsedDate < START_DATE);
+
             if (parsedDate < START_DATE || parsedDate > END_DATE) validForProgram = false;
           } else {
             const match = dateText.match(/(20\d\d)/);
@@ -431,7 +435,11 @@ async function startServer() {
           earnedDate: earnedDate,
           category: category,
           points: points,
-          validForProgram
+          validForProgram,
+          _debugCleanDate: cleanDateStr,
+          _debugParsedDate: parsedDate ? parsedDate.toISOString() : null,
+          _debugStartDate: START_DATE ? START_DATE.toISOString() : null
+
         });
       });
 

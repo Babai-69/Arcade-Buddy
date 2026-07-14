@@ -1,0 +1,1532 @@
+
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<title>Babai Bro | Google Skills</title>
+<link crossorigin href='https://cdn.qwiklabs.com' rel='preconnect'>
+<link crossorigin href='https://fonts.gstatic.com' rel='preconnect'>
+<link crossorigin href='https://fonts.googleapis.com' rel='preconnect'>
+<link as='font' crossorigin='anonymous' href='https://cdn.qwiklabs.com/fonts/google-symbols.woff2' rel='preload' type='font/woff2'>
+<link as='font' crossorigin='anonymous' href='https://cdn.qwiklabs.com/fonts/material-icons.woff2' rel='preload' type='font/woff2'>
+<link as='font' crossorigin='anonymous' href='https://cdn.qwiklabs.com/fonts/google-material-icons.woff2' rel='preload' type='font/woff2'>
+<style>
+  @mixin font_face_props {
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Google Material Icons';
+    src: url('https://cdn.qwiklabs.com/fonts/google-material-icons.woff2') format('woff2');
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Material Icons';
+    src: url('https://cdn.qwiklabs.com/fonts/material-icons.woff2') format('woff2');
+  }
+  
+  @font-face {
+    @include font_face_props;
+  
+    font-family: 'Google Symbols';
+    src: url('https://cdn.qwiklabs.com/fonts/google-symbols.woff2') format('woff2');
+  }
+  
+  .material-icons {
+    font-family: 'Material Icons';
+  }
+  
+  .google-symbols {
+    font-family: 'Google Symbols';
+  }
+  
+  .google-material-icons {
+    font-family: 'Google Material Icons';
+  }
+  
+  .material-icons,
+  .google-symbols,
+  .google-material-icons {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+</style>
+
+<meta name="action-cable-url" content="/cable" />
+<script>
+//<![CDATA[
+window.gon={};gon.deployment="google-run";
+//]]>
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    if (arguments[0] === 'event') {
+      dataLayer.push({ event: arguments[1], eventParams: arguments[2] }, { eventParams: undefined });
+    } else {
+      dataLayer.push(arguments);
+    }
+  }
+  let gtmLoaded = false;
+  function glueCookieNotificationBarLoaded() {
+    if (!gtmLoaded) {
+      dataLayerInit(
+        false,
+        false,
+        false,
+        false,
+        'google-run'
+      );
+      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+      'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+      })(window,document,'script','dataLayer',"GTM-MBRHNDG7");
+      pushPageEvent();
+      if (typeof sessEvent !== 'undefined') {
+        pushSessionEvent(sessEvent, sessLoginStatus, sessPreviousPath);
+      }
+      gtmLoaded = true;
+    }
+  }
+</script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/polyfills/webcomponents-loader-2e147cb1679d97581f981243bfc2d1c03dc34a58.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/head_scripts-78121e337319c81329ed63eb61196ea57f74a57d.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/vendor-1c75122c864db561eb016ef97dbd4eb4a740856f.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/application-35ef6ec8d0f557a110dfff6861124710d619edd3.js"></script>
+<script src="https://cdn.qwiklabs.com/assets/hallofmirrors/hallofmirrors-c7cf1fbf5d07d9d6bcc867d23ee997b9e36bf9ef.js"></script>
+<script src="https://cdn.qwiklabs.com/nk_components/1.1.42/index.js"></script>
+<script src="https://support.google.com/inapp/api.js"></script>
+
+
+<meta name="csrf-param" content="authenticity_token" />
+<meta name="csrf-token" content="n5hmzBo1PeEmtvTxUHShkym4CHTgjZ1pkEmTs15MOhenGmMFoQYHwnwR1OWQW52KhjORAUiUp4D1fswrRhICSw" />
+<meta content='width=device-width, initial-scale=1.0, user-scalable=yes' name='viewport'>
+<meta content='1rRsY0INj8RvwB5EF5pwdxt2A2P9aDgAlsICaJ0d5w0' name='google-site-verification'>
+<meta content='#3681E4' property='msapplication-TileColor'>
+<meta content='/super_G_optimized.png' property='msapplication-TileImage'>
+<meta content='{&quot;userId&quot;:null,&quot;experimentIds&quot;:[&quot;auto_upgrade_game_labs&quot;,&quot;docebo_ux&quot;,&quot;relaunch_for_sso&quot;,&quot;dialog_queue&quot;,&quot;landing_page&quot;,&quot;innovator_gear_sign_in&quot;,&quot;docebo_sync&quot;,&quot;relaunch_collection_ai&quot;,&quot;entity_api_keys&quot;,&quot;course_exams&quot;,&quot;switch_path_and_explore_headers&quot;,&quot;credly&quot;,&quot;search_async&quot;,&quot;credly_integration_announcement_modal&quot;,&quot;search_suggestions&quot;,&quot;banner_breadcrumbs&quot;,&quot;one_tap&quot;,&quot;search_autocomplete&quot;,&quot;front_door_landing_page&quot;,&quot;cache_explore_page_result&quot;,&quot;alexandria_subscriptions_pagination&quot;,&quot;canonical_domain_redirect&quot;,&quot;use_mosaic&quot;,&quot;challenge_lab_fast_track&quot;,&quot;quota_service_use_lua&quot;,&quot;search_sort_by&quot;,&quot;google_dev_payment&quot;,&quot;use_docebo_features&quot;,&quot;org_invite_link&quot;,&quot;hide_unpopular_filters&quot;,&quot;feedback&quot;,&quot;gwg_paid_chip&quot;,&quot;in_context_all_labs&quot;,&quot;recert&quot;,&quot;gwg_catalog&quot;,&quot;show_new_course_exams&quot;,&quot;gamification_streaks&quot;,&quot;chime_use_abuse_details&quot;,&quot;discovery_lab_duration_estimate&quot;,&quot;gamification&quot;,&quot;gamification_xp&quot;,&quot;docebo_sync_org_support&quot;,&quot;cdn_fonts&quot;,&quot;lab_page_redesign&quot;,&quot;learning_plan_search&quot;,&quot;relaunch&quot;,&quot;new_org_dashboard&quot;,&quot;relaunch_extra&quot;,&quot;zendesk_to_cases&quot;,&quot;show_org_catalog_button&quot;,&quot;innovator_sign_in&quot;,&quot;relaunch_grid_list&quot;,&quot;one_stop_hub&quot;,&quot;relaunch_subscriptions&quot;,&quot;gamification_leagues&quot;,&quot;next_2026_collections&quot;,&quot;in_context_view&quot;,&quot;gamification_leaderboards&quot;,&quot;gamification_ui_data&quot;,&quot;dashboard_jobs&quot;,&quot;subscription_ux&quot;,&quot;catalog_filters_button&quot;,&quot;catalog_filter_chips&quot;,&quot;sitemap_poc&quot;,&quot;gamification_ui&quot;,&quot;sso_redirect&quot;,&quot;onramp&quot;,&quot;interview_warmup_turndown&quot;,&quot;oauth_risc_shutoff&quot;,&quot;gamification_achievements&quot;,&quot;recalculate_activities&quot;,&quot;learning_plan_slug&quot;,&quot;reroute_new_interview_warmup&quot;,&quot;analytics_v2&quot;,&quot;wipeout_hard_delete&quot;,&quot;remove_gdp_subscription&quot;,&quot;new_org_dashboard_announcement&quot;,&quot;learner_grace_period_upgrade&quot;]}' name='help-api-product-data'>
+<meta content='{&quot;groupIds&quot;:[]}' name='help-api-custom-data'>
+<meta content='Learn and earn with Google Skills, a platform that provides  free training and certifications for Google Cloud partners and beginners. Explore now.' name='description'>
+<meta content='Google Skills' name='author'>
+<meta content='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1' property='og:url'>
+<meta content='Babai Bro | Google Skills' property='og:title'>
+<meta content='website' property='og:type'>
+<meta content='/super_G_optimized.png' property='og:image'>
+<meta content='1200' property='og:image:width'>
+<meta content='630' property='og:image:height'>
+<meta content='image/png' property='og:image:type'>
+<meta content='Google Skills' property='og:site_name'>
+<meta content='Learn and earn with Google Skills, a platform that provides  free training and certifications for Google Cloud partners and beginners. Explore now.' property='og:description'>
+
+
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=ar' hreflang='ar' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=de' hreflang='de' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=es' hreflang='es' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=fr' hreflang='fr' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=fr_CA' hreflang='fr-CA' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=he' hreflang='he' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=id' hreflang='id' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=it' hreflang='it' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=ja' hreflang='ja' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=ko' hreflang='ko' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=pl' hreflang='pl' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=pt_BR' hreflang='pt-BR' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=pt_PT' hreflang='pt-PT' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=ru' hreflang='ru' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=tr' hreflang='tr' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=uk' hreflang='uk' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=zh' hreflang='zh' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=zh_TW' hreflang='zh-TW' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1' hreflang='en' rel='alternate'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1' hreflang='x-default' rel='alternate'>
+<link href='https://cdn.qwiklabs.com/X46FrQX4iLxHW5MxL8jICvgZM0evMEKscCeQO%2BazGdo%3D' rel='icon' type='image/x-icon'>
+<link href='https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1' rel='canonical'>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400|Roboto+Mono:400,700|Roboto:300,400,500,700|Google+Sans:300,400,500,700|Google+Sans+Display:400|Google+Sans+Text:400,500,700" />
+
+<link rel="stylesheet" href="https://cdn.qwiklabs.com/assets/application-8ea2b6b6dde9f8c172c2ac4525f13435a6a2d970.css" media="all" />
+<link rel="stylesheet" href="https://www.gstatic.com/glue/cookienotificationbar/cookienotificationbar.min.css" />
+
+
+<style>
+  :root {
+    --primary-text-on-surface-color: #355d9c;
+    --primary-text-on-surface-color-dark: #2f538b;
+    --primary-text-on-surface-color-darker: #29497a;
+    --primary-text-on-surface-color-darkest: #243e69;
+    --primary-surface-color: #586d8d;
+    --primary-surface-color-rgb: 88,109,141;
+    --primary-surface-color-light: #e0e4eb;
+    --primary-surface-color-lightest: #eff2f5;
+    --text-on-primary-color: #ffffff;
+    --accent-text-on-surface-color: #f000e8;
+    --accent-surface-color: #f9ab00;
+    --accent-surface-color-rgb: 249,171,0;
+    --accent-surface-color-light: #ffefcc;
+    --text-on-accent-color: #000000;
+  }
+</style>
+
+
+
+</head>
+<body class=''>
+<ql-drawer-container class='body-container' relaunch>
+<div class='sticky' slot='header'>
+<ql-toolbar class='app-toolbar' jumpEnabled role='banner'>
+<div class='toolbar-navigation' slot='navigation'>
+<ql-toggle-button animatedToggle="true" expandable="true" for="app-nav" onIcon="menu_open" offIcon="menu" label="Menu" class="always-show" data-tooltip-text="Menu"></ql-toggle-button>
+</div>
+<div class='toolbar-title gs-logo' slot='title'>
+<a class="custom-logo" aria-label="Google Skills" href="/"><div class="custom-logo"><img alt="Google Skills" height="24" aria-label="Google Skills" src="https://cdn.qwiklabs.com/lqJbxogu4tSLez1OvjDcIO8rwow6cPLwvrfIdmQLf6U%3D" /></div></a>
+</div>
+<div class='search-bar tablet-hide' slot='search'></div>
+<div class='toolbar-actions' slot='action'>
+<ql-icon-button class='mobile-hide' data-tooltip-text='Help' icon='help_outline' id='help-menu-button' label='Help options'></ql-icon-button>
+<ql-menu for='help-menu-button' id='help-menu'>
+<ql-menu-item data-analytics-action='opened_help' data-analytics-label='profile' label='Help Center' onclick='hallofmirrors.helpService.startHelp({&quot;productData&quot;:{&quot;userId&quot;:null},&quot;context&quot;:&quot;profile&quot;})'></ql-menu-item>
+<ql-menu-item href='https://support.google.com/qwiklabs/contact/Google_Skills' label='Contact Us' target='_blank'></ql-menu-item>
+<ql-menu-item href='https://reportingwidget.google.com/widget/54?cid=1&amp;url=https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?' label='Report Illegal Content'></ql-menu-item>
+</ql-menu>
+
+<ql-icon-button aria-expanded='false' aria-haspopup aria-label='More options' class='mobile-show' data-toggle='tooltip' icon='more_vert' id='mobile-more-menu-button' title='More options'></ql-icon-button>
+<ql-menu for='mobile-more-menu-button' id='mobile-more-menu'>
+
+
+<ql-menu-item aria-controls='help-submenu' aria-expanded='false' aria-haspopup='true' id='help-submenu-button' label='Help' role='button' tabindex='0'></ql-menu-item>
+<ql-menu-item aria-controls='language-submenu' aria-expanded='false' aria-haspopup='true' id='language-submenu-button' label='Language' role='button' tabindex='0'></ql-menu-item>
+</ql-menu>
+
+<ql-menu class='submenu' for='help-submenu-button' id='help-submenu'>
+<ql-menu-item data-analytics-action='opened_help' data-analytics-label='' label='Help Center' onclick='hallofmirrors.helpService.startHelp({&quot;productData&quot;:{&quot;userId&quot;:null},&quot;context&quot;:&quot;&quot;})'></ql-menu-item>
+<ql-menu-item href='https://support.google.com/qwiklabs/contact/Google_Skills' label='Contact Us' target='_blank'></ql-menu-item>
+<ql-menu-item href='https://reportingwidget.google.com/widget/54?cid=1&amp;url=https%3A%2F%2Fwww.skills.google%2Fpublic_profiles%2F7a0c9c4d-4215-4f16-a18c-47784257bde1%3F' label='Report Illegal Content'></ql-menu-item>
+</ql-menu>
+<ql-menu class='submenu' for='language-submenu-button' id='language-submenu'>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='ar' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=ar' label='العربية‬‎' lang='ar' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='de' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=de' label='Deutsch' lang='de' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='en' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=en' label='English' lang='en' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='es' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=es' label='español (Latinoamérica)' lang='es' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='fr' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=fr' label='français' lang='fr' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='fr_CA' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=fr_CA' label='français (Canada)' lang='fr-CA' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='he' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=he' label='עברית' lang='he' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='id' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=id' label='bahasa Indonesia' lang='id' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='it' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=it' label='italiano' lang='it' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='ja' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=ja' label='日本語' lang='ja' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='ko' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=ko' label='한국어' lang='ko' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='pl' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=pl' label='polski' lang='pl' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='pt_BR' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=pt_BR' label='português (Brasil)' lang='pt-BR' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='pt_PT' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=pt_PT' label='português (Portugal)' lang='pt-PT' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='ru' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=ru' label='русский' lang='ru' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='tr' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=tr' label='Türkçe' lang='tr' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='uk' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=uk' label='українська' lang='uk' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='zh' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=zh' label='简体中文' lang='zh' role='menuitem'></ql-menu-item>
+<ql-menu-item data-analytics-action='changed_locale' data-analytics-label='zh_TW' href='/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1?locale=zh_TW' label='繁體中文' lang='zh-TW' role='menuitem'></ql-menu-item>
+</ql-menu>
+
+<ql-button ariaLabel='Join by creating an account' data-analytics-action='clicked_header_join' data-analytics-actions='[&quot;clicked_header_join&quot;, &quot;navigation&quot;]' data-analytics-button-text='Join' data-analytics-label='Join' data-analytics-legacy-event-name='clicked_header_join' data-analytics-link-url='/users/sign_up' data-analytics-position='header' data-analytics-type='eventParams' href='/users/sign_up'>
+Join
+</ql-button>
+<ql-button data-analytics-action='clicked_header_sign_in' data-analytics-actions='[&quot;clicked_header_sign_in&quot;, &quot;navigation&quot;]' data-analytics-button-text='Sign in' data-analytics-label='Sign in' data-analytics-legacy-event-name='clicked_header_sign_in' data-analytics-link-url='/users/sign_in' data-analytics-position='header' data-analytics-type='eventParams' href='/users/sign_in'>
+Sign in
+</ql-button>
+
+
+</div>
+</ql-toolbar>
+</div>
+<ql-drawer aria-label='Application Navigation' id='app-nav' openWidth='15' relaunch responsive='768' slot='drawer' width='6' widthUnit='rem'>
+<nav class='ql-sidenav relaunch'>
+<ql-fab data-analytics-action='login_start' data-analytics-button-text='Sign in' data-analytics-label='Sign in' data-analytics-position='sidenav' data-analytics-type='eventParams' expandable href='/users/sign_in' icon='login' label='Sign in'></ql-fab>
+<ql-sidenav-item href='/' icon='home' label='Home' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/&quot;,&quot;buttonText&quot;:&quot;Home&quot;,&quot;label&quot;:&quot;Home&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+<ql-sidenav-item href='/catalog' icon='book_2' label='Catalog' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/catalog&quot;,&quot;buttonText&quot;:&quot;Catalog&quot;,&quot;label&quot;:&quot;Catalog&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+<ql-sidenav-item href='/paths' icon='conversion_path' label='Paths' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/paths&quot;,&quot;buttonText&quot;:&quot;Paths&quot;,&quot;label&quot;:&quot;Paths&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+<ql-sidenav-item expandable icon='category' label='Collections' onclick='ql.track(&#39;navigation_toggle&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;#&quot;,&quot;buttonText&quot;:&quot;Collections&quot;,&quot;label&quot;:&quot;Collections&quot;})' relaunch>
+<div class='sub-items' slot='submenu'>
+<ql-sidenav-item href='/collections/ai-boost-bites' label='AI Boost Bites' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/collections/ai-boost-bites&quot;,&quot;buttonText&quot;:&quot;AI Boost Bites&quot;,&quot;label&quot;:&quot;AI Boost Bites&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+<ql-sidenav-item href='/collections/career-certificates' label='Career Certificates' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/collections/career-certificates&quot;,&quot;buttonText&quot;:&quot;Career Certificates&quot;,&quot;label&quot;:&quot;Career Certificates&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+<ql-sidenav-item href='/collections/cloud' label='Cloud' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/collections/cloud&quot;,&quot;buttonText&quot;:&quot;Cloud&quot;,&quot;label&quot;:&quot;Cloud&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+<ql-sidenav-item href='/collections/deepmind' label='DeepMind' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/collections/deepmind&quot;,&quot;buttonText&quot;:&quot;DeepMind&quot;,&quot;label&quot;:&quot;DeepMind&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+</div>
+
+</ql-sidenav-item>
+
+<ql-sidenav-item href='/subscriptions' icon='subscriptions' label='Subscriptions' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/subscriptions&quot;,&quot;buttonText&quot;:&quot;Subscriptions&quot;,&quot;label&quot;:&quot;Subscriptions&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+<ql-sidenav-item href='/learningcenter' icon='corporate_fare' label='Organizations' onclick='ql.track(&#39;navigation&#39;, {&quot;legacyEventName&quot;:&quot;click_sidenav_item&quot;,&quot;position&quot;:&quot;application_sidenav&quot;,&quot;linkUrl&quot;:&quot;/learningcenter&quot;,&quot;buttonText&quot;:&quot;Organizations&quot;,&quot;label&quot;:&quot;Organizations&quot;})' relaunch>
+
+</ql-sidenav-item>
+
+</nav>
+
+</ql-drawer>
+<ql-drawer-content class='body-content' slot='drawer-content'>
+<div class='banner'>
+<div id='callout-container'>
+</div>
+
+</div>
+<div class='page-header'>
+<div class='page-main-banner'>
+<div class='page-main-banner-breadcrumbs'>
+
+</div>
+<aside aria-label='Free trial' class='page-main-banner-console-free-trial'>
+<div class='console-free-trial'>
+<p class='console-free-trial-content ql-body-medium'>
+Apply your skills in Google Cloud console
+</p>
+<div class='console-free-trial-actions'>
+<ql-button data-analytics-action='gcp_cta' data-analytics-position='free trial banner' data-analytics-type='eventParams' elevated href='https://console.cloud.google.com/freetrial' label='Get started' target='_blank'></ql-button>
+</div>
+</div>
+</aside>
+</div>
+
+</div>
+<main id='jump-content' tabindex='-1'>
+
+<div class='text--center'>
+<ql-avatar class='profile-avatar l-mbl' size='160' src='https://lh3.googleusercontent.com/a/ACg8ocItaw-lSglscEiP43Y086nNvr5UHJWXqrLzSv33M74lekM1KOM=s320-c'></ql-avatar>
+<h1 class='ql-display-small'>
+Babai Bro
+</h1>
+<p class='ql-body-large l-mbl'>
+Member since 2026
+</p>
+<div class='profile-league'>
+<h2 class='ql-headline-medium'>Silver League</h2>
+<strong>1493 points</strong>
+<img width="120" src="https://cdn.qwiklabs.com/assets/leagues/silver_sm_new-deaa0090c8b38c1cde7cbc34bb895870009e6fee.png" />
+</div>
+<div class='profile-badges'>
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/25492093"><img role="presentation" src="https://cdn.qwiklabs.com/V5hy7oPDiKov68Q4kTcuuA%2BMHNMX3Z0my4mncKPPGvY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Build Infrastructure with Terraform on Google Cloud
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jul 13, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Build Infrastructure with Terraform on Google Cloud' label='Learn more' modal='public-profile-award-modal-0' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/25492083"><img role="presentation" src="https://cdn.qwiklabs.com/wPsKX9ooPyDhRzoyLxsCaz5VW%2B7hof8T9Qo0j5%2BRIG4%3D" />
+</a><span class='ql-title-medium l-mts'>
+Secure Software Delivery
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jul 13, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Secure Software Delivery' label='Learn more' modal='public-profile-award-modal-1' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/25492054"><img role="presentation" src="https://cdn.qwiklabs.com/kPOkdinL49CRqi6oozKKPh%2BvEVbmSQFCPxEQ2uyELSQ%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Base Camp July 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jul 13, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Base Camp July 2026' label='Learn more' modal='public-profile-award-modal-2' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/25428706"><img role="presentation" src="https://cdn.qwiklabs.com/z9bzy3p7KL1CvhBCR9dBz4tdGDy7%2BdQOM%2BGxXQRGePY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Build a Smart Cloud Application with Vibe Coding and MCP
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jul 10, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Build a Smart Cloud Application with Vibe Coding and MCP' label='Learn more' modal='public-profile-award-modal-3' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/25426877"><img role="presentation" src="https://cdn.qwiklabs.com/qyA9z%2BB5WJRf6tukQXk3BDi60R0gnWyQho9KRTpH2Sc%3D" />
+</a><span class='ql-title-medium l-mts'>
+Deploy Multi-Agent Architectures
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jul 10, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Deploy Multi-Agent Architectures' label='Learn more' modal='public-profile-award-modal-4' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/25007167"><img role="presentation" src="https://cdn.qwiklabs.com/KcMuK0okDaoPDIVlKXW1JXuVL0%2BaaF%2B4jU5EV%2Fp1T1w%3D" />
+</a><span class='ql-title-medium l-mts'>
+Managing Cloud Infrastructure with Terraform
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 19, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Managing Cloud Infrastructure with Terraform' label='Learn more' modal='public-profile-award-modal-5' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/25005764"><img role="presentation" src="https://cdn.qwiklabs.com/9p3saLkj7Q1f5K6Necicu56WrN7n2a6ctFBrn%2BUWig8%3D" />
+</a><span class='ql-title-medium l-mts'>
+Build Global and Regional Load Balancing Solutions
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 19, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Build Global and Regional Load Balancing Solutions' label='Learn more' modal='public-profile-award-modal-6' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24951469"><img role="presentation" src="https://cdn.qwiklabs.com/%2BNPiWnLvi3OoI1DZAwSq6gNvInrRxKmop%2Fxlnin63uA%3D" />
+</a><span class='ql-title-medium l-mts'>
+Introduction to Cloud Next Generation Firewall
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 16, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Introduction to Cloud Next Generation Firewall' label='Learn more' modal='public-profile-award-modal-7' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24949095"><img role="presentation" src="https://cdn.qwiklabs.com/XemqcUvTQE65dglOn1zBWtA5uhoWQulCF%2BY82SW%2FnjA%3D" />
+</a><span class='ql-title-medium l-mts'>
+Develop AI-Powered Prototypes in Google AI Studio
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 16, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Develop AI-Powered Prototypes in Google AI Studio' label='Learn more' modal='public-profile-award-modal-8' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24938969"><img role="presentation" src="https://cdn.qwiklabs.com/1Sb5hVLDMPyRbwJTLMwbJQnDemCVgzS7LSld6YgBhUk%3D" />
+</a><span class='ql-title-medium l-mts'>
+Kickstarting Application Development with Gemini Code Assist
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 16, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Kickstarting Application Development with Gemini Code Assist' label='Learn more' modal='public-profile-award-modal-9' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24937984"><img role="presentation" src="https://cdn.qwiklabs.com/93oxTTP4eA9mlPV5pq4suSPVJLXtncOFGkeB6SNe2Yk%3D" />
+</a><span class='ql-title-medium l-mts'>
+Explore Generative AI in Agent Platform
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 16, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Explore Generative AI in Agent Platform' label='Learn more' modal='public-profile-award-modal-10' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24937428"><img role="presentation" src="https://cdn.qwiklabs.com/%2FoLo60xg2CMZB%2BWs7JLFlQhAVVn7ZXEVsiHws3APcHY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Create Your First Gemini Enterprise Application
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 16, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Create Your First Gemini Enterprise Application' label='Learn more' modal='public-profile-award-modal-11' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24852005"><img role="presentation" src="https://cdn.qwiklabs.com/%2BAXzPvUS2QGQ3%2FJ110CkbHpVVR7n8ld7FqtcCEI4zms%3D" />
+</a><span class='ql-title-medium l-mts'>
+Engineer AI Agents with Agent Development Kit (ADK)
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 11, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Engineer AI Agents with Agent Development Kit (ADK)' label='Learn more' modal='public-profile-award-modal-12' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24825216"><img role="presentation" src="https://cdn.qwiklabs.com/YU4aGcbO%2FwXYPN4M16ewenm%2FgE%2FhhZPMEwaY61eyar8%3D" />
+</a><span class='ql-title-medium l-mts'>
+AI Infrastructure: Cloud TPUs
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 10, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about AI Infrastructure: Cloud TPUs' label='Learn more' modal='public-profile-award-modal-13' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24825087"><img role="presentation" src="https://cdn.qwiklabs.com/XmVono210uduEESaHiAt8X2UOpx1dVPZKWHkQI%2F0Qqc%3D" />
+</a><span class='ql-title-medium l-mts'>
+Network Observability on Google Cloud
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 10, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Network Observability on Google Cloud' label='Learn more' modal='public-profile-award-modal-14' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24824829"><img role="presentation" src="https://cdn.qwiklabs.com/OgEKKA6lK1kMMYWRVX0WJAMuteS44UB8IRD4SuamxJU%3D" />
+</a><span class='ql-title-medium l-mts'>
+AI Boost Bites: NotebookLM Video Overviews
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 10, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about AI Boost Bites: NotebookLM Video Overviews' label='Learn more' modal='public-profile-award-modal-15' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24824797"><img role="presentation" src="https://cdn.qwiklabs.com/ifSp1k5lkn1JqxI7fz1oGAxqrfoHzEKdGOmOLII%2FNd0%3D" />
+</a><span class='ql-title-medium l-mts'>
+AI Boost Bites: Automate tasks with Gemini and Apps Script
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 10, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about AI Boost Bites: Automate tasks with Gemini and Apps Script' label='Learn more' modal='public-profile-award-modal-16' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24824769"><img role="presentation" src="https://cdn.qwiklabs.com/LfphJE4ffS8gMf1%2Favz7ZvrsZPwFZ1CjxSQEQ4LZR84%3D" />
+</a><span class='ql-title-medium l-mts'>
+AI Boost Bites: Intro to NotebookLM
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 10, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about AI Boost Bites: Intro to NotebookLM' label='Learn more' modal='public-profile-award-modal-17' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24823607"><img role="presentation" src="https://cdn.qwiklabs.com/rttN%2B607CxrsgcNaA2FJVltO9JoLgbNTyosC%2FtFqJYI%3D" />
+</a><span class='ql-title-medium l-mts'>
+Orchestrate Multi-agent Workflows with Gemini Enterprise
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun 10, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Orchestrate Multi-agent Workflows with Gemini Enterprise' label='Learn more' modal='public-profile-award-modal-18' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24746032"><img role="presentation" src="https://cdn.qwiklabs.com/E3sIcfF6fAg9NM15SrpxBEbbQXYCdw4UnIxM1m%2FI0gI%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Trail: Data Engineering and Information Protection
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun  7, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Trail: Data Engineering and Information Protection' label='Learn more' modal='public-profile-award-modal-19' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24706294"><img role="presentation" src="https://cdn.qwiklabs.com/ruCyHO8Xuzk2LHFOBpFSi8kbi7iMf09Kkt0wd7HHJM4%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Voyage: Identity Management and Pre-trained AI APIs
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun  5, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Voyage: Identity Management and Pre-trained AI APIs' label='Learn more' modal='public-profile-award-modal-20' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24679948"><img role="presentation" src="https://cdn.qwiklabs.com/YE%2FsUPAgkgzNQ3R37uaSd0VbsMyaQ1CYDIr9Ax%2B3V8o%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Adventure: App Dev and Cloud Observability
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun  4, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Adventure: App Dev and Cloud Observability' label='Learn more' modal='public-profile-award-modal-21' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24677713"><img role="presentation" src="https://cdn.qwiklabs.com/YBTJT7XFewk0opYHO3X4YokU4TEiiJ55oHsV2xPKAXw%3D" />
+</a><span class='ql-title-medium l-mts'>
+Logic Log
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun  4, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Logic Log' label='Learn more' modal='public-profile-award-modal-22' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24665546"><img role="presentation" src="https://cdn.qwiklabs.com/%2BmoPaCMolQerMTT8YH6G8wM04v9FsEkyvf8hEt9OPuY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Base Camp June 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jun  4, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Base Camp June 2026' label='Learn more' modal='public-profile-award-modal-23' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24457362"><img role="presentation" src="https://cdn.qwiklabs.com/MJ1QYHJE2h%2F5DOzxX3vu2YfwIndoAR4IutTMJzVEevA%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Trail: Cloud Security and DevOps Foundations
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned May 27, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Trail: Cloud Security and DevOps Foundations' label='Learn more' modal='public-profile-award-modal-24' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24415251"><img role="presentation" src="https://cdn.qwiklabs.com/acM7OgvUEOhSeWdlHH%2B5hkF9BHL%2BPI6uToEYrcGt50A%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Voyage: Data Governance and Firebase Foundations
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned May 25, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Voyage: Data Governance and Firebase Foundations' label='Learn more' modal='public-profile-award-modal-25' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24344276"><img role="presentation" src="https://cdn.qwiklabs.com/W9saOrXeoBb9OcfBF9ifcv%2FV%2FeqOaQTbZkUmo8wcs38%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Adventure: Modern App Deployment
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned May 22, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Adventure: Modern App Deployment' label='Learn more' modal='public-profile-award-modal-26' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24045454"><img role="presentation" src="https://cdn.qwiklabs.com/pn28u5yHjwU%2Br5LGxTTF2MNEGBnGHWZ9S5eWiEFAHgs%3D" />
+</a><span class='ql-title-medium l-mts'>
+Skill Up Summer
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned May  8, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Skill Up Summer' label='Learn more' modal='public-profile-award-modal-27' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/24022768"><img role="presentation" src="https://cdn.qwiklabs.com/exXBfYMpTTZHZL4JAIIMbbtPXtLOIJmyCnmxuw4ggto%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Base Camp May 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned May  7, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Base Camp May 2026' label='Learn more' modal='public-profile-award-modal-28' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/23749168"><img role="presentation" src="https://cdn.qwiklabs.com/Xqt3O07j%2B0EJYTN2%2Bp7QIv114d9RGBcSBlYl0mfyHqM%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Adventure: GKE Operations and Networking
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Apr 22, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Adventure: GKE Operations and Networking' label='Learn more' modal='public-profile-award-modal-29' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/23729318"><img role="presentation" src="https://cdn.qwiklabs.com/%2Bub%2FxM0IG82eclzeCw2ZCQeVZIFWDrDK59Hbkr1Gk9M%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Voyage: Modern Application Development
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Apr 21, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Voyage: Modern Application Development' label='Learn more' modal='public-profile-award-modal-30' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/23728342"><img role="presentation" src="https://cdn.qwiklabs.com/yxP%2BhIbvcYcO3fdnphDvLK9DxwuephoEbI%2Bna9OHkGY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Dialogue Design
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Apr 21, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Dialogue Design' label='Learn more' modal='public-profile-award-modal-31' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/23466250"><img role="presentation" src="https://cdn.qwiklabs.com/wSMtWvBhImlr5fZH7LC%2BTdaVBnCMTVnlLkZVHAvzD4g%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Trail: Data Migration
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Apr  6, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Trail: Data Migration' label='Learn more' modal='public-profile-award-modal-32' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/23441177"><img role="presentation" src="https://cdn.qwiklabs.com/rLbE%2F%2FxV6XzXOKwVxTQbXKhuz%2Ba%2B7wLmwosJBVIu8zY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Base Camp April 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Apr  4, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Base Camp April 2026' label='Learn more' modal='public-profile-award-modal-33' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22941025"><img role="presentation" src="https://cdn.qwiklabs.com/IRPG3Yw9cQHCqDtIwhC77r19TXnE6Hga6%2FZGsUto66s%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Voyage: AI and Cloud Deployment
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Mar 11, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Voyage: AI and Cloud Deployment' label='Learn more' modal='public-profile-award-modal-34' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22876315"><img role="presentation" src="https://cdn.qwiklabs.com/A%2B1718y0NBe7Wop2uyFCtW3aIFh4iiDJkxV2ShnZjHA%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Base Camp March 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Mar  9, 2026 EDT
+</span>
+<ql-button ariaLabel='Learn more about Arcade Base Camp March 2026' label='Learn more' modal='public-profile-award-modal-35' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22811530"><img role="presentation" src="https://cdn.qwiklabs.com/429CGBQ%2BnNPDKrNH%2BTvKJHg0nfDefEPufz08GLBpZVQ%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Trail: Automation and Analytics
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Mar  6, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade Trail: Automation and Analytics' label='Learn more' modal='public-profile-award-modal-36' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22765301"><img role="presentation" src="https://cdn.qwiklabs.com/YL%2FXwmtZYUdONk0F2TOKnEjSPFyHaQASjhNNFM5AZaQ%3D" />
+</a><span class='ql-title-medium l-mts'>
+Holi-istic Infrastructures
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Mar  4, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Holi-istic Infrastructures' label='Learn more' modal='public-profile-award-modal-37' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22739687"><img role="presentation" src="https://cdn.qwiklabs.com/Um6GrGIh0o12UBnS7YNa0a3XjrZw6mnCLqgQdNNPf6Y%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade March 2026 Sprint 1
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Mar  3, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade March 2026 Sprint 1' label='Learn more' modal='public-profile-award-modal-38' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22737919"><img role="presentation" src="https://cdn.qwiklabs.com/qVef9aFjLaIc3DC6zdffuk8CiHj8d%2BMPywH41hXnJlM%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade March 2026 Sprint 2
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Mar  3, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade March 2026 Sprint 2' label='Learn more' modal='public-profile-award-modal-39' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22736969"><img role="presentation" src="https://cdn.qwiklabs.com/Yqg9vzg5Pa9%2FDf2feM%2BGZ8pgUNoPnp2gKooeuOxCi5E%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade March 2026 Sprint 3
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Mar  3, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade March 2026 Sprint 3' label='Learn more' modal='public-profile-award-modal-40' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22736146"><img role="presentation" src="https://cdn.qwiklabs.com/VwT%2B6YgyR2ehxprdIHHAM59LAhZONg2g3dtaPMxB4M4%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade March 2026 Sprint 4
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Mar  3, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade March 2026 Sprint 4' label='Learn more' modal='public-profile-award-modal-41' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22571710"><img role="presentation" src="https://cdn.qwiklabs.com/Z2tX5Tm%2FAvp8wYanE%2FqP5zeltZbAZNdD23wP6rDC4aY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Certification Zone February 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb 25, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade Certification Zone February 2026' label='Learn more' modal='public-profile-award-modal-42' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22367074"><img role="presentation" src="https://cdn.qwiklabs.com/egXdmWNKvdZdUli9JWSNPen0vnMsUYEgu2njo%2BcvSVE%3D" />
+</a><span class='ql-title-medium l-mts'>
+From Foundations To Wonders
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb 18, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about From Foundations To Wonders' label='Learn more' modal='public-profile-award-modal-43' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22317702"><img role="presentation" src="https://cdn.qwiklabs.com/fWPypa%2FxJQ7EmeFb8JY6uODx27gudfX1ZQ3Tj%2F3X9DY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Skills At The Pitch
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb 16, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Skills At The Pitch' label='Learn more' modal='public-profile-award-modal-44' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22255476"><img role="presentation" src="https://cdn.qwiklabs.com/g9QaSmyFshLtblLzd0DfmZJxWp%2BzafFKKv9NGGXCZmY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Base Camp February 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb 13, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade Base Camp February 2026' label='Learn more' modal='public-profile-award-modal-45' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22252775"><img role="presentation" src="https://cdn.qwiklabs.com/SyG4h2BBU9F5MfTTAvbkqgsFZbEgnNXWmISV6v%2B9R2I%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Adventure: Analytics and Automation
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb 13, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade Adventure: Analytics and Automation' label='Learn more' modal='public-profile-award-modal-46' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22183409"><img role="presentation" src="https://cdn.qwiklabs.com/ibkN2ahNqNmduoGtGmqenSxAJoi9iJgLtjXIEGzGWco%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Voyage: Data Tools
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb 11, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade Voyage: Data Tools' label='Learn more' modal='public-profile-award-modal-47' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22072714"><img role="presentation" src="https://cdn.qwiklabs.com/Rmkd7Y0yxcid9D91kKKJ%2FobHLZFVN0%2BlN%2FgX24jF6bo%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade Trail: Application Development
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb  7, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade Trail: Application Development' label='Learn more' modal='public-profile-award-modal-48' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22058985"><img role="presentation" src="https://cdn.qwiklabs.com/N51vf1M8p2WAXSQ%2FcftnEObWuFU33Jc3E%2FwhmlYEhEo%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade February 2026 Sprint 1
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb  6, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade February 2026 Sprint 1' label='Learn more' modal='public-profile-award-modal-49' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22058665"><img role="presentation" src="https://cdn.qwiklabs.com/GAGCON6jmj7GTy3czln75XzAhuRqW4Y5ObkCbDiFcLc%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade February 2026 Sprint 2
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb  6, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade February 2026 Sprint 2' label='Learn more' modal='public-profile-award-modal-50' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22047207"><img role="presentation" src="https://cdn.qwiklabs.com/EfroK%2BdhxRpGgXxEFeCboNsb4KZWLQ8ep%2FjLg7al8Kc%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade February 2026 Sprint 3
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb  6, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade February 2026 Sprint 3' label='Learn more' modal='public-profile-award-modal-51' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/22001356"><img role="presentation" src="https://cdn.qwiklabs.com/xoB71CnytOlhFNsIoQpj7oiQwDA8ZZO7dr077s3FWIg%3D" />
+</a><span class='ql-title-medium l-mts'>
+Arcade February 2026 Sprint 4
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Feb  4, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Arcade February 2026 Sprint 4' label='Learn more' modal='public-profile-award-modal-52' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21721392"><img role="presentation" src="https://cdn.qwiklabs.com/VTvlfPXpDraf6pIzUZz2IK%2FRjsmKKtqAkEGFkb4QWIU%3D" />
+</a><span class='ql-title-medium l-mts'>
+Google Skills Arcade Certification Zone January 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 24, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Google Skills Arcade Certification Zone January 2026' label='Learn more' modal='public-profile-award-modal-53' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21720093"><img role="presentation" src="https://cdn.qwiklabs.com/OKcbA2pNhCWnn17RacVRb%2BPwqGGyKHQs%2B5DDKpPiyHE%3D" />
+</a><span class='ql-title-medium l-mts'>
+Google Skills Arcade Base Camp January 2026
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 24, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Google Skills Arcade Base Camp January 2026' label='Learn more' modal='public-profile-award-modal-54' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21658376"><img role="presentation" src="https://cdn.qwiklabs.com/24PZYrEjWJ83X1Y41w259nTpeBulffMQVVDtukri7g0%3D" />
+</a><span class='ql-title-medium l-mts'>
+Level 2: Event-Driven Systems
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 21, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Level 2: Event-Driven Systems' label='Learn more' modal='public-profile-award-modal-55' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21633688"><img role="presentation" src="https://cdn.qwiklabs.com/s2Z%2FNVvCyvqdC7YjLTIWb1hG4x%2BQ7NzrqC7x5g2gXU0%3D" />
+</a><span class='ql-title-medium l-mts'>
+Level 1: Compute, Storage and Monitoring
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 20, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Level 1: Compute, Storage and Monitoring' label='Learn more' modal='public-profile-award-modal-56' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21632796"><img role="presentation" src="https://cdn.qwiklabs.com/jYebaq0KueqOtV%2Fuo4ZzfGU8wviSChvJf3FFBVd5RSE%3D" />
+</a><span class='ql-title-medium l-mts'>
+Level 3: Applied Generative AI
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 20, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Level 3: Applied Generative AI' label='Learn more' modal='public-profile-award-modal-57' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21607958"><img role="presentation" src="https://cdn.qwiklabs.com/OKs5G92MGsypQteta56%2FA%2FOT1MDhKfnvjSd7qJTCDKo%3D" />
+</a><span class='ql-title-medium l-mts'>
+Google Skills Arcade Trivia January 2026 Week 1
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 19, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Google Skills Arcade Trivia January 2026 Week 1' label='Learn more' modal='public-profile-award-modal-58' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21588804"><img role="presentation" src="https://cdn.qwiklabs.com/erhiNzYTyTu8DMXe9Qdqw0wjrwVbtTpD9WaRtgoF0tY%3D" />
+</a><span class='ql-title-medium l-mts'>
+Google Skills Arcade Trivia January 2026 Week 2
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 18, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Google Skills Arcade Trivia January 2026 Week 2' label='Learn more' modal='public-profile-award-modal-59' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21588271"><img role="presentation" src="https://cdn.qwiklabs.com/JyDrLJUtV80PNWj9zonAayaa%2BXS3ANokYL%2FwcLP3U1s%3D" />
+</a><span class='ql-title-medium l-mts'>
+Google Skills Arcade Trivia January 2026 Week 3
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 18, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Google Skills Arcade Trivia January 2026 Week 3' label='Learn more' modal='public-profile-award-modal-60' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21587482"><img role="presentation" src="https://cdn.qwiklabs.com/cMYTpo1BSL8YRRBUn1QkY8TgL2rehGS6wTCWHnciurM%3D" />
+</a><span class='ql-title-medium l-mts'>
+Google Skills Arcade Trivia January 2026 Week 4
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 18, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Google Skills Arcade Trivia January 2026 Week 4' label='Learn more' modal='public-profile-award-modal-61' outlined tip='Learn more'></ql-button>
+</div>
+
+<div class='profile-badge'>
+<a class="badge-image" href="https://www.skills.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1/badges/21533680"><img role="presentation" src="https://cdn.qwiklabs.com/37vwyGD%2FB8DexMzP5NwwoN8z6PxbEFbKkdetz2aEZNw%3D" />
+</a><span class='ql-title-medium l-mts'>
+Work Life Refresh
+</span>
+<span class='ql-body-medium l-mbs'>
+Earned Jan 15, 2026 EST
+</span>
+<ql-button ariaLabel='Learn more about Work Life Refresh' label='Learn more' modal='public-profile-award-modal-62' outlined tip='Learn more'></ql-button>
+</div>
+
+</div>
+</div>
+
+</main>
+
+</ql-drawer-content>
+</ql-drawer-container>
+
+
+<span class='hidden' id='flash-sibling-before'></span>
+<ql-snackbar></ql-snackbar>
+
+<script data-glue-cookie-notification-bar-category='2A' src='https://www.gstatic.com/glue/cookienotificationbar/cookienotificationbar.min.js'></script>
+
+
+
+<ql-dialog dismissalLabel='Dismiss' headline='Build Infrastructure with Terraform on Google Cloud' id='public-profile-award-modal-0'>
+<p>Complete the intermediate Build Infrastructure with Terraform on Google Cloud skill badge to demonstrate skills in the following: Infrastructure as Code (IaC) principles using Terraform, provisioning and managing Google Cloud resources with Terraform configurations, effective state management (local and remote), and modularizing Terraform code for reusability and organization.</p>
+<ql-button href='/course_templates/636' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Secure Software Delivery' id='public-profile-award-modal-1'>
+<p>Complete the intermediate Secure Software Delivery skill badge to demonstrate your proficiency in proactively integrating security into the software development lifecycle (SDLC) with DevSecOps principles. You'll learn how to utilize Google Kubernetes Engine (GKE) and Cloud Run for secure container image deployment, implement automated vulnerability scanning to proactively identify risks, and streamline application development with Artifact Registry while maintaining a focus on security. Additionally, you'll gain skills in integrating Cloud Build for robust development processes and implementing Admission Control Policies for fine-grained control over your environment.</p>
+<ql-button href='/course_templates/1164' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Base Camp July 2026' id='public-profile-award-modal-2'>
+<p>Welcome to Base Camp, where you’ll develop key Google Cloud skills (available in Spanish and Portuguese too!) and earn an exclusive credential that will open doors to the cloud for you. No prior experience is required!</p>
+<ql-button href='/games/76266' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Build a Smart Cloud Application with Vibe Coding and MCP' id='public-profile-award-modal-3'>
+<p>Earn a skill badge by completing the Build a Smart Cloud Application with Vibe Coding and MCP course, where you will learn to leverage the power of Google's AI coding assistant and MCP servers</p>
+<ql-button href='/course_templates/1459' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Deploy Multi-Agent Architectures' id='public-profile-award-modal-4'>
+<p>Complete the advanced Deploy Multi-Agent Architectures skill badge to demonstrate skills in the following: building multi-agent systems with ADK, connecting agents with the Agent-to-Agent (A2A) protocol, integrating external tools using the Model Context Protocol (MCP), and deploying a complete multi-agent solution to Agent Engine.</p>
+<ql-button href='/course_templates/1445' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Managing Cloud Infrastructure with Terraform' id='public-profile-award-modal-5'>
+<p>In this Quest, the experienced user of Google Cloud will learn how to describe and launch cloud resources with Terraform, an open source tool that codifies APIs into declarative configuration files that can be shared amongst team members, treated as code, edited, reviewed, and versioned.  In these nine hands-on labs, you will work with example templates and understand how to launch a range of configurations, from simple servers, through full load-balanced applications.</p>
+<ql-button href='/course_templates/746' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Build Global and Regional Load Balancing Solutions' id='public-profile-award-modal-6'>
+<p>Complete the intermediate Build Global and Regional Load Balancing Solutions skill badge course to demonstrate skills in the following: deploy and utilize an internal client VM within the same VPC network and test traffic distribution, backend infrastructure suitable for a global external application Load Balancer, and backend VM instances and load balancer components using startup scripts and network tags to host a web application service.</p>
+<ql-button href='/course_templates/1558' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Introduction to Cloud Next Generation Firewall' id='public-profile-award-modal-7'>
+<p>This training course introduces Cloud NGFW. Topics include how Cloud NGFW provides centralized firewall management, centralized firewall visibility, advanced threat protection, and firewall insights.</p>
+<ql-button href='/course_templates/1202' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Develop AI-Powered Prototypes in Google AI Studio' id='public-profile-award-modal-8'>
+<p>Complete the introductory Develop AI-Powered Prototypes in Google AI Studio skill badge to demonstrate skills in the following: crafting effective prompts, leveraging multimodal capabilities for image and video analysis, prototyping functional AI-driven applications from templates and text prompts, and utilizing API keys to build and deploy custom AI solutions.</p>
+<ql-button href='/course_templates/1426' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Kickstarting Application Development with Gemini Code Assist' id='public-profile-award-modal-9'>
+<p>Earn a skill badge by completing the Kickstarting Application Development with Gemini Code Assist course, where you will learn to leverage the power of Google's AI coding assistant and multiple development tech</p>
+<ql-button href='/course_templates/1399' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Explore Generative AI in Agent Platform' id='public-profile-award-modal-10'>
+<p>Complete the intermediate Explore Generative AI in Agent Platform skill badge to demonstrate skills in text generation, image and video analysis for enhanced content creation, and applying function calling techniques within the Gemini API. Discover how to leverage sophisticated Gemini techniques, explore multimodal content generation, and expand the capabilities of your AI-powered projects.</p>
+<ql-button href='/course_templates/959' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Create Your First Gemini Enterprise Application' id='public-profile-award-modal-11'>
+<p>Create your first Gemini Enterprise application to earn a skill badge! Connect diverse data sources to your application to build a powerful, unified search and analysis engine. Master advanced capabilities like deep research agents, multi-agent ideation, and NotebookLM for focused analysis.</p>
+<ql-button href='/course_templates/1586' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Engineer AI Agents with Agent Development Kit (ADK)' id='public-profile-award-modal-12'>
+<p>Complete the intermediate Engineer AI Agents with Agent Development Kit (ADK) skill badge by completing this course to demonstrate skills in the following: formulating real-world language model research problems; building a simple tokenizer; preparing a dataset for training a transformer language model; running the training loop of a small language model.</p>
+<ql-button href='/course_templates/1596' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='AI Infrastructure: Cloud TPUs' id='public-profile-award-modal-13'>
+<p>Welcome to the Cloud TPUs course. We'll explore the advantages and disadvantages of TPUs in various scenarios and compare different TPU accelerators to help you choose the right fit. You'll learn strategies to maximize performance and efficiency for your AI models and understand the significance of GPU/TPU interoperability for flexible machine learning workflows. Through engaging content and practical demos, we'll guide you step-by-step in leveraging TPUs effectively.</p>
+<ql-button href='/course_templates/1405' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Network Observability on Google Cloud' id='public-profile-award-modal-14'>
+<p>This mini-course will empower users to understand Network Observability in Google Cloud to gain comprehensive visibility into their network traffic, proactively identify issues, and optimize their infrastructure. By understanding how Network Observability works in Google Cloud, organizations can ensure seamless application delivery and enhance their overall cloud architecture and operations.</p>
+<ql-button href='/course_templates/1430' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='AI Boost Bites: NotebookLM Video Overviews' id='public-profile-award-modal-15'>
+<p> This video covers how to use the Video Overviews feature in NotebookLM to automatically generate a short explainer video based on your source documents.</p>
+<ql-button href='/course_templates/1420' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='AI Boost Bites: Automate tasks with Gemini and Apps Script' id='public-profile-award-modal-16'>
+<p>This video covers how to use Gemini and Apps Script to automate manual tasks across Google Workspace. You'll learn to prompt Gemini to generate Apps Script code that automatically drafts email reminders in Google Sheets for tasks not marked 'Complete.' Automate your workflow with little to no technical expertise, freeing up time for more important work and eliminating manual follow-ups.</p>
+<ql-button href='/course_templates/1371' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='AI Boost Bites: Intro to NotebookLM' id='public-profile-award-modal-17'>
+<p>This video covers how to use NotebookLM as a personal research
+    assistant by adding sources, asking questions, and generating new content
+    formats based on your documents.</p>
+<ql-button href='/course_templates/1418' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Orchestrate Multi-agent Workflows with Gemini Enterprise' id='public-profile-award-modal-18'>
+<p>Complete the introductory Orchestrate Multi-Agent Workflows with Gemini Enterprise skill badge to demonstrate skills in the following: using agentic assistants powered by Gemini Enterprise to unify data across first- and third-party sources, develop multimedia marketing materials, and automate business actions across systems.
+
+Skill badges validate your practical knowledge on specific products through hands-on labs and challenge assessments. Earn a badge by completing a course or jump straight into the challenge lab to get your badge today. Badges prove your proficiency, enhance your professional profile, and ultimately lead to increased career opportunities. Visit your profile to track badges you’ve earned.</p>
+<ql-button href='/course_templates/1682' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Trail: Data Engineering and Information Protection' id='public-profile-award-modal-19'>
+<p>Raw data is only useful if it is clean, structured, and secure. In this track, you’ll start by processing and preparing data using Dataprep, Dataflow templates, and Apache Spark. You'll learn how to clean up datasets so they are ready for machine learning models. From there, you'll focus on security by working with tools that find and mask sensitive information like personal IDs and credentials. You'll practice redacting critical details and creating safe, de-identified copies of your data in Cloud Storage. By finishing the hands-on challenge labs, you’ll show you can handle big data workflows while keeping confidential information completely safe.</p>
+<ql-button href='/games/71959' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Voyage: Identity Management and Pre-trained AI APIs' id='public-profile-award-modal-20'>
+<p>Keeping your cloud resources secure and making your apps smarter are two essential skills for any cloud developer. In this voyage, you’ll start with the security fundamentals, learning how to configure service accounts, manage IAM permissions using gcloud, and set up custom roles. Once you've secured your environment, you'll work with Google Cloud's pre-trained AI tools—converting text to synthetic speech, translating languages on the fly, and transcribing audio files into text. Complete with two practical challenge labs to test your skills, you'll walk away knowing how to safely manage access to your cloud project while adding powerful language and speech features to your applications.</p>
+<ql-button href='/games/71960' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Adventure: App Dev and Cloud Observability' id='public-profile-award-modal-21'>
+<p>Writing code is just the first step; you also need to know how to deploy it smoothly and keep it running at its best. In this adventure, you’ll get started with serverless setups by running code on Cloud Run Functions and connecting your services using Google Cloud Pub/Sub. From there, you'll work on the operations side—building out clean development environments, keeping tabs on multiple projects at once, and setting up smart alerts so you can spot and fix issues early. With a couple of challenge labs thrown into the mix, you’ll walk away with the skills needed to build, monitor, and scale apps on Google Cloud.</p>
+<ql-button href='/games/71957' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Logic Log' id='public-profile-award-modal-22'>
+<p>Building a reliable platform for data analysis requires structured data modeling and clean, maintainable code. In this challenge, you’ll start with the building blocks of LookML, creating custom dimensions, measures, and derived tables to shape your data exactly how you need it. From there, you'll work on making your platform faster and easier to use by setting up caching, defining datagroups, and modularizing your code using extends. By following these development best practices, you'll walk away knowing how to build efficient, scalable data models that your team can easily rely on.</p>
+<ql-button href='/games/71961' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Base Camp June 2026' id='public-profile-award-modal-23'>
+<p>Welcome to Base Camp, where you’ll develop key Google Cloud skills (available in Spanish and Portuguese too!) and earn an exclusive credential that will open doors to the cloud for you. No prior experience is required!</p>
+<ql-button href='/games/71958' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Trail: Cloud Security and DevOps Foundations' id='public-profile-award-modal-24'>
+<p>Securing applications and streamlining delivery go hand in hand in modern cloud environments. In this trail, you’ll work with tools like Cloud KMS, Identity-Aware Proxy, and service accounts to manage access and protect resources. You’ll also explore private Kubernetes clusters, artifact management, and build CI/CD pipelines with Cloud Build—bringing together the essentials of cloud security and DevOps in practice.</p>
+<ql-button href='/games/68017' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Voyage: Data Governance and Firebase Foundations' id='public-profile-award-modal-25'>
+<p>Working with data and applications requires the right balance of governance and agility. In this voyage, you’ll use Dataplex to organize, secure, and assess data quality while exploring concepts like data mesh. Alongside, you’ll get hands-on with Firebase—building serverless apps, working with Firestore, and managing data in real time—bringing together modern data management and application development.</p>
+<ql-button href='/games/68018' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Adventure: Modern App Deployment' id='public-profile-award-modal-26'>
+<p>Building and running applications on Google Cloud can take many forms—and this adventure brings them together. Get hands-on with App Engine, Cloud Run, Kubernetes Engine, and Compute Engine as you deploy applications, manage scaling, and explore modern architectures, including the shift from monolithic to microservices.</p>
+<ql-button href='/games/68016' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Skill Up Summer' id='public-profile-award-modal-27'>
+<p>A season to build, experiment, and grow—one skill at a time. You’ll start with the fundamentals of networking, creating the foundation that connects everything together. From there, you’ll step into automation and application development using Cloud Scheduler, App Engine, and machine learning APIs. By the end, you’ll have a more confident, hands-on understanding of how modern applications are built, connected, and run on the cloud.</p>
+<ql-button href='/games/68020' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Base Camp May 2026' id='public-profile-award-modal-28'>
+<p>Welcome to Base Camp, where you’ll develop key Google Cloud skills (available in Spanish and Portuguese too!) and earn an exclusive credential that will open doors to the cloud for you. No prior experience is required!</p>
+<ql-button href='/games/68019' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Adventure: GKE Operations and Networking' id='public-profile-award-modal-29'>
+<p>Google Kubernetes Engine (GKE) is all about running and managing containerized applications without worrying too much about the underlying setup. In this adventure, you’ll get hands-on with how things actually work—managing workloads, debugging issues, and trying out autoscaling. You’ll also explore Autopilot, run load tests, and work with private clusters and network access. By the end, you’ll have a clearer sense of how GKE setups are put together and handled in practice.</p>
+<ql-button href='/games/63301' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Voyage: Modern Application Development' id='public-profile-award-modal-30'>
+<p>On Google Cloud, building an app usually means handling more than just the code. You’ll need to deploy it, connect services, and keep things running properly. In this voyage, you’ll host a web app, set up a deployment pipeline, and build a REST API with Cloud Run. You’ll also try out Flutter and set up a Python development environment. You’ll work with VPC networks, load balancing, and clean up unused resources along the way. It’s a practical set of tasks that reflects how apps are actually run on Google Cloud.</p>
+<ql-button href='/games/63302' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Dialogue Design' id='public-profile-award-modal-31'>
+<p>78%—or nearly 8 in 10—business leaders say Google Cloud helps them stay ahead in the age of AI. A big part of that comes down to how teams build and connect intelligent systems. Here, you’ll build and manage conversational agents, and use speech-to-text and translation APIs to handle different types of input. You’ll also move from monolithic apps to microservices on GKE, connect workflows using webhooks, and use observability tools to keep track of what’s happening. IAM comes in as well to manage access where needed. It’s a practical look at how these pieces are used together in real setups.</p>
+<ql-button href='/games/63304' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Trail: Data Migration' id='public-profile-award-modal-32'>
+<p>A lot of cloud work comes down to moving data, managing access, and making sense of what’s happening behind the scenes. In this trail, you’ll migrate a MySQL database to Google Cloud, work with IAM permissions using gcloud, and analyze network traffic with VPC Flow Logs. You’ll also store and manage media files, prepare data with Dataprep, and build reports using Looker Studio and LookML. There’s even a lab on measuring Speech-to-Text accuracy. It’s a mix of tasks that shows how data is handled, monitored, and used across different parts of Google Cloud.</p>
+<ql-button href='/games/63303' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Base Camp April 2026' id='public-profile-award-modal-33'>
+<p>Welcome to Base Camp, where you’ll develop key Google Cloud skills (available in Spanish and Portuguese too!) and earn an exclusive credential that will open doors to the cloud for you. No prior experience is required!</p>
+<ql-button href='/games/63300' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Voyage: AI and Cloud Deployment' id='public-profile-award-modal-34'>
+<p>Over 85% of enterprises are accelerating AI and cloud adoption to stay ahead. In this voyage, you’ll prepare and protect data using Dataprep and the Cloud Data Loss Prevention API, scan for vulnerabilities, and validate workloads. You’ll also build and deploy modern applications using Cloud Build, GKE pipelines, App Engine Flexible, and Artifact Registry — while creating AI-powered solutions with Vertex AI, Gemini, and Speech-to-Text. Together, these labs help you secure data, deploy confidently, and build intelligent cloud applications at scale.</p>
+<ql-button href='/games/58981' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Base Camp March 2026' id='public-profile-award-modal-35'>
+<p>Welcome to Base Camp, where you’ll develop key Google Cloud skills (available in Spanish and Portuguese too!) and earn an exclusive credential that will open doors to the cloud for you. No prior experience is required!</p>
+<ql-button href='/games/58979' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Trail: Automation and Analytics' id='public-profile-award-modal-36'>
+<p>Modern cloud teams rely on automation and strong platform knowledge to move faster and smarter. In this trail, you’ll deploy Kubernetes Load Balancers and Cloud SQL using Terraform, strengthen observability with Cloud Logging, and customize analytics experiences in Looker using Liquid. You’ll also put your knowledge to the test through role-based Arcade Quizzes — from Data Practitioner and Database Engineer to Workspace Administrator — sharpening both your technical confidence and real-world readiness. </p>
+<ql-button href='/games/58980' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Holi-istic Infrastructures' id='public-profile-award-modal-37'>
+<p>Holi is all about bringing different colors together — and that’s exactly what this challenge does with technology. You’ll package applications with Docker, manage deployments using Kubernetes Engine, secure access with IAM and VPN, and deploy apps on App Engine. You’ll also store data in Cloud Storage and explore how AI APIs can analyze, classify, and translate text. It’s a hands-on way to see how different cloud pieces come together to build something reliable, secure, and smart.</p>
+<ql-button href='/games/58989' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade March 2026 Sprint 1' id='public-profile-award-modal-38'>
+<p>This month's Arcade Sprint 1 is live! It's designed for quick learning. Since the labs are open all month, there's no rush; just jump in when you have the time. You'll earn 1 Arcade Point and a new skill with each step. It's that simple: grab your point and keep the momentum going!</p>
+<ql-button href='/games/58971' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade March 2026 Sprint 2' id='public-profile-award-modal-39'>
+<p>This month's Arcade Sprint 2 is live! It's designed for quick learning. Since the labs are open all month, there's no rush; just jump in when you have the time. You'll earn 1 Arcade Point and a new skill with each step. It's that simple: grab your point and keep the momentum going!</p>
+<ql-button href='/games/58972' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade March 2026 Sprint 3' id='public-profile-award-modal-40'>
+<p>This month's Arcade Sprint 3 is live! It's designed for quick learning. Since the labs are open all month, there's no rush; just jump in when you have the time. You'll earn 1 Arcade Point and a new skill with each step. It's that simple: grab your point and keep the momentum going!</p>
+<ql-button href='/games/58973' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade March 2026 Sprint 4' id='public-profile-award-modal-41'>
+<p>This month's Arcade Sprint 4 is live! It's designed for quick learning. Since the labs are open all month, there's no rush; just jump in when you have the time. You'll earn 1 Arcade Point and a new skill with each step. It's that simple: grab your point and keep the momentum going!</p>
+<ql-button href='/games/58970' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Certification Zone February 2026' id='public-profile-award-modal-42'>
+<p>Google Cloud Certifications provide a tangible way for you to demonstrate your skills to potential or current employers. These certifications incorporate performance-based questions, testing your hands-on expertise through practical tasks. Begin your journey towards becoming a Google Certified Professional with the help of the Arcade Cert Zone.</p>
+<ql-button href='/games/57952' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='From Foundations To Wonders' id='public-profile-award-modal-43'>
+<p>As Pup and Kit move through the city between matches—booking plans on the fly, exploring structures built to last, and navigating busy streets—the story reflects what it takes to keep systems running smoothly behind the scenes. From securing storage and shaping networks to improving performance, reliability, and cost efficiency, these labs echo the quiet work that makes flexibility possible. Along the way, hands-on challenges and quizzes sharpen decision-making, so when it’s time for the next big play, everything is ready to perform.</p>
+<ql-button href='/games/56183' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Skills At The Pitch' id='public-profile-award-modal-44'>
+<p>Pup and Kit’s World Cup journey highlights how the right skills quietly power great experiences. As they plan, adapt, and stay in sync using data, automation, and cloud-based tools, the story nudges you to step into their shoes and build those capabilities yourself. Each lab mirrors a moment from their adventure, encouraging you to explore, experiment, and strengthen skills that help you stay prepared, move faster, and make smarter choices-whatever the situation demands.</p>
+<ql-button href='/games/56182' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Base Camp February 2026' id='public-profile-award-modal-45'>
+<p>Welcome to Base Camp, where you’ll develop key Google Cloud skills (available in Spanish and Portuguese too!) and earn an exclusive credential that will open doors to the cloud for you. No prior experience is required!</p>
+<ql-button href='/games/54946' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Adventure: Analytics and Automation' id='public-profile-award-modal-46'>
+<p>Over 70% of cloud professionals say hands-on practice is the most effective way to build real-world skills. In this adventure, you’ll develop hands-on skills across data analytics, automation, security, networking, and application deployment using Google Cloud and Workspace tools. You’ll create dashboards and alerts in Looker, analyze security findings, work with AI-powered services, deploy CI/CD pipelines, and manage network access and traffic insights—strengthening your ability to design, monitor, and operate reliable, scalable cloud solutions.</p>
+<ql-button href='/games/54943' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Voyage: Data Tools' id='public-profile-award-modal-47'>
+<p>Getting started with cloud and data tools is all about building strong fundamentals. In this voyage, you’ll gain hands-on skills by working with Google Cloud APIs, Compute Engine, Cloud Storage, networking, and serverless services. You’ll also explore how to collect, validate, analyze, and visualize data using Google Sheets and Forms, while learning how to manage secure access with Vault policies. Together, these labs help you build confidence with core cloud services and everyday data workflows that support efficient, secure, and scalable solutions.  </p>
+<ql-button href='/games/54945' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade Trail: Application Development' id='public-profile-award-modal-48'>
+<p>Developers using managed cloud services can reduce infrastructure management effort by up to 60%, allowing more time to focus on building features that matter. In this level, you’ll gain hands-on experience with Cloud SQL, containerized workloads, and cloud-native application development through the Arcade ACE App Dev series, helping you design, deploy, and manage scalable applications more efficiently. </p>
+<ql-button href='/games/54944' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade February 2026 Sprint 1' id='public-profile-award-modal-49'>
+<p>This month's Arcade Sprint 1 is live! It's designed for quick learning. Since the labs are open all month, there's no rush; just jump in when you have the time. You'll earn 1 Arcade Point and a new skill with each step. It's that simple: grab your point and keep the momentum going!</p>
+<ql-button href='/games/54939' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade February 2026 Sprint 2' id='public-profile-award-modal-50'>
+<p>This month's Arcade Sprint 2 is live! It's designed for quick learning. Since the labs are open all month, there's no rush; just jump in when you have the time. You'll earn 1 Arcade Point and a new skill with each step. It's that simple: grab your point and keep the momentum going!</p>
+<ql-button href='/games/54940' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade February 2026 Sprint 3' id='public-profile-award-modal-51'>
+<p>This month's Arcade Sprint 3 is live! It's designed for quick learning. Since the labs are open all month, there's no rush; just jump in when you have the time. You'll earn 1 Arcade Point and a new skill with each step. It's that simple: grab your point and keep the momentum going!</p>
+<ql-button href='/games/54942' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Arcade February 2026 Sprint 4' id='public-profile-award-modal-52'>
+<p>This month's Arcade Sprint 4 is live! It's designed for quick learning. Since the labs are open all month, there's no rush; just jump in when you have the time. You'll earn 1 Arcade Point and a new skill with each step. It's that simple: grab your point and keep the momentum going!</p>
+<ql-button href='/games/54941' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Google Skills Arcade Certification Zone January 2026' id='public-profile-award-modal-53'>
+<p>Google Cloud Certifications provide a tangible way for you to demonstrate your skills to potential or current employers. These certifications incorporate performance-based questions, testing your hands-on expertise through practical tasks. Begin your journey towards becoming a Google Certified Professional with the help of the Arcade Cert Zone.</p>
+<ql-button href='/games/53105' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Google Skills Arcade Base Camp January 2026' id='public-profile-award-modal-54'>
+<p>Welcome to Base Camp, where you’ll develop key Google Cloud skills (available in Spanish and Portuguese too!) and earn an exclusive credential that will open doors to the cloud for you. No prior experience is required!</p>
+<ql-button href='/games/50497' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Level 2: Event-Driven Systems' id='public-profile-award-modal-55'>
+<p>Over 80% of modern applications rely on event-driven architectures or real-time messaging to stay responsive at scale. In challenge, you’ll work with Pub/Sub to build event-driven systems, deploy workloads on Google Kubernetes Engine, manage authentication and dynamic secrets with Vault, and explore language processing using Cloud APIs. You’ll also build Flutter applications and work with Cloud Spanner, gaining hands-on experience across messaging, security, data, and application development.  </p>
+<ql-button href='/games/50499' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Level 1: Compute, Storage and Monitoring' id='public-profile-award-modal-56'>
+<p>A new year brings a fresh opportunity to build consistency in how you learn and apply cloud skills. In this challenge, you’ll deploy applications using App Engine and Cloud Run Functions, work with Compute Engine instances, and manage data through Cloud Storage using both the console and CLI. You’ll also define fine-grained access with custom IAM roles, analyze logs, create alerts from logs-based metrics, and monitor workloads across multiple projects. Together, these labs help you begin the year by strengthening essential cloud operations skills and developing habits that support reliable, well-monitored applications.</p>
+<ql-button href='/games/50498' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Level 3: Applied Generative AI' id='public-profile-award-modal-57'>
+<p>Generative AI is quickly becoming a core part of modern cloud solutions. In this challenge, you’ll build applications using Gemini on Vertex AI for text embeddings, multimodal content generation, and text-to-image workflows, while also learning how to ingest data into BigQuery from Cloud Storage. You’ll then test your understanding through role-based Arcade quizzes designed for Workspace Administrators, Database Engineers, DevOps Engineers, and Digital Leaders—bringing together hands-on building and practical knowledge validation. </p>
+<ql-button href='/games/50500' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Google Skills Arcade Trivia January 2026 Week 1' id='public-profile-award-modal-58'>
+<p>Hey there! You're invited to game on with Google Skills Arcade Trivia for January Week 1! Play throughout the month and boost your cloud learning journey. Every week, we'll release a new set of questions to test your knowledge of Google Cloud Platform. Get started now and earn the January Trivia Week 1 badge!</p>
+<ql-button href='/games/50493' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Google Skills Arcade Trivia January 2026 Week 2' id='public-profile-award-modal-59'>
+<p>Hey there! You're invited to game on with Google Skills Arcade Trivia for January Week 2! Play throughout the month and boost your cloud learning journey. Every week, we'll release a new set of questions to test your knowledge of Google Cloud Platform. Get started now and earn the January Trivia Week 2 badge!</p>
+<ql-button href='/games/50494' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Google Skills Arcade Trivia January 2026 Week 3' id='public-profile-award-modal-60'>
+<p>Hey there! You're invited to game on with Google Skills Arcade Trivia for January Week 3! Play throughout the month and boost your cloud learning journey. Every week, we'll release a new set of questions to test your knowledge of Google Cloud Platform. Get started now and earn the January Trivia Week 3 badge!</p>
+<ql-button href='/games/50496' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Google Skills Arcade Trivia January 2026 Week 4' id='public-profile-award-modal-61'>
+<p>Hey there! You're invited to game on with Google Skills Arcade Trivia for January Week 4! Play throughout the month and boost your cloud learning journey. Every week, we'll release a new set of questions to test your knowledge of Google Cloud Platform. Get started now and earn the January Trivia Week 4 badge!</p>
+<ql-button href='/games/50495' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+<ql-dialog dismissalLabel='Dismiss' headline='Work Life Refresh' id='public-profile-award-modal-62'>
+<p>Setting goals is a big part of New Year resolutions—but sustaining a healthy work-life balance is what truly makes them stick. This challenge helps you organize your inbox, manage schedules, collaborate smoothly, and track work efficiently using Google Workspace tools. Start the year with better planning, clearer communication, and workflows that support productivity without burnout.  </p>
+<ql-button href='/games/51854' label='Learn more' method='get' slot='action' text>
+Learn more
+</ql-button>
+</ql-dialog>
+
+
+
+<script>
+  document.addEventListener("turbo:load", function () {
+    ql.initMaterialInputs();
+    ql.tomSelect.init();
+    initTabs();
+    ql.list.init();
+    ql.favoriting.init();
+    ql.header.myAccount.init();
+    initTooltips();
+    ql.autocomplete.init();
+    ql.modals.init();
+    ql.toggleButtons.init();
+    Turbo.session.drive = false;
+    ql.messages.init();
+  ql.jumpContent.init();
+  
+  }, {once: true});
+</script>
+<script>
+  document.addEventListener("turbo:load", () => ql.analyticsV2.init());
+  document.addEventListener("turbo:frame-load", () => ql.analyticsV2.init());
+</script>
+<script>
+  document.addEventListener("turbo:load", function () {
+    ql.celebrations.init({"course_complete":"COURSE COMPLETED","document_complete":"DOCUMENT COMPLETED","experience_label":"Experience points","lab_complete":"LAB COMPLETED","learning_plan_complete":"PATH COMPLETED","lesson_complete":"LESSON COMPLETED","quiz_complete":"QUIZ COMPLETED","video_complete":"VIDEO COMPLETED"});
+    ql.achievements.init();
+  }, {once: true});
+</script>
+
+</body>
+</html>
+
+
