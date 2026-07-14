@@ -11,9 +11,11 @@ export function FacilitatorDetails() {
         The Arcade Facilitator Program is a no-cost gaming campaign where technical practitioners of all levels can learn new cloud skills like deploying AI agents, application development, big data & AI/ML and earn Google Cloud credentials & points to use towards <strong className="text-slate-900 dark:text-white">claiming prizes and Google Cloud benefits.</strong>
       </p>
       
-      <p className="text-lg font-bold text-slate-900 dark:text-white mb-8">
-        Enrol in the program
-      </p>
+      <div className="flex mb-8">
+        <a href="https://arcade-buddy.onrender.com/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors">
+          Enrol in the program
+        </a>
+      </div>
       
       <div className="space-y-4 mb-10">
         <div className="flex items-start gap-4">

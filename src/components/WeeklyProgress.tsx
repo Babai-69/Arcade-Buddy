@@ -16,14 +16,52 @@ export function WeeklyProgress({ badges = [] }: WeeklyProgressProps) {
   const TRACKING_END = new Date('2026-09-14T18:29:00Z');
   
   const [currentWeekStart, setCurrentWeekStart] = useState(() => {
-    const now = new Date();
-    let refDate = now < TRACKING_START ? TRACKING_START : now > TRACKING_END ? TRACKING_END : now;
+    let refDate = new Date();
+    if (badges && badges.length > 0) {
+      // Find the latest badge date
+      let latestTime = 0;
+      badges.forEach(b => {
+        const dStr = (b as any)._debugParsedDate || b.earnedDate.replace(/^Earned\s+/i, '');
+        if (dStr) {
+          const d = new Date(dStr);
+          if (!isNaN(d.getTime()) && d.getTime() > latestTime) {
+            latestTime = d.getTime();
+          }
+        }
+      });
+      if (latestTime > 0) {
+        refDate = new Date(latestTime);
+      }
+    }
     const day = refDate.getDay();
     const diff = refDate.getDate() - day;
     const startOfWeek = new Date(refDate.setDate(diff));
     startOfWeek.setHours(0,0,0,0);
     return startOfWeek;
   });
+
+  useEffect(() => {
+    if (badges && badges.length > 0) {
+      let latestTime = 0;
+      badges.forEach(b => {
+        const dStr = (b as any)._debugParsedDate || b.earnedDate.replace(/^Earned\s+/i, '');
+        if (dStr) {
+          const d = new Date(dStr);
+          if (!isNaN(d.getTime()) && d.getTime() > latestTime) {
+            latestTime = d.getTime();
+          }
+        }
+      });
+      if (latestTime > 0) {
+        const refDate = new Date(latestTime);
+        const day = refDate.getDay();
+        const diff = refDate.getDate() - day;
+        const startOfWeek = new Date(refDate.setDate(diff));
+        startOfWeek.setHours(0,0,0,0);
+        setCurrentWeekStart(startOfWeek);
+      }
+    }
+  }, [badges]);
 
   useEffect(() => {
     const dates: Date[] = [];
@@ -34,9 +72,7 @@ export function WeeklyProgress({ badges = [] }: WeeklyProgressProps) {
       if (!dateStr) return;
       const date = new Date(dateStr);
       if (!isNaN(date.getTime())) {
-        if (date >= TRACKING_START && date <= TRACKING_END) {
-          dates.push(date);
-        }
+        dates.push(date);
       }
     });
     setBadgeDates(dates);
