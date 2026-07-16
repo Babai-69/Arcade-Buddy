@@ -29,9 +29,15 @@ export const gameBadges = [
     "image": "https://cdn.qwiklabs.com/wlgUr4hLSfy8uOE7nNMh8rnzMD%2BXoq72kifWCPTWhtw%3D",
     "link": "https://www.skills.google/games/7318?utm_source=googleskills&utm_medium=lp&utm_campaign=wmpgame-july-arcade26"
   }
+
 ];
 
 export const skillBadges = [
+  {
+    "name": "Create Your First Gemini Enterprise Application",
+    "image": "https://cdn.qwiklabs.com/%2FoLo60xg2CMZB%2BWs7JLFlQhAVVn7ZXEVsiHws3APcHY%3D",
+    "link": "https://www.skills.google/paths/3546/course_templates/1586"
+  },
   {
     "name": "Analyze BigQuery Data in Connected Sheets",
     "image": "https://cdn.qwiklabs.com/3dEst6RNTZQgSGIi4PTlumTkXxf%2FdmfV%2FBV3rh%2Fx6X4%3D",
@@ -74,7 +80,7 @@ export const skillBadges = [
   },
   {
     "name": "Develop AI-Powered Prototypes in Google AI Studio",
-    "image": "",
+    "image": "https://cdn.qwiklabs.com/XemqcUvTQE65dglOn1zBWtA5uhoWQulCF%2BY82SW%2FnjA%3D",
     "link": "https://www.skills.google/course_templates/1426"
   },
   {
@@ -118,8 +124,8 @@ export const skillBadges = [
     "link": "https://www.cloudskillsboost.google/course_templates/647"
   },
   {
-    "name": "Get Started with Pub/Sub",
-    "image": "https://cdn.qwiklabs.com/HDQKD%2Btnlq2juEuFJFBBmtJ9JWrHrbVI0v7J8uQp1VA%3D",
+    "name": "Implement Event-Driven Messaging and Automation Workflows",
+    "image": "https://cdn.qwiklabs.com/N%2BxUAUCI22RMSyUybS%2BNuGwQo7kggIF2ncKAD%2BsqBeU%3D",
     "link": "https://www.cloudskillsboost.google/course_templates/728"
   },
   {
@@ -129,7 +135,7 @@ export const skillBadges = [
   },
   {
     "name": "Kickstarting Application Development with Gemini Code Assist",
-    "image": "",
+    "image": "https://cdn.qwiklabs.com/1Sb5hVLDMPyRbwJTLMwbJQnDemCVgzS7LSld6YgBhUk%3D",
     "link": "https://www.skills.google/course_templates/1399"
   },
   {
@@ -249,7 +255,7 @@ export const skillBadges = [
   },
   {
     "name": "Build a Smart Cloud Application with Vibe Coding and MCP",
-    "image": "https://arcadepointscalci.in/Google%20DeepMind:%20Train%20A%20Small%20Language%20Model",
+    "image": "https://cdn.qwiklabs.com/z9bzy3p7KL1CvhBCR9dBz4tdGDy7%2BdQOM%2BGxXQRGePY%3D",
     "link": "https://www.skills.google/course_templates/1459"
   },
   {
@@ -424,7 +430,7 @@ export const skillBadges = [
   },
   {
     "name": "Designing Network Security in Google Cloud",
-    "image": "No Image",
+    "image": "https://cdn.qwiklabs.com/JTqg3dHcMxJXSOHz7X2hfaRDyiLoEhOTwnz5JtKyJwg%3D",
     "link": "https://www.skills.google/course_templates/1412"
   },
   {

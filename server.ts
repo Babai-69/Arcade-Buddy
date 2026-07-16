@@ -221,6 +221,11 @@ async function startServer() {
 
       $(".profile-badge").each((i, el) => {
         const rawText = $(el).text() || "";
+        const badgeText   = $(el).text();
+        const altText     = $(el).find('img').attr('alt') || '';
+        const ariaLabel   = $(el).attr('aria-label') || '';
+        const allText     = (badgeText + altText + ariaLabel).toLowerCase();
+
         const title = $(el).find(".badge-title, .ql-title-medium").text().trim() || $(el).attr('alt') || rawText || "";
         const titleLower = title.toLowerCase();
 
@@ -284,7 +289,7 @@ async function startServer() {
           titleLower.includes("milestone") ||
           titleLower.includes("special") ||
           titleLower.includes("bonus") ||
-          titleLower.includes("event")
+          (titleLower.includes("event") && !titleLower.includes("eventarc") && !titleLower.includes("event-driven"))
         ) {
           if (validForProgram) specialBadges++;
           category = "Special";
@@ -309,7 +314,7 @@ async function startServer() {
             "gen ai: navigate the landscape",
             "gen ai apps: transform your work",
             "introduction to large language models",
-            "responsible ai: applying ai principles with google cloud",
+            "responsible ai: applying ai principles with google cloud",            
             "responsible ai for digital leaders with google cloud",
             "ai infrastructure: introduction to ai hypercomputer",
             "machine learning operations (mlops) with vertex ai: model evaluation",
@@ -317,112 +322,16 @@ async function startServer() {
             "building complex end to end self-service experiences in dialogflow cx",
             "gen ai agents: transform your organization"
           ];
-
-          const halfPointSkillBadges = [
-            "analyze bigquery data in connected sheets",
-            "analyze images with the cloud vision api",
-            "analyze sentiment with natural language api",
-            "app building with appsheet",
-            "build a website on google cloud",
-            "cloud speech api: 3 ways",
-            "create and manage cloud sql for postgresql instances",
-            "derive insights from bigquery data",
-            "develop ai-powered prototypes in google ai studio",
-            "develop with apps script and appsheet",
-            "explore generative ai with the gemini api in vertex ai",
-            "get started with api gateway",
-            "get started with cloud storage",
-            "get started with dataplex",
-            "get started with eventarc",
-            "get started with google workspace tools",
-            "get started with looker",
-            "get started with pub/sub",
-            "get started with sensitive data protection",
-            "kickstarting application development with gemini code assist",
-            "monitor and manage google cloud resources",
-            "monitoring in google cloud",
-            "networking fundamentals on google cloud",
-            "prepare data for looker dashboards and reports",
-            "prepare data for ml apis on google cloud",
-            "prompt design in vertex ai",
-            "set up a google cloud network",
-            "set up an app dev environment on google cloud",
-            "share data using google data cloud",
-            "store, process, and manage data on google cloud - console",
-            "tag and discover biglake data",
-            "the basics of google cloud compute",
-            "use apis to work with cloud storage",
-            "use functions, formulas, and charts in google sheets",
-            "use machine learning apis on google cloud",
-            "using the google cloud speech api",
-            "analyze speech and language with google apis",
-            "app engine: 3 ways",
-            "automate data capture at scale with document ai",
-            "build google cloud infrastructure for aws professionals",
-            "build infrastructure with terraform on google cloud",
-            "build lookml objects in looker",
-            "build a data warehouse with bigquery",
-            "build a smart cloud application with vibe coding and mcp",
-            "cloud run functions: 3 ways",
-            "configure service accounts and iam roles for google cloud",
-            "create ml models with bigquery ml",
-            "create a secure data lake on cloud storage",
-            "create a streaming data lake on cloud storage",
-            "create and manage bigtable instances",
-            "create and manage cloud spanner instances",
-            "develop gen ai apps with gemini and streamlit",
-            "develop serverless applications on cloud run",
-            "develop serverless apps with firebase",
-            "develop your google cloud network",
-            "enhance gemini model capabilities",
-            "implement ci/cd pipelines on google cloud",
-            "implement cloud security fundamentals on google cloud",
-            "implement devops workflows in google cloud",
-            "implement load balancing on compute engine",
-            "implementing cloud load balancing for compute engine",
-            "integrate bigquery data and google workspace using apps script",
-            "manage data models in looker",
-            "migrate mysql data to cloud sql using database migration service",
-            "monitor and log with google cloud observability",
-            "optimize costs for google kubernetes engine",
-            "perform predictive data analysis in bigquery",
-            "privileged access with iam",
-            "secure biglake data",
-            "store, process, and manage data on google cloud - command line",
-            "streaming analytics into bigquery",
-            "build custom processors with document ai",
-            "build real world ai applications with gemini and imagen",
-            "build a data mesh with dataplex",
-            "build a secure google cloud network",
-            "connecting cloud networks with ncc",
-            "deploy kubernetes applications on google cloud",
-            "deploy and manage apigee x",
-            "designing network security in google cloud",
-            "detect manufacturing defects using visual inspection ai",
-            "develop and secure apis with apigee x",
-            "discover and protect sensitive data across your ecosystem",
-            "engineer data for predictive modeling with bigquery ml",
-            "implement multimodal vector search with bigquery",
-            "inspect rich documents with gemini multimodality and multimodal rag",
-            "manage kubernetes in google cloud",
-            "mitigate threats and vulnerabilities with security command center",
-            "protect cloud traffic with chrome enterprise premium security",
-            "secure software delivery",
-            "analyze and reason on multimodal data with gemini",
-            "build and deploy machine learning solutions on vertex ai",
-            "cloud architecture: design, implement, and manage",
-            "deploy multi-agent architectures",
-            "google deepmind: train a small language model"
-          ];
-
+          
           if (labFreeTitles.includes(titleLower)) {
             category = "Lab-free";
             points = 0;
-          } else if (halfPointSkillBadges.includes(titleLower)) {
+          } else if (allText.includes("skill badge")) {
             if (validForProgram) skillBadges += 1;
             category = "Skill";
             points = 0.5;
           } else {
+            // Default to skill badge as fallback
             if (validForProgram) skillBadges += 1;
             category = "Skill";
             points = 0.5;

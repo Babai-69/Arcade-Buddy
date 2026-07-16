@@ -27,7 +27,7 @@ const rawBadges = [
   {name:'Get Started with Eventarc',cat:'Application Development',diff:'Easy',credits:3,hours:3},
   {name:'Get Started with Google Workspace Tools',cat:'Application Development',diff:'Easy',credits:2,hours:2},
   {name:'Get Started with Looker',cat:'Analytics',diff:'Easy',credits:3,hours:3},
-  {name:'Get Started with Pub/Sub',cat:'Data',diff:'Easy',credits:3,hours:3},
+  {name:'Implement Event-Driven Messaging and Automation Workflows',cat:'Data',diff:'Easy',credits:3,hours:3},
   {name:'Get Started with Sensitive Data Protection',cat:'Security',diff:'Easy',credits:3,hours:3},
   {name:'Kickstarting Application Development with Gemini Code Assist',cat:'Application Development',diff:'Easy',credits:3,hours:4},
   {name:'Monitor and Manage Google Cloud Resources',cat:'Infrastructure',diff:'Easy',credits:3,hours:3},

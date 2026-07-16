@@ -1,4 +1,5 @@
 export const SKILL_BADGES: Record<string, string> = {
+  "Create Your First Gemini Enterprise Application": "https://www.skills.google/paths/3546/course_templates/1586",
   "Analyze BigQuery Data in Connected Sheets": "https://www.skills.google/course_templates/1240",
   "Analyze Images with the Cloud Vision API": "https://www.cloudskillsboost.google/course_templates/633",
   "Analyze Sentiment with Natural Language API": "https://www.cloudskillsboost.google/course_templates/667",
@@ -16,7 +17,7 @@ export const SKILL_BADGES: Record<string, string> = {
   "Get Started with Eventarc": "https://www.cloudskillsboost.google/course_templates/727",
   "Get Started with Google Workspace Tools": "https://www.cloudskillsboost.google/course_templates/676",
   "Get Started with Looker": "https://www.cloudskillsboost.google/course_templates/647",
-  "Get Started with Pub/Sub": "https://www.cloudskillsboost.google/course_templates/728",
+  "Implement Event-Driven Messaging and Automation Workflows": "https://www.cloudskillsboost.google/course_templates/728",
   "Get Started with Sensitive Data Protection": "https://www.skills.google/course_templates/750",
   "Kickstarting Application Development with Gemini Code Assist": "https://www.skills.google/course_templates/1399",
   "Monitor and Manage Google Cloud Resources": "https://www.cloudskillsboost.google/course_templates/653",

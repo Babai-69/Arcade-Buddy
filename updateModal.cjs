@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+
+const content = `import React, { useState, useEffect } from 'react';
 import { X, MessageCircle, Send, CheckCircle2, TriangleAlert, CheckSquare, ExternalLink, Copy, Gift, Youtube, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -191,3 +193,6 @@ export function CommunityWelcomeModal() {
     </AnimatePresence>
   );
 }
+`;
+
+fs.writeFileSync('src/components/CommunityWelcomeModal.tsx', content);

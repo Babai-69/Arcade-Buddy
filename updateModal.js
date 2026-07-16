@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+
+const content = `import React, { useState, useEffect } from 'react';
 import { X, MessageCircle, Send, CheckCircle2, TriangleAlert, CheckSquare, ExternalLink, Copy, Gift, Youtube, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -130,7 +132,7 @@ export function CommunityWelcomeModal() {
                   <li>Access to a hidden leaderboard only for those who use our code</li>
                   <li>Top participants win exclusive gifts 🎁</li>
                 </ul>
-                <a href="https://arcade.google.com" target="_blank" className="text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center gap-1 text-sm font-medium">
+                <a href="#" className="text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center gap-1 text-sm font-medium">
                   <ExternalLink className="w-3.5 h-3.5" /> View the Special Leaderboard
                 </a>
               </div>
@@ -169,11 +171,9 @@ export function CommunityWelcomeModal() {
 
               {/* Bottom Actions */}
               <div className="pt-4 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-2 text-slate-300">
-                    <span className="font-bold text-white">Have you registered?</span>
-                  </div>
-                  <span className="text-sm text-slate-400">Required to use the platform</span>
+                <div className="flex items-center gap-2 text-slate-300">
+                  <span className="font-bold text-white">Have you registered?</span>
+                  <span className="text-sm text-slate-400">(Required to use the platform)</span>
                 </div>
                 <div className="flex gap-2 w-full md:w-auto">
                   <button onClick={handleRegisteredYes} className="flex-1 md:flex-none bg-green-600 hover:bg-green-500 text-white px-8 py-2.5 rounded-lg font-bold transition-colors flex items-center justify-center gap-2">
@@ -191,3 +191,6 @@ export function CommunityWelcomeModal() {
     </AnimatePresence>
   );
 }
+`;
+
+fs.writeFileSync('src/components/CommunityWelcomeModal.tsx', content);

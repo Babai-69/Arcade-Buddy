@@ -13,6 +13,7 @@ import { toPng } from 'html-to-image';
 import confetti from 'canvas-confetti';
 
 import { CheckProgress } from './CheckProgress';
+import { MilestoneOverview } from './MilestoneOverview';
 import { WeeklyProgress } from './WeeklyProgress';
 
 export function UserProgressDashboard() {
@@ -56,16 +57,10 @@ export function UserProgressDashboard() {
     
     let gameCount = 0;
     let skillCount = 0;
-    gamesToTrack.forEach(game => {
-      if (data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()) && b.validForProgram)) {
-        gameCount++;
-      }
-    });
-    Object.keys(SKILL_BADGES).forEach(badgeName => {
-      if (data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase() && b.validForProgram)) {
-        skillCount++;
-      }
-    });
+    if (data && data.badges) {
+      gameCount = data.badges.filter((b: any) => b.validForProgram && b.category === 'Game').length;
+      skillCount = data.badges.filter((b: any) => b.validForProgram && b.category === 'Skill').length;
+    }
 
     if (prevGameCount !== null && gameCount > prevGameCount) {
         if (gameCount === 12) setToastMessage({ title: 'Milestone Unlocked! 🎮', desc: 'You have completed 100% of the Game Badges!' });
@@ -268,17 +263,9 @@ export function UserProgressDashboard() {
   // Calculate stats for charts
   let completedGameBadgesCount = 0;
   let completedSkillBadgesCount = 0;
-  if (data) {
-    gamesToTrack.forEach(game => {
-      if (data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()) && b.validForProgram)) {
-        completedGameBadgesCount++;
-      }
-    });
-    Object.keys(SKILL_BADGES).forEach(badgeName => {
-      if (data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase() && b.validForProgram)) {
-        completedSkillBadgesCount++;
-      }
-    });
+  if (data && data.badges) {
+    completedGameBadgesCount = data.badges.filter((b: any) => b.validForProgram && b.category === 'Game').length;
+    completedSkillBadgesCount = data.badges.filter((b: any) => b.validForProgram && b.category === 'Skill').length;
   }
 
   const milestones = [
@@ -499,7 +486,9 @@ export function UserProgressDashboard() {
           
 
 
-          <CheckProgress completedBadges={data.badges} />
+          <MilestoneOverview data={data} />
+                    
+                    <CheckProgress completedBadges={data.badges} />
           
           <WeeklyProgress badges={data.badges} />
           
