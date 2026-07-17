@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, Trophy, Medal, Star, ChevronRight, Activity, AlertCircle, Lock } from 'lucide-react';
 import confetti from 'canvas-confetti';
@@ -96,6 +97,16 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
       };
 
       setResult(newResult);
+      
+      // Save for UserProgressDashboard to pick up
+      localStorage.setItem('arcadeProfileUrl', url);
+      // We pass the raw data so it can be parsed by UserProgressDashboard if needed
+      localStorage.setItem('arcadeProgressData', JSON.stringify(data));
+      
+      const prevRecent = JSON.parse(localStorage.getItem('arcadeRecentUrls') || '[]');
+      const newRecent = [url, ...prevRecent.filter(u => u !== url)].slice(0, 5);
+      localStorage.setItem('arcadeRecentUrls', JSON.stringify(newRecent));
+
 
       if (data.arcadePoints >= 120) {
         confetti({
@@ -199,6 +210,13 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
 
               return (
                 <div className="flex flex-col gap-6">
+                  {/* View Progress Button */}
+                  <div className="flex justify-center mb-4">
+                    <Link to="/my-progress" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#5B6CF9] to-[#8B5CF6] hover:from-[#4A5CE9] hover:to-[#7A4BE6] text-white rounded-xl font-bold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 w-full sm:w-auto">
+                      View Detailed Progress & Share Card
+                      <ChevronRight className="w-5 h-5" />
+                    </Link>
+                  </div>
                   {/* TOP ROW */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* CARD 1 - User Profile */}
