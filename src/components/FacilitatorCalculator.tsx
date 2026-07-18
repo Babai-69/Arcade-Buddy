@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Award, Gamepad2, Layers, Search, AlertCircle, Info, Calendar, CheckCircle2, Lock, ArrowRight, Loader2, Target, Star } from 'lucide-react';
 import { ArcadeLoader } from './ArcadeLoader';
+import { MilestoneProgress } from './MilestoneProgress';
 
 export function FacilitatorCalculator() {
   const [url, setUrl] = useState('');

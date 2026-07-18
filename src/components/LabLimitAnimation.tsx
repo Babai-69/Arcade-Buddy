@@ -19,7 +19,7 @@ export function LabLimitAnimation({ defaultOpen = false }: LabLimitAnimationProp
         timeout = setTimeout(() => {
           // Randomly fail ~20% of the time to simulate 2-3 failed out of 15
           const isFailed = Math.random() < 0.2;
-          const newLabs = [...labs, isFailed ? 'failed' : 'success'];
+          const newLabs = [...labs, isFailed ? 'failed' : 'success'] as ('success' | 'failed')[];
           setLabs(newLabs);
           
           if (newLabs.length >= 15) setStatus('expired');

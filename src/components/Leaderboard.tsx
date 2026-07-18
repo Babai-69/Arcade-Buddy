@@ -57,7 +57,11 @@ export function Leaderboard({ participants = [] }: LeaderboardProps) {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-2">Program Leaderboard</h2>
-            <p className="text-slate-500 dark:text-slate-400">Live rankings updated daily.</p>
+            <p className="text-slate-500 dark:text-slate-400">
+              Live rankings updated daily. 
+              <br className="hidden sm:block" />
+              <span className="text-sm">Note: This section reflects a progress report that is 24 hours old. Don't worry if you don't see the exact badge count!</span>
+            </p>
           </div>
           
           <div className="flex flex-col sm:flex-row gap-3">

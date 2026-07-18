@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
-import { BookOpen, X, Youtube } from 'lucide-react';
+import { BookOpen, X, Youtube, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export function RegistrationGuideWidget() {
   const [isOpen, setIsOpen] = useState(false);
-
   // Use the preview URL instead of edit URL for cleaner display
-  const docUrl = "https://docs.google.com/document/d/1paUrRhgYKV8v1Slsnn1XIBdlQcxfQCL-loyqgNntvD4/preview";
+  const docUrl = "https://docs.google.com/document/d/1NDgPcOeDHYHkbIAFaXe0h-MaurN3zNUad2vm78UnEag/preview";
 
   return (
     <>
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 left-6 z-40 p-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-110 flex items-center justify-center group"
-        aria-label="Registration Guide"
+        className="fixed bottom-6 left-6 z-40 p-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center group"
+        aria-label="Completion Guide"
       >
         <BookOpen className="w-6 h-6" />
         <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out pl-0 group-hover:pl-2 font-medium">
-          Registration Guide
+          Completion Guide
         </span>
       </button>
 
@@ -40,9 +39,18 @@ export function RegistrationGuideWidget() {
               <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <h3 className="font-bold text-slate-900 dark:text-white">Registration Guide</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white">Completion Guide</h3>
                 </div>
                 <div className="flex items-center gap-4">
+                  <a 
+                    href="https://docs.google.com/document/d/1NDgPcOeDHYHkbIAFaXe0h-MaurN3zNUad2vm78UnEag/export?format=pdf" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="flex items-center gap-2 text-sm font-medium text-blue-700 bg-blue-100 hover:bg-blue-200 dark:text-blue-300 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 px-3 py-1.5 rounded-lg transition-colors border border-blue-200 dark:border-blue-800/50"
+                  >
+                    <Download className="w-4 h-4" />
+                    Download PDF
+                  </a>
                   <a 
                     href="https://youtu.be/J1tm4HRSHjc?si=sGCaxHDgTVkk-CiQ" 
                     target="_blank" 
@@ -50,7 +58,7 @@ export function RegistrationGuideWidget() {
                     className="flex items-center gap-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg transition-colors"
                   >
                     <Youtube className="w-4 h-4" />
-                    Watch Video Guide
+                    Watch Completion Guide
                   </a>
                   <button
                     onClick={() => setIsOpen(false)}
@@ -60,6 +68,7 @@ export function RegistrationGuideWidget() {
                   </button>
                 </div>
               </div>
+
               <div className="flex-1 w-full relative bg-slate-100 dark:bg-slate-950">
                 {/* Loader placeholder behind iframe */}
                 <div className="absolute inset-0 flex items-center justify-center text-slate-500">
@@ -72,7 +81,7 @@ export function RegistrationGuideWidget() {
                 <iframe
                   src={docUrl}
                   className="absolute inset-0 w-full h-full border-0 relative z-10 bg-white"
-                  title="Registration Guide Document"
+                  title="Completion Guide Document"
                   allow="autoplay; fullscreen"
                 />
               </div>

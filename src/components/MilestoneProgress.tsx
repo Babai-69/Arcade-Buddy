@@ -26,7 +26,7 @@ export function MilestoneProgress({ gameBadges, skillBadges }: MilestoneProgress
   const firstIncompleteIndex = milestones.findIndex((m) => !m.isCompleted);
   const currentTargetIndex = firstIncompleteIndex === -1 ? milestones.length - 1 : firstIncompleteIndex; // if all completed, ultimate is target? Or no target. Let's say -1 means all completed.
 
-  const nodes = [
+  const nodes: any[] = [
     { id: 'start', label: 'Start', pts: '0 pts', isCompleted: true, isCurrent: false, isLocked: false },
     ...milestones.map((m, idx) => {
       const isCompleted = m.isCompleted;

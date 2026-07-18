@@ -247,9 +247,13 @@ export function TrueLeaderboardPage() {
            ✨ Top achievers can earn exclusive vouchers from the Arcade Team. ✨
          </p>
          
-         <div className="bg-white dark:bg-[#4d5e75] border border-slate-200 dark:border-white/20 rounded-xl p-6 shadow-sm">
+         <div className="bg-white dark:bg-[#4d5e75] border border-slate-200 dark:border-white/20 rounded-xl p-6 shadow-sm mb-8">
            <h3 className="text-[#e29302] dark:text-[#FBBC05] font-bold text-xl md:text-2xl mb-2">Want to win exclusive rewards?</h3>
            <p className="text-slate-800 dark:text-white font-medium">Keep earning points and climb the leaderboard to receive Arcade-exclusive rewards!</p>
+         </div>
+
+         <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200">
+           <strong>Please note:</strong> The leaderboard section reflects a progress report that is 24 hours old and does not show the current badge count. It will be updated daily after 24 hours with the most current values. Don't worry if you don't see the exact badge count on the leaderboard!
          </div>
       </div>
 
