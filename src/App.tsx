@@ -28,7 +28,6 @@ import { NotFound404 } from './pages/NotFound404';
 import { AdminPanel } from './components/AdminPanel';
 import { ScrollToTop } from './components/ScrollToTop';
 import { AccessGuard } from './components/AccessGuard';
-import { ChatBot } from './components/ChatBot';
 import { mockParticipants } from './data/sampleData';
 import { Participant } from './types';
 
@@ -80,7 +79,6 @@ export default function App() {
         )}
       </main>
       <Footer />
-      <ChatBot />
     </div>
   );
 }

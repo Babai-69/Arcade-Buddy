@@ -1,4 +1,6 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import dotenv from 'dotenv';
+dotenv.config();
 import fs from 'fs';
 import path from 'path';
 import dns from 'dns';
@@ -19,6 +21,25 @@ import nodemailer from "nodemailer";
 import { gameBadges as syllabusGameBadges } from "./src/data/badgesData";
 
 async function startServer() {
+  // Check required env vars on startup
+  const requiredEnvVars = [
+    'GEMINI_API_KEY',
+  ];
+
+  const missingVars = requiredEnvVars.filter(
+    v => !process.env[v]
+  );
+
+  if (missingVars.length > 0) {
+    console.warn(
+      `⚠️ Missing environment variables: ${missingVars.join(', ')}`
+    );
+    console.warn(
+      'Some features may not work correctly.'
+    );
+  } else {
+    console.log('✅ All required environment variables found');
+  }
   const app = express();
   const PORT = 3000;
 
@@ -34,9 +55,20 @@ async function startServer() {
   
   app.post("/api/chat", async (req, res) => {
     try {
+      if (!process.env.GEMINI_API_KEY) {
+        console.error("GEMINI_API_KEY is missing!");
+        return res.status(500).json({
+          error: "API key not configured",
+          reply: "Configuration error. Please contact the admin."
+        });
+      }
+
       const { message, history } = req.body;
-      
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+      if (!message) {
+        return res.status(400).json({ error: "Message is required" });
+      }
+
       const systemInstruction = `You are GArcade Assistant, an expert AI guide for the Google Cloud Skills Boost Arcade Facilitator program 2026.
 
 You help students with:
@@ -63,40 +95,13 @@ TIER THRESHOLDS:
 
 FACILITATOR MILESTONE REQUIREMENTS:
 - Milestone 1: 6 Game + 18 Skill → +5 bonus pts
-- Milestone 2: 8 Game + 34 Skill → +15 bonus pts
-- Milestone 3: 10 Game + 50 Skill → +25 bonus pts
-- Ultimate: 12 Game + 66 Skill → +35 bonus pts
-- Bonus Milestone: +10 extra pts (if M1+ reached)
+- Milestone 2: 12 Game + 26 Skill → +10 bonus pts
+- Milestone 3: 20 Game + 40 Skill → +15 bonus pts
+- Ultimate: 28 Game + 54 Skill → +25 bonus pts
+- Ultimate Plus: 36 Game + 66 Skill → +35 bonus pts
 
-PROGRAM TIMELINE:
-- Start: July 13, 2026 at 5PM IST
-- End: September 14, 2026 at 11:59PM IST
-- Only badges in this window count for bonus
-
-DAILY LAB LIMIT:
-- Maximum 15 labs per 24-hour rolling window
-- Window starts from first lab (not midnight)
-- Failed labs still count
-- After limit: +1 lab every 2 hours
-- Lab-free courses have no limit
-
-HOW TO GET PUBLIC PROFILE URL:
-1. Go to cloudskillsboost.google.com
-2. Click profile picture → Settings
-3. Enable "Make profile public"
-4. Go to /profile/ — copy the URL
-5. Format: skills.google/public_profiles/YOUR-ID
-
-MONTHLY ARCADE GAMES (6 per month):
-- Arcade Base Camp
-- Arcade Adventure
-- Arcade Voyage
-- Arcade Trail
-- Arcade Special Monthly Game
-- New Arcade Monthly Game
-
-WATERFALL PRIZE SYSTEM:
-- Legend → first access to premium rewards
+PRIZE DETAILS:
+- Legend → premium swag (hoodies, bottles, etc.)
 - Champion → remaining premium gear
 - Ranger → standard swag
 - Trooper → foundational rewards
@@ -111,26 +116,60 @@ WEBSITE FEATURES:
 Keep responses concise and helpful.
 Use emojis sparingly for clarity.
 If asked about a profile URL, tell them to use the Calculator feature on the site.
+
 If you don't know something or cannot find the answer, say so honestly and add exactly: "For further help, feel free to email us at 📧 abir.facilitator@gmail.com and we'll get back to you as soon as possible! or join the channel for more information link https://chat.whatsapp.com/IHPSoiWBJ6d4SZrY1yUDty"
 Never make up point values or requirements.`;
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.5-flash',
-        contents: [
-          ...history,
-          { role: 'user', parts: [{ text: message }] }
-        ],
-        config: {
-          systemInstruction,
-          temperature: 0.7,
-          maxOutputTokens: 2048,
-        }
+      const genAI = new GoogleGenerativeAI(
+        process.env.GEMINI_API_KEY as string
+      );
+
+      const model = genAI.getGenerativeModel({
+        model: "gemini-2.0-flash",
+        systemInstruction,
       });
-      
-      res.json({ reply: response.text });
-    } catch (e) {
-      console.error('Chat API Error:', e);
-      res.status(500).json({ error: "Failed to fetch response", details: e.message });
+
+      const chat = model.startChat({
+        history: (() => {
+          let formatted = [];
+          for (const msg of history || []) {
+            const role = msg.role === 'user' ? 'user' : 'model';
+            const parts = [{ text: msg.content || " " }];
+            if (formatted.length === 0) {
+              if (role === 'user') formatted.push({ role, parts });
+            } else if (formatted[formatted.length - 1].role !== role) {
+              formatted.push({ role, parts });
+            } else {
+              formatted[formatted.length - 1].parts[0].text += "\n" + parts[0].text;
+            }
+          }
+          return formatted;
+        })(),
+        generationConfig: {
+          maxOutputTokens: 300,
+          temperature: 0.7,
+        },
+      });
+
+      const result = await chat.sendMessage(message);
+      const reply = result.response.text();
+
+      return res.json({ reply });
+    } catch (error: any) {
+      console.error("Chat API error:", error.message);
+      if (
+        error.message?.includes('429') ||
+        error.message?.includes('quota') ||
+        error.message?.includes('Too Many Requests')
+      ) {
+        return res.status(200).json({
+          reply: "I am receiving too many requests right now. Please wait a moment and try again! For urgent help email: 📧 abir.facilitator@gmail.com"
+        });
+      }
+      return res.status(500).json({
+        error: error.message,
+        reply: "Sorry, I am having trouble connecting right now. Please try again in a moment!"
+      });
     }
   });
 
