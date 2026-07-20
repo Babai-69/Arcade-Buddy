@@ -20,6 +20,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   const [error, setError] = useState('');
   const [isBadgeTrackerOpen, setIsBadgeTrackerOpen] = useState(false);
   const [isFacilitatorBadgeTrackerOpen, setIsFacilitatorBadgeTrackerOpen] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(true);
 
   const [isLoading, setIsLoading] = useState(false);
   const [spotsLoading, setSpotsLoading] = useState(true);
@@ -195,8 +196,27 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
               const basePoints = isBeforeStart ? 0 : result.arcadePoints;
               const displaySkillBadges = isBeforeStart ? 0 : result.skillBadges;
               const displayGameBadges = isBeforeStart ? 0 : result.gameBadges;
-              const bonusPoints = 0; // Assuming 0 bonus for now
-              const totalPoints = basePoints + bonusPoints;
+              
+              let programGameBadges = 0;
+              let programSkillBadges = 0;
+              
+              if (result.badges && !isBeforeStart) {
+                result.badges.forEach(b => {
+                  if (b.validForProgram) {
+                    if (b.category === 'Game') programGameBadges++;
+                    if (b.category === 'Skill') programSkillBadges++;
+                  }
+                });
+              }
+
+              let milestoneBonus = 0;
+              if (programGameBadges >= 12 && programSkillBadges >= 66) milestoneBonus = 35;
+              else if (programGameBadges >= 10 && programSkillBadges >= 50) milestoneBonus = 25;
+              else if (programGameBadges >= 8 && programSkillBadges >= 34) milestoneBonus = 15;
+              else if (programGameBadges >= 6 && programSkillBadges >= 18) milestoneBonus = 5;
+
+              const totalBonus = isRegistered ? milestoneBonus : 0;
+              const totalPoints = basePoints + totalBonus;
 
               const currentTierObj = MILESTONES.slice().reverse().find(m => totalPoints >= m.requiredPoints);
               const currentTierName = currentTierObj ? currentTierObj.name : "No Tier";
@@ -268,17 +288,68 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                           <p className="text-[#4285F4] font-bold text-sm mb-1">Program has Ended</p>
                           <p className="text-sm font-medium">
                             <span className="text-[#6b7280] dark:text-slate-400">Base: {basePoints} + </span>
-                            <span className={bonusPoints > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-[#6b7280] dark:text-slate-400'}>{bonusPoints} bonus</span>
+                            <span className={totalBonus > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-[#6b7280] dark:text-slate-400'}>{totalBonus} bonus</span>
                           </p>
                         </>
                       ) : (
                         <p className="text-sm font-medium">
                           <span className="text-[#6b7280] dark:text-slate-400">Base: {basePoints} + </span>
-                          <span className={bonusPoints > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-[#6b7280] dark:text-slate-400'}>{bonusPoints} bonus</span>
+                          <span className={totalBonus > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-[#6b7280] dark:text-slate-400'}>{totalBonus} bonus</span>
                         </p>
                       )}
                     </div>
                   </div>
+
+                  {/* Toggle UI */}
+                  <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-3 sm:p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-sm relative">
+                    <div className="flex items-center gap-2 group cursor-help">
+                      <h3 className="font-bold text-gray-900 dark:text-white">Swags Tier Progress</h3>
+                      <div className="text-gray-400 relative">
+                        <AlertCircle className="w-4 h-4" />
+                        <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 p-2 bg-gray-900 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all pointer-events-none z-10 text-center">
+                          Toggle to see how your tier changes with or without the Facilitator bonus points
+                          <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">Facilitator Program:</span>
+                      <div className="flex bg-gray-100/50 dark:bg-slate-700/30 p-1 rounded-lg border border-gray-200 dark:border-slate-700 w-full sm:w-auto">
+                        <button
+                          onClick={() => setIsRegistered(true)}
+                          className={`flex-1 sm:flex-none px-3.5 py-1.5 text-[13px] rounded-md transition-all ${isRegistered ? 'bg-indigo-500/15 border border-indigo-500 text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border border-transparent'}`}
+                        >
+                          Registered
+                        </button>
+                        <button
+                          onClick={() => setIsRegistered(false)}
+                          className={`flex-1 sm:flex-none px-3.5 py-1.5 text-[13px] rounded-md transition-all ${!isRegistered ? 'bg-indigo-500/15 border border-indigo-500 text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border border-transparent'}`}
+                        >
+                          Not Registered
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {isRegistered && milestoneBonus > 0 && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: -5 }} 
+                      animate={{ opacity: 1, y: 0 }} 
+                      className="bg-[#34A853]/10 text-[#34A853] px-3 py-2 rounded-lg text-xs font-bold text-center border border-[#34A853]/20"
+                    >
+                      ✨ Includes +{totalBonus} facilitator bonus points
+                    </motion.div>
+                  )}
+                  
+                  {!isRegistered && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: -5 }} 
+                      animate={{ opacity: 1, y: 0 }} 
+                      className="bg-gray-100 dark:bg-slate-700/50 text-gray-600 dark:text-gray-400 px-3 py-2 rounded-lg text-xs font-medium text-center border border-gray-200 dark:border-slate-700"
+                    >
+                      Showing base points only (no facilitator bonus)
+                    </motion.div>
+                  )}
 
                   {/* MIDDLE ROW - Tier Progress Stepper */}
                   <div className="bg-white dark:bg-slate-800 rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
@@ -432,7 +503,8 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
       <FacilitatorBadgeTracker 
         isOpen={isFacilitatorBadgeTrackerOpen} 
         onClose={() => setIsFacilitatorBadgeTrackerOpen(false)} 
-        participant={result} 
+        participant={result}
+        isRegistered={isRegistered} 
       />
     </section>
   );

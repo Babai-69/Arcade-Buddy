@@ -7,9 +7,10 @@ interface FacilitatorBadgeTrackerProps {
   isOpen: boolean;
   onClose: () => void;
   participant: Participant | null;
+  isRegistered?: boolean;
 }
 
-export function FacilitatorBadgeTracker({ isOpen, onClose, participant }: FacilitatorBadgeTrackerProps) {
+export function FacilitatorBadgeTracker({ isOpen, onClose, participant, isRegistered = true }: FacilitatorBadgeTrackerProps) {
   const [activeTab, setActiveTab] = useState<'game' | 'skill'>('game');
   const [showExcluded, setShowExcluded] = useState(false);
 
@@ -136,20 +137,33 @@ export function FacilitatorBadgeTracker({ isOpen, onClose, participant }: Facili
                     <p className="text-xl font-bold text-slate-900 dark:text-white leading-none">{totalPoints.toFixed(1)}</p>
                   </div>
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3">
-                  <div className="bg-[#FBBC05]/10 p-2.5 rounded-lg text-[#FBBC05]">
-                    <Trophy className="w-5 h-5" />
+                {isRegistered && (
+                  <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center gap-3">
+                    <div className="bg-[#FBBC05]/10 p-2.5 rounded-lg text-[#FBBC05]">
+                      <Trophy className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Milestone</p>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{status.name}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">Milestone</p>
-                    <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{status.name}</p>
-                  </div>
-                </div>
+                )}
               </div>
+
+              {!isRegistered && (
+                <div className="bg-slate-100 dark:bg-slate-800/80 rounded-xl p-4 border border-slate-200 dark:border-slate-700 text-center shadow-sm">
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Register for the Facilitator Program to earn bonus points on these badges.
+                  </p>
+                  <a href="/register" className="inline-block mt-2 text-sm font-bold text-[#4285F4] hover:underline">
+                    Join the Program →
+                  </a>
+                </div>
+              )}
 
               {/* Milestone Progress */}
               {status.next && (
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-5 border border-slate-200 dark:border-slate-700 shadow-sm">
+                <div className={`bg-white dark:bg-slate-800 rounded-xl p-5 border shadow-sm ${isRegistered ? 'border-slate-200 dark:border-slate-700' : 'border-slate-200 dark:border-slate-700 opacity-60 grayscale'}`}>
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-bold text-slate-900 dark:text-white">Progress to {status.next.n}</h3>
                     <span className="text-xs text-slate-500 font-medium">
@@ -164,7 +178,7 @@ export function FacilitatorBadgeTracker({ isOpen, onClose, participant }: Facili
                         {gameCount >= status.next.g && <CheckCircle className="w-3.5 h-3.5 text-[#34A853]" />}
                       </div>
                       <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
-                        <div className="bg-[#4285F4] h-2 rounded-full" style={{ width: `${Math.min(100, (gameCount / status.next.g) * 100)}%` }}></div>
+                        <div className={`h-2 rounded-full ${isRegistered ? 'bg-[#4285F4]' : 'bg-slate-400 dark:bg-slate-500'}`} style={{ width: `${Math.min(100, (gameCount / status.next.g) * 100)}%` }}></div>
                       </div>
                     </div>
                     <div>
@@ -173,7 +187,7 @@ export function FacilitatorBadgeTracker({ isOpen, onClose, participant }: Facili
                         {skillCount >= status.next.s && <CheckCircle className="w-3.5 h-3.5 text-[#34A853]" />}
                       </div>
                       <div className="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2">
-                        <div className="bg-[#7c3aed] h-2 rounded-full" style={{ width: `${Math.min(100, (skillCount / status.next.s) * 100)}%` }}></div>
+                        <div className={`h-2 rounded-full ${isRegistered ? 'bg-[#7c3aed]' : 'bg-slate-400 dark:bg-slate-500'}`} style={{ width: `${Math.min(100, (skillCount / status.next.s) * 100)}%` }}></div>
                       </div>
                     </div>
                   </div>
