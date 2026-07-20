@@ -52,7 +52,7 @@ export function RegistrationGuideWidget() {
                     Download PDF
                   </a>
                   <a 
-                    href="https://youtu.be/J1tm4HRSHjc?si=sGCaxHDgTVkk-CiQ" 
+                    href="https://youtu.be/v8ZzN5sJzOs?si=qDXVzruVv1TooNRB" 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="flex items-center gap-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg transition-colors"
