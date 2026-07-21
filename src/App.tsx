@@ -8,6 +8,7 @@ import { Home } from './pages/Home';
 import { AboutPage } from './pages/AboutPage';
 import { TrueLeaderboardPage } from './pages/TrueLeaderboardPage';
 import { LeaderboardPage as DashboardPage } from './pages/LeaderboardPage';
+import { CalculatorPage } from './pages/CalculatorPage';
 import { FacilitatorPage } from './pages/FacilitatorPage';
 import { ResourcesPage } from './pages/ResourcesPage';
 import { QuickStartPage } from './pages/QuickStartPage';
@@ -31,6 +32,8 @@ import { AccessGuard } from './components/AccessGuard';
 import { mockParticipants } from './data/sampleData';
 import { Participant } from './types';
 
+import { DisclaimerPage } from './pages/DisclaimerPage';
+
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>(mockParticipants);
   const location = useLocation();
@@ -49,6 +52,7 @@ export default function App() {
               <Route path="/" element={<PageTransition><Home participants={participants} /></PageTransition>} />
               <Route path="/leaderboard" element={<PageTransition><TrueLeaderboardPage /></PageTransition>} />
               <Route path="/dashboard" element={<PageTransition><DashboardPage participants={participants} /></PageTransition>} />
+              <Route path="/calculator" element={<PageTransition><CalculatorPage participants={participants} /></PageTransition>} />
               <Route path="/facilitator" element={<PageTransition><FacilitatorPage /></PageTransition>} />
               <Route path="/syllabus" element={<PageTransition><SyllabusPage /></PageTransition>} />
               <Route path="/resources" element={<PageTransition><ResourcesPage /></PageTransition>} />
@@ -58,6 +62,7 @@ export default function App() {
               <Route path="/public-profile-help" element={<PageTransition><PublicProfileHelpPage /></PageTransition>} />
               <Route path="/swags" element={<PageTransition><SwagsPage /></PageTransition>} />
               <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
+              <Route path="/disclaimer" element={<PageTransition><DisclaimerPage /></PageTransition>} />
               <Route path="/my-progress" element={<PageTransition><MyProgressPage /></PageTransition>} />
               <Route path="/admin-progress" element={<PageTransition><AdminProgressPage /></PageTransition>} />
               <Route path="/faq" element={<PageTransition><FaqPage /></PageTransition>} />

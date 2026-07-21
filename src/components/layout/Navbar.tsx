@@ -93,7 +93,7 @@ export function Navbar() {
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <Link to="/dashboard#calculator" className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full font-bold transition-all shadow-md text-sm">
+            <Link to="/calculator" className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full font-bold transition-all shadow-md text-sm">
               Calculator
             </Link>
             <NavbarNotifications />
@@ -139,7 +139,7 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 px-3">
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/dashboard#calculator" className="block text-center w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-xl font-bold transition-all shadow-md">
+              <Link onClick={() => setIsMobileMenuOpen(false)} to="/calculator" className="block text-center w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-xl font-bold transition-all shadow-md">
                 Calculator
               </Link>
             </div>

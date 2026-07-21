@@ -22,6 +22,7 @@ export function AdminPanel({ onUpdateParticipants }: AdminPanelProps) {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      transformHeader: (header) => header.trim(),
       complete: (results) => {
         const rawData = results.data as any[];
         
@@ -33,6 +34,9 @@ export function AdminPanel({ onUpdateParticipants }: AdminPanelProps) {
           const skillBadges = parseInt(row['# of Skill Badges Completed'] || '0') || 0;
           const arcadePoints = gameBadges + triviaBadges + Math.floor(skillBadges / 2);
 
+          let rawMilestone = row['General Milestone Earned'] || row['Milestone Earned'] || 'None';
+          if (rawMilestone === 'None') rawMilestone = 'No Milestone';
+
           return {
             id: String(idx + 1),
             name: row['User Name'] || row['Name'] || 'Unknown',
@@ -42,7 +46,7 @@ export function AdminPanel({ onUpdateParticipants }: AdminPanelProps) {
             gameBadges,
             triviaBadges,
             arcadePoints,
-            milestoneEarned: row['Milestone Earned'] || 'None',
+            milestoneEarned: rawMilestone,
             dailyPoints: 0,
             totalPoints: arcadePoints,
             lastUpdated: new Date().toISOString(),

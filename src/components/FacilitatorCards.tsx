@@ -81,8 +81,11 @@ export function FacilitatorCards() {
               
               {/* Left Column */}
               <div className="flex flex-col items-center flex-shrink-0 w-full md:w-56 mt-4">
-                 <div className="w-48 h-48 rounded-full overflow-hidden mb-5 border-4 border-[#f0f4ff] dark:border-slate-800 shadow-sm">
-                   <img src={facilitators[currentIndex].image} alt={facilitators[currentIndex].name} className="w-full h-full object-cover" />
+                 <div className="relative group w-48 h-48 mb-5 rounded-full">
+                   <div className="absolute inset-0 rounded-full transition-all duration-400 shadow-[0_0_20px_rgba(59,130,246,0.4)] group-hover:shadow-[0_0_40px_rgba(59,130,246,0.8)] dark:shadow-[0_0_20px_rgba(255,140,40,0.6)] dark:group-hover:shadow-[0_0_40px_rgba(255,140,40,0.9)] z-0"></div>
+                   <div className="w-full h-full rounded-full overflow-hidden border-4 border-[#f0f4ff] dark:border-slate-800 relative z-10 bg-white dark:bg-slate-900">
+                     <img src={facilitators[currentIndex].image} alt={facilitators[currentIndex].name} className="w-full h-full object-cover relative z-20" />
+                   </div>
                  </div>
                  <span className="bg-[#f0f4ff] dark:bg-slate-800 text-blue-600 dark:text-blue-400 text-xs font-bold px-4 py-1.5 rounded-full mb-3 shadow-sm whitespace-nowrap">
                    {facilitators[currentIndex].role}

@@ -71,6 +71,7 @@ export function TrueLeaderboardPage() {
     Papa.parse(file, {
       header: true,
       skipEmptyLines: true,
+      transformHeader: (header) => header.trim(),
       complete: async (results) => {
         const rows = results.data as any[];
         setUploadStatus(`Parsing complete. Found ${rows.length} rows.`);
@@ -94,6 +95,9 @@ export function TrueLeaderboardPage() {
         else if (pts >= 75) tier = 'Ranger';
         else if (pts >= 50) tier = 'Trooper';
 
+        let rawMilestone = r['General Milestone Earned'] || r['Milestone Earned'] || 'No Milestone';
+        if (rawMilestone === 'None' || rawMilestone === '') rawMilestone = 'No Milestone';
+
         return {
           id: String(r['User Name'] || Math.random()),
           name: r['User Name'] || '—',
@@ -101,7 +105,7 @@ export function TrueLeaderboardPage() {
           game,
           trivia,
           lab,
-          milestone: r['Milestone Earned'] || 'None',
+          milestone: rawMilestone,
           access: r['Access Code Redemption Status'] || 'No',
           points: pts,
           tier,
@@ -226,7 +230,7 @@ export function TrueLeaderboardPage() {
   const statTotal = data.length;
   const statActive = data.filter(r => r.access === 'Yes').length;
   const statPoints = Math.round(data.reduce((s, r) => s + r.points, 0) * 10) / 10;
-  const statMilestone = data.filter(r => r.milestone !== 'None').length;
+  const statMilestone = data.filter(r => r.milestone !== 'No Milestone').length;
 
   const top3 = useMemo(() => {
     return [...data].sort((a, b) => b.points - a.points).slice(0, 3);
@@ -338,7 +342,7 @@ export function TrueLeaderboardPage() {
                   className="w-full pl-9 pr-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 text-sm" />
         </div>
         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
-          <SelectFilter value={milestoneFilter} onChange={setMilestoneFilter} defaultLabel="All Milestones" options={['Ultimate Milestone', 'Milestone 3', 'Milestone 2', 'Milestone 1', 'None']} />
+          <SelectFilter value={milestoneFilter} onChange={setMilestoneFilter} defaultLabel="All Milestones" options={['Ultimate Milestone', 'Milestone 3', 'Milestone 2', 'Milestone 1', 'No Milestone']} />
           <SelectFilter value={tierFilter} onChange={setTierFilter} defaultLabel="All Tiers" options={['Legend', 'Champion', 'Ranger', 'Trooper', 'No Tier']} />
           <SelectFilter value={accessFilter} onChange={setAccessFilter} defaultLabel="All Access" options={[{v: 'Yes', l: 'Redeemed'}, {v: 'No', l: 'Not Redeemed'}]} />
         </div>

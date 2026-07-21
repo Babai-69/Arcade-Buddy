@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Search, Trophy, Medal, Star, ChevronRight, Activity, AlertCircle, Lock } from 'lucide-react';
+import { Search, Trophy, Medal, Star, ChevronRight, Activity, AlertCircle, Lock, CheckCircle2, Check } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Participant, MILESTONES } from '../types';
 import { BadgeTracker } from './BadgeTracker';
@@ -21,6 +21,8 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   const [isBadgeTrackerOpen, setIsBadgeTrackerOpen] = useState(false);
   const [isFacilitatorBadgeTrackerOpen, setIsFacilitatorBadgeTrackerOpen] = useState(false);
   const [isRegistered, setIsRegistered] = useState(true);
+  const [rememberProfile, setRememberProfile] = useState(false);
+  const [isDemoAnimation, setIsDemoAnimation] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [spotsLoading, setSpotsLoading] = useState(true);
@@ -34,6 +36,13 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        const savedUrl = localStorage.getItem(`arcadeProfileUrl_${currentUser.uid}`);
+        if (savedUrl) {
+          setUrl(savedUrl);
+          setRememberProfile(true);
+        }
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -53,6 +62,54 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
         setSpotsLoading(false);
       });
   }, []);
+
+  const [demoStep, setDemoStep] = useState(0);
+
+  const handleDemoData = async () => {
+    setIsDemoAnimation(true);
+    setDemoStep(1); // 1: Fetching
+    setUrl("https://www.cloudskillsboost.google/public_profiles/demo_account");
+    setIsLoading(true);
+    setError('');
+    
+    await new Promise(r => setTimeout(r, 1000));
+    setDemoStep(2); // 2: Counting badges
+    
+    await new Promise(r => setTimeout(r, 1500));
+    setDemoStep(3); // 3: Calculating points & milestones
+    
+    await new Promise(r => setTimeout(r, 1500));
+    
+    setResult({
+      id: 'demo',
+      name: 'Demo Student',
+      avatarUrl: '',
+      community: 'Demo',
+      email: '',
+      profileUrl: 'demo',
+      gameBadges: 8,
+      triviaBadges: 2,
+      skillBadges: 34,
+      specialBadges: 0,
+      arcadePoints: 25,
+      currentRank: 0,
+      milestoneEarned: '',
+      dailyPoints: 0,
+      totalPoints: 40,
+      lastUpdated: '',
+      previousRank: 0,
+      badges: [] 
+    });
+    setIsLoading(false);
+    setIsDemoAnimation(false);
+    setDemoStep(0);
+    
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  };
 
   const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,6 +161,12 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
       // We pass the raw data so it can be parsed by UserProgressDashboard if needed
       localStorage.setItem('arcadeProgressData', JSON.stringify(data));
       
+      if (user && rememberProfile) {
+        localStorage.setItem(`arcadeProfileUrl_${user.uid}`, url);
+      } else if (user) {
+        localStorage.removeItem(`arcadeProfileUrl_${user.uid}`);
+      }
+      
       const prevRecent = JSON.parse(localStorage.getItem('arcadeRecentUrls') || '[]');
       const newRecent = [url, ...prevRecent.filter(u => u !== url)].slice(0, 5);
       localStorage.setItem('arcadeRecentUrls', JSON.stringify(newRecent));
@@ -134,55 +197,130 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   };
 
   return (
-    <section id="calculator" className="py-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className={user ? "glass-panel rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden" : "rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden bg-transparent"}>
-        <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-slate-900 dark:text-white">Check Your Arcade Profile</h2>
-          <p className="text-slate-500 dark:text-[#8B8FA3]">Enter your Public Profile URL or Name to check your real-time milestone progress.</p>
-        </div>
+    <section id="calculator" className="py-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center mb-10">
+        <h1 className="text-4xl md:text-5xl font-display font-bold mb-3 text-slate-900 dark:text-white">
+          Google Cloud Arcade<br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Points Calculator</span>
+        </h1>
+        <p className="text-slate-500 dark:text-[#8B8FA3] max-w-2xl mx-auto mt-4">
+          Paste your Google Cloud Skills Boost public profile URL to instantly calculate your<br className="hidden md:block"/> Arcade points, see which badges you earned, and check your swag tier progress.
+        </p>
+      </div>
 
-        {!user ? (
-          <div className="max-w-[400px] mx-auto mb-10 bg-white dark:bg-[#12172A] rounded-[16px] p-8 border border-[#E5E7EB] dark:border-[#2A3352] shadow-sm dark:shadow-none text-center">
-            <div className="w-[56px] h-[56px] bg-gradient-to-br from-[#5B6CF9] to-[#8B5CF6] rounded-full flex items-center justify-center mx-auto mb-6">
-              <Lock className="w-[26px] h-[26px] text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-[#1A1F36] dark:text-[#F5F5F7] mb-3">Login required</h3>
-            <p className="text-[15px] leading-relaxed text-[#6B7280] dark:text-[#8B8FA3] mb-8">
-              Sign in to check your arcade points and track your progress.
-            </p>
-            <button 
-              onClick={() => window.dispatchEvent(new CustomEvent('open-login-modal'))}
-              className="w-full h-[44px] rounded-[10px] bg-gradient-to-br from-[#5B6CF9] to-[#8B5CF6] text-white font-medium hover:brightness-110 active:scale-[0.98] transition-all duration-200 border-none"
-            >
-              Sign in to continue
-            </button>
-          </div>
-        ) : (
-          <form onSubmit={handleCheck} className="relative max-w-2xl mx-auto mb-10">
-            <div className="flex items-center relative z-10 bg-white dark:bg-slate-900 rounded-full p-2 pl-6 shadow-xl border border-slate-200 dark:border-slate-800">
-              <Search className="h-5 w-5 text-slate-400" />
-              <input 
-                type="text" 
-                placeholder="e.g. https://www.cloudskillsboost.google/public_profiles/xxxxx" 
-                className="flex-1 bg-transparent border-none focus:outline-none px-4 py-3 text-slate-900 dark:text-white placeholder:text-slate-400"
+      <div className="bg-white dark:bg-[#111111] border border-slate-200 dark:border-[#2a2a2a] rounded-[24px] p-6 sm:p-8 max-w-3xl mx-auto relative overflow-hidden shadow-sm dark:shadow-none mb-10">
+        <div className="flex items-center gap-2 mb-2">
+          <Search className="text-[#3b82f6] dark:text-cyan-400 w-5 h-5" />
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white">Fetch Your Profile</h3>
+        </div>
+        <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">Paste your Google Cloud Skills Boost public profile URL to calculate your Arcade points.</p>
+        
+        <form onSubmit={handleCheck} className="mb-6">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="https://www.skills.google/public_profiles/..."
+                className="w-full bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-xl px-4 py-3.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:border-[#555] transition-colors"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               />
-              <button 
-                type="submit" 
-                disabled={isLoading}
-                className="bg-[#4285F4] hover:bg-blue-600 outline-none focus:outline-none text-white px-6 py-3 rounded-full font-medium transition-colors shadow-md disabled:bg-slate-400 flex items-center justify-center min-w-[100px]"
-              >
-                {isLoading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  'Check'
-                )}
-              </button>
+              {url.includes('public_profiles/') && <Check className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500 w-5 h-5" />}
             </div>
-            {error && <p className="text-[#EA4335] mt-4 text-center font-medium">{error}</p>}
-          </form>
-        )}
+            <button
+              type="submit"
+              disabled={isLoading || !url}
+              className="bg-[#f59e0b] hover:bg-[#d97706] text-slate-900 font-bold px-6 py-3.5 rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap flex items-center justify-center min-w-[150px]"
+            >
+              {isLoading && !isDemoAnimation ? (
+                <div className="w-5 h-5 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" />
+              ) : (
+                'Analyze Profile'
+              )}
+            </button>
+          </div>
+          {error && <p className="text-[#EA4335] mt-3 text-sm font-medium">{error}</p>}
+        </form>
+        
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-[#2a2a2a] pb-6 mb-6">
+          <label className="flex items-center gap-3 cursor-pointer group">
+            <button
+              type="button"
+              onClick={() => {
+                if (!user) {
+                  window.dispatchEvent(new CustomEvent('open-login-modal'));
+                  return;
+                }
+                const newValue = !rememberProfile;
+                setRememberProfile(newValue);
+                if (newValue && url) {
+                  localStorage.setItem(`arcadeProfileUrl_${user.uid}`, url);
+                } else if (!newValue) {
+                  localStorage.removeItem(`arcadeProfileUrl_${user.uid}`);
+                }
+              }}
+              className={`w-10 h-5 rounded-full relative transition-colors ${rememberProfile ? 'bg-blue-500' : 'bg-slate-300 dark:bg-gray-600'}`}
+            >
+              <div className={`w-4 h-4 rounded-full bg-white absolute top-0.5 transition-transform ${rememberProfile ? 'translate-x-5' : 'translate-x-0.5'}`}></div>
+            </button>
+            <span className="text-sm text-slate-600 dark:text-gray-300 font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Remember my profile</span>
+          </label>
+          
+          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-gray-500 bg-slate-50 dark:bg-[#1a1a1a] px-3 py-1.5 rounded-md border border-slate-200 dark:border-[#2a2a2a]">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Not affiliated with Google. Only reads public data.</span>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between">
+          <button 
+            onClick={handleDemoData}
+            type="button"
+            className="text-[#f59e0b] hover:text-[#d97706] text-sm font-bold flex items-center gap-1 transition-colors"
+          >
+            Try with demo data <ChevronRight className="w-4 h-4" />
+          </button>
+          
+          <Link to="/disclaimer" className="text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300 text-sm flex items-center gap-1 transition-colors">
+            <AlertCircle className="w-4 h-4 text-[#f59e0b]" /> Official Disclaimer
+          </Link>
+        </div>
+      </div>
+
+      {isDemoAnimation && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="max-w-3xl mx-auto mb-10 bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#2a2a2a] rounded-2xl p-6 shadow-sm"
+        >
+          <h4 className="text-slate-900 dark:text-white font-bold mb-4 flex items-center gap-2">
+            <Activity className="w-5 h-5 text-[#f59e0b]" /> 
+            Simulation Process
+          </h4>
+          <div className="space-y-4">
+            <div className={`flex items-center gap-3 transition-opacity duration-300 ${demoStep >= 1 ? 'opacity-100' : 'opacity-30'}`}>
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${demoStep > 1 ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+                {demoStep > 1 ? <Check className="w-3 h-3" /> : '1'}
+              </div>
+              <span className="text-slate-700 dark:text-gray-300 font-medium">Fetching public profile data</span>
+            </div>
+            
+            <div className={`flex items-center gap-3 transition-opacity duration-300 ${demoStep >= 2 ? 'opacity-100' : 'opacity-30'}`}>
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${demoStep > 2 ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+                {demoStep > 2 ? <Check className="w-3 h-3" /> : '2'}
+              </div>
+              <span className="text-slate-700 dark:text-gray-300 font-medium">Counting valid Skill Badges and Game Badges</span>
+            </div>
+
+            <div className={`flex items-center gap-3 transition-opacity duration-300 ${demoStep >= 3 ? 'opacity-100' : 'opacity-30'}`}>
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${demoStep > 3 ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
+                {demoStep > 3 ? <Check className="w-3 h-3" /> : '3'}
+              </div>
+              <span className="text-slate-700 dark:text-gray-300 font-medium">Mapping points and checking milestone eligibility</span>
+            </div>
+          </div>
+        </motion.div>
+      )}
 
         {result && (
           <motion.div 
@@ -200,7 +338,10 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
               let programGameBadges = 0;
               let programSkillBadges = 0;
               
-              if (result.badges && !isBeforeStart) {
+              if (result.id === 'demo') {
+                programGameBadges = 8;
+                programSkillBadges = 34;
+              } else if (result.badges && !isBeforeStart) {
                 result.badges.forEach(b => {
                   if (b.validForProgram) {
                     if (b.category === 'Game') programGameBadges++;
@@ -493,7 +634,6 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
             })()}
           </motion.div>
         )}
-      </div>
 
       <BadgeTracker 
         isOpen={isBadgeTrackerOpen} 
