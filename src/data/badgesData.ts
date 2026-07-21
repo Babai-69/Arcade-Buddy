@@ -34,6 +34,11 @@ export const gameBadges = [
 
 export const skillBadges = [
   {
+    "name": "Use Functions, Formulas, and Charts in Google Sheet",
+    "image": "https://cdn.qwiklabs.com/3xUBCgjDtw7iDWgVUmRn9yR2L7ulP9d1c0s8BXEJn4s%3D",
+    "link": "https://www.skills.google/course_templates/776"
+  },
+  {
     "name": "Create Your First Gemini Enterprise Application",
     "image": "https://cdn.qwiklabs.com/%2FoLo60xg2CMZB%2BWs7JLFlQhAVVn7ZXEVsiHws3APcHY%3D",
     "link": "https://www.skills.google/paths/3546/course_templates/1586"
