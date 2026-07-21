@@ -13,7 +13,7 @@ export function FacilitatorDetails() {
       
       <div className="flex mb-8">
         <a href="https://arcade-buddy.onrender.com/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors">
-          Enrol in the program
+          Enrollments are closed
         </a>
       </div>
       
