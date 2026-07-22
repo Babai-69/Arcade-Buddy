@@ -1,51 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { X, MessageCircle, Send, CheckCircle2, TriangleAlert, CheckSquare, ExternalLink, Copy, Gift, Youtube, Check } from 'lucide-react';
+import { X, Check, MessageCircle, ExternalLink, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Link } from 'react-router-dom';
 
 export function CommunityWelcomeModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
-  
-  // Deadline: July 20, 2026, 11:59 PM (Local time)
-  const isBeforeDeadline = new Date() <= new Date('2026-07-20T23:59:59');
 
   useEffect(() => {
-    const hasRegistered = localStorage.getItem('hasRegisteredForFacilitator');
-    if (hasRegistered === 'true') {
+    const hasDismissed = localStorage.getItem('hasDismissedCommunityModal');
+    if (hasDismissed === 'true') {
       return;
     }
     const timer = setTimeout(() => {
       setIsOpen(true);
-    }, 1000);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
-  const handleRegisteredYes = () => {
-    localStorage.setItem('hasRegisteredForFacilitator', 'true');
+  const handleDontShowAgain = () => {
+    localStorage.setItem('hasDismissedCommunityModal', 'true');
     setIsOpen(false);
   };
 
-  const handleRegisteredNo = () => {
-    if (isBeforeDeadline) {
-      const code = "GCAF26-IN-C5V-KYM";
-      navigator.clipboard.writeText(code).catch(err => console.error("Could not copy text: ", err));
-      
-      // Open Google Form
-      window.open("https://forms.gle/Z2TX54F8bQ4ooV5c9", "_blank");
-      // Open YouTube video
-      window.open("https://youtu.be/J1tm4HRSHjc?si=sGCaxHDgTVkk-CiQ", "_blank");
-      
-      // DO NOT close modal before deadline if they click NO
-    } else {
-      localStorage.setItem('hasRegisteredForFacilitator', 'true');
-      setIsOpen(false);
-    }
-  };
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText("GCAF26-IN-C5V-KYM");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleRemindLater = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -55,158 +33,126 @@ export function CommunityWelcomeModal() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto font-sans"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto"
         >
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-[#111622] w-full max-w-2xl rounded-2xl shadow-2xl flex flex-col border border-slate-800 my-0 max-h-[98vh] overflow-y-auto overflow-x-hidden"
+            className="bg-white dark:bg-[#111111] w-full max-w-md rounded-[24px] shadow-2xl flex flex-col relative overflow-hidden"
           >
-            <div className="p-4 md:p-5">
-              {!isBeforeDeadline && (
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors z-10"
-                  aria-label="Close"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              )}
+            {/* RGB Top Border */}
+            <div 
+              className="h-1.5 w-full" 
+              style={{ background: 'linear-gradient(90deg, #4285F4 0%, #9b72cb 25%, #EA4335 50%, #FBBC05 75%, #34A853 100%)' }}
+            ></div>
+
+            <button
+              onClick={handleRemindLater}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors z-10"
+              aria-label="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="p-6 sm:p-8 pt-10">
+              <div className="flex justify-center mb-6">
+                <span className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-bold px-3 py-1 rounded-full tracking-wide uppercase">
+                  Facilitator-Led Community
+                </span>
+              </div>
               
-              {isBeforeDeadline ? (
-                <>
-                  <div className="flex items-center gap-2 mb-2 pr-8">
-                    <TriangleAlert className="w-6 h-6 text-yellow-400 shrink-0" />
-                    <h2 className="text-xl md:text-2xl font-bold text-yellow-400">Claim upto 45 FREE Arcade Points</h2>
-                  </div>
-                  <p className="text-slate-200 font-medium mb-2 text-sm md:text-base">
-                    Want to earn <span className="text-green-400 font-bold">45 bonus arcade points</span> for free with minimal effort?
-                  </p>
-
-                  {/* Register and Get Box */}
-                  <div className="border border-yellow-600/40 bg-yellow-950/10 rounded-xl p-3 md:p-4 mb-2">
-                    <h3 className="text-white font-bold mb-2 text-sm md:text-base">Register and Get:</h3>
-                    <ul className="space-y-1.5">
-                      <li className="flex items-start gap-2 text-slate-300 text-xs md:text-sm">
-                        <CheckSquare className="w-4 h-4 text-green-500 shrink-0 mt-0.5 bg-white rounded-sm" />
-                        <span>45 Bonus Arcade Points</span>
-                      </li>
-                      <li className="flex items-start gap-2 text-slate-300 text-xs md:text-sm">
-                        <CheckSquare className="w-4 h-4 text-green-500 shrink-0 mt-0.5 bg-white rounded-sm" />
-                        <span>750 Qwiklabs Credits to complete Skill Badges</span>
-                      </li>
-                    </ul>
-                  </div>
-
-                  <div className="mb-2 text-xs md:text-sm text-slate-300">
-                    <span className="font-medium">Fill this official registration form:</span>{' '}
-                    <a 
-                      href="https://forms.gle/Z2TX54F8bQ4ooV5c9" 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center gap-1 font-bold"
-                    >
-                      Register Here <ExternalLink className="w-3.5 h-3.5" />
-                    </a>
-                  </div>
-
-                  {/* How to Fill the Form */}
-                  <div className="border border-yellow-500/40 border-dashed rounded-xl p-3 md:p-4 mb-2 bg-slate-900/50">
-                    <h3 className="text-white font-bold mb-2 text-sm md:text-base">How to Fill the Form:</h3>
-                    <ul className="list-disc list-outside ml-4 space-y-1 text-slate-300 mb-2 text-xs md:text-sm">
-                      <li>Use your correct email and public profile URL</li>
-                      <li>Choose <strong className="text-white">Yes</strong> when asked if you have a referral code</li>
-                    </ul>
-                    
-                    <div className="flex flex-wrap items-center gap-2">
-                      <div className="bg-yellow-400/10 text-yellow-400 font-mono font-bold text-base md:text-lg px-3 py-1.5 rounded-lg border border-yellow-400/20">
-                        GCAF26-IN-C5V-KYM
-                      </div>
-                      <button 
-                        onClick={handleCopy} 
-                        className="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors"
-                      >
-                        {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
-                        {copied ? 'Copied' : 'Copy'}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Special Bonus Box */}
-                  <div className="border border-slate-700 bg-slate-800/40 rounded-xl p-3 md:p-4 mb-2">
-                    <h3 className="text-white font-bold mb-2 flex items-center gap-1.5 text-sm md:text-base">
-                      <Gift className="w-4 h-4 text-purple-400" /> Special Bonus:
-                    </h3>
-                    <ul className="list-disc list-outside ml-4 space-y-1 text-slate-300 mb-2 text-xs md:text-sm">
-                      <li>Access to a hidden leaderboard only for those who use our code</li>
-                      <li>Top participants win exclusive gifts 🎁</li>
-                    </ul>
-                    <a href="https://arcade-buddy.onrender.com/leaderboard" target="_blank" rel="noreferrer" className="text-blue-400 hover:text-blue-300 hover:underline inline-flex items-center gap-1 text-xs font-medium">
-                      <ExternalLink className="w-3 h-3" /> View the Special Leaderboard
-                    </a>
-                  </div>
-
-                  {/* YouTube Help */}
-                  <div className="mb-2 flex flex-col sm:flex-row items-start sm:items-center gap-3 bg-red-950/20 border border-red-900/30 rounded-xl p-3 md:p-4">
-                    <Youtube className="w-8 h-8 text-red-500 shrink-0" />
-                    <div>
-                      <h4 className="text-white font-bold mb-0.5 text-sm md:text-base">Need help with registration?</h4>
-                      <p className="text-slate-400 text-xs md:text-sm">Watch our step-by-step YouTube guide.</p>
-                    </div>
-                    <a 
-                      href="https://youtu.be/J1tm4HRSHjc?si=sGCaxHDgTVkk-CiQ" 
-                      target="_blank" 
-                      rel="noreferrer" 
-                      className="sm:ml-auto shrink-0 bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg font-medium text-xs transition-colors whitespace-nowrap"
-                    >
-                      Watch Video
-                    </a>
-                  </div>
-                </>
-              ) : (
-                <div className="mb-4">
-                  <div className="flex items-center justify-center mb-4">
-                    <MessageCircle className="w-16 h-16 text-blue-500" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-center text-white mb-2">Welcome to Arcade Buddy!</h2>
-                  <p className="text-center text-slate-300 mb-4">Join our community to stay updated and get help.</p>
+              <h2 className="text-2xl font-bold text-slate-900 dark:text-white text-center mb-4 leading-tight">
+                Build your Google Cloud skills with a community beside you.
+              </h2>
+              
+              <p className="text-slate-600 dark:text-gray-400 text-center text-sm mb-6 leading-relaxed">
+                Join our Arcade Facilitator '26 community for verified updates, enrollment guidance, learning resources, and peer support.
+              </p>
+              
+              <div className="space-y-3 mb-8">
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-slate-700 dark:text-gray-300 font-medium">Verified program updates</span>
                 </div>
-              )}
-
-              {/* Community */}
-              <div className="border border-slate-700 bg-slate-800/40 rounded-xl p-3 md:p-4 mb-2">
-                <h3 className="text-white font-bold mb-2 flex items-center gap-2 text-sm md:text-base">
-                  <MessageCircle className="w-4 h-4" /> Join Our Community
-                </h3>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <a href="https://t.me/arcadebuddy" target="_blank" rel="noreferrer" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-1.5 transition-colors">
-                    <Send className="w-4 h-4" /> Join Telegram
-                  </a>
-                  <a href="https://chat.whatsapp.com/JBPTktVT9sHHZ60mHlpk0l" target="_blank" rel="noreferrer" className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-lg font-medium text-sm flex items-center justify-center gap-1.5 transition-colors">
-                    <MessageCircle className="w-4 h-4" /> Join WhatsApp
-                  </a>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-slate-700 dark:text-gray-300 font-medium">Enrollment and profile guidance</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 shrink-0" />
+                  <span className="text-slate-700 dark:text-gray-300 font-medium">Community learning support</span>
                 </div>
               </div>
-
-              {isBeforeDeadline && (
-                <div className="pt-3 border-t border-slate-800 flex flex-col md:flex-row items-center justify-between gap-3">
-                  <div className="flex flex-col gap-0.5">
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <span className="font-bold text-white text-sm">Have you registered?</span>
-                    </div>
-                    <span className="text-xs text-slate-400">Required to use the platform</span>
+              
+              <div className="bg-slate-50 dark:bg-[#1a1a1a] rounded-xl p-5 mb-4 border border-slate-100 dark:border-slate-800">
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center shrink-0">
+                    <MessageCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                   </div>
-                  <div className="flex gap-2 w-full md:w-auto">
-                    <button onClick={handleRegisteredYes} className="flex-1 md:flex-none bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg text-sm font-bold transition-colors flex items-center justify-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4" /> Yes
-                    </button>
-                    <button onClick={handleRegisteredNo} className="flex-1 md:flex-none bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded-lg text-sm font-bold transition-colors">
-                      No
-                    </button>
+                  <div>
+                    <h3 className="font-bold text-slate-900 dark:text-white mb-1">Join the WhatsApp Community</h3>
+                    <p className="text-slate-500 dark:text-gray-400 text-xs leading-relaxed mb-3">
+                      Updates, reminders, guidance, and participant discussions.
+                    </p>
+                    <div className="inline-flex items-center gap-1.5 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-md text-xs font-medium mb-4">
+                      <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                      1000+ Members
+                    </div>
                   </div>
                 </div>
-              )}
+                <a 
+                  href="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-2.5 rounded-lg flex items-center justify-center transition-colors"
+                >
+                  Join on WhatsApp
+                </a>
+              </div>
+              
+              <div className="bg-slate-50 dark:bg-[#1a1a1a] rounded-xl p-4 mb-6 border border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-sm mb-1">Prefer Telegram?</h3>
+                  <p className="text-slate-500 dark:text-gray-400 text-xs">Receive the same essential community updates.</p>
+                </div>
+                <a 
+                  href="https://t.me/arcadebuddy" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  className="shrink-0 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-900 dark:text-white text-xs font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 transition-colors"
+                >
+                  <div className="bg-[#0088cc] rounded-full p-1 flex items-center justify-center">
+                    <Send className="w-3 h-3 text-white -ml-0.5" />
+                  </div>
+                  Join Telegram Community
+                </a>
+              </div>
+              
+              <div className="text-center mb-6">
+                <Link to="/about" onClick={() => setIsOpen(false)} className="text-blue-600 dark:text-blue-400 font-medium text-sm hover:underline">
+                  View official Facilitator '26 program details
+                </Link>
+                <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
+                  This is an independent facilitator-led community hub. Official program rules and updates are provided by Google.
+                </p>
+              </div>
+              
+              <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                <button 
+                  onClick={handleRemindLater}
+                  className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium text-sm transition-colors"
+                >
+                  Remind Me Later
+                </button>
+                <button 
+                  onClick={handleDontShowAgain}
+                  className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium text-sm transition-colors"
+                >
+                  Don't Show Again
+                </button>
+              </div>
+              
             </div>
           </motion.div>
         </motion.div>
@@ -214,3 +160,4 @@ export function CommunityWelcomeModal() {
     </AnimatePresence>
   );
 }
+

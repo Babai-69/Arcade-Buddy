@@ -538,10 +538,15 @@ export function FacilitatorCalculator() {
                             <span className="font-medium text-sm text-slate-700 dark:text-slate-300">Built first AI agent</span>
                           </label>
 
-                          <label className="flex items-center gap-3 p-2 rounded-md cursor-pointer hover:bg-black/5 dark:hover:bg-white/5">
-                            <input type="checkbox" className="w-5 h-5 rounded text-[#FBBC05]" checked={bonusMilestone.submitted} onChange={e => setBonusMilestone({...bonusMilestone, submitted: e.target.checked})} />
-                            <span className="font-medium text-sm text-slate-700 dark:text-slate-300">Submitted Project/Billing ID (Opening Soon)</span>
-                          </label>
+                          <div className="flex items-center justify-between p-2 rounded-md hover:bg-black/5 dark:hover:bg-white/5">
+                            <label className="flex items-center gap-3 cursor-pointer">
+                              <input type="checkbox" className="w-5 h-5 rounded text-[#FBBC05]" checked={bonusMilestone.submitted} onChange={e => setBonusMilestone({...bonusMilestone, submitted: e.target.checked})} />
+                              <span className="font-medium text-sm text-slate-700 dark:text-slate-300">Submitted Google Form (LIVE)</span>
+                            </label>
+                            <a href="https://forms.gle/MMfH5RKp83TfRtXj9" target="_blank" rel="noopener noreferrer" className="text-xs font-bold text-[#FBBC05] hover:underline whitespace-nowrap ml-2">
+                              Open Form
+                            </a>
+                          </div>
                         </div>
                       ) : (
                         <div className="mb-6 p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-center text-slate-500 dark:text-slate-400 text-sm">

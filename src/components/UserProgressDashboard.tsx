@@ -16,6 +16,7 @@ import confetti from 'canvas-confetti';
 import { CheckProgress } from './CheckProgress';
 import { MilestoneOverview } from './MilestoneOverview';
 import { MilestoneProgress } from './MilestoneProgress';
+import { BonusMilestoneTracker } from './BonusMilestoneTracker';
 import { WeeklyProgress } from './WeeklyProgress';
 
 export function UserProgressDashboard() {
@@ -447,8 +448,10 @@ export function UserProgressDashboard() {
 
 
           <MilestoneProgress gameBadges={data.gameBadges} skillBadges={data.skillBadges} />
+
+          <BonusMilestoneTracker gameBadges={data.gameBadges} skillBadges={data.skillBadges} badges={data.badges} />
                     
-                    <CheckProgress completedBadges={data.badges} />
+          <CheckProgress completedBadges={data.badges} />
           
           <WeeklyProgress badges={data.badges} />
           

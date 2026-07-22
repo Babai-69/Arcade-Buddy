@@ -56,7 +56,7 @@ export function BonusMilestonePage() {
               <div>
                 <h3 className="font-bold text-amber-900 dark:text-amber-100 mb-1">Important Note</h3>
                 <p className="text-amber-800/90 dark:text-amber-200/90 text-sm leading-relaxed">
-                  Points are only credited once your submission (Step 4) is verified. Google's submission form is currently listed as <strong>"Opening Soon"</strong> — you can complete Steps 1–3 now, but final credit depends on when submissions open.
+                  Points are only credited once your submission (Step 4) is verified. Google's submission form is now <strong>LIVE</strong> — you can complete all steps and make your AI agent submissions to earn those extra 10 Bonus Points.
                 </p>
               </div>
             </div>
@@ -209,8 +209,10 @@ export function BonusMilestonePage() {
                     <li><strong className="text-slate-900 dark:text-white">Project ID</strong> — the same project where you built your agent</li>
                     <li><strong className="text-slate-900 dark:text-white">Billing Account ID</strong> — from your project's Billing section (format: <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-[#EA4335]">XXXXXX-XXXXXX-XXXXXX</code>)</li>
                   </ul>
-                  <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-sm">
-                    <Send className="w-4 h-4" /> Submissions opening soon!
+                  <div className="mt-4">
+                    <a href="https://forms.gle/MMfH5RKp83TfRtXj9" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-xl font-bold transition-colors shadow-sm">
+                      <Send className="w-4 h-4" /> Go to Submission Form
+                    </a>
                   </div>
                 </div>
               </div>

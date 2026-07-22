@@ -1,6 +1,7 @@
 import React from 'react';
 import { ExternalLink, ShieldAlert, Cloud, Code, GitMerge, FileText, Gift, Award, Zap, Terminal, Database, Shield } from 'lucide-react';
 import { FacilitatorCards } from '../components/FacilitatorCards';
+import { SupportSection } from '../components/SupportSection';
 
 export function AboutPage() {
   return (
@@ -63,8 +64,13 @@ export function AboutPage() {
         </div>
 
         {/* Developer Profile */}
-        <div className="w-full max-w-5xl mx-auto mb-16">
+        <div className="w-full max-w-5xl mx-auto mb-8">
            <FacilitatorCards />
+        </div>
+
+        {/* Support Section */}
+        <div className="w-full max-w-5xl mx-auto mb-16">
+           <SupportSection />
         </div>
 
       </div>
