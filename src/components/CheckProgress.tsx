@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { gameBadges, skillBadges } from '../data/badgesData';
-import { SKILL_BADGES } from '../data/skillBadges';
 import { Search, Copy, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -38,7 +37,7 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
     const END = new Date('2026-09-14T18:29:00Z');
 
     return completedBadges
-      .filter(b => b.category === 'Skill' || b.category === 'Game' || b.category === 'Completion')
+      .filter(b => b.category === 'Skill' || b.category === 'Game')
       .map(b => {
         const foundInDb = [...gameBadges, ...skillBadges].find(dbBadge => 
           dbBadge.name.toLowerCase().includes(b.title.toLowerCase()) ||
@@ -47,31 +46,13 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
         
         const dateStr = (b.earnedDate || '').replace(/^Earned\s+(on\s+)?/i, '').trim();
         const badgeDate = new Date(dateStr);
-        let validForProgram = b.validForProgram !== undefined ? b.validForProgram : (badgeDate >= START && badgeDate <= END);
-        let category = b.category || 'Other';
-        let points = b.points || (category === 'Skill' ? 0.5 : 1);
-        let type = (category || '').toUpperCase() === 'GAME' ? 'GAME' : 'SKILL';
-
-        // Retroactively catch Completion Badges that were cached as Skill badges
-        if (category === 'Skill' && !SKILL_BADGES.some(sb => sb.toLowerCase() === b.title.toLowerCase())) {
-          validForProgram = false;
-          category = 'Completion';
-          points = 0;
-          type = 'COMPLETION';
-        }
-        
-        // Also handle explicit Completion Badges correctly
-        if (category === 'Completion') {
-          validForProgram = false;
-          points = 0;
-          type = 'COMPLETION';
-        }
+        const validForProgram = b.validForProgram !== undefined ? b.validForProgram : (badgeDate >= START && badgeDate <= END);
 
         return {
           name: b.title,
-          category: category,
-          points: points,
-          type: type,
+          category: b.category,
+          points: b.points || (b.category === 'Skill' ? 0.5 : 1),
+          type: (b.category || '').toUpperCase() === 'GAME' ? 'GAME' : 'SKILL',
           earnedDate: dateStr,
           validForProgram,
           image: foundInDb ? foundInDb.image : 'No Image',
@@ -202,7 +183,7 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
                   <div className="p-4 flex-1 flex flex-col">
                   <div className="flex items-start justify-between mb-4">
                     <span className={`text-[10px] font-bold px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 ${
-                      badge.type === 'GAME' ? 'text-purple-600 dark:text-purple-400' : badge.type === 'COMPLETION' ? 'text-slate-500 dark:text-slate-400' : 'text-green-600 dark:text-green-400'
+                      badge.type === 'GAME' ? 'text-purple-600 dark:text-purple-400' : 'text-green-600 dark:text-green-400'
                     }`}>
                       {badge.type}
                     </span>

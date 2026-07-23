@@ -371,16 +371,12 @@ app.post("/api/notify-query", async (req, res) => {
         const allText     = (badgeText + altText + ariaLabel).toLowerCase();
 
         // Skip Completion Badges entirely
-        if (/completion\s*badge/i.test(allText)) {
+        if (allText.includes("completion badge")) {
           return;
         }
 
         const title = $(el).find(".badge-title, .ql-title-medium").text().trim() || $(el).attr('alt') || rawText || "";
         const titleLower = title.toLowerCase();
-
-        if (titleLower.includes("google cloud computing foundations")) {
-          console.log("Found badge HTML:", $(el).html());
-        }
 
         // Extract the year and check timeline
         const dateText = $(el).find(".ql-body-medium.l-mbs, .ql-body-medium").text().trim();

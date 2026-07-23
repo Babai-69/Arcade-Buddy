@@ -51,6 +51,7 @@ export const SKILL_BADGES: string[] = [
   "Explore Generative AI in Agent Platform",
   "Explore Generative AI with the Gemini API in Vertex AI",
   "Get Started with Sensitive Data Protection",
+  "Google Cloud Computing Foundations: Data, ML, and AI in Google Cloud",
   "Google Cloud Essentials",
   "Google DeepMind: Train A Small Language Model",
   "Implement CI/CD Pipelines on Google Cloud",
