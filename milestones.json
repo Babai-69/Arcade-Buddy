@@ -1,16 +1,16 @@
 {
-  "lastUpdated": "2026-07-19T07:00:34.941Z",
+  "lastUpdated": "2026-07-23T18:43:07.539Z",
   "data": {
     "trooper": {
-      "spotsLeft": 4696,
+      "spotsLeft": 4550,
       "total": 6000
     },
     "ranger": {
-      "spotsLeft": 3897,
+      "spotsLeft": 3731,
       "total": 4000
     },
     "champion": {
-      "spotsLeft": 2968,
+      "spotsLeft": 2923,
       "total": 3000
     },
     "legend": {
@@ -20,15 +20,15 @@
   },
   "rawSpotsLeft": {
     "milestone-1": {
-      "text": "4696 / 6000",
+      "text": "4550 / 6000",
       "percent": "0%"
     },
     "milestone-2": {
-      "text": "3897 / 4000",
+      "text": "3731 / 4000",
       "percent": "0%"
     },
     "milestone-3": {
-      "text": "2968 / 3000",
+      "text": "2923 / 3000",
       "percent": "0%"
     },
     "milestone-4": {

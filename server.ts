@@ -18,6 +18,7 @@ import * as cheerio from "cheerio";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 import nodemailer from "nodemailer";
+import { SKILL_BADGES } from "./src/data/skillBadges";
 import { gameBadges as syllabusGameBadges } from "./src/data/badgesData";
 
 async function startServer() {
@@ -369,6 +370,11 @@ app.post("/api/notify-query", async (req, res) => {
         const ariaLabel   = $(el).attr('aria-label') || '';
         const allText     = (badgeText + altText + ariaLabel).toLowerCase();
 
+        // Skip Completion Badges entirely
+        if (allText.includes("completion badge")) {
+          return;
+        }
+
         const title = $(el).find(".badge-title, .ql-title-medium").text().trim() || $(el).attr('alt') || rawText || "";
         const titleLower = title.toLowerCase();
 
@@ -469,15 +475,13 @@ app.post("/api/notify-query", async (req, res) => {
           if (labFreeTitles.includes(titleLower)) {
             category = "Lab-free";
             points = 0;
-          } else if (allText.includes("skill badge")) {
+          } else if (SKILL_BADGES.some(b => b.toLowerCase() === titleLower)) {
             if (validForProgram) skillBadges += 1;
             category = "Skill";
             points = 0.5;
           } else {
-            // Default to skill badge as fallback
-            if (validForProgram) skillBadges += 1;
-            category = "Skill";
-            points = 0.5;
+            // Exclude entirely as a Completion Badge
+            return;
           }
         }
 
