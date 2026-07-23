@@ -1,5 +1,5 @@
 const cheerio = require('cheerio');
-const { SKILL_BADGES } = require('./dist/src/data/skillBadges.js');
+const fs = require('fs');
 
 async function run() {
   const url = 'https://www.cloudskillsboost.google/public_profiles/7a0c9c4d-4215-4f16-a18c-47784257bde1';
@@ -21,25 +21,8 @@ async function run() {
     }
   });
 
-  console.log(`Found ${badges.length} badges in the timeframe`);
-  let skillCount = 0;
-  const missing = [];
-  
-  for (const b of badges) {
-    if (b.toLowerCase().includes('skill badge')) { // Let's check what it says
-        // Actually wait, let's just see how many match SKILL_BADGES
-    }
-    const matched = SKILL_BADGES.find(sb => sb.toLowerCase() === b.toLowerCase());
-    if (matched) {
-      skillCount++;
-    } else {
-      missing.push(b);
-    }
-  }
-  
-  console.log(`Matched as skill badges: ${skillCount}`);
-  console.log("Not matched (potential missing skill badges or completion badges):");
-  console.log(missing.join("\n"));
+  fs.writeFileSync('badges_dump.json', JSON.stringify(badges, null, 2));
+  console.log('Dumped to badges_dump.json');
 }
 
 run();

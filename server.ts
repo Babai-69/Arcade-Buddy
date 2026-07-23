@@ -475,7 +475,7 @@ app.post("/api/notify-query", async (req, res) => {
           if (labFreeTitles.includes(titleLower)) {
             category = "Lab-free";
             points = 0;
-          } else if (SKILL_BADGES.some(b => b.toLowerCase() === titleLower)) {
+          } else if (SKILL_BADGES.some(b => b.name.toLowerCase() === titleLower)) {
             if (validForProgram) skillBadges += 1;
             category = "Skill";
             points = 0.5;
