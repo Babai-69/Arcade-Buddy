@@ -391,9 +391,5 @@ export const SKILL_BADGES: SkillBadge[] = [
   {
     "name": "Using the Google Cloud Speech API",
     "link": "https://www.skills.google/course_templates/756"
-  },
-  {
-    "name": "Website on Google Cloud",
-    "link": "https://www.skills.google/course_templates/682"
   }
 ];
