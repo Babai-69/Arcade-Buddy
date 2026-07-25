@@ -84,7 +84,6 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
       id: 'demo',
       name: 'Demo Student',
       avatarUrl: '',
-      community: 'Demo',
       email: '',
       profileUrl: 'demo',
       gameBadges: 8,
@@ -215,32 +214,49 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
         </div>
         <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">Paste your Google Cloud Skills Boost public profile URL to calculate your Arcade points.</p>
         
-        <form onSubmit={handleCheck} className="mb-6">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <input
-                type="text"
-                placeholder="https://www.skills.google/public_profiles/..."
-                className="w-full bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-xl px-4 py-3.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:border-[#555] transition-colors"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-              />
-              {url.includes('public_profiles/') && <Check className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500 w-5 h-5" />}
+        <div className="relative">
+          {!user && (
+            <div className="absolute inset-0 z-10 bg-white/40 dark:bg-black/40 backdrop-blur-[2px] rounded-xl flex items-center justify-center">
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-login-modal'))}
+                className="flex items-center gap-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-5 py-2.5 rounded-full font-medium shadow-lg border border-slate-200 dark:border-slate-700 hover:scale-105 transition-transform"
+              >
+                <svg className="w-5 h-5 text-[#f59e0b]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Sign in to calculate progress
+              </button>
             </div>
-            <button
-              type="submit"
-              disabled={isLoading || !url}
-              className="bg-[#f59e0b] hover:bg-[#d97706] text-slate-900 font-bold px-6 py-3.5 rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap flex items-center justify-center min-w-[150px]"
-            >
-              {isLoading && !isDemoAnimation ? (
-                <div className="w-5 h-5 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" />
-              ) : (
-                'Analyze Profile'
-              )}
-            </button>
-          </div>
-          {error && <p className="text-[#EA4335] mt-3 text-sm font-medium">{error}</p>}
-        </form>
+          )}
+          <form onSubmit={handleCheck} className="mb-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="https://www.skills.google/public_profiles/..."
+                  className="w-full bg-slate-50 dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-xl px-4 py-3.5 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-gray-500 focus:outline-none focus:border-[#555] transition-colors"
+                  value={url}
+                  onChange={(e) => setUrl(e.target.value)}
+                  disabled={!user}
+                />
+                {url.includes('public_profiles/') && <Check className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500 w-5 h-5" />}
+              </div>
+              <button
+                type="submit"
+                disabled={isLoading || !url || !user}
+                className="bg-[#f59e0b] hover:bg-[#d97706] text-slate-900 font-bold px-6 py-3.5 rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap flex items-center justify-center min-w-[150px]"
+              >
+                {isLoading && !isDemoAnimation ? (
+                  <div className="w-5 h-5 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" />
+                ) : (
+                  'Analyze Profile'
+                )}
+              </button>
+            </div>
+            {error && <p className="text-[#EA4335] mt-3 text-sm font-medium">{error}</p>}
+          </form>
+        </div>
         
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-[#2a2a2a] pb-6 mb-6">
           <label className="flex items-center gap-3 cursor-pointer group">
