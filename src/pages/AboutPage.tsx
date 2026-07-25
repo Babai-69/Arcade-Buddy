@@ -1,7 +1,8 @@
 import React from 'react';
-import { ExternalLink, ShieldAlert, Cloud, Code, GitMerge, FileText, Gift, Award, Zap, Terminal, Database, Shield } from 'lucide-react';
+import { ExternalLink, ShieldAlert, Cloud, Code, GitMerge, FileText, Gift, Award, Zap, Terminal, Database, Shield, HelpCircle } from 'lucide-react';
 import { FacilitatorCards } from '../components/FacilitatorCards';
 import { SupportSection } from '../components/SupportSection';
+import { Link } from 'react-router-dom';
 
 export function AboutPage() {
   return (
@@ -64,8 +65,16 @@ export function AboutPage() {
         </div>
 
         {/* Developer Profile */}
-        <div className="w-full max-w-5xl mx-auto mb-8">
+        <div className="w-full max-w-5xl mx-auto mb-16">
            <FacilitatorCards />
+        </div>
+
+        {/* View FAQ Button */}
+        <div className="w-full max-w-5xl mx-auto mb-12 flex justify-center">
+           <Link to="/faq" className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all flex items-center gap-3">
+             <HelpCircle className="w-6 h-6" /> 
+             <span className="text-lg">View Frequently Asked Questions</span>
+           </Link>
         </div>
 
         {/* Support Section */}
