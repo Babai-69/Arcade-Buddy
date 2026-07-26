@@ -132,3 +132,74 @@
     }
   }
 }
+
+/* Home Page Background & Orbs */
+.home-bg-gradient {
+  background:
+    radial-gradient(ellipse 1200px 700px at 20% -10%, rgba(66,133,244,0.12), transparent 60%),
+    radial-gradient(ellipse 1000px 600px at 90% 10%, rgba(52,168,83,0.10), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 50% 100%, rgba(234,67,53,0.08), transparent 60%),
+    linear-gradient(180deg, #f4f6fb, #eaeef7 40%, #f4f6fb);
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+.dark .home-bg-gradient {
+  background:
+    radial-gradient(ellipse 1200px 700px at 20% -10%, rgba(66,133,244,0.25), transparent 60%),
+    radial-gradient(ellipse 1000px 600px at 90% 10%, rgba(52,168,83,0.18), transparent 60%),
+    radial-gradient(ellipse 900px 700px at 50% 100%, rgba(234,67,53,0.12), transparent 60%),
+    linear-gradient(180deg, #0a0e1a, #121a2e 40%, #0a0e1a);
+}
+
+.home-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.18;
+}
+
+.dark .home-orb {
+  opacity: 0.35;
+}
+
+.home-orb1 {
+  width: 420px;
+  height: 420px;
+  background: var(--color-google-blue);
+  top: -120px;
+  left: -100px;
+  animation: float1 14s ease-in-out infinite;
+}
+
+.home-orb2 {
+  width: 340px;
+  height: 340px;
+  background: var(--color-google-green);
+  top: 400px;
+  right: -120px;
+  animation: float2 16s ease-in-out infinite;
+}
+
+.home-orb3 {
+  width: 300px;
+  height: 300px;
+  background: var(--color-google-yellow);
+  bottom: 100px;
+  left: 10%;
+  animation: float3 18s ease-in-out infinite;
+}
+
+@keyframes float1 {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(40px, 60px, 0); }
+}
+
+@keyframes float2 {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-50px, -40px, 0); }
+}
+
+@keyframes float3 {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(30px, -50px, 0); }
+}

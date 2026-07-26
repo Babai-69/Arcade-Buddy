@@ -41,7 +41,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col font-sans transition-colors duration-300">
       <ScrollToTop />
-      <div className="mesh-bg"></div>
+      {location.pathname !== '/' && <div className="mesh-bg"></div>}
       <Navbar />
       
       <main className="flex-grow pt-16">

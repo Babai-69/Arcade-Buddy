@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Mail, Clock, Youtube, MessageCircle, Send, HelpCircle, ExternalLink, AlertCircle } from 'lucide-react';
 
 export function SupportSection() {
@@ -111,46 +112,12 @@ export function SupportSection() {
         </div>
       </div>
 
-      {/* Support FAQ */}
-      <div className="bg-white dark:bg-[#0c0c0c] border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-sm">
-        <div className="flex items-center gap-2 mb-8">
-          <HelpCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-500" />
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">Support Frequently Asked Questions</h3>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-          {/* Q1 */}
-          <div>
-            <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-3">How accurate are the points calculated?</h4>
-            <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-              Our scoring logic strictly mirrors the official 2026 Google Cloud Arcade scoring catalogs. It maps active monthly games, skill badges, and milestone parameters precisely. Always ensure your public profile contains the correct matching badge titles to fetch exact results.
-            </p>
-          </div>
-          
-          {/* Q2 */}
-          <div>
-            <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-3">Can the support team manually credit missing points?</h4>
-            <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-              No. ArcadeBuddy is an independent community project. We do not have access to Google Cloud Skills Boost database servers, qwiklabs infrastructure, or swag distribution consoles. All point adjustments and tier redemptions must occur officially through the Google Cloud program coordinates.
-            </p>
-          </div>
-
-          {/* Q3 */}
-          <div>
-            <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-3">What should I include when reporting a system bug?</h4>
-            <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-              Please email us your Google Cloud Skills Boost public profile URL, list which badge is displaying incorrectly or missing, and note your operating system or browser (Chrome, Safari, Firefox). This details helps us isolate code anomalies and roll out patches rapidly!
-            </p>
-          </div>
-
-          {/* Q4 */}
-          <div>
-            <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-3">Is there a cost associated with the solution guides?</h4>
-            <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
-              Absolutely not. All resources, solution video companion playlists, catalog links, and points calculations available on this platform are 100% free of charge. We are passionate about promoting cloud education and enabling students across the globe!
-            </p>
-          </div>
-        </div>
+      {/* View FAQ Button */}
+      <div className="flex justify-center mt-16 mb-8">
+         <Link to="/faq" className="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl shadow-lg shadow-blue-500/30 transition-all flex items-center gap-3">
+           <HelpCircle className="w-6 h-6" /> 
+           <span className="text-lg">View Frequently Asked Questions</span>
+         </Link>
       </div>
     </div>
   );
