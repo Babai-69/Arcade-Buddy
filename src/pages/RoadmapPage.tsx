@@ -54,11 +54,13 @@ const CheckboxRow = ({ label, value, target, delay, hideTick = false, activeColo
   return (
     <div className="flex items-center gap-4 py-3 border-b border-white/5">
        <div 
-         className="w-[22px] h-[22px] rounded flex items-center justify-center flex-shrink-0 transition-all duration-[1200ms] ease-out text-[#070B14]" 
+         className={`w-[22px] h-[22px] rounded flex items-center justify-center flex-shrink-0 transition-all duration-[1200ms] ease-out ${isDone ? 'text-[#070B14]' : 'border border-white/20 bg-white/5'}`}
          style={{ 
            transitionDelay: `${delay}ms`, 
-           backgroundColor: activeColor, 
-           boxShadow: `0 0 10px ${activeColor}66` 
+           ...(isDone && {
+             backgroundColor: activeColor, 
+             boxShadow: `0 0 10px ${activeColor}66` 
+           })
          }}
        >
          {isDone && !hideTick && <Check size={14} strokeWidth={3.5} />}

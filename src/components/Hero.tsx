@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
-import { Cloud, Award, Sparkles, ChevronRight, Users, Activity, TrendingUp, Clock, Instagram, Github, Linkedin } from 'lucide-react';
+import { Cloud, Award, Sparkles, ChevronRight, Users, Activity, TrendingUp, Clock, Instagram, Github, Linkedin, Compass } from 'lucide-react';
 import { Participant } from '../types';
 
 export function Hero({ participants }: { participants: Participant[] }) {
@@ -153,13 +153,22 @@ export function Hero({ participants }: { participants: Participant[] }) {
             </a>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
             <a href="/#register" className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-full font-semibold hover:scale-105 transition-transform shadow-lg">
               Join the Program <ChevronRight className="h-5 w-5" />
             </a>
             <a href="/leaderboard" className="flex items-center gap-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-8 py-4 rounded-full font-semibold border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">
               <Award className="h-5 w-5 text-[#FBBC05]" /> View Leaderboard
             </a>
+          </div>
+          
+          <div className="flex justify-center mb-16">
+             <button 
+                onClick={() => window.dispatchEvent(new Event('start-welcome-tour'))}
+                className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white px-6 py-3 rounded-full font-semibold shadow-[0_6px_18px_rgba(26,115,232,0.35)] hover:-translate-y-1 transition-transform"
+             >
+                <Compass className="w-5 h-5" /> Take a Quick Tour
+             </button>
           </div>
 
           {timerState !== 'ended' && (

@@ -34,6 +34,7 @@ import { Participant } from './types';
 
 import { RoadmapPage } from './pages/RoadmapPage';
 import { DisclaimerPage } from './pages/DisclaimerPage';
+import { WelcomeTour } from './components/WelcomeTour';
 
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>(mockParticipants);
@@ -44,6 +45,7 @@ export default function App() {
       <ScrollToTop />
       {location.pathname !== '/' && <div className="mesh-bg"></div>}
       <Navbar />
+      <WelcomeTour />
       
       <main className="flex-grow pt-16">
         <AccessGuard>

@@ -55,12 +55,13 @@ export function Navbar() {
           </Link>
           
           {/* Navigation - Center Pill Style */}
-          <div className="hidden xl:flex items-center absolute left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 shadow-[0_4px_16px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] rounded-full p-2 gap-1.5 border border-slate-100 dark:border-slate-800 transition-colors duration-300">
+          <div className="hidden md:flex items-center absolute left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 shadow-[0_4px_16px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5)] rounded-full p-2 gap-1.5 border border-slate-100 dark:border-slate-800 transition-colors duration-300">
             {navLinks.map((link) => {
               const isActive = location.pathname === link.path;
               return (
                 <Link
                   key={link.name}
+                  id={`nav-${link.name.toLowerCase()}`}
                   to={link.path}
                   aria-current={isActive ? 'page' : undefined}
                   className={`flex items-center gap-2 h-10 px-[14px] rounded-full border-none cursor-pointer text-sm font-medium whitespace-nowrap transition-all duration-300 ease-out overflow-hidden ${
@@ -85,7 +86,7 @@ export function Navbar() {
           </div>
 
           {/* Actions - Right */}
-          <div className="hidden xl:flex items-center space-x-4 z-10 w-[240px] justify-end">
+          <div className="hidden md:flex items-center space-x-4 z-10 w-[240px] justify-end">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
@@ -93,15 +94,15 @@ export function Navbar() {
             >
               {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <Link to="/calculator" className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full font-bold transition-all shadow-md text-sm">
+            <Link id="nav-calc" to="/calculator" className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full font-bold transition-all shadow-md text-sm">
               Calculator
             </Link>
-            <NavbarNotifications />
-            <NavbarUserMenu />
+            <div id="nav-notif"><NavbarNotifications /></div>
+            <div id="nav-profile"><NavbarUserMenu /></div>
           </div>
 
           {/* Mobile Actions */}
-          <div className="xl:hidden flex items-center gap-2 z-10">
+          <div className="md:hidden flex items-center gap-2 z-10">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 text-slate-800 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
@@ -123,12 +124,14 @@ export function Navbar() {
       
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="xl:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-xl absolute w-full left-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto">
+        <div className="md:hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-xl absolute w-full left-0 top-16 max-h-[calc(100vh-4rem)] overflow-y-auto">
           <div className="px-4 pt-2 pb-6 space-y-1">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
+                id={`mobile-nav-${link.name.toLowerCase()}`}
                 to={link.path}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={`block px-3 py-3 rounded-md text-base font-medium ${
                   location.pathname === link.path
                     ? 'text-[#4285F4] bg-blue-50 dark:bg-blue-900/20'
