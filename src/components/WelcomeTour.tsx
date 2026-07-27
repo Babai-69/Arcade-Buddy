@@ -233,17 +233,6 @@ export function WelcomeTour() {
                 <a href="#" target="_blank" rel="noopener" className="mt-3.5 w-full flex justify-center bg-[#25D366] text-white py-[13px] rounded-full font-bold text-[14.5px] shadow-[0_8px_18px_rgba(37,211,102,.32)] hover:-translate-y-[1px] transition-transform">Join on WhatsApp</a>
               </div>
 
-              <div className="mt-3 bg-[#F6F8FC] border border-[#DADCE0] rounded-[18px] py-[15px] px-4 flex items-center justify-between gap-3">
-                <div>
-                  <div className="font-display font-bold text-[13.5px] text-[#202124]">Prefer Telegram?</div>
-                  <div className="mt-[3px] text-xs text-[#5F6368] leading-[1.5]">Receive the same essential community updates.</div>
-                </div>
-                <a href="#" target="_blank" rel="noopener" className="shrink-0 bg-white border border-[#DADCE0] py-[9px] px-[14px] rounded-full text-[12.5px] font-semibold text-[#202124] inline-flex items-center gap-[7px] whitespace-nowrap hover:bg-[#F6F8FC] transition-colors">
-                  <span className="w-5 h-5 rounded-full bg-[#229ED9] text-white flex items-center justify-center text-[11px]">➤</span>
-                  Join Telegram
-                </a>
-              </div>
-
               <div className="mt-[22px]">
                 <button onClick={startTour} className="w-full flex justify-center text-white py-[14px] rounded-full font-medium text-[14.5px] shadow-[0_6px_18px_rgba(26,115,232,.35)] hover:-translate-y-[2px] transition-transform" style={{ background: 'linear-gradient(90deg,#1A73E8,#4FA8FF)' }}>🧭 Take the quick tour with me</button>
               </div>
