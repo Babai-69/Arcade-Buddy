@@ -40,9 +40,9 @@ export function WelcomeTour() {
     
     if (shouldShow) {
       const timer = setTimeout(() => {
-        // Auto start the tour for beginners directly instead of showing welcome
-        startTour();
-      }, 1000);
+        // Show entry welcome card modal first when user opens the website
+        setShowWelcome(true);
+      }, 800);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -176,7 +176,8 @@ export function WelcomeTour() {
         @keyframes welcomeIn { from { opacity: 0; transform: translateY(18px) scale(0.97); } to { opacity: 1; transform: none; } }
         @keyframes shimmer { to { background-position: -200% 0; } }
         @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.15); } }
-        @keyframes wave { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-30deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(-30deg); } 80% { transform: rotate(-6deg); } }
+        @keyframes wave { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-32deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(-28deg); } 80% { transform: rotate(-6deg); } }
+        @keyframes antennaPulse { 0%, 100% { fill: #FBBC04; filter: drop-shadow(0 0 2px #FBBC04); } 50% { fill: #EA4335; filter: drop-shadow(0 0 6px #EA4335); } }
       `}</style>
       <button className="fab-chat fixed bottom-6 right-6 z-[60] w-[52px] h-[52px] rounded-full bg-white border border-[#DADCE0] flex items-center justify-center text-[20px] shadow-[0_8px_20px_rgba(32,33,36,0.12)] cursor-pointer text-[#5F6368] hover:bg-slate-50 transition-colors" title="Chatbot">
         <MessageCircle size={24} />
@@ -190,9 +191,9 @@ export function WelcomeTour() {
             <div className="pt-[26px] px-[28px] pb-[22px] max-sm:px-5">
               
               <div className="flex justify-center">
-                <svg className="w-[84px] h-[84px]" style={{ filter: 'drop-shadow(0 10px 18px rgba(26,115,232,.25))' }} viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-[96px] h-[96px]" style={{ filter: 'drop-shadow(0 10px 18px rgba(26,115,232,.25))' }} viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
                   <rect x="60" y="16" width="8" height="14" rx="4" fill="#5F6368"/>
-                  <circle cx="64" cy="12" r="6" fill="#FBBC04"/>
+                  <circle cx="64" cy="12" r="6" style={{ animation: 'antennaPulse 1.8s ease-in-out infinite' }}/>
                   <rect x="28" y="30" width="72" height="56" rx="22" fill="#1A73E8"/>
                   <rect x="37" y="38" width="54" height="36" rx="15" fill="#E8F0FE"/>
                   <ellipse cx="45" cy="64" rx="5" ry="3.5" fill="#FBBC04" opacity=".55"/>
@@ -203,9 +204,9 @@ export function WelcomeTour() {
                   <rect x="38" y="88" width="52" height="30" rx="14" fill="#34A853"/>
                   <circle cx="64" cy="103" r="6" fill="#fff" opacity=".85"/>
                   <rect x="14" y="92" width="16" height="9" rx="4.5" fill="#EA4335"/>
-                  <g style={{ transformOrigin: '64px 78px', animation: 'wave 1.5s ease-in-out infinite' }}>
-                    <rect x="92" y="90" width="16" height="9" rx="4.5" fill="#EA4335"/>
-                    <circle cx="108" cy="94" r="7" fill="#FBBC04"/>
+                  <g style={{ transformOrigin: '92px 94.5px', transformBox: 'view-box', animation: 'wave 1.2s ease-in-out infinite' }}>
+                    <rect x="92" y="90" width="18" height="9" rx="4.5" fill="#EA4335"/>
+                    <circle cx="108" cy="94.5" r="7.5" fill="#FBBC04"/>
                   </g>
                   <rect x="44" y="114" width="12" height="9" rx="4" fill="#5F6368"/>
                   <rect x="72" y="114" width="12" height="9" rx="4" fill="#5F6368"/>
@@ -273,7 +274,7 @@ export function WelcomeTour() {
             <div className="flex items-center gap-3">
               <svg className="w-[52px] h-[52px] shrink-0" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
                 <rect x="60" y="16" width="8" height="14" rx="4" fill="#5F6368"/>
-                <circle cx="64" cy="12" r="6" fill="#FBBC04"/>
+                <circle cx="64" cy="12" r="6" style={{ animation: 'antennaPulse 1.8s ease-in-out infinite' }}/>
                 <rect x="28" y="30" width="72" height="56" rx="22" fill="#1A73E8"/>
                 <rect x="37" y="38" width="54" height="36" rx="15" fill="#E8F0FE"/>
                 <ellipse cx="45" cy="64" rx="5" ry="3.5" fill="#FBBC04" opacity=".55"/>
@@ -284,9 +285,9 @@ export function WelcomeTour() {
                 <rect x="38" y="88" width="52" height="30" rx="14" fill="#34A853"/>
                 <circle cx="64" cy="103" r="6" fill="#fff" opacity=".85"/>
                 <rect x="14" y="92" width="16" height="9" rx="4.5" fill="#EA4335"/>
-                <g style={{ transformOrigin: '64px 78px', animation: 'wave 1.5s ease-in-out infinite' }}>
-                  <rect x="92" y="90" width="16" height="9" rx="4.5" fill="#EA4335"/>
-                  <circle cx="108" cy="94" r="7" fill="#FBBC04"/>
+                <g style={{ transformOrigin: '92px 94.5px', transformBox: 'view-box', animation: 'wave 1.2s ease-in-out infinite' }}>
+                  <rect x="92" y="90" width="18" height="9" rx="4.5" fill="#EA4335"/>
+                  <circle cx="108" cy="94.5" r="7.5" fill="#FBBC04"/>
                 </g>
                 <rect x="44" y="114" width="12" height="9" rx="4" fill="#5F6368"/>
                 <rect x="72" y="114" width="12" height="9" rx="4" fill="#5F6368"/>
