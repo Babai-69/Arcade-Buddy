@@ -32,6 +32,7 @@ import { AccessGuard } from './components/AccessGuard';
 import { mockParticipants } from './data/sampleData';
 import { Participant } from './types';
 
+import { RoadmapPage } from './pages/RoadmapPage';
 import { DisclaimerPage } from './pages/DisclaimerPage';
 
 export default function App() {
@@ -62,6 +63,7 @@ export default function App() {
               <Route path="/public-profile-help" element={<PageTransition><PublicProfileHelpPage /></PageTransition>} />
               <Route path="/swags" element={<PageTransition><SwagsPage /></PageTransition>} />
               <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
+              <Route path="/roadmap" element={<PageTransition><RoadmapPage /></PageTransition>} />
               <Route path="/disclaimer" element={<PageTransition><DisclaimerPage /></PageTransition>} />
               <Route path="/my-progress" element={<PageTransition><MyProgressPage /></PageTransition>} />
               <Route path="/admin-progress" element={<PageTransition><AdminProgressPage /></PageTransition>} />

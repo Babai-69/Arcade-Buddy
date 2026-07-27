@@ -430,6 +430,13 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                         >
                           🗓️ Badge Tracker
                         </button>
+                        <Link 
+                          to="/roadmap"
+                          state={{ participant: result }}
+                          className="w-full text-center py-2 px-3 rounded-full bg-blue-600 hover:bg-blue-700 text-sm font-semibold text-white transition-colors cursor-pointer mt-2"
+                        >
+                          🚀 Your Personalised Roadmap
+                        </Link>
                       </div>
                     </div>
 

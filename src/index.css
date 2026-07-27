@@ -203,3 +203,15 @@
   0%, 100% { transform: translate3d(0, 0, 0); }
   50% { transform: translate3d(30px, -50px, 0); }
 }
+
+@keyframes neon-pulse {
+  0%, 100% {
+    text-shadow: 0 0 10px #6FE3D6, 0 0 20px #6FE3D6, 0 0 30px #6FE3D6;
+  }
+  50% {
+    text-shadow: 0 0 5px #6FE3D6, 0 0 10px #6FE3D6, 0 0 15px #6FE3D6;
+  }
+}
+.animate-neon-pulse {
+  animation: neon-pulse 2s infinite ease-in-out;
+}
