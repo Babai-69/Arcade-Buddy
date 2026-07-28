@@ -169,7 +169,7 @@ export const skillBadges = [
     "link": "https://www.skills.google/course_templates/631"
   },
   {
-    "name": "Prompt Design in Vertex AI",
+    "name": "Prompt Design in Agent Platform",
     "image": "https://cdn.qwiklabs.com/s%2FZRePds6xWgygxn10JCzWgR584W9Df2%2BngG2Leq0dI%3D",
     "link": "https://www.skills.google/course_templates/976"
   },
