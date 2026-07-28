@@ -126,11 +126,13 @@ export function WelcomeTour() {
             left: `${r.left - 8}px`,
             width: `${r.width + 16}px`,
             height: `${r.height + 16}px`,
+            borderRadius: step.custom === 'chat' ? '50%' : '16px'
           });
 
           const cardW = 328;
           let top, left;
           const placement = step.placement;
+          const cardH = cardRef.current ? cardRef.current.offsetHeight : 260;
           if (placement === 'bottom') {
             top = r.bottom + 18;
             left = Math.min(window.innerWidth - cardW - 16, Math.max(16, r.left + r.width / 2 - cardW / 2));
@@ -138,10 +140,10 @@ export function WelcomeTour() {
             top = r.bottom + 18;
             left = Math.max(16, r.right - cardW);
           } else if (placement === 'top-left') {
-            top = r.top - 18 - 260;
+            top = r.top - 18 - cardH;
             left = Math.max(16, r.right - cardW);
           } else {
-            top = r.top - 18 - 260;
+            top = r.top - 18 - cardH;
             left = Math.min(window.innerWidth - cardW - 16, r.left);
           }
           
@@ -179,7 +181,7 @@ export function WelcomeTour() {
         @keyframes wave { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-32deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(-28deg); } 80% { transform: rotate(-6deg); } }
         @keyframes antennaPulse { 0%, 100% { fill: #FBBC04; filter: drop-shadow(0 0 2px #FBBC04); } 50% { fill: #EA4335; filter: drop-shadow(0 0 6px #EA4335); } }
       `}</style>
-      <button className="fab-chat fixed bottom-6 right-6 z-[60] w-[52px] h-[52px] rounded-full bg-white border border-[#DADCE0] flex items-center justify-center text-[20px] shadow-[0_8px_20px_rgba(32,33,36,0.12)] cursor-pointer text-[#5F6368] hover:bg-slate-50 transition-colors" title="Chatbot">
+      <button className={`fab-chat fixed bottom-6 right-6 ${tourActive && steps[currentStep].custom === 'chat' ? 'z-[600]' : 'z-[60]'} w-[52px] h-[52px] rounded-full bg-white border border-[#DADCE0] flex items-center justify-center text-[20px] shadow-[0_8px_20px_rgba(32,33,36,0.12)] cursor-pointer text-[#5F6368] hover:bg-slate-50 transition-colors`} title="Chatbot">
         <MessageCircle size={24} />
       </button>
 
