@@ -23,9 +23,9 @@ export function SupportSection() {
           <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8 relative z-10 max-w-xl">
             For primary assistance, bug submissions, or collaborative opportunities, write to our official email address. Make sure to attach screenshots of your browser console or include your exact Skills Boost public URL to expedite diagnostics.
           </p>
-          <div className="bg-[#F15A24] text-white font-bold px-6 py-3 rounded-lg inline-block text-sm relative z-10">
-            abir.facilitator@gmail.com
-          </div>
+          <a href="mailto:support.arcadebuddy@gmail.com" className="bg-[#F15A24] hover:bg-[#d94a18] text-white font-bold px-6 py-3 rounded-lg inline-block text-sm relative z-10 transition-colors">
+            support.arcadebuddy@gmail.com
+          </a>
           
           {/* Faded Background Icon */}
           <Mail className="absolute -bottom-6 -right-6 w-48 h-48 text-slate-100 dark:text-white/[0.02] -rotate-12 pointer-events-none" />
