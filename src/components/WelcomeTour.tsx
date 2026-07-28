@@ -249,7 +249,7 @@ export function WelcomeTour() {
               </div>
 
               <div className="mt-5 text-center text-[12.5px] font-medium text-[#1A73E8]">
-                <a href="#">View official Facilitator '26 program details</a>
+                <a href="https://rsvp.withgoogle.com/events/arcade-facilitator/home">View official Facilitator '26 program details</a>
               </div>
               <div className="mt-1.5 text-center text-[11.5px] text-[#80868B] leading-[1.5]">
                 This is an independent facilitator-led community hub.<br/>Official program rules and updates are provided by Google.
