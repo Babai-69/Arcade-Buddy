@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Search, Trophy, Medal, Star, ChevronRight, Activity, AlertCircle, Lock, CheckCircle2, Check } from 'lucide-react';
+import { Search, Trophy, Medal, Star, ChevronRight, Activity, AlertCircle, Lock, CheckCircle2, Check, RefreshCw } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Participant, MILESTONES } from '../types';
 import { BadgeTracker } from './BadgeTracker';
 import { FacilitatorBadgeTracker } from './FacilitatorBadgeTracker';
-import { auth } from '../lib/firebase';
+import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 interface ProfileCheckerProps {
   participants: Participant[];
@@ -167,9 +168,27 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
       }
       
       const prevRecent = JSON.parse(localStorage.getItem('arcadeRecentUrls') || '[]');
-      const newRecent = [url, ...prevRecent.filter(u => u !== url)].slice(0, 5);
+      const newRecent = [url, ...prevRecent.filter((u: string) => u !== url)].slice(0, 5);
       localStorage.setItem('arcadeRecentUrls', JSON.stringify(newRecent));
 
+      // Save to Firebase so the admin can see it
+      if (user) {
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          await setDoc(userRef, {
+            profileUrl: url,
+            gameBadges: data.gameBadges || 0,
+            triviaBadges: data.triviaBadges || 0,
+            skillBadges: data.skillBadges || 0,
+            arcadePoints: data.arcadePoints || 0,
+            milestoneEarned: data.milestoneEarned || '',
+            badgesCompletedCount: data.badges?.length || 0,
+            lastCalculated: new Date().toISOString()
+          }, { merge: true });
+        } catch (err) {
+          console.warn('Failed to update progress in Firebase:', err);
+        }
+      }
 
       if (data.arcadePoints >= 120) {
         confetti({
@@ -397,26 +416,37 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                   {/* TOP ROW */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* CARD 1 - User Profile */}
-                    <div className="bg-white dark:bg-slate-800 rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] flex flex-col justify-between">
+                    <div className="bg-white dark:bg-slate-800 rounded-[16px] p-6 shadow-[0_2px_12px_rgba(0,0,0,0.08)] flex flex-col justify-between relative">
                       <div>
-                        <div className="flex items-center gap-4 mb-4">
-                          {result.avatarUrl ? (
-                            <img src={result.avatarUrl} alt="Avatar" className="w-12 h-12 rounded-full object-cover" />
-                          ) : (
-                            <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-[#2563eb] dark:text-blue-400 font-bold text-lg">
-                              {avatarInitials}
-                            </div>
-                          )}
-                          <div>
-                            <h3 className="font-bold text-[20px] text-gray-900 dark:text-white leading-tight">{result.name}</h3>
-                            <div className="mt-1 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-bold shadow-sm border" style={{ 
-                              color: currentTierObj ? currentTierObj.colorClass.replace('bg-[', '').replace(']', '') : '#6b7280',
-                              borderColor: currentTierObj ? currentTierObj.colorClass.replace('bg-[', '').replace(']', '') : '#d1d5db',
-                              backgroundColor: 'transparent'
-                            }}>
-                              {currentTierName}
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-4">
+                            {result.avatarUrl ? (
+                              <img src={result.avatarUrl} alt="Avatar" className="w-12 h-12 rounded-full object-cover" />
+                            ) : (
+                              <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-[#2563eb] dark:text-blue-400 font-bold text-lg">
+                                {avatarInitials}
+                              </div>
+                            )}
+                            <div>
+                              <h3 className="font-bold text-[20px] text-gray-900 dark:text-white leading-tight pr-8">{result.name}</h3>
+                              <div className="mt-1 inline-flex items-center px-3 py-0.5 rounded-full text-xs font-bold shadow-sm border" style={{ 
+                                color: currentTierObj ? currentTierObj.colorClass.replace('bg-[', '').replace(']', '') : '#6b7280',
+                                borderColor: currentTierObj ? currentTierObj.colorClass.replace('bg-[', '').replace(']', '') : '#d1d5db',
+                                backgroundColor: 'transparent'
+                              }}>
+                                {currentTierName}
+                              </div>
                             </div>
                           </div>
+                          
+                          <button
+                            onClick={handleCheck}
+                            disabled={isLoading}
+                            className="absolute top-6 right-6 p-2 rounded-full text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-700/50 transition-colors disabled:opacity-50"
+                            title="Refresh Progress"
+                          >
+                            <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin text-blue-500' : ''}`} />
+                          </button>
                         </div>
                         <p className="text-[#6b7280] dark:text-slate-400 text-sm mb-6">Member since {new Date().getFullYear()}</p>
                       </div>

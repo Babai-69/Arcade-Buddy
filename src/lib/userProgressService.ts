@@ -9,6 +9,14 @@ export interface UserProfile {
   photoURL: string;
   createdAt: string;
   lastUpdated: string;
+  profileUrl?: string;
+  gameBadges?: number;
+  triviaBadges?: number;
+  skillBadges?: number;
+  arcadePoints?: number;
+  milestoneEarned?: string;
+  badgesCompletedCount?: number;
+  lastCalculated?: string;
 }
 
 export interface UserBadgeProgress extends BadgeData {

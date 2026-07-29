@@ -10,7 +10,41 @@ export function AdminProgressDashboard() {
   const [selectedStudent, setSelectedStudent] = useState<UserProfile | null>(null);
   const [studentBadges, setStudentBadges] = useState<UserBadgeProgress[]>([]);
   const [loadingBadges, setLoadingBadges] = useState(false);
+  const [syncingUid, setSyncingUid] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const handleSyncStudent = async (student: UserProfile) => {
+    if (!student.profileUrl) return;
+    setSyncingUid(student.uid);
+    try {
+      const res = await fetch(`/api/calculator?url=${encodeURIComponent(student.profileUrl)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (!data.error) {
+          const updates = {
+            gameBadges: data.gameBadges || 0,
+            triviaBadges: data.triviaBadges || 0,
+            skillBadges: data.skillBadges || 0,
+            arcadePoints: data.arcadePoints || 0,
+            milestoneEarned: data.milestoneEarned || '',
+            badgesCompletedCount: data.badges?.length || 0,
+            lastCalculated: new Date().toISOString()
+          };
+          
+          const { doc, setDoc } = await import('firebase/firestore');
+          const { db } = await import('../lib/firebase');
+          const userRef = doc(db, 'users', student.uid);
+          await setDoc(userRef, updates, { merge: true });
+          
+          setStudents(prev => prev.map(s => s.uid === student.uid ? { ...s, ...updates } : s));
+        }
+      }
+    } catch (err) {
+      console.error('Failed to sync student:', err);
+    } finally {
+      setSyncingUid(null);
+    }
+  };
 
   useEffect(() => {
     // Check admin
@@ -119,7 +153,10 @@ export function AdminProgressDashboard() {
             <tr>
               <th className="px-6 py-4 font-semibold text-slate-500">Student</th>
               <th className="px-6 py-4 font-semibold text-slate-500">Email</th>
-              <th className="px-6 py-4 font-semibold text-slate-500">Last Active</th>
+              <th className="px-6 py-4 font-semibold text-slate-500">Points</th>
+              <th className="px-6 py-4 font-semibold text-slate-500">Milestone</th>
+              <th className="px-6 py-4 font-semibold text-slate-500">Badges (G/S/T)</th>
+              <th className="px-6 py-4 font-semibold text-slate-500">Last Synced</th>
               <th className="px-6 py-4 font-semibold text-slate-500 text-right">Action</th>
             </tr>
           </thead>
@@ -133,11 +170,35 @@ export function AdminProgressDashboard() {
                   </div>
                 </td>
                 <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{s.email}</td>
-                <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{new Date(s.lastUpdated || s.createdAt).toLocaleDateString()}</td>
+                <td className="px-6 py-4 text-slate-900 dark:text-white font-bold">{s.arcadePoints || 0}</td>
+                <td className="px-6 py-4">
+                  <span className={`px-2 py-1 rounded-md text-xs font-bold ${
+                    s.milestoneEarned ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'
+                  }`}>
+                    {s.milestoneEarned || 'None'}
+                  </span>
+                </td>
+                <td className="px-6 py-4 text-slate-600 dark:text-slate-400">
+                  {s.gameBadges || 0} / {s.skillBadges || 0} / {s.triviaBadges || 0}
+                </td>
+                <td className="px-6 py-4 text-slate-600 dark:text-slate-400">
+                  {s.lastCalculated ? new Date(s.lastCalculated).toLocaleDateString() : 'Never'}
+                </td>
                 <td className="px-6 py-4 text-right">
-                  <button className="text-blue-500 hover:text-blue-700 font-medium text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors">
-                    View Progress
-                  </button>
+                  <div className="flex justify-end gap-2">
+                    {s.profileUrl && (
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); handleSyncStudent(s); }}
+                        disabled={syncingUid === s.uid}
+                        className="text-amber-600 hover:text-amber-700 font-medium text-xs bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-full transition-colors disabled:opacity-50"
+                      >
+                        {syncingUid === s.uid ? 'Syncing...' : 'Sync Data'}
+                      </button>
+                    )}
+                    <button className="text-blue-500 hover:text-blue-700 font-medium text-xs bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-full transition-colors">
+                      View Tracker
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

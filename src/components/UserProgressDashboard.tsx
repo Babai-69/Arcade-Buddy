@@ -168,6 +168,26 @@ export function UserProgressDashboard() {
       if (result.error) throw new Error(result.error);
       
       setData(result);
+      
+      // Save progress to Firebase so admins can see it
+      if (user) {
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          await setDoc(userRef, {
+            profileUrl: targetUrl,
+            gameBadges: result.gameBadges || 0,
+            triviaBadges: result.triviaBadges || 0,
+            skillBadges: result.skillBadges || 0,
+            arcadePoints: result.arcadePoints || 0,
+            milestoneEarned: result.milestoneEarned || '',
+            badgesCompletedCount: result.badges?.length || 0,
+            lastCalculated: new Date().toISOString()
+          }, { merge: true });
+        } catch (err) {
+          console.warn('Failed to update progress in Firebase:', err);
+        }
+      }
+
       // Save progress to local storage
       localStorage.setItem('arcadeProfileUrl', targetUrl);
       localStorage.setItem('arcadeProgressData', JSON.stringify(result));
