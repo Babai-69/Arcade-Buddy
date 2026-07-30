@@ -1,38 +1,38 @@
 {
-  "lastUpdated": "2026-07-23T18:43:07.539Z",
+  "lastUpdated": "2026-07-30T06:52:25.796Z",
   "data": {
     "trooper": {
-      "spotsLeft": 4550,
+      "spotsLeft": 4392,
       "total": 6000
     },
     "ranger": {
-      "spotsLeft": 3731,
+      "spotsLeft": 3594,
       "total": 4000
     },
     "champion": {
-      "spotsLeft": 2923,
+      "spotsLeft": 2843,
       "total": 3000
     },
     "legend": {
-      "spotsLeft": 2500,
+      "spotsLeft": 2499,
       "total": 2500
     }
   },
   "rawSpotsLeft": {
     "milestone-1": {
-      "text": "4550 / 6000",
+      "text": "4392 / 6000",
       "percent": "0%"
     },
     "milestone-2": {
-      "text": "3731 / 4000",
+      "text": "3594 / 4000",
       "percent": "0%"
     },
     "milestone-3": {
-      "text": "2923 / 3000",
+      "text": "2843 / 3000",
       "percent": "0%"
     },
     "milestone-4": {
-      "text": "2500 / 2500",
+      "text": "2499 / 2500",
       "percent": "0%"
     }
   }

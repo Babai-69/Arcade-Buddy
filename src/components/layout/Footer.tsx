@@ -47,6 +47,23 @@ export function Footer() {
                 <Twitter className="w-5 h-5" />
               </a>
             </div>
+
+            <div className="flex flex-col gap-3 mt-8 max-w-sm">
+              <Link to="/support" className="flex items-center justify-between p-3.5 rounded-xl bg-purple-50 dark:bg-slate-900/50 border border-purple-200 dark:border-purple-500/20 hover:bg-purple-100 dark:hover:bg-slate-800 transition-colors group">
+                 <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                    <span className="text-red-500 dark:text-red-400 text-base font-bold">❓</span> 
+                    <span className="text-slate-700 dark:text-slate-300">Have a question or need assistance?</span>
+                 </div>
+                 <span className="text-sm font-semibold text-purple-700 dark:text-purple-400 group-hover:translate-x-1 transition-transform bg-purple-200 dark:bg-purple-500/20 px-3 py-1.5 rounded-lg whitespace-nowrap">Raise a query →</span>
+              </Link>
+              <Link to="/feedback" className="flex items-center justify-between p-3.5 rounded-xl bg-blue-50 dark:bg-slate-900/50 border border-blue-200 dark:border-blue-500/20 hover:bg-blue-100 dark:hover:bg-slate-800 transition-colors group">
+                 <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
+                    <span className="text-blue-500 dark:text-blue-400 text-base">💙</span> 
+                    <span className="text-slate-700 dark:text-slate-300">We'd love to hear your thoughts.</span>
+                 </div>
+                 <span className="text-sm font-semibold text-blue-700 dark:text-blue-400 group-hover:translate-x-1 transition-transform bg-blue-200 dark:bg-blue-500/20 px-3 py-1.5 rounded-lg whitespace-nowrap">Share your feedback →</span>
+              </Link>
+            </div>
           </div>
           <div>
             <h4 className="font-bold mb-4 font-display">Quick Links</h4>

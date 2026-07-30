@@ -24,6 +24,7 @@ import { FaqPage } from './pages/FaqPage';
 import { MyProgressPage } from './pages/MyProgressPage';
 import { AdminProgressPage } from './pages/AdminProgressPage';
 import { SupportPage } from './pages/SupportPage';
+import { FeedbackPage } from './pages/FeedbackPage';
 import { BonusMilestonePage } from './pages/BonusMilestonePage';
 import { NotFound404 } from './pages/NotFound404';
 import { AdminPanel } from './components/AdminPanel';
@@ -75,6 +76,7 @@ export default function App() {
               <Route path="/code-of-conduct" element={<PageTransition><CodeOfConductPage /></PageTransition>} />
               <Route path="/program-tncs" element={<PageTransition><ProgramTnCsPage /></PageTransition>} />
               <Route path="/support" element={<PageTransition><SupportPage /></PageTransition>} />
+              <Route path="/feedback" element={<PageTransition><FeedbackPage /></PageTransition>} />
               <Route path="*" element={<PageTransition><NotFound404 /></PageTransition>} />
             </Routes>
           </AnimatePresence>

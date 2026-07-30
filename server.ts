@@ -178,8 +178,8 @@ app.post("/api/notify-query", async (req, res) => {
     try {
       const { name, email, profileUrl, queryType, message, attachments } = req.body;
       
-      const smtpUser = process.env.SMTP_USER;
-      const smtpPass = process.env.SMTP_PASS;
+      const smtpUser = process.env.SMTP_USER || "support.arcadebuddy@gmail.com";
+      const smtpPass = process.env.SMTP_PASS || "suhzmteebcfbisgg";
 
       if (!smtpUser || !smtpPass) {
         return res.json({ success: true, emailSent: false, message: 'SMTP credentials not configured on server. Query saved to database.' });
@@ -221,6 +221,50 @@ app.post("/api/notify-query", async (req, res) => {
       return res.json({ success: true, emailSent: true });
     } catch (error: any) {
       console.error('Failed to process request:', error);
+      res.status(500).json({ success: false, message: error.message });
+    }
+  });
+
+  app.post("/api/feedback", async (req, res) => {
+    try {
+      const { name, email, rating, review } = req.body;
+      
+      const smtpUser = process.env.SMTP_USER || "support.arcadebuddy@gmail.com";
+      const smtpPass = process.env.SMTP_PASS || "suhzmteebcfbisgg";
+
+      if (!smtpUser || !smtpPass) {
+        return res.json({ success: true, emailSent: false, message: 'SMTP credentials not configured on server. Feedback saved to database.' });
+      }
+
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass,
+        },
+      });
+
+      const mailOptions = {
+        from: smtpUser,
+        to: smtpUser, // Send to admin
+        replyTo: email,
+        subject: `[Arcade Feedback] ${rating}/5 Stars - ${name}`,
+        html: `
+          <h2>New Platform Feedback</h2>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Rating:</strong> ${rating} / 5</p>
+          <p><strong>Review:</strong></p>
+          <p>${review}</p>
+        `
+      };
+
+      await transporter.sendMail(mailOptions);
+      return res.json({ success: true, emailSent: true });
+    } catch (error: any) {
+      console.error('Failed to process feedback:', error);
       res.status(500).json({ success: false, message: error.message });
     }
   });
