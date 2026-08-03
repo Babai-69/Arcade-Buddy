@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'motion/react';
 
 interface CheckProgressProps {
   completedBadges: { title: string; earnedDate?: string; category?: string; points?: number; validForProgram?: boolean }[];
+  activeGames?: { title: string; img: string; link: string; code: string }[];
 }
 
-export function CheckProgress({ completedBadges }: CheckProgressProps) {
+export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgressProps) {
   const [activeTab, setActiveTab] = useState('All');
   const [viewMode, setViewMode] = useState<'incomplete' | 'completed'>('incomplete');
   const [searchQuery, setSearchQuery] = useState('');
@@ -21,7 +22,22 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
       b.name.toLowerCase().includes(cb.title.toLowerCase())
     );
     
-    const game = gameBadges
+        // Map active games to the expected badge format
+    const dynamicGameBadges = activeGames.map(ag => ({
+      name: ag.title,
+      image: ag.img,
+      link: ag.link
+    }));
+
+    // Merge static game badges with dynamic ones, avoiding duplicates by name
+    const combinedGameBadges = [...dynamicGameBadges];
+    gameBadges.forEach(gb => {
+      if (!combinedGameBadges.some(b => b.name.toLowerCase() === gb.name.toLowerCase())) {
+        combinedGameBadges.push(gb);
+      }
+    });
+
+    const game = combinedGameBadges
       .filter(b => !isCompleted(b))
       .map(b => ({ ...b, category: 'Game', points: 1, type: 'GAME' }));
       
@@ -39,8 +55,10 @@ export function CheckProgress({ completedBadges }: CheckProgressProps) {
     return completedBadges
       .filter(b => b.category === 'Skill' || b.category === 'Game')
       .map(b => {
-        const foundInDb = [...gameBadges, ...skillBadges].find(dbBadge => 
-          dbBadge.name.toLowerCase().includes(b.title.toLowerCase()) ||
+                const dynamicGameBadges = activeGames.map(ag => ({ name: ag.title, image: ag.img, link: ag.link }));
+        const allPossibleBadges = [...dynamicGameBadges, ...gameBadges, ...skillBadges];
+        const foundInDb = allPossibleBadges.find(dbBadge => 
+           dbBadge.name.toLowerCase().includes(b.title.toLowerCase()) ||
           b.title.toLowerCase().includes(dbBadge.name.toLowerCase())
         );
         

@@ -471,7 +471,7 @@ export function UserProgressDashboard() {
 
           <BonusMilestoneTracker gameBadges={data.gameBadges} skillBadges={data.skillBadges} badges={data.badges} />
                     
-          <CheckProgress completedBadges={data.badges} />
+          <CheckProgress completedBadges={data.badges} activeGames={activeGames} />
           
           <WeeklyProgress badges={data.badges} />
           

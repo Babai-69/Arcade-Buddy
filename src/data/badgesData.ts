@@ -1,4 +1,36 @@
 export const gameBadges = [
+
+  {
+    "name": "Arcade Simulator: Network Security Engineer",
+    "image": "https://services.google.com/fh/files/misc/simulater-aug.png",
+    "link": "https://www.skills.google/games/7397"
+  },
+  {
+    "name": "Spans and Plans",
+    "image": "https://services.google.com/fh/files/misc/special-aug.png",
+    "link": "https://www.skills.google/games/7399"
+  },
+  {
+    "name": "Arcade Base Camp",
+    "image": "https://services.google.com/fh/files/misc/bc-aug.png",
+    "link": "https://www.skills.google/games/7394"
+  },
+  {
+    "name": "Arcade Trail",
+    "image": "https://services.google.com/fh/files/misc/trail-aug.png",
+    "link": "https://www.skills.google/games/7396"
+  },
+  {
+    "name": "Arcade Adventure",
+    "image": "https://services.google.com/fh/files/misc/adv-aug.png",
+    "link": "https://www.skills.google/games/7395"
+  },
+  {
+    "name": "Arcade Voyage",
+    "image": "https://services.google.com/fh/files/misc/voyuge-aug.png",
+    "link": "https://www.skills.google/games/7398"
+  },
+
   {
     "name": "Arcade Adventure: Low-Code Development",
     "image": "https://cdn.qwiklabs.com/4fQLKgjIAxTZlNT4DG%2BEmZyldujFT7hY7%2BnCNVSYJGg%3D",

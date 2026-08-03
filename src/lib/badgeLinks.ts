@@ -97,10 +97,10 @@ export const SKILL_BADGES: Record<string, string> = {
 };
 
 export const GAME_BADGES: Record<string, string> = {
-  "Arcade Adventure Jul 2026": "https://go.cloudskillsboost.google/arcade",
-  "Arcade Voyage Jul 2026": "https://go.cloudskillsboost.google/arcade",
-  "Arcade Trail Jul 2026": "https://go.cloudskillsboost.google/arcade",
-  "Arcade Base Camp July 2026": "https://go.cloudskillsboost.google/arcade",
-  "Special Monthly Game Jul 2026": "https://go.cloudskillsboost.google/arcade",
-  "New Monthly Game Jul 2026": "https://go.cloudskillsboost.google/arcade"
+  "Arcade Simulator: Network Security Engineer": "https://www.skills.google/games/7397",
+  "Spans and Plans": "https://www.skills.google/games/7399",
+  "Arcade Base Camp": "https://www.skills.google/games/7394",
+  "Arcade Adventure": "https://www.skills.google/games/7395",
+  "Arcade Voyage": "https://www.skills.google/games/7398",
+  "Arcade Trail": "https://www.skills.google/games/7396",
 };

@@ -467,6 +467,8 @@ app.post("/api/notify-query", async (req, res) => {
           titleLower.includes("sprint") ||
           titleLower.includes("arcade game") ||
           titleLower.includes("monthly game") ||
+          titleLower.includes("simulator") ||
+          titleLower.includes("spans and plans") ||
           titleLower.includes("base camp")
         ) {
           if (validForProgram) gameBadges++;
@@ -593,12 +595,8 @@ let cachedGames = null;
            else if (img.includes('adv')) title = "Arcade Adventure";
            else if (img.includes('voy')) title = "Arcade Voyage";
            else if (img.includes('trail')) title = "Arcade Trail";
-           else if (img.includes('Spaces')) title = "Safe Spaces";
-           else if (img.includes('work') || img.includes('special')) {
-             title = "Arcade Simulator";
-             finalImg = "https://services.google.com/fh/files/misc/special-july.png";
-           }
-           else if (img.includes('logic')) return; // Ignore Special Monthly Game
+           else if (img.includes('simulater-aug')) title = "Arcade Simulator: Network Security Engineer";
+           else if (img.includes('special-aug')) title = "Spans and Plans";
            
            let code = "Coming Soon!";
            const cardText = $(el).text();
@@ -607,11 +605,6 @@ let cachedGames = null;
                          parentText.match(/(?:access\s*code|code)[\s:]+([a-zA-Z0-9-]+)/i);
            if (match && match[1]) {
              code = match[1];
-           }
-
-           if (code === "1q-security-19110") {
-             title = "Safe Spaces";
-             finalImg = "https://services.google.com/fh/files/misc/new-special-game.png";
            }
 
            games.push({ link, img: finalImg, title, code });

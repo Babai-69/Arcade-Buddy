@@ -4,6 +4,16 @@ import { ExternalLink, Beaker, Coins, Gamepad2, Layers, ChevronDown, ChevronUp, 
 import { motion } from 'motion/react';
 import { useArcadeGames } from '../utils/arcadeApi';
 
+
+const julyGames = [
+  { title: "Arcade Base Camp", img: "https://services.google.com/fh/files/misc/basecamp.png", code: "LOCKED" },
+  { title: "Arcade Adventure", img: "https://services.google.com/fh/files/misc/adventure.png", code: "LOCKED" },
+  { title: "Arcade Voyage", img: "https://services.google.com/fh/files/misc/voyage.png", code: "LOCKED" },
+  { title: "Arcade Trail", img: "https://services.google.com/fh/files/misc/trail.png", code: "LOCKED" },
+  { title: "Arcade Simulator", img: "https://services.google.com/fh/files/misc/special-july.png", code: "LOCKED" },
+  { title: "Safe Spaces", img: "https://services.google.com/fh/files/misc/new-special-game.png", code: "LOCKED" }
+];
+
 const beginnerBadges = [
   { title: "Create Your First Gemini Enterprise Application", labs: 1, credits: 0, link: "https://www.skills.google/paths/3546/course_templates/1586" },
   { title: "Develop AI-Powered Prototypes in Google AI Studio", labs: 4, credits: 0, link: "https://www.skills.google/course_templates/1426" },
@@ -206,6 +216,7 @@ export function FacilitatorSyllabus() {
             </div>
           </motion.div>
 
+
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -213,8 +224,8 @@ export function FacilitatorSyllabus() {
             className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
           >
             <div className="flex items-center gap-3">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">July 2026 Games</h3>
-              {isJulyActive ? (
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">August 2026 Games</h3>
+              {isAugustActive ? (
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-wider">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                   Active Now
@@ -229,90 +240,129 @@ export function FacilitatorSyllabus() {
             
             <div className="flex items-center gap-3">
               <div className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-medium">
-                August 2026 
-                {isAugustActive ? (
+                July 2026 
+                {isJulyActive ? (
                   <span className="text-green-600 dark:text-green-400 ml-1">— Active Now</span>
                 ) : (
-                  <span className="opacity-70 ml-1">— Coming Soon</span>
+                  <span className="opacity-70 ml-1">— Closed</span>
                 )}
               </div>
             </div>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {activeGames.map((game, idx) => {
+            {isAugustActive && activeGames.length > 0 ? activeGames.map((game, idx) => (
+              <motion.div 
+                key={`august-active-${idx}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className="bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col items-center group hover:border-[#4285F4] dark:hover:border-[#4285F4] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(66,133,244,0.15)] dark:hover:shadow-[0_8px_30px_rgba(66,133,244,0.2)] transition-all duration-300"
+              >
+                <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#0d1117] flex items-center justify-center mb-6">
+                  <img 
+                    src={game.img} 
+                    alt={game.title || `Game ${idx + 1}`} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                
+                <div className="w-full mt-auto">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-bold text-slate-900 dark:text-white text-lg">{game.title || `Game ${idx + 1}`}</h4>
+                    <span className="px-2.5 py-1 rounded bg-green-50 dark:bg-green-500/20 text-green-700 dark:text-green-400 text-xs font-bold flex items-center gap-1.5">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                      ACTIVE
+                    </span>
+                  </div>
+                  
+                  <div className="space-y-1.5 mb-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Access Code</p>
+                    <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-white/5 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
+                      <code className={`font-mono text-sm ${game.code === "Coming Soon!" ? "text-amber-600 dark:text-amber-400 font-sans font-medium" : "text-green-600 dark:text-green-400"}`}>
+                        {game.code || "Coming Soon!"}
+                      </code>
+                      <button 
+                        className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
+                        onClick={() => {
+                          if (game.code && game.code !== "Coming Soon!") {
+                            navigator.clipboard.writeText(game.code);
+                          }
+                        }}
+                        title="Copy code"
+                      >
+                        <Copy className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <a 
+                      href={game.link || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex w-full items-center justify-center gap-2 bg-[#4285F4] hover:bg-[#3367d6] text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Start Challenge <ExternalLink className="w-4 h-4" />
+                    </a>
+                  </div>
+                </div>
+              </motion.div>
+            )) : [1, 2, 3].map((_, idx) => (
+              <motion.div 
+                key={`august-soon-${idx}`}
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 + (idx * 0.1) }}
+                className="bg-slate-50/80 dark:bg-[#1a1d27]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-5 flex flex-col items-center justify-center relative overflow-hidden opacity-60"
+              >
+                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                  <Lock className="w-16 h-16 text-slate-400 opacity-80" />
+                </div>
+                
+                <div className="w-full aspect-square bg-slate-200/50 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-2 mb-6 z-10">
+                  <span className="text-xs font-medium text-slate-500">Aug 2026</span>
+                </div>
+                <div className="w-full mt-auto z-10 text-center">
+                  <h4 className="font-medium text-slate-500 dark:text-slate-400 text-lg mb-2">Locked</h4>
+                  <div className="w-16 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto" />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="flex flex-col items-center mb-10">
+            <p className="text-sm font-medium text-slate-500 mb-3">
+              This month: {activeGames.length} of {activeGames.length > 0 ? activeGames.length : 3} games shown · More releasing throughout August
+            </p>
+            <div className="w-full max-w-md h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-blue-500 rounded-full w-full" />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 my-10">
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">
+              July 2026 — {isJulyActive ? "Active" : "Closed"}
+            </span>
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {julyGames.map((game, idx) => {
               const gameName = game.title || `Game ${idx + 1}`;
               
               if (isJulyActive) {
-                return (
-                  <motion.div 
-                    key={`july-active-${idx}`}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col items-center group hover:border-[#4285F4] dark:hover:border-[#4285F4] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(66,133,244,0.15)] dark:hover:shadow-[0_8px_30px_rgba(66,133,244,0.2)] transition-all duration-300"
-                  >
-                    <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#0d1117] flex items-center justify-center mb-6">
-                      <img 
-                        src={game.img} 
-                        alt={gameName} 
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    
-                    <div className="w-full mt-auto">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="font-bold text-slate-900 dark:text-white text-lg">{gameName}</h4>
-                        <span className="px-2.5 py-1 rounded bg-green-50 dark:bg-green-500/20 text-green-700 dark:text-green-400 text-xs font-bold flex items-center gap-1.5">
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                          ACTIVE
-                        </span>
-                      </div>
-                      
-                      <div className="space-y-1.5 mb-4">
-                        <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Access Code</p>
-                        <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-white/5 group-hover:border-slate-300 dark:group-hover:border-white/10 transition-colors">
-                          <code className={`font-mono text-sm ${game.code === "Coming Soon!" ? "text-amber-600 dark:text-amber-400 font-sans font-medium" : "text-green-600 dark:text-green-400"}`}>
-                            {game.code || "Coming Soon!"}
-                          </code>
-                          <button 
-                            className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
-                            onClick={() => {
-                              if (game.code && game.code !== "Coming Soon!") {
-                                navigator.clipboard.writeText(game.code);
-                              }
-                            }}
-                            title="Copy code"
-                          >
-                            <Copy className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <a 
-                          href={game.link || "#"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => {
-                            if (game.code && game.code !== "Coming Soon!") {
-                              navigator.clipboard.writeText(game.code);
-                            }
-                          }}
-                          className="inline-flex w-full items-center justify-center gap-2 bg-[#4285F4] hover:bg-[#3367d6] text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
-                        >
-                          Start Challenge <ExternalLink className="w-4 h-4" />
-                        </a>
-                      </div>
-                    </div>
-                  </motion.div>
-                );
+                // If by some reason it is July (e.g. testing), we could show them as active
+                // but since activeGames would fetch July games if it were July, we just use activeGames here if we wanted.
+                // However, let's keep it simple and just show locked since it's August now.
               }
 
               return (
                 <motion.div 
-                  key={idx}
+                  key={`july-${idx}`}
                   initial={{ opacity: 0, scale: 0.95 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
@@ -340,96 +390,14 @@ export function FacilitatorSyllabus() {
                     
                     <div className="space-y-1.5">
                       <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Access Code</p>
-                      <p className="text-slate-500 font-medium">LOCKED</p>
+                      <p className="text-slate-500 font-medium">CLOSED</p>
                     </div>
                   </div>
                 </motion.div>
               );
             })}
           </div>
-
-          <div className="flex items-center gap-4 my-10">
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
-            <span className="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">
-              August 2026 {isAugustActive ? "— Active" : "— Locked"}
-            </span>
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {isAugustActive && activeGames.length > 0 ? activeGames.map((game, idx) => (
-              <motion.div 
-                key={`active-${idx}`}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className="bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col items-center group hover:border-[#4285F4] dark:hover:border-[#4285F4] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(66,133,244,0.15)] dark:hover:shadow-[0_8px_30px_rgba(66,133,244,0.2)] transition-all duration-300"
-              >
-                <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#0d1117] flex items-center justify-center mb-6">
-                  <img 
-                    src={game.img} 
-                    alt={game.title} 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                
-                <div className="w-full mt-auto">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-bold text-slate-900 dark:text-white text-lg">{game.title}</h4>
-                    <span className="px-2.5 py-1 rounded bg-green-50 dark:bg-green-500/20 text-green-700 dark:text-green-400 text-xs font-bold flex items-center gap-1.5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                      ACTIVE
-                    </span>
-                  </div>
-                  
-                  <div className="space-y-1.5">
-                    <a 
-                      href={game.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex w-full items-center justify-center gap-2 bg-[#4285F4] hover:bg-[#3367d6] text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
-                    >
-                      Start Challenge <ExternalLink className="w-4 h-4" />
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            )) : [1, 2, 3].map((_, idx) => (
-              <motion.div 
-                key={`soon-${idx}`}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 + (idx * 0.1) }}
-                className="bg-slate-50/80 dark:bg-[#1a1d27]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-5 flex flex-col items-center justify-center relative overflow-hidden opacity-60"
-              >
-                <div className="absolute inset-0 z-10 flex items-center justify-center">
-                  <Lock className="w-16 h-16 text-slate-400 opacity-80" />
-                </div>
-                
-                <div className="w-full aspect-square bg-slate-200/50 dark:bg-slate-800/50 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 flex flex-col items-center justify-center gap-2 mb-6 z-10">
-                  <span className="text-xs font-medium text-slate-500">Aug 2026</span>
-                </div>
-
-                <div className="w-full mt-auto z-10 text-center">
-                  <h4 className="font-medium text-slate-500 dark:text-slate-400 text-lg mb-2">Locked</h4>
-                  <div className="w-16 h-1 bg-slate-200 dark:bg-slate-700 rounded-full mx-auto" />
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          
-          <div className="flex flex-col items-center">
-            <p className="text-sm font-medium text-slate-500 mb-3">
-              This month: {activeGames.length} of {activeGames.length} games shown · More releasing throughout August
-            </p>
-            <div className="w-full max-w-md h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div className="h-full bg-blue-500 rounded-full w-full" />
-            </div>
-          </div>
         </div>
-
         {/* Learning Path Header */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
