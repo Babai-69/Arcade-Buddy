@@ -36,7 +36,7 @@ export function SupportPage() {
     if (showToast) {
       timer = setTimeout(() => {
         setShowToast(false);
-      }, 3000);
+      }, 5000);
     }
     return () => clearTimeout(timer);
   }, [showToast]);
@@ -93,7 +93,7 @@ export function SupportPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 py-12 px-4 sm:px-6 lg:px-8">
       {showToast && (
         <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-[200] bg-emerald-900 border border-emerald-500 text-emerald-100 px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4 duration-300 max-w-md w-[90%]">
           <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />
@@ -101,199 +101,223 @@ export function SupportPage() {
         </div>
       )}
 
-      <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700 transition-colors">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="relative bg-gradient-to-r from-purple-600 via-fuchsia-500 to-pink-500 p-8 md:p-12 text-center text-white">
-          <div className="inline-block p-4 bg-white/10 rounded-full border border-white/20 mb-6 backdrop-blur-sm">
-            <MessageSquare className="w-10 h-10 text-white" />
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center p-3 bg-blue-100 dark:bg-blue-500/10 rounded-2xl text-blue-600 dark:text-blue-400 mb-6 ring-1 ring-blue-500/20 shadow-sm">
+            <MessageSquare className="w-8 h-8" />
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Help &amp; Support Center</h1>
-          <p className="text-xl md:text-2xl mb-2 max-w-3xl mx-auto text-white/90">Get assistance with your Arcade Buddy</p>
-          <p className="text-lg text-white/80 max-w-2xl mx-auto">Report issues, ask questions, or get help from our community</p>
+          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white tracking-tight mb-4">
+            Help &amp; Support Center
+          </h1>
+          <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            Report issues, ask questions, or get help from our community to maximize your Arcade points.
+          </p>
         </div>
 
-        <div className="p-6 md:p-8 space-y-12">
-          {/* How can we help */}
-          <div className="space-y-6">
-            <h2 className="text-3xl font-bold text-center text-slate-900 dark:text-white">How Can We Help You?</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
-                <div className="flex items-center gap-3 mb-4 text-red-500 dark:text-red-400 font-semibold">
-                  <AlertCircle className="w-6 h-6" />
-                  <h4 className="text-lg text-slate-900 dark:text-white">Technical Issues</h4>
-                </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-                  Report calculation errors, missing badges, or technical problems with the points system.
-                </p>
-                <ul className="text-sm space-y-2 text-slate-600 dark:text-slate-400 list-disc list-inside ml-2">
-                  <li>Points calculation errors</li>
-                  <li>Missing badges</li>
-                  <li>System malfunctions</li>
-                  <li>Data sync issues</li>
-                </ul>
-              </div>
-
-              <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
-                <div className="flex items-center gap-3 mb-4 text-blue-500 dark:text-blue-400 font-semibold">
-                  <HelpCircle className="w-6 h-6" />
-                  <h4 className="text-lg text-slate-900 dark:text-white">General Support</h4>
-                </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-                  For general inquiries about the Arcade program, join our community platforms for quick assistance.
-                </p>
-                <ul className="text-sm space-y-2 text-slate-600 dark:text-slate-400 list-disc list-inside ml-2">
-                  <li>Program questions</li>
-                  <li>How-to guides</li>
-                  <li>General inquiries</li>
-                  <li>Community discussions</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-500/20 rounded-xl p-6 flex gap-4 text-slate-700 dark:text-blue-200 transition-colors">
-            <Info className="w-6 h-6 shrink-0 text-blue-500 dark:text-blue-400 mt-1" />
-            <div>
-              <strong className="font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-2 text-lg mb-2">Before Submitting a Query</strong>
-              <p className="text-sm leading-relaxed opacity-90">
-                Please check our FAQ section below for common questions. For technical issues like missing badges or calculation errors, use the form below with detailed information for faster resolution.
-              </p>
-            </div>
-          </div>
-
-          {/* Form Section */}
-          <div className="bg-slate-50 dark:bg-slate-800 p-6 md:p-8 rounded-xl border border-slate-200 dark:border-slate-700 transition-colors">
-            <div className="text-center mb-8">
-              <div className="inline-block p-3 bg-blue-100 dark:bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400 mb-4">
-                <Edit className="w-8 h-8" />
-              </div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Submit Your Query</h3>
-              <p className="text-sm text-slate-600 dark:text-slate-400">Please provide detailed information about the issue you're experiencing</p>
-            </div>
-
-            {!user ? (
-              <div className="text-center py-8">
-                <p className="text-lg text-slate-600 dark:text-slate-400 mb-4">You must be logged in to submit a query.</p>
-                <div className="inline-flex items-center justify-center p-4 bg-slate-100 dark:bg-slate-900 rounded-full">
-                  <AlertCircle className="w-8 h-8 text-amber-500" />
-                </div>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
-                    <input 
-                      type="text"
-                      name="name"
-                      required
-                      readOnly
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Enter your full name" 
-                      className="w-full bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed transition-all"
-                    />
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Guidelines & Information */}
+          <div className="lg:col-span-5 space-y-6">
+            <div className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-3xl p-8 shadow-sm">
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">How Can We Help You?</h2>
+              
+              <div className="space-y-4">
+                <div className="group p-5 rounded-2xl bg-slate-50 hover:bg-red-50 dark:bg-slate-900/50 dark:hover:bg-red-500/5 border border-slate-100 dark:border-slate-800 transition-colors">
+                  <div className="flex items-center gap-3 mb-3 text-red-500 dark:text-red-400 font-semibold">
+                    <AlertCircle className="w-5 h-5 shrink-0" />
+                    <h4 className="text-lg text-slate-900 dark:text-white">Technical Issues</h4>
                   </div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+                    Report calculation errors, missing badges, or technical problems with the points system.
+                  </p>
+                  <ul className="text-sm space-y-2 text-slate-600 dark:text-slate-400 list-disc list-inside">
+                    <li>Points calculation errors</li>
+                    <li>Missing badges</li>
+                    <li>System malfunctions</li>
+                    <li>Data sync issues</li>
+                  </ul>
+                </div>
+
+                <div className="group p-5 rounded-2xl bg-slate-50 hover:bg-blue-50 dark:bg-slate-900/50 dark:hover:bg-blue-500/5 border border-slate-100 dark:border-slate-800 transition-colors">
+                  <div className="flex items-center gap-3 mb-3 text-blue-500 dark:text-blue-400 font-semibold">
+                    <HelpCircle className="w-5 h-5 shrink-0" />
+                    <h4 className="text-lg text-slate-900 dark:text-white">General Support</h4>
+                  </div>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+                    For general inquiries about the Arcade program, join our community platforms for quick assistance.
+                  </p>
+                  <ul className="text-sm space-y-2 text-slate-600 dark:text-slate-400 list-disc list-inside">
+                    <li>Program questions</li>
+                    <li>How-to guides</li>
+                    <li>General inquiries</li>
+                    <li>Community discussions</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-[#123123] to-[#166534] rounded-3xl p-8 shadow-lg text-emerald-50 text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-full bg-white/5 opacity-50 blur-2xl pointer-events-none" />
+              <div className="relative z-10">
+                <div className="flex justify-center mb-4 text-3xl">⏱️</div>
+                <h4 className="text-xl font-bold mb-3">Response Time</h4>
+                <p className="text-sm text-emerald-100/90 leading-relaxed mb-6">
+                  We strive to respond to all queries within 24-48 hours. For urgent matters, please reach out through our communities for faster assistance.
+                </p>
+                <div className="flex flex-col gap-3">
+                  <a href="https://t.me/arcadebuddy" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-white/10 hover:bg-white/20 text-white font-medium py-2.5 px-4 rounded-xl transition-colors backdrop-blur-sm border border-white/10">
+                    Telegram Community
+                  </a>
+                  <a href="https://chat.whatsapp.com/JBPTktVT9sHHZ60mHlpk0l" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center bg-white/10 hover:bg-white/20 text-white font-medium py-2.5 px-4 rounded-xl transition-colors backdrop-blur-sm border border-white/10">
+                    WhatsApp Group
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Form Section */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-500/20 rounded-3xl p-6 flex gap-4 text-slate-700 dark:text-blue-200 shadow-sm items-start">
+              <Info className="w-6 h-6 shrink-0 text-blue-500 dark:text-blue-400 mt-1" />
+              <div>
+                <strong className="block font-bold text-blue-800 dark:text-blue-300 text-lg mb-1">Before Submitting a Query</strong>
+                <p className="text-sm leading-relaxed text-blue-900/80 dark:text-blue-100/80">
+                  Please check our FAQ section for common questions. For technical issues like missing badges or calculation errors, use the form below with detailed information for faster resolution.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-3xl p-8 sm:p-10 shadow-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl opacity-50 pointer-events-none" />
+              
+              <div className="relative z-10">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="p-2.5 bg-blue-100 dark:bg-blue-500/20 rounded-lg text-blue-600 dark:text-blue-400">
+                    <Edit className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Submit Your Query</h2>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Please provide detailed information about your issue.</p>
+                  </div>
+                </div>
+
+                {!user ? (
+                  <div className="text-center py-12 bg-slate-50 dark:bg-slate-900/50 rounded-2xl border border-slate-200 dark:border-slate-700">
+                    <div className="inline-flex items-center justify-center p-4 bg-amber-100 dark:bg-amber-500/10 rounded-full mb-4">
+                      <AlertCircle className="w-8 h-8 text-amber-600 dark:text-amber-500" />
+                    </div>
+                    <p className="text-lg text-slate-900 dark:text-white font-medium mb-2">Authentication Required</p>
+                    <p className="text-sm text-slate-600 dark:text-slate-400">You must be logged in to submit a query.</p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Full Name</label>
+                        <input 
+                          type="text"
+                          name="name"
+                          required
+                          readOnly
+                          value={formData.name}
+                          onChange={handleChange}
+                          placeholder="Enter your full name" 
+                          className="w-full bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed transition-all"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
+                        <input 
+                          type="email"
+                          name="email"
+                          required
+                          readOnly
+                          value={formData.email}
+                          onChange={handleChange}
+                          placeholder="Enter your email address" 
+                          className="w-full bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed transition-all"
+                        />
+                      </div>
+                    </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Email Address</label>
-                    <input 
-                      type="email"
-                      name="email"
-                      required
-                      readOnly
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="Enter your email address" 
-                      className="w-full bg-slate-100 dark:bg-slate-900/50 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-500 dark:text-slate-400 cursor-not-allowed transition-all"
-                    />
-                  </div>
-                </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Public Profile URL</label>
-                <input 
-                  type="url"
-                  name="profileUrl"
-                  required
-                  value={formData.profileUrl}
-                  onChange={handleChange}
-                  placeholder="https://www.cloudskillsboost.google/public_profiles/PROFILE_ID" 
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Type of Query</label>
-                <select 
-                  name="queryType"
-                  required
-                  value={formData.queryType}
-                  onChange={handleChange}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-                >
-                  <option value="" disabled>Select query type...</option>
-                  <option value="Website Glitch">Website Glitch</option>
-                  <option value="Content Information">Content Information</option>
-                  <option value="Incorrect amount of Arcade Points">Incorrect amount of Arcade Points</option>
-                  <option value="Technical Issue">Technical Issue</option>
-                  <option value="Lab Issue">Lab Issue</option>
-                  <option value="Others">Others</option>
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Proof Attachments</label>
-                <input 
-                  type="file"
-                  name="attachments"
-                  accept="image/*,video/*"
-                  multiple
-                  onChange={handleChange}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-100 dark:file:bg-blue-500/10 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-200 dark:hover:file:bg-blue-500/20 transition-all"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Detailed Message</label>
-                <textarea 
-                  name="message"
-                  required
-                  value={formData.message}
-                  onChange={handleChange}
-                  placeholder="Please describe your issue in detail. Include badge names, completion dates, or any error messages you encountered..." 
-                  rows={5}
-                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-y"
-                />
-                <p className="text-xs text-slate-500 mt-2">The more details you provide, the better we can assist you.</p>
-              </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Public Profile URL</label>
+                      <input 
+                        type="url"
+                        name="profileUrl"
+                        required
+                        value={formData.profileUrl}
+                        onChange={handleChange}
+                        placeholder="https://www.cloudskillsboost.google/public_profiles/PROFILE_ID" 
+                        className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Type of Query</label>
+                      <select 
+                        name="queryType"
+                        required
+                        value={formData.queryType}
+                        onChange={handleChange}
+                        className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all appearance-none"
+                      >
+                        <option value="" disabled>Select query type...</option>
+                        <option value="Website Glitch">Website Glitch</option>
+                        <option value="Content Information">Content Information</option>
+                        <option value="Incorrect amount of Arcade Points">Incorrect amount of Arcade Points</option>
+                        <option value="Technical Issue">Technical Issue</option>
+                        <option value="Lab Issue">Lab Issue</option>
+                        <option value="Others">Others</option>
+                      </select>
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Proof Attachments</label>
+                      <input 
+                        type="file"
+                        name="attachments"
+                        accept="image/*,video/*"
+                        multiple
+                        onChange={handleChange}
+                        className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-100 dark:file:bg-blue-500/10 file:text-blue-600 dark:file:text-blue-400 hover:file:bg-blue-200 dark:hover:file:bg-blue-500/20 transition-all cursor-pointer"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Detailed Message</label>
+                      <textarea 
+                        name="message"
+                        required
+                        value={formData.message}
+                        onChange={handleChange}
+                        placeholder="Please describe your issue in detail. Include badge names, completion dates, or any error messages you encountered..." 
+                        rows={5}
+                        className="w-full bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
+                      />
+                      <div className="flex justify-between mt-2 text-xs font-medium text-slate-500">
+                        <span>The more details you provide, the better we can assist you.</span>
+                      </div>
+                    </div>
 
-              <div className="pt-4">
-                <button 
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="w-full bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 text-white font-medium py-3.5 rounded-lg flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 text-lg"
-                >
-                  {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
-                  {isSubmitting ? 'Submitting...' : 'Submit Query'}
-                </button>
+                    <div className="pt-4">
+                      <button 
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-blue-400 dark:disabled:bg-blue-600/50 text-white font-semibold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md hover:shadow-lg disabled:shadow-none"
+                      >
+                        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                        {isSubmitting ? 'Submitting query...' : 'Submit Query'}
+                      </button>
+                    </div>
+                  </form>
+                )}
               </div>
-            </form>
-            )}
-          </div>
-
-          {/* Response Time Section */}
-          <div className="bg-[#123123] border border-[#166534] rounded-xl p-8 text-center shadow-lg">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <span className="text-2xl">⏱️</span>
-              <h4 className="text-xl font-semibold text-emerald-50">Response Time</h4>
             </div>
-            <p className="text-base text-emerald-100/90 leading-relaxed max-w-3xl mx-auto">
-              We strive to respond to all queries within 24-48 hours. For urgent matters, please reach out through our <a href="https://t.me/arcadebuddy" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline font-medium underline-offset-2">Telegram community</a> or <a href="https://chat.whatsapp.com/JBPTktVT9sHHZ60mHlpk0l" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300 underline font-medium underline-offset-2">WhatsApp group</a> for faster assistance.
-            </p>
           </div>
-
         </div>
       </div>
     </div>

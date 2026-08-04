@@ -229,7 +229,7 @@ export function UserProgressDashboard() {
     
     // Process Game Badges
     gamesToTrack.forEach(game => {
-      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().includes(game.title.toLowerCase()) && b.validForProgram);
+      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().trim() === game.title.toLowerCase().trim() && b.validForProgram);
       if (isCompleted) completedGameBadges++;
       tableData.push([
         game.title,

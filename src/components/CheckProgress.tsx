@@ -18,8 +18,7 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
 
   const allBadges = useMemo(() => {
     const isCompleted = (b: {name: string}) => completedBadges.some(cb => 
-      cb.title.toLowerCase().includes(b.name.toLowerCase()) || 
-      b.name.toLowerCase().includes(cb.title.toLowerCase())
+      cb.title.toLowerCase().trim() === b.name.toLowerCase().trim()
     );
     
         // Map active games to the expected badge format
@@ -46,7 +45,7 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
       .map(b => ({ ...b, category: 'Skill', points: 0.5, type: 'SKILL' }));
       
     return [...game, ...skill];
-  }, [completedBadges]);
+  }, [completedBadges, activeGames]);
 
   const completedBadgesData = useMemo(() => {
     const START = new Date('2026-07-13T00:00:00Z');
@@ -58,8 +57,7 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
                 const dynamicGameBadges = activeGames.map(ag => ({ name: ag.title, image: ag.img, link: ag.link }));
         const allPossibleBadges = [...dynamicGameBadges, ...gameBadges, ...skillBadges];
         const foundInDb = allPossibleBadges.find(dbBadge => 
-           dbBadge.name.toLowerCase().includes(b.title.toLowerCase()) ||
-          b.title.toLowerCase().includes(dbBadge.name.toLowerCase())
+           dbBadge.name.toLowerCase().trim() === b.title.toLowerCase().trim()
         );
         
         const dateStr = (b.earnedDate || '').replace(/^Earned\s+(on\s+)?/i, '').trim();
@@ -77,7 +75,7 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
           link: foundInDb ? foundInDb.link : '#',
         };
       });
-  }, [completedBadges]);
+  }, [completedBadges, activeGames]);
 
   const filteredBadges = useMemo(() => {
     const sourceBadges = viewMode === 'incomplete' ? allBadges : completedBadgesData;
