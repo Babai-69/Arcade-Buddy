@@ -6,10 +6,10 @@ import { useArcadeGames } from '../utils/arcadeApi';
 
 
 const julyGames = [
-  { title: "Arcade Base Camp", img: "https://services.google.com/fh/files/misc/basecamp.png", code: "LOCKED" },
-  { title: "Arcade Adventure", img: "https://services.google.com/fh/files/misc/adventure.png", code: "LOCKED" },
-  { title: "Arcade Voyage", img: "https://services.google.com/fh/files/misc/voyage.png", code: "LOCKED" },
-  { title: "Arcade Trail", img: "https://services.google.com/fh/files/misc/trail.png", code: "LOCKED" },
+  { title: "Arcade Base Camp", img: "https://services.google.com/fh/files/misc/basecamp-july.png", code: "LOCKED" },
+  { title: "Arcade Adventure", img: "https://services.google.com/fh/files/misc/adv-july.png", code: "LOCKED" },
+  { title: "Arcade Voyage", img: "https://services.google.com/fh/files/misc/voyuge-july.png", code: "LOCKED" },
+  { title: "Arcade Trail", img: "https://services.google.com/fh/files/misc/trail-july.png", code: "LOCKED" },
   { title: "Arcade Simulator", img: "https://services.google.com/fh/files/misc/special-july.png", code: "LOCKED" },
   { title: "Safe Spaces", img: "https://services.google.com/fh/files/misc/new-special-game.png", code: "LOCKED" }
 ];
@@ -335,7 +335,7 @@ export function FacilitatorSyllabus() {
 
           <div className="flex flex-col items-center mb-10">
             <p className="text-sm font-medium text-slate-500 mb-3">
-              This month: {activeGames.length} of {activeGames.length > 0 ? activeGames.length : 3} games shown · More releasing throughout August
+              This month: {activeGames.length} of {activeGames.length > 0 ? activeGames.length : 3} games shown · More releasing throughout September
             </p>
             <div className="w-full max-w-md h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
               <div className="h-full bg-blue-500 rounded-full w-full" />
