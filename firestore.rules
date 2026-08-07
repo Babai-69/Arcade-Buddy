@@ -26,6 +26,12 @@ service cloud.firestore {
     }
 
     // Queries - any user can create, only admin can read/update/delete
+    // Feedbacks - any user can create, only admin can read/update/delete
+    match /feedbacks/{feedbackId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
     match /queries/{queryId} {
       allow create: if true;
       allow read, update, delete: if isAdmin();

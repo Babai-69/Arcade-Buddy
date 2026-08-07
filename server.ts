@@ -16,7 +16,7 @@ import express from "express";
 import cors from "cors";
 import * as cheerio from "cheerio";
 import { createServer as createViteServer } from "vite";
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, Type } from "@google/genai";
 import nodemailer from "nodemailer";
 import { SKILL_BADGES } from "./src/data/skillBadges";
 import { gameBadges as syllabusGameBadges } from "./src/data/badgesData";
@@ -632,6 +632,64 @@ let cachedGames = null;
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to fetch notifications" });
+    }
+  });
+
+  app.post("/api/roadmap-recommendations", async (req, res) => {
+    try {
+      if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: "API key not configured" });
+      }
+
+      const { gameBadges, skillBadges, points, recommendedLabs } = req.body;
+      
+      const genAI = new GoogleGenAI({
+        apiKey: process.env.GEMINI_API_KEY as string,
+        httpOptions: { headers: { 'User-Agent': 'aistudio-build' } }
+      });
+
+      const prompt = `Based on the following user progress in the Google Cloud Skills Boost program:
+Game Badges: ${gameBadges}
+Skill Badges: ${skillBadges}
+Total Points: ${points}
+
+Please recommend 6 labs from the following list of recommended labs. Pick labs that best fit the user's progress. If they have fewer badges (beginners), prefer "Easy" labs. If they have many (advanced), prefer "Medium" or "Hard" labs.
+
+Available Labs:
+${JSON.stringify(recommendedLabs, null, 2)}
+
+Return the response in JSON format as an array of objects. Each object should have the exact same structure as the input objects. Include a "reasoning" string property in each object explaining why this lab is a good fit for this user.`;
+
+      const response = await genAI.models.generateContent({
+        model: "gemini-3.6-flash",
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          responseSchema: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                name: { type: Type.STRING },
+                category: { type: Type.STRING },
+                difficulty: { type: Type.STRING },
+                time: { type: Type.STRING },
+                link: { type: Type.STRING },
+                reasoning: { type: Type.STRING }
+              },
+              required: ["name", "category", "difficulty", "time", "reasoning"]
+            }
+          }
+        }
+      });
+      
+      const jsonStr = response.text || "[]";
+      const recs = JSON.parse(jsonStr);
+      
+      return res.json({ recommendations: recs });
+    } catch (e: any) {
+        console.error("Roadmap generation error:", e);
+        return res.status(500).json({ error: "Failed to generate roadmap" });
     }
   });
 

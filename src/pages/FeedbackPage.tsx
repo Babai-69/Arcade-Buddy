@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { MessageSquare, Star, Send, Loader2, CheckCircle, AlertCircle, Sparkles, HelpCircle } from 'lucide-react';
+import { db } from '../lib/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export function FeedbackPage() {
   const [formData, setFormData] = useState({
@@ -8,6 +10,7 @@ export function FeedbackPage() {
     rating: 5,
     review: ''
   });
+
   const [hoveredStar, setHoveredStar] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -19,6 +22,13 @@ export function FeedbackPage() {
     setError('');
     
     try {
+      // Store in Firebase
+      await addDoc(collection(db, 'feedbacks'), {
+        ...formData,
+        createdAt: serverTimestamp()
+      });
+
+      // Also send email notification
       const response = await fetch('/api/feedback', {
         method: 'POST',
         headers: {
@@ -206,12 +216,6 @@ export function FeedbackPage() {
                   </div>
                 )}
 
-                {showToast && (
-                  <div className="p-4 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-xl text-emerald-700 dark:text-emerald-400 text-sm flex items-center gap-3">
-                    <CheckCircle className="w-5 h-5 shrink-0" />
-                    <p className="font-medium">Feedback submitted successfully! Thank you.</p>
-                  </div>
-                )}
 
                 <button
                   type="submit"
@@ -226,6 +230,20 @@ export function FeedbackPage() {
           </div>
         </div>
       </div>
+      
+      {showToast && (
+        <div className="fixed bottom-6 right-6 z-[100] animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] rounded-2xl p-4 flex items-center gap-4 min-w-[320px]">
+            <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center shrink-0">
+              <CheckCircle className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div>
+              <h4 className="text-slate-900 dark:text-white font-bold text-base">Thank You!</h4>
+              <p className="text-sm text-slate-500 dark:text-slate-400">Feedback submitted successfully.</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

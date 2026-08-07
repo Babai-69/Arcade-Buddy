@@ -7,6 +7,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { SKILL_BADGES, GAME_BADGES } from '../lib/badgeLinks';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { useArcadeGames } from '../utils/arcadeApi';
 import { AdminCertificatePreview } from './AdminCertificatePreview';
 
@@ -457,19 +458,77 @@ export function UserProgressDashboard() {
                 }
               </p>
               {nextMilestone && (
-                <div className="mt-3 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden flex">
-                   <div className="bg-purple-500 h-full" style={{ width: `${(Math.min(completedGameBadgesCount, nextMilestone.games) / (nextMilestone.games + nextMilestone.skills)) * 100}%` }}></div>
-                   <div className="bg-blue-500 h-full" style={{ width: `${(Math.min(completedSkillBadgesCount, nextMilestone.skills) / (nextMilestone.games + nextMilestone.skills)) * 100}%` }}></div>
+                <div className="mt-4 w-full h-8 relative">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      layout="vertical"
+                      data={[{ 
+                        name: 'Milestone Progress', 
+                        games: Math.min(completedGameBadgesCount, nextMilestone.games), 
+                        skills: Math.min(completedSkillBadgesCount, nextMilestone.skills),
+                        remaining: (nextMilestone.games + nextMilestone.skills) - (Math.min(completedGameBadgesCount, nextMilestone.games) + Math.min(completedSkillBadgesCount, nextMilestone.skills))
+                      }]}
+                      margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                    >
+                      <XAxis type="number" hide domain={[0, nextMilestone.games + nextMilestone.skills]} />
+                      <YAxis type="category" dataKey="name" hide />
+                      <Bar dataKey="games" stackId="a" fill="#a855f7" radius={[4, 0, 0, 4]} />
+                      <Bar dataKey="skills" stackId="a" fill="#3b82f6" radius={completedGameBadgesCount + completedSkillBadgesCount >= nextMilestone.games + nextMilestone.skills ? [0, 4, 4, 0] : [0, 0, 0, 0]} />
+                      <Bar dataKey="remaining" stackId="a" fill="#e2e8f0" radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               )}
             </div>
           </div>
           
+          {/* Overall Progress Recharts */}
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Overall Program Completion</h3>
+            <div className="h-12 w-full mb-2">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  layout="vertical"
+                  data={[{
+                    name: 'Overall',
+                    completed: Math.min(completedGameBadgesCount, 12) + Math.min(completedSkillBadgesCount, 66),
+                    remaining: 78 - (Math.min(completedGameBadgesCount, 12) + Math.min(completedSkillBadgesCount, 66))
+                  }]}
+                  margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+                >
+                  <XAxis type="number" hide domain={[0, 78]} />
+                  <YAxis type="category" dataKey="name" hide />
+                  <Tooltip 
+                    cursor={{fill: 'transparent'}}
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-3 rounded-lg shadow-lg">
+                            <p className="text-sm font-semibold text-slate-900 dark:text-white mb-1">Total Progress</p>
+                            <p className="text-sm text-green-600 dark:text-green-400">Completed: {payload[0].value} Badges</p>
+                            <p className="text-sm text-slate-500">Remaining: {payload[1].value} Badges</p>
+                          </div>
+                        );
+                      }
+                      return null;
+                    }}
+                  />
+                  <Bar dataKey="completed" stackId="a" fill="#10b981" radius={[4, 0, 0, 4]} />
+                  <Bar dataKey="remaining" stackId="a" fill="#f1f5f9" radius={[0, 4, 4, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex justify-between text-sm font-medium text-slate-500 dark:text-slate-400">
+              <span>0</span>
+              <span>Total Required: 78 Badges (12 Games, 66 Skills)</span>
+              <span>78</span>
+            </div>
+          </div>
 
 
           <MilestoneProgress gameBadges={data.gameBadges} skillBadges={data.skillBadges} />
 
-          <BonusMilestoneTracker gameBadges={data.gameBadges} skillBadges={data.skillBadges} badges={data.badges} />
+          <div id="swag-milestone"><BonusMilestoneTracker gameBadges={data.gameBadges} skillBadges={data.skillBadges} badges={data.badges} /></div>
                     
           <CheckProgress completedBadges={data.badges} activeGames={activeGames} />
           

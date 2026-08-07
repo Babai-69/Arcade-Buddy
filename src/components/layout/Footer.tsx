@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Send, BookOpen, Star, HelpCircle, Gamepad2, Cloud, Shield, Instagram, Github, Linkedin, Twitter } from 'lucide-react';
+import { MessageCircle, Send, BookOpen, Star, HelpCircle, Gamepad2, Cloud, Shield, Instagram, Github, Linkedin, Twitter, Users, User, UserCheck } from 'lucide-react';
 import footerLogo from '../../assets/images/regenerated_image_1782574219934.png';
 
 export function Footer() {
@@ -63,6 +63,24 @@ export function Footer() {
                  </div>
                  <span className="text-sm font-semibold text-blue-700 dark:text-blue-400 group-hover:translate-x-1 transition-transform bg-blue-200 dark:bg-blue-500/20 px-3 py-1.5 rounded-lg whitespace-nowrap">Share your feedback →</span>
               </Link>
+            </div>
+
+            {/* System Stats Section */}
+            <div className="grid grid-cols-2 gap-3 mt-6 max-w-sm">
+              <div className="bg-white/40 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-4 border border-white/20 dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
+                <div className="flex items-center gap-2 mb-1">
+                  <Users className="w-4 h-4 text-blue-500 dark:text-blue-400" />
+                  <span className="text-slate-900 dark:text-white font-bold text-lg">1,290</span>
+                </div>
+                <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Total Visits</span>
+              </div>
+              <div className="bg-white/40 dark:bg-slate-800/40 backdrop-blur-md rounded-xl p-4 border border-white/20 dark:border-slate-700/50 shadow-sm flex flex-col justify-center">
+                <div className="flex items-center gap-2 mb-1">
+                  <Star className="w-4 h-4 text-green-500 dark:text-green-400 fill-current" />
+                  <span className="text-slate-900 dark:text-white font-bold text-lg">4.5 <span className="text-sm font-normal text-slate-500 dark:text-slate-400">out of 5</span></span>
+                </div>
+                <span className="text-xs text-slate-600 dark:text-slate-400 font-medium">Average Rating</span>
+              </div>
             </div>
           </div>
           <div>

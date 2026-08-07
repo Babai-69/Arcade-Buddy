@@ -150,29 +150,76 @@ export function RoadmapPage() {
   const gamesNeededForUltimate = Math.max(0, ultimateMilestone.games - gameBadges);
   const skillsNeededForUltimate = Math.max(0, ultimateMilestone.skills - skillBadges);
 
-  // Recommendations Logic
-  let recs: any[] = [];
-  if (gameBadges < 4) {
-    recs.push({ name: 'Level 1: Google Cloud Infrastructure', category: 'Game Badge', difficulty: 'Varies', time: '4-6 Hours', link: 'https://go.qwiklabs.com/arcade' });
-    recs.push({ name: 'Level 2: Data & AI', category: 'Game Badge', difficulty: 'Varies', time: '4-6 Hours', link: 'https://go.qwiklabs.com/arcade' });
-    recs.push({ name: 'Trivia: Week 1', category: 'Trivia Game Badge', difficulty: 'Easy', time: '1 Hour', link: 'https://go.qwiklabs.com/arcade' });
-    recs.push({ name: 'Trivia: Week 2', category: 'Trivia Game Badge', difficulty: 'Easy', time: '1 Hour', link: 'https://go.qwiklabs.com/arcade' });
-  }
+  const [recs, setRecs] = useState<any[]>([]);
+  const [loadingRecs, setLoadingRecs] = useState(true);
+  const [recsError, setRecsError] = useState("");
 
-  let skillRecs = [...RECOMMENDED_LABS];
-  if (skillBadges > 66) {
-    skillRecs = skillRecs.filter(r => r.difficulty === 'Medium' || r.difficulty === 'Hard' || r.difficulty === 'Advanced');
-  } else if (skillBadges <= 20) {
-    skillRecs = skillRecs.filter(r => r.difficulty === 'Easy');
-  }
-  
-  // Attach links from SKILL_BADGES
-  skillRecs = skillRecs.map(r => {
-    const found = SKILL_BADGES.find(sb => sb.name === r.name);
-    return { ...r, link: found ? found.link : 'https://www.cloudskillsboost.google/catalog' };
-  });
+  useEffect(() => {
+    async function fetchRecommendations() {
+      try {
+        setLoadingRecs(true);
+        setRecsError("");
+        
+        let skillRecs = [...RECOMMENDED_LABS];
+        // Attach links from SKILL_BADGES
+        skillRecs = skillRecs.map(r => {
+          const found = SKILL_BADGES.find(sb => sb.name === r.name);
+          return { ...r, link: found ? found.link : 'https://www.cloudskillsboost.google/catalog' };
+        });
 
-  recs = [...recs, ...skillRecs].slice(0, 6);
+        const res = await fetch('/api/roadmap-recommendations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            gameBadges,
+            skillBadges,
+            points: arcadePoints,
+            recommendedLabs: skillRecs
+          })
+        });
+        
+        if (!res.ok) throw new Error("Failed to fetch recommendations");
+        const data = await res.json();
+        
+        // Sometimes the AI might not recommend enough game badges, let's prepend some basic ones if needed
+        let finalRecs = data.recommendations || [];
+        
+        if (gameBadges < 4) {
+          const basicGames = [
+            { name: 'Level 1: Google Cloud Infrastructure', category: 'Game Badge', difficulty: 'Varies', time: '4-6 Hours', link: 'https://go.qwiklabs.com/arcade', reasoning: 'Great starting point for learning the basics.' },
+            { name: 'Level 2: Data & AI', category: 'Game Badge', difficulty: 'Varies', time: '4-6 Hours', link: 'https://go.qwiklabs.com/arcade', reasoning: 'Essential for building data skills.' },
+            { name: 'Trivia: Week 1', category: 'Trivia Game Badge', difficulty: 'Easy', time: '1 Hour', link: 'https://go.qwiklabs.com/arcade', reasoning: 'Quick and easy points to get you started.' }
+          ];
+          // Prepend some basic games
+          finalRecs = [...basicGames, ...finalRecs].slice(0, 6);
+        } else {
+            finalRecs = finalRecs.slice(0, 6);
+        }
+        
+        setRecs(finalRecs);
+      } catch (err: any) {
+        setRecsError(err.message);
+        // Fallback recommendations if AI fails
+        let fallbackRecs: any[] = [];
+        if (gameBadges < 4) {
+          fallbackRecs.push({ name: 'Level 1: Google Cloud Infrastructure', category: 'Game Badge', difficulty: 'Varies', time: '4-6 Hours', link: 'https://go.qwiklabs.com/arcade', reasoning: 'Great starting point for learning the basics.' });
+          fallbackRecs.push({ name: 'Level 2: Data & AI', category: 'Game Badge', difficulty: 'Varies', time: '4-6 Hours', link: 'https://go.qwiklabs.com/arcade', reasoning: 'Essential for building data skills.' });
+        }
+        let skillRecs = [...RECOMMENDED_LABS];
+        skillRecs = skillRecs.map(r => {
+          const found = SKILL_BADGES.find(sb => sb.name === r.name);
+          return { ...r, link: found ? found.link : 'https://www.cloudskillsboost.google/catalog', reasoning: 'Recommended based on your current level.' };
+        });
+        setRecs([...fallbackRecs, ...skillRecs].slice(0, 6));
+      } finally {
+        setLoadingRecs(false);
+      }
+    }
+    
+    if (participant) {
+      fetchRecommendations();
+    }
+  }, [participant, gameBadges, skillBadges, arcadePoints]);
 
   // Timer & Wait Message Logic
   const now = new Date();
@@ -191,9 +238,9 @@ export function RoadmapPage() {
 
   let waitMessage = null;
   if (skillBadges >= 66) {
-    if (currentMonth <= 6 && gameBadges >= 5) {
+    if (currentMonth <= 6 && gameBadges >= 6) {
       waitMessage = "Come back again in August when new games will be launched!";
-    } else if (currentMonth === 7 && gameBadges >= 5) {
+    } else if (currentMonth === 7 && gameBadges >= 12) {
       waitMessage = "Come back later in September for new games!";
     }
   }
@@ -316,19 +363,34 @@ export function RoadmapPage() {
                <h3 className="text-[#6FE3D6] font-serif text-3xl mb-4" style={{ textShadow: '0 0 10px rgba(111,227,214,0.6)' }}>{waitMessage}</h3>
                <p className="text-[#8993A8] text-lg">You have already completed the required skill badges and this month's available game badges. Great job!</p>
             </div>
+          ) : loadingRecs ? (
+            <div className="flex flex-col items-center justify-center p-16 border border-white/10 rounded-2xl bg-[#070B14]/80">
+              <div className="w-8 h-8 rounded-full border-2 border-[#6FE3D6] border-t-transparent animate-spin mb-4"></div>
+              <p className="text-[#8993A8] animate-pulse">Generating personalized learning path using Gemini AI...</p>
+            </div>
+          ) : recsError ? (
+            <div className="p-8 border border-red-500/30 rounded-2xl bg-red-500/10 text-center">
+              <p className="text-red-400 mb-2">Could not generate AI recommendations: {recsError}</p>
+              <p className="text-[#8993A8] text-sm">Showing default fallback recommendations below.</p>
+            </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10 border border-white/10 rounded-2xl overflow-hidden shadow-2xl">
               {recs.map((lab, i) => (
-                <a key={i} href={lab.link} target="_blank" rel="noreferrer" className="group bg-[#070B14]/90 backdrop-blur-sm p-8 sm:p-10 hover:bg-[#0B1220]/90 transition-all block">
+                <a key={i} href={lab.link} target="_blank" rel="noreferrer" className="group bg-[#070B14]/90 backdrop-blur-sm p-8 sm:p-10 hover:bg-[#0B1220]/90 transition-all block flex flex-col h-full">
                   <div className="font-mono text-[10px] sm:text-[11px] text-[#5B6478] tracking-[0.06em] mb-6 flex justify-between">
                     <span>0{i+1}</span>
                     <span className="opacity-0 group-hover:opacity-100 transition-opacity text-[#6FE3D6] -translate-x-2 group-hover:translate-x-0">Start Lab ↗</span>
                   </div>
                   <h3 className="font-serif text-lg sm:text-xl mb-4 text-[#EAEEF7] group-hover:text-[#6FE3D6] transition-colors line-clamp-2">{lab.name}</h3>
-                  <p className="text-[12.5px] sm:text-[13.5px] text-[#8993A8] leading-relaxed mb-6">
+                  <p className="text-[12.5px] sm:text-[13.5px] text-[#8993A8] leading-relaxed mb-4">
                     {lab.category} — <span className={lab.difficulty === 'Hard' || lab.difficulty === 'Advanced' ? 'text-[#F5A623]' : 'text-white'}>{lab.difficulty}</span>
                   </p>
-                  <div className="flex justify-between items-center text-[11px] sm:text-xs font-mono text-[#5B8DEF]">
+                  {lab.reasoning && (
+                    <div className="bg-[#6FE3D6]/5 border border-[#6FE3D6]/20 rounded-lg p-3 mb-6 mt-auto">
+                      <p className="text-[#6FE3D6] text-xs italic line-clamp-3">"{lab.reasoning}"</p>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center text-[11px] sm:text-xs font-mono text-[#5B8DEF] mt-auto">
                     <span>{lab.time}</span>
                     <span>{lab.category.includes('Game') ? '+1.0 Pts' : '+0.5 Pts'}</span>
                   </div>

@@ -3,7 +3,7 @@ import Papa from 'papaparse';
 import { collection, doc, writeBatch, onSnapshot, getDocs } from 'firebase/firestore';
 import { db, auth, loginWithGoogle, loginWithGoogleRedirect, logout } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { Search, ChevronUp, ChevronDown, Lock, Unlock, UploadCloud, FileText, Trash2, Trophy, Medal, Crown } from 'lucide-react';
+import { Search, ChevronUp, ChevronDown, Minus, Lock, Unlock, UploadCloud, FileText, Trash2, Trophy, Medal, Crown } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ArcadeLoader } from '../components/ArcadeLoader';
 
@@ -112,9 +112,17 @@ export function TrueLeaderboardPage() {
         };
       });
 
+      const oldRanks: Record<string, number> = {};
+      data.forEach(d => {
+        if (d.name) oldRanks[d.name] = d.rank;
+      });
+
       // Sort by points to assign rank
       processed.sort((a, b) => b.points - a.points);
-      processed.forEach((p, i) => (p as any).rank = i + 1);
+      processed.forEach((p, i) => {
+        (p as any).rank = i + 1;
+        (p as any).previousRank = oldRanks[p.name] || (i + 1);
+      });
 
       setUploadStatus(`Saving to Firebase...`);
       
@@ -376,7 +384,12 @@ export function TrueLeaderboardPage() {
                 paginated.map((r, i) => (
                   <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap font-mono font-semibold text-slate-500 dark:text-slate-400">
-                       {r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : `#${r.rank}`}
+                       <div className="flex items-center gap-2">
+                         <span>{r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : `#${r.rank}`}</span>
+                         {r.previousRank && r.rank < r.previousRank && <ChevronUp className="w-4 h-4 text-green-500" />}
+                         {r.previousRank && r.rank > r.previousRank && <ChevronDown className="w-4 h-4 text-red-500" />}
+                         {r.previousRank && r.rank === r.previousRank && <Minus className="w-4 h-4 text-slate-400" />}
+                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                        <div className="font-semibold text-slate-900 dark:text-white">{r.name}</div>
