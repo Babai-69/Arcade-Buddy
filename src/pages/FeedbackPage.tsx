@@ -22,12 +22,6 @@ export function FeedbackPage() {
     setError('');
     
     try {
-      // Store in Firebase
-      await addDoc(collection(db, 'feedbacks'), {
-        ...formData,
-        createdAt: serverTimestamp()
-      });
-
       // Also send email notification
       const response = await fetch('/api/feedback', {
         method: 'POST',

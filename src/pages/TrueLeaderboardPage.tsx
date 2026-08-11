@@ -65,6 +65,16 @@ export function TrueLeaderboardPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     
+    // File upload security validation
+    if (file.type !== "text/csv" && !file.name.toLowerCase().endsWith(".csv")) {
+      alert("Invalid file type. Please upload a CSV file.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      alert("File is too large. Maximum size is 10MB.");
+      return;
+    }
+    
     setUploading(true);
     setUploadStatus('Parsing CSV...');
     

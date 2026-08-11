@@ -3,6 +3,9 @@ import { createPortal } from 'react-dom';
 import { X, Search, Download, Award, AlertCircle } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import QRCode from 'qrcode';
+import html2canvas from 'html2canvas';
+import { CertificateTemplate } from '../CertificateTemplate';
+import { useRef, useEffect } from 'react';
 
 interface CertificateModalProps {
   isOpen: boolean;
@@ -18,6 +21,16 @@ export function CertificateModal({ isOpen, onClose, userEmail }: CertificateModa
   const [isEligible, setIsEligible] = useState<boolean | null>(null);
   const [stats, setStats] = useState<{ gameBadges: number; skillBadges: number } | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const certificateRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (profileUrl) {
+      QRCode.toDataURL(profileUrl, { margin: 1, width: 256 })
+        .then(url => setQrCodeUrl(url))
+        .catch(err => console.error("QR Code Error:", err));
+    }
+  }, [profileUrl]);
 
   if (!isOpen) return null;
 
@@ -73,73 +86,32 @@ export function CertificateModal({ isOpen, onClose, userEmail }: CertificateModa
   };
 
   const handleDownload = async () => {
-    if (!isEligible || !name || !profileUrl) return;
+    if (!isEligible || !name || !profileUrl || !certificateRef.current) return;
     
     setIsDownloading(true);
     
     try {
-      // Create a basic certificate PDF design.
-      // A more complex design could use pre-rendered images, 
-      // but the user said "I will give you a Certificate Model Demo... you just add his name and QR".
-      // We will create a functional placeholder design using jsPDF.
-      const doc = new jsPDF({
+      const canvas = await html2canvas(certificateRef.current, {
+        scale: 3,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        width: 1000,
+        height: 700
+      });
+      
+      const imgData = canvas.toDataURL('image/png', 1.0);
+      
+      const pdf = new jsPDF({
         orientation: 'landscape',
         unit: 'mm',
         format: 'a4'
       });
-
-      const width = doc.internal.pageSize.getWidth();
-      const height = doc.internal.pageSize.getHeight();
-
-      // Background color
-      doc.setFillColor(248, 250, 252); // slate-50
-      doc.rect(0, 0, width, height, 'F');
       
-      // Border
-      doc.setDrawColor(66, 133, 244); // Google Blue
-      doc.setLineWidth(4);
-      doc.rect(10, 10, width - 20, height - 20);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = pdf.internal.pageSize.getHeight();
       
-      // Title
-      doc.setTextColor(30, 41, 59); // slate-800
-      doc.setFontSize(40);
-      doc.setFont("helvetica", "bold");
-      doc.text("Certificate of Completion", width / 2, 50, { align: 'center' });
-      
-      // Subtitle
-      doc.setFontSize(20);
-      doc.setFont("helvetica", "normal");
-      doc.setTextColor(100, 116, 139); // slate-500
-      doc.text("This certificate is proudly presented to", width / 2, 75, { align: 'center' });
-      
-      // Name
-      doc.setFontSize(36);
-      doc.setTextColor(66, 133, 244); // Google Blue
-      doc.setFont("helvetica", "bold");
-      doc.text(name, width / 2, 100, { align: 'center' });
-      
-      // Description
-      doc.setFontSize(16);
-      doc.setTextColor(71, 85, 105); // slate-600
-      doc.setFont("helvetica", "normal");
-      doc.text("for successfully achieving the Ultimate Milestone", width / 2, 120, { align: 'center' });
-      doc.text("in the Google Cloud Arcade 2026 Program.", width / 2, 130, { align: 'center' });
-      
-      // Stats
-      if (stats) {
-        doc.setFontSize(14);
-        doc.setTextColor(15, 23, 42); // slate-900
-        doc.setFont("helvetica", "bold");
-        doc.text(`Game Badges: ${stats.gameBadges}   |   Skill Badges: ${stats.skillBadges}`, width / 2, 150, { align: 'center' });
-      }
-
-      // Generate QR Code for the profile URL
-      const qrDataUrl = await QRCode.toDataURL(profileUrl, { margin: 1, width: 100 });
-      doc.addImage(qrDataUrl, 'PNG', width / 2 - 25, 160, 50, 50);
-
-      // Save PDF
-      doc.save(`Arcade_Certificate_${name.replace(/\s+/g, '_')}.pdf`);
-      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Arcade_Certificate_${name.replace(/\s+/g, '_')}.pdf`);
     } catch (err) {
       console.error('Error generating certificate:', err);
       setError('Failed to generate certificate. Please try again.');

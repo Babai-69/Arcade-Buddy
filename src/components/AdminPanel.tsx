@@ -16,6 +16,15 @@ export function AdminPanel({ onUpdateParticipants }: AdminPanelProps) {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    if (file.type !== "text/csv" && !file.name.toLowerCase().endsWith(".csv")) {
+      alert("Invalid file type. Please upload a CSV file.");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      alert("File is too large. Maximum size is 10MB.");
+      return;
+    }
+
     setLoading(true);
     setSuccess(false);
 

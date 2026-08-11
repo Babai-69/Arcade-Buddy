@@ -42,6 +42,19 @@ export function SupportPage() {
   }, [showToast]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    if (e.target.type === 'file') {
+      const files = (e.target as HTMLInputElement).files;
+      if (files) {
+        for (let i = 0; i < files.length; i++) {
+          if (files[i].size > 5 * 1024 * 1024) {
+            alert(`File ${files[i].name} is too large. Maximum size is 5MB per file.`);
+            e.target.value = '';
+            return;
+          }
+        }
+      }
+    }
+    
     setFormData({
       ...formData,
       [e.target.name]: e.target.type === 'file' ? (e.target as HTMLInputElement).files : e.target.value

@@ -230,7 +230,27 @@ export function UserProgressDashboard() {
     
     // Process Game Badges
     gamesToTrack.forEach(game => {
-      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase().trim() === game.title.toLowerCase().trim() && b.validForProgram);
+      const isCompleted = data.badges.some((b: any) => {
+        const bTitle = b.title.toLowerCase().trim();
+        const gTitle = game.title.toLowerCase().trim();
+        const isMatch = bTitle === gTitle || 
+             (bTitle.includes('network security') && gTitle.includes('network security')) ||
+             (bTitle.includes('spans and plans') && gTitle.includes('spans and plans')) ||
+             (bTitle.includes('base camp') && gTitle.includes('base camp')) ||
+             (bTitle.includes('adventure') && gTitle.includes('adventure')) ||
+             (bTitle.includes('voyage') && gTitle.includes('voyage')) ||
+             (bTitle.includes('trail') && gTitle.includes('trail'));
+             
+        if (!isMatch || !b.validForProgram) return false;
+        
+        const isGeneric = ['base camp', 'adventure', 'voyage', 'trail'].some(kw => gTitle.includes(kw) && bTitle !== gTitle);
+        if (isGeneric) {
+          if (!b.earnedDate || (!b.earnedDate.includes('Aug') && !b.earnedDate.includes('Sep'))) {
+            return false;
+          }
+        }
+        return true;
+      });
       if (isCompleted) completedGameBadges++;
       tableData.push([
         game.title,
@@ -242,7 +262,11 @@ export function UserProgressDashboard() {
     
     // Process Skill Badges
     Object.keys(SKILL_BADGES).forEach(badgeName => {
-      const isCompleted = data.badges.some((b: any) => b.title.toLowerCase() === badgeName.toLowerCase() && b.validForProgram);
+      const isCompleted = data.badges.some((b: any) => {
+        const bTitle = b.title.toLowerCase().trim();
+        const sTitle = badgeName.toLowerCase().trim();
+        return ((bTitle === sTitle)) && b.validForProgram;
+      });
       if (isCompleted) completedSkillBadges++;
       tableData.push([
         badgeName,

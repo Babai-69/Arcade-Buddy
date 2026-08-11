@@ -17,9 +17,27 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
   const tabs = ['All', 'Game', 'Skills'];
 
   const allBadges = useMemo(() => {
-    const isCompleted = (b: {name: string}) => completedBadges.some(cb => 
-      cb.title.toLowerCase().trim() === b.name.toLowerCase().trim()
-    );
+    const isCompleted = (b: {name: string}) => completedBadges.some(cb => {
+      const cbTitle = cb.title.toLowerCase().trim();
+      const bName = b.name.toLowerCase().trim();
+      const isMatch = cbTitle === bName || 
+             (bName.includes('network security') && cbTitle.includes('network security')) ||
+             (bName.includes('spans and plans') && cbTitle.includes('spans and plans')) ||
+             (bName.includes('base camp') && cbTitle.includes('base camp')) ||
+             (bName.includes('adventure') && cbTitle.includes('adventure')) ||
+             (bName.includes('voyage') && cbTitle.includes('voyage')) ||
+             (bName.includes('trail') && cbTitle.includes('trail'));
+
+      if (!isMatch || cb.validForProgram === false) return false;
+      
+      const isGeneric = ['base camp', 'adventure', 'voyage', 'trail'].some(kw => bName.includes(kw) && cbTitle !== bName);
+      if (isGeneric) {
+        if (!cb.earnedDate || (!cb.earnedDate.includes('Aug') && !cb.earnedDate.includes('Sep'))) {
+          return false;
+        }
+      }
+      return true;
+    });
     
         // Map active games to the expected badge format
     const dynamicGameBadges = activeGames.map(ag => ({
@@ -56,9 +74,27 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
       .map(b => {
                 const dynamicGameBadges = activeGames.map(ag => ({ name: ag.title, image: ag.img, link: ag.link }));
         const allPossibleBadges = [...dynamicGameBadges, ...gameBadges, ...skillBadges];
-        const foundInDb = allPossibleBadges.find(dbBadge => 
-           dbBadge.name.toLowerCase().trim() === b.title.toLowerCase().trim()
-        );
+        const foundInDb = allPossibleBadges.find(dbBadge => {
+          const dbName = dbBadge.name.toLowerCase().trim();
+          const bTitle = b.title.toLowerCase().trim();
+          const isMatch = dbName === bTitle || 
+          (dbName.includes('network security') && bTitle.includes('network security')) ||
+          (dbName.includes('spans and plans') && bTitle.includes('spans and plans')) ||
+          (dbName.includes('base camp') && bTitle.includes('base camp')) ||
+          (dbName.includes('adventure') && bTitle.includes('adventure')) ||
+          (dbName.includes('voyage') && bTitle.includes('voyage')) ||
+          (dbName.includes('trail') && bTitle.includes('trail'));
+          
+          if (!isMatch) return false;
+          
+          const isGeneric = ['base camp', 'adventure', 'voyage', 'trail'].some(kw => dbName.includes(kw) && dbName !== bTitle);
+          if (isGeneric) {
+            if (!b.earnedDate || (!b.earnedDate.includes('Aug') && !b.earnedDate.includes('Sep'))) {
+              return false;
+            }
+          }
+          return true;
+        });
         
         const dateStr = (b.earnedDate || '').replace(/^Earned\s+(on\s+)?/i, '').trim();
         const badgeDate = new Date(dateStr);

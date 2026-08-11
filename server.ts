@@ -13,6 +13,9 @@ if (fs.existsSync(path.resolve(process.cwd(), '.env'))) {
 }
 
 import express from "express";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import { z } from "zod";
 import cors from "cors";
 import * as cheerio from "cheerio";
 import { createServer as createViteServer } from "vite";
@@ -44,7 +47,21 @@ async function startServer() {
   const app = express();
   const PORT = 3000;
 
+  app.set('trust proxy', 1);
+
   app.use(cors());
+  app.use(helmet({
+    contentSecurityPolicy: false, // disabled for Vite to work properly in dev
+  }));
+
+  const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 1000, // limit each IP to 1000 requests per windowMs
+    message: "Too many requests from this IP, please try again after 15 minutes",
+    validate: { xForwardedForHeader: false, default: true }
+  });
+  app.use('/api/', limiter);
+
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
@@ -64,11 +81,17 @@ async function startServer() {
         });
       }
 
-      const { message, history } = req.body;
+      const chatSchema = z.object({
+        message: z.string().min(1).max(2000),
+        history: z.array(z.any()).optional()
+      });
 
-      if (!message) {
-        return res.status(400).json({ error: "Message is required" });
+      const parseResult = chatSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ error: "Invalid input" });
       }
+
+      const { message, history } = parseResult.data;
 
       const systemInstruction = `You are GArcade Assistant, an expert AI guide for the Google Cloud Skills Boost Arcade Facilitator program 2026.
 
@@ -168,7 +191,7 @@ Never make up point values or requirements.`;
         });
       }
       return res.status(500).json({
-        error: error.message,
+        error: "Internal Server Error",
         reply: "Sorry, I am having trouble connecting right now. Please try again in a moment!"
       });
     }
@@ -176,7 +199,21 @@ Never make up point values or requirements.`;
 
 app.post("/api/notify-query", async (req, res) => {
     try {
-      const { name, email, profileUrl, queryType, message, attachments } = req.body;
+      const querySchema = z.object({
+        name: z.string().min(1).max(100),
+        email: z.string().email(),
+        profileUrl: z.string().url().optional().or(z.literal('')),
+        queryType: z.string().min(1).max(100),
+        message: z.string().min(1).max(5000),
+        attachments: z.array(z.any()).optional()
+      });
+
+      const parseResult = querySchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ success: false, message: "Invalid input" });
+      }
+
+      const { name, email, profileUrl, queryType, message, attachments } = parseResult.data;
       
       const smtpUser = process.env.SMTP_USER || "support.arcadebuddy@gmail.com";
       const smtpPass = process.env.SMTP_PASS || "suhzmteebcfbisgg";
@@ -221,13 +258,25 @@ app.post("/api/notify-query", async (req, res) => {
       return res.json({ success: true, emailSent: true });
     } catch (error: any) {
       console.error('Failed to process request:', error);
-      res.status(500).json({ success: false, message: error.message });
+      res.status(500).json({ success: false, message: "An internal error occurred while processing the request." });
     }
   });
 
   app.post("/api/feedback", async (req, res) => {
     try {
-      const { name, email, rating, review } = req.body;
+      const feedbackSchema = z.object({
+        name: z.string().min(1).max(100),
+        email: z.string().email(),
+        rating: z.number().min(1).max(5),
+        review: z.string().min(1).max(5000)
+      });
+      
+      const parseResult = feedbackSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ success: false, message: "Invalid input" });
+      }
+      
+      const { name, email, rating, review } = parseResult.data;
       
       const smtpUser = process.env.SMTP_USER || "support.arcadebuddy@gmail.com";
       const smtpPass = process.env.SMTP_PASS || "suhzmteebcfbisgg";
@@ -265,7 +314,7 @@ app.post("/api/notify-query", async (req, res) => {
       return res.json({ success: true, emailSent: true });
     } catch (error: any) {
       console.error('Failed to process feedback:', error);
-      res.status(500).json({ success: false, message: error.message });
+      res.status(500).json({ success: false, message: "An internal error occurred while processing feedback." });
     }
   });
 

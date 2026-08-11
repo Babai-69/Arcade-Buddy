@@ -4,6 +4,8 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import QRCode from 'qrcode';
 
+import { CertificateTemplate } from './CertificateTemplate';
+
 export function AdminCertificatePreview() {
   const [name, setName] = useState('');
   const [profileUrl, setProfileUrl] = useState('');
@@ -33,23 +35,10 @@ export function AdminCertificatePreview() {
     setSuccess('');
 
     try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(profileUrl)}`);
-      if (!res.ok) throw new Error('Could not fetch profile. Ensure your profile is public.');
-      
-      const data = await res.json();
-      const userStats = {
-        gameBadges: data.gameBadges || 0,
-        skillBadges: data.skillBadges || 0
-      };
-
-      if (userStats.gameBadges >= 12 && userStats.skillBadges >= 66) {
-        setSuccess('User is eligible! Generating certificate...');
-        await generateCertificatePDF(name);
-      } else {
-        setError(`Not eligible. Found ${userStats.skillBadges} Skill Badges (needs 66) and ${userStats.gameBadges} Game Badges (needs 12).`);
-      }
+      setSuccess('Generating certificate...');
+      await generateCertificatePDF(name);
     } catch (err: any) {
-      setError(err.message || 'Error verifying profile.');
+      setError(err.message || 'An error occurred during generation.');
     } finally {
       setLoading(false);
     }
@@ -65,14 +54,7 @@ export function AdminCertificatePreview() {
         useCORS: true,
         backgroundColor: '#ffffff',
         width: 1000,
-        height: 700,
-        onclone: (clonedDoc) => {
-          const el = clonedDoc.getElementById('certificate-preview-box');
-          if (el) {
-            el.style.transform = 'none';
-            el.parentElement!.style.transform = 'none';
-          }
-        }
+        height: 700
       });
       
       const imgData = canvas.toDataURL('image/png', 1.0);
@@ -192,125 +174,11 @@ export function AdminCertificatePreview() {
           <p className="text-sm font-semibold text-slate-500 dark:text-slate-400 mb-4 tracking-wider uppercase">Visual Template Preview</p>
           
           <div className="origin-top lg:scale-[0.8] xl:scale-[0.62] transform" style={{ width: '1000px', height: '700px', transformOrigin: 'top center' }}>
-            {/* The Certificate Template */}
-            <div 
-              ref={certificateRef}
-              id="certificate-preview-box"
-              style={{ width: '1000px', height: '700px', fontFamily: 'Helvetica, Arial, sans-serif' }}
-              className="bg-white border-4 border-slate-100 shadow-xl relative overflow-hidden text-center flex flex-col items-center"
-            >
-              {/* Corner Blobs */}
-              <div className="absolute -top-16 -left-16 w-64 h-64 bg-[#EA4335] rounded-full mix-blend-multiply opacity-90 filter blur-[1px]" style={{ borderRadius: '43% 57% 70% 30% / 30% 55% 45% 70%' }}></div>
-              <div className="absolute -top-24 -right-12 w-80 h-80 bg-[#4285F4] rounded-full mix-blend-multiply opacity-90 filter blur-[1px]" style={{ borderRadius: '23% 77% 10% 90% / 30% 24% 76% 70%' }}></div>
-              <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-[#34A853] rounded-full mix-blend-multiply opacity-90 filter blur-[1px]" style={{ borderRadius: '63% 37% 30% 70% / 50% 64% 36% 50%' }}></div>
-              <div className="absolute -bottom-24 -right-16 w-80 h-80 bg-[#FBBC05] rounded-full mix-blend-multiply opacity-90 filter blur-[1px]" style={{ borderRadius: '73% 27% 30% 70% / 80% 24% 76% 20%' }}></div>
-              
-              {/* Stack of 4 small colored dots (green, yellow, blue, red) */}
-              <div className="absolute top-20 right-16 flex flex-col gap-3">
-                <div className="w-4 h-4 rounded-full bg-[#34A853]"></div>
-                <div className="w-4 h-4 rounded-full bg-[#FBBC05]"></div>
-                <div className="w-4 h-4 rounded-full bg-[#4285F4]"></div>
-                <div className="w-4 h-4 rounded-full bg-[#EA4335]"></div>
-              </div>
-
-              {/* Header Content */}
-              <div className="mt-12 z-10 w-full px-20">
-                {/* Google Cloud wordmark */}
-                <div className="flex justify-center items-center gap-3 mb-2">
-                  <div className="text-5xl font-bold tracking-tighter">
-                    <span className="text-[#4285F4]">G</span>
-                    <span className="text-[#EA4335]">o</span>
-                    <span className="text-[#FBBC05]">o</span>
-                    <span className="text-[#4285F4]">g</span>
-                    <span className="text-[#34A853]">l</span>
-                    <span className="text-[#EA4335]">e</span>
-                  </div>
-                  <div className="text-5xl text-gray-500 tracking-tight">
-                    Cloud
-                  </div>
-                </div>
-
-                {/* Subtitle */}
-                <p className="text-[#4285F4] font-bold tracking-widest text-lg uppercase mb-4">
-                  ARCADE FACILITATOR PROGRAM 2026
-                </p>
-
-                {/* Title */}
-                <h1 className="text-5xl font-bold text-[#4A6CF7] mb-6 tracking-tight">
-                  Certificate of Appreciation
-                </h1>
-                
-                {/* Recipient Name */}
-                <h2 className="text-6xl font-bold text-[#F4A300] font-serif mb-1" style={{ fontFamily: 'Georgia, serif' }}>
-                  {name || 'Student Name'}
-                </h2>
-                
-                {/* Dotted underline */}
-                <div className="w-2/3 max-w-[600px] mx-auto border-b-2 border-dotted border-[#9aa0a6] mb-5"></div>
-
-                {/* Body Text */}
-                <p className="text-[#1e7a4d] text-lg leading-relaxed max-w-[700px] mx-auto mb-6 font-medium">
-                  For successfully completing the <span className="font-bold">Ultimate Milestone</span> of the Google Cloud Arcade Facilitator Program 2026, demonstrating outstanding consistency, dedication and cloud learning excellence during the program timeline.
-                </p>
-
-                {/* Info Pill */}
-                <div className="inline-flex justify-center items-center gap-8 bg-white border border-gray-200 rounded-2xl px-8 py-3 text-gray-700 text-[15px] shadow-sm mb-4">
-                  <div className="flex flex-col items-center">
-                    <span className="font-bold text-[#4285F4] text-[11px] uppercase tracking-wider mb-0.5">Program Duration</span>
-                    <span className="font-medium text-gray-800">13th July 2026 – 14th September 2026</span>
-                  </div>
-                  <div className="w-px h-8 bg-gray-200"></div>
-                  <div className="flex flex-col items-center">
-                    <span className="font-bold text-[#4285F4] text-[11px] uppercase tracking-wider mb-0.5">Milestone Achieved</span>
-                    <span className="font-medium text-gray-800">12 Game Badges + 66 Skill Badges</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer Row */}
-              <div className="absolute bottom-12 left-0 w-full px-20 flex justify-between items-end z-10">
-                {/* Left Signature */}
-                <div className="flex flex-col items-center w-[250px]">
-                  <img 
-                    src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782921503/signature_mqwxcl.png" 
-                    alt="Signature" 
-                    className="h-16 object-contain mb-2 mix-blend-multiply" 
-                    crossOrigin="anonymous"
-                  />
-                  <div className="w-full border-b border-dotted border-[#9aa0a6] mb-2"></div>
-                  <p className="font-bold text-gray-800 text-lg">Abir Dey</p>
-                  <p className="text-gray-500 text-sm">Arcade Facilitator</p>
-                </div>
-
-                {/* Center QR */}
-                <div className="flex flex-col items-center justify-end pb-1">
-                  <div className="bg-white p-1.5 rounded-xl shadow-sm border border-gray-200 mb-2">
-                    {qrCodeUrl ? (
-                      <img src={qrCodeUrl} alt="QR Code" className="w-[96px] h-[96px] rounded-lg" />
-                    ) : (
-                      <div className="w-[96px] h-[96px] bg-gray-50 flex items-center justify-center border border-dashed border-gray-300 rounded-lg">
-                        <span className="text-gray-400 text-[10px] text-center p-2 leading-tight">Enter URL<br/>to generate<br/>QR</span>
-                      </div>
-                    )}
-                  </div>
-                  <p className="text-gray-500 text-[11px] font-medium tracking-wide uppercase">Scan to Verify</p>
-                </div>
-
-                {/* Right Signature */}
-                <div className="flex flex-col items-center w-[250px]">
-                  <img 
-                    src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782921368/f50b015a-ad12-4117-bba1-0d21503e0ff5_lz3yej.png" 
-                    alt="Signature" 
-                    className="h-16 object-contain mb-2 mix-blend-multiply"
-                    crossOrigin="anonymous" 
-                  />
-                  <div className="w-full border-b border-dotted border-[#9aa0a6] mb-2"></div>
-                  <p className="font-bold text-gray-800 text-lg">Tripti Gupta</p>
-                  <p className="text-gray-500 text-sm">Arcade Facilitator</p>
-                </div>
-              </div>
-
-            </div>
+            <CertificateTemplate name={name} qrCodeUrl={qrCodeUrl} id="certificate-preview-box" />
+          </div>
+          
+          <div style={{ position: 'absolute', top: '-10000px', left: '-10000px', pointerEvents: 'none' }}>
+            <CertificateTemplate name={name} qrCodeUrl={qrCodeUrl} id="certificate-print-box" innerRef={certificateRef} />
           </div>
           
           <p className="text-xs text-slate-400 mt-4 text-center">
