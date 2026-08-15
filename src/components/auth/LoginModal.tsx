@@ -68,8 +68,10 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
       await loginWithGoogle();
       onClose();
     } catch (err: any) {
-      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/popup-blocked') {
-         setError("Google Login popup was blocked. Please click the 'Open in new tab' button (arrow icon at top right) and try again.");
+      if (err.code === 'auth/popup-closed-by-user') {
+         setError("Login cancelled. If you didn't cancel, your browser or ad-blocker may be blocking the Google popup. Please allow popups for this site.");
+      } else if (err.code === 'auth/popup-blocked') {
+         setError("Popup blocked by browser. Please allow popups for this site and try again.");
       } else {
          setError(err.message || 'Failed to sign in with Google');
       }

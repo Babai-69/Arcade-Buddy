@@ -45,6 +45,13 @@ async function startServer() {
     console.log('✅ All required environment variables found');
   }
   const app = express();
+  
+  // Fix Firebase Auth popup cross-origin communication on strict hosts (e.g. Render/Cloudflare)
+  app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
+    next();
+  });
   const PORT = 3000;
 
   app.set('trust proxy', 1);
@@ -52,6 +59,8 @@ async function startServer() {
   app.use(cors());
   app.use(helmet({
     contentSecurityPolicy: false, // disabled for Vite to work properly in dev
+    crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+    crossOriginEmbedderPolicy: false
   }));
 
   const limiter = rateLimit({
