@@ -69,11 +69,15 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
       onClose();
     } catch (err: any) {
       if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/popup-blocked') {
-        try {
-          await loginWithGoogleRedirect();
-          return; // don't set loading to false, page is redirecting
-        } catch (redirectErr: any) {
-          setError(redirectErr.message || 'Failed to sign in with Google Redirect');
+        if (window !== window.parent) {
+          setError("Google Login is blocked inside this preview window. Please click the 'Open in new tab' button (arrow icon at the top right) to log in.");
+        } else {
+          try {
+            await loginWithGoogleRedirect();
+            return; // don't set loading to false, page is redirecting
+          } catch (redirectErr: any) {
+            setError(redirectErr.message || 'Failed to sign in with Google Redirect');
+          }
         }
       } else {
         setError(err.message || 'Failed to sign in with Google');

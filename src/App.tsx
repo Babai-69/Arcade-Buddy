@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getRedirectResult } from 'firebase/auth';
+import { auth } from './lib/firebase';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
 import { Navbar } from './components/layout/Navbar';
@@ -40,6 +42,12 @@ import { WelcomeTour } from './components/WelcomeTour';
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>(mockParticipants);
   const location = useLocation();
+
+  useEffect(() => {
+    getRedirectResult(auth).catch(err => {
+      console.error("Redirect auth error:", err);
+    });
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col font-sans transition-colors duration-300">
