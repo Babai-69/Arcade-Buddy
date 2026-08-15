@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
-import { auth, loginWithGoogle } from '../../lib/firebase';
+import { auth, loginWithGoogle, loginWithGoogleRedirect } from '../../lib/firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail, updateProfile } from 'firebase/auth';
 
 interface LoginModalProps {
@@ -68,8 +68,16 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
       await loginWithGoogle();
       onClose();
     } catch (err: any) {
-      setError(err.message || 'Failed to sign in with Google');
-    } finally {
+      if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/popup-blocked') {
+        try {
+          await loginWithGoogleRedirect();
+          return; // don't set loading to false, page is redirecting
+        } catch (redirectErr: any) {
+          setError(redirectErr.message || 'Failed to sign in with Google Redirect');
+        }
+      } else {
+        setError(err.message || 'Failed to sign in with Google');
+      }
       setLoading(false);
     }
   };
