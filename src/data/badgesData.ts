@@ -1,34 +1,38 @@
 export const gameBadges = [
-
   {
     "name": "Arcade Simulator: Network Security Engineer",
-    "image": "https://services.google.com/fh/files/misc/simulater-aug.png",
+    "image": "https://cdn.qwiklabs.com/KU0Jp50XMAj26Vmx1iNYlmxJUltgvVVAa3YI0Xgssjg%3D",
     "link": "https://www.skills.google/games/7397"
   },
   {
     "name": "Spans and Plans",
-    "image": "https://services.google.com/fh/files/misc/special-aug.png",
+    "image": "https://cdn.qwiklabs.com/jf0VYLPQlpqie%2FRI4cjTeBwtiL3xPto3PBIM5b8iSzI%3D",
     "link": "https://www.skills.google/games/7399"
   },
   {
-    "name": "Arcade Base Camp",
-    "image": "https://services.google.com/fh/files/misc/bc-aug.png",
+    "name": "Arcade Base Camp August 2026",
+    "image": "https://cdn.qwiklabs.com/nXo%2Bc%2FLavbtJXZma1hYLmBxApy6Cr6CZiR1Bnukj5dk%3D",
     "link": "https://www.skills.google/games/7394"
   },
   {
-    "name": "Arcade Trail",
-    "image": "https://services.google.com/fh/files/misc/trail-aug.png",
+    "name": "Arcade Trail: Cloud Delivery Systems",
+    "image": "https://cdn.qwiklabs.com/fRCfiQc6gVA%2BSEUkSvc7agSfPUGUiHmYaI4kslS9mSw%3D",
     "link": "https://www.skills.google/games/7396"
   },
   {
-    "name": "Arcade Adventure",
-    "image": "https://services.google.com/fh/files/misc/adv-aug.png",
+    "name": "Arcade Adventure: Data Vault",
+    "image": "https://cdn.qwiklabs.com/vQwBzyge8g7JI%2Fs9rWfu%2BvXJurcIOnP0A9wKR7U4i14%3D",
     "link": "https://www.skills.google/games/7395"
   },
   {
-    "name": "Arcade Voyage",
-    "image": "https://services.google.com/fh/files/misc/voyuge-aug.png",
+    "name": "Arcade Voyage: Google Sheets",
+    "image": "https://cdn.qwiklabs.com/yn3KXIRZy6Md4qAEmKiYk6SEuHg0a7gDEaqc2H4o1Cs%3D",
     "link": "https://www.skills.google/games/7398"
+  },
+  {
+    "name": "Arcade Re-Trail",
+    "image": "https://cdn.qwiklabs.com/eEC4APNIAxpy40bcPc0lLR5bM4amNO3Zl%2Fcw73e%2B7LQ%3D",
+    "link": "https://www.skills.google/games/7426?utm_source=googleskills&utm_medium=lp&utm_campaign=retrail-Aug-arcade26"
   },
 
   {

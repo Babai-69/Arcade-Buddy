@@ -310,12 +310,12 @@ export function FacilitatorSyllabus() {
             </h2>
             
             <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-8 text-lg">
-              Complete these games to earn Arcade Points. 6 new games release every month!
+              Complete these games to earn Arcade Points. Typically 6 new games release every month, plus extra chances!
             </p>
             
             <div className="flex flex-wrap justify-center gap-4">
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
-                <span className="text-blue-500 dark:text-blue-400 text-lg">🎮</span> 6 Games/Month
+                <span className="text-blue-500 dark:text-blue-400 text-lg">🎮</span> 6+ Games/Month
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
                 <span className="text-amber-500 dark:text-amber-400 text-lg">⏱️</span> Limited Seats
