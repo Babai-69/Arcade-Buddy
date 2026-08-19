@@ -1,393 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { Search, Trophy, Medal, Star, ChevronRight, Activity, AlertCircle, Lock, CheckCircle2, Check, RefreshCw, Info } from 'lucide-react';
-import confetti from 'canvas-confetti';
-import { Participant, MILESTONES } from '../types';
-import { BadgeTracker } from './BadgeTracker';
-import { FacilitatorBadgeTracker } from './FacilitatorBadgeTracker';
-import { auth, db } from '../lib/firebase';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+const fs = require('fs');
 
-interface ProfileCheckerProps {
-  participants: Participant[];
+let code = fs.readFileSync('src/components/ProfileChecker.tsx', 'utf8');
+
+const startIndex = code.indexOf('{result && (');
+const endIndex = code.indexOf('<BadgeTracker');
+
+if (startIndex === -1 || endIndex === -1) {
+  console.log("Could not find bounds");
+  process.exit(1);
 }
 
+// Back up to the closing `)}` before `<BadgeTracker`
+let lastBraceIndex = code.lastIndexOf(')}', endIndex);
 
-const AnimatedPoints = ({ endVal }: { endVal: number }) => {
-  const [val, setVal] = React.useState(0);
-  React.useEffect(() => {
-    let startTime: number | undefined;
-    const duration = 1500;
-    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-    
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      setVal(Math.floor(easeOutCubic(progress) * endVal));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+const part1 = code.substring(0, startIndex);
+const part2 = code.substring(lastBraceIndex + 2); // after `)}`
 
-    if (endVal > 0) {
-      setTimeout(() => {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#8B7CFA']
-        });
-      }, 1500);
-    }
-  }, [endVal]);
-  return <>{val}</>;
-};
+// We also need to add a small animated number component inside ProfileChecker or outside it.
+// And 4 floating orbs for the background.
+// Let's add them.
 
-export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [url, setUrl] = useState('');
-  const [result, setResult] = useState<Participant | null>(null);
-  const [error, setError] = useState('');
-  const [isBadgeTrackerOpen, setIsBadgeTrackerOpen] = useState(false);
-  const [isFacilitatorBadgeTrackerOpen, setIsFacilitatorBadgeTrackerOpen] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(true);
-  const [rememberProfile, setRememberProfile] = useState(false);
-  const [isDemoAnimation, setIsDemoAnimation] = useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [spotsLoading, setSpotsLoading] = useState(true);
-  const [spots, setSpots] = useState<any>({
-    trooper:  { spotsLeft: 6000, total: 6000 },
-    ranger:   { spotsLeft: 4000, total: 4000 },
-    champion: { spotsLeft: 3000, total: 3000 },
-    legend:   { spotsLeft: 2500, total: 2500 },
-  });
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        const savedUrl = localStorage.getItem(`arcadeProfileUrl_${currentUser.uid}`);
-        if (savedUrl) {
-          setUrl(savedUrl);
-          setRememberProfile(true);
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    setSpotsLoading(true);
-    fetch('/api/arcade-spots')
-      .then(res => res.json())
-      .then(data => {
-        if (!data || !data.trooper) return;
-        setSpots(data);
-      })
-      .catch(() => {
-        // keep fallback values silently
-      })
-      .finally(() => {
-        setSpotsLoading(false);
-      });
-  }, []);
-
-  const [demoStep, setDemoStep] = useState(0);
-
-  const handleDemoData = async () => {
-    setIsDemoAnimation(true);
-    setDemoStep(1); // 1: Fetching
-    setUrl("https://www.cloudskillsboost.google/public_profiles/demo_account");
-    setIsLoading(true);
-    setError('');
-    
-    await new Promise(r => setTimeout(r, 1000));
-    setDemoStep(2); // 2: Counting badges
-    
-    await new Promise(r => setTimeout(r, 1500));
-    setDemoStep(3); // 3: Calculating points & milestones
-    
-    await new Promise(r => setTimeout(r, 1500));
-    
-    setResult({
-      id: 'demo',
-      name: 'Demo Student',
-      avatarUrl: '',
-      email: '',
-      profileUrl: 'demo',
-      gameBadges: 8,
-      triviaBadges: 2,
-      skillBadges: 34,
-      specialBadges: 0,
-      arcadePoints: 25,
-      currentRank: 0,
-      milestoneEarned: '',
-      dailyPoints: 0,
-      totalPoints: 40,
-      lastUpdated: '',
-      previousRank: 0,
-      badges: [] 
-    });
-    setIsLoading(false);
-    setIsDemoAnimation(false);
-    setDemoStep(0);
-    
-    confetti({
-      particleCount: 150,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-  };
-
-  const handleCheck = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!url) return;
-    
-    setIsLoading(true);
-    setError('');
-    setResult(null);
-    
-    // Check if it's a valid profile URL
-    if (!url.includes('cloudskillsboost.google/public_profiles/') && !url.includes('skills.google/public_profiles/')) {
-      setError("Please send a valid Google Cloud Skills Boost public profile URL to calculate your Arcade points.");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(url)}`);
-      if (!res.ok) {
-        throw new Error('Profile is private or invalid URL.');
-      }
-      const data = await res.json();
-      
-      const newResult = {
-        id: 'fetched',
-        name: data.name,
-        avatarUrl: data.avatarUrl,
-        community: 'Unknown',
-        email: '',
-        profileUrl: url,
-        gameBadges: data.gameBadges,
-        triviaBadges: data.triviaBadges,
-        skillBadges: data.skillBadges,
-        specialBadges: data.specialBadges || 0,
-        arcadePoints: data.arcadePoints,
-        currentRank: 0,
-        milestoneEarned: '',
-        dailyPoints: 0,
-        totalPoints: data.arcadePoints,
-        lastUpdated: '',
-        previousRank: 0,
-        badges: data.badges
-      };
-
-      setResult(newResult);
-      
-      // Save for UserProgressDashboard to pick up
-      localStorage.setItem('arcadeProfileUrl', url);
-      // We pass the raw data so it can be parsed by UserProgressDashboard if needed
-      localStorage.setItem('arcadeProgressData', JSON.stringify(data));
-      
-      if (user && rememberProfile) {
-        localStorage.setItem(`arcadeProfileUrl_${user.uid}`, url);
-      } else if (user) {
-        localStorage.removeItem(`arcadeProfileUrl_${user.uid}`);
-      }
-      
-      const prevRecent = JSON.parse(localStorage.getItem('arcadeRecentUrls') || '[]');
-      const newRecent = [url, ...prevRecent.filter((u: string) => u !== url)].slice(0, 5);
-      localStorage.setItem('arcadeRecentUrls', JSON.stringify(newRecent));
-
-      // Save to Firebase so the admin can see it
-      if (user) {
-        try {
-          const userRef = doc(db, 'users', user.uid);
-          await setDoc(userRef, {
-            profileUrl: url,
-            gameBadges: data.gameBadges || 0,
-            triviaBadges: data.triviaBadges || 0,
-            skillBadges: data.skillBadges || 0,
-            arcadePoints: data.arcadePoints || 0,
-            milestoneEarned: data.milestoneEarned || '',
-            badgesCompletedCount: data.badges?.length || 0,
-            lastCalculated: new Date().toISOString()
-          }, { merge: true });
-        } catch (err) {
-          console.warn('Failed to update progress in Firebase:', err);
-        }
-      }
-
-      if (data.arcadePoints >= 120) {
-        confetti({
-          particleCount: 150,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-      }
-
-    } catch (err: any) {
-      setResult(null);
-      setError('Profile is private or invalid URL. Please set your profile to public on Cloud Skills Boost and try again.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getNextMilestone = (points: number) => {
-    return MILESTONES.find(m => m.requiredPoints > points);
-  };
-
-  const getCurrentMilestone = (points: number) => {
-    return [...MILESTONES].reverse().find(m => points >= m.requiredPoints);
-  };
-
-  return (
-    <section id="calculator" className="py-10 w-full mx-auto px-0">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl md:text-5xl font-display font-bold mb-3 text-slate-900 dark:text-white">
-          Google Cloud Arcade<br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500">Points Calculator</span>
-        </h1>
-        <p className="text-slate-500 dark:text-[#8B8FA3] max-w-2xl mx-auto mt-4">
-          Paste your Google Cloud Skills Boost public profile URL to instantly calculate your<br className="hidden md:block"/> Arcade points, see which badges you earned, and check your swag tier progress.
-        </p>
-      </div>
-
-      <div className="bg-white/50 dark:bg-[#111111]/50 backdrop-blur-md border border-slate-200/50 dark:border-[#2a2a2a]/50 rounded-[24px] p-6 sm:p-8 max-w-3xl mx-auto relative overflow-hidden shadow-xl mb-10">
-        <div className="flex items-center gap-2 mb-2">
-          <Search className="text-[#3b82f6] dark:text-cyan-400 w-5 h-5" />
-          <h3 className="text-lg font-bold text-slate-900 dark:text-white">Fetch Your Profile</h3>
-        </div>
-        <p className="text-sm text-slate-500 dark:text-gray-400 mb-6">Paste your Google Cloud Skills Boost public profile URL to calculate your Arcade points.</p>
-        
-        <div className="relative">
-          {!user && (
-            <div className="absolute inset-0 z-10 bg-white/40 dark:bg-black/40 backdrop-blur-[2px] rounded-xl flex items-center justify-center">
-              <button
-                type="button"
-                onClick={() => window.dispatchEvent(new CustomEvent('open-login-modal'))}
-                className="flex items-center gap-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-5 py-2.5 rounded-full font-medium shadow-lg border border-slate-200 dark:border-slate-700 hover:scale-105 transition-transform"
-              >
-                <svg className="w-5 h-5 text-[#f59e0b]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                Sign in to calculate progress
-              </button>
-            </div>
-          )}
-          <form onSubmit={handleCheck} className="mb-6">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="relative flex-1">
-                <input
-                  type="text"
-                  placeholder="https://www.skills.google/public_profiles/..."
-                  className="w-full bg-white/60 dark:bg-[#1a1a1a]/60 backdrop-blur-sm border border-slate-200/50 dark:border-white/10 rounded-xl px-4 py-3.5 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-transparent transition-all shadow-inner"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  disabled={!user}
-                />
-                {url.includes('public_profiles/') && <Check className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500 w-5 h-5" />}
-              </div>
-              <button
-                type="submit"
-                disabled={isLoading || !url || !user}
-                className="bg-[#f59e0b] hover:bg-[#d97706] text-slate-900 font-bold px-6 py-3.5 rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap flex items-center justify-center min-w-[150px]"
-              >
-                {isLoading && !isDemoAnimation ? (
-                  <div className="w-5 h-5 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" />
-                ) : (
-                  'Analyze Profile'
-                )}
-              </button>
-            </div>
-            {error && <p className="text-[#EA4335] mt-3 text-sm font-medium">{error}</p>}
-          </form>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-[#2a2a2a] pb-6 mb-6">
-          <label className="flex items-center gap-3 cursor-pointer group">
-            <button
-              type="button"
-              onClick={() => {
-                if (!user) {
-                  window.dispatchEvent(new CustomEvent('open-login-modal'));
-                  return;
-                }
-                const newValue = !rememberProfile;
-                setRememberProfile(newValue);
-                if (newValue && url) {
-                  localStorage.setItem(`arcadeProfileUrl_${user.uid}`, url);
-                } else if (!newValue) {
-                  localStorage.removeItem(`arcadeProfileUrl_${user.uid}`);
-                }
-              }}
-              className={`w-10 h-5 rounded-full relative transition-colors ${rememberProfile ? 'bg-blue-500' : 'bg-slate-300 dark:bg-gray-600'}`}
-            >
-              <div className={`w-4 h-4 rounded-full bg-white absolute top-0.5 transition-transform ${rememberProfile ? 'translate-x-5' : 'translate-x-0.5'}`}></div>
-            </button>
-            <span className="text-sm text-slate-600 dark:text-gray-300 font-medium group-hover:text-slate-900 dark:group-hover:text-white transition-colors">Remember my profile</span>
-          </label>
-          
-          <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-gray-500 bg-slate-50 dark:bg-[#1a1a1a] px-3 py-1.5 rounded-md border border-slate-200 dark:border-[#2a2a2a]">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>Not affiliated with Google. Only reads public data.</span>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <button 
-            onClick={handleDemoData}
-            type="button"
-            className="text-[#f59e0b] hover:text-[#d97706] text-sm font-bold flex items-center gap-1 transition-colors"
-          >
-            Try with demo data <ChevronRight className="w-4 h-4" />
-          </button>
-          
-          <Link to="/disclaimer" className="text-slate-500 dark:text-gray-400 hover:text-slate-700 dark:hover:text-gray-300 text-sm flex items-center gap-1 transition-colors">
-            <AlertCircle className="w-4 h-4 text-[#f59e0b]" /> Official Disclaimer
-          </Link>
-        </div>
-      </div>
-
-      {isDemoAnimation && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="max-w-3xl mx-auto mb-10 bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#2a2a2a] rounded-2xl p-6 shadow-sm"
-        >
-          <h4 className="text-slate-900 dark:text-white font-bold mb-4 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-[#f59e0b]" /> 
-            Simulation Process
-          </h4>
-          <div className="space-y-4">
-            <div className={`flex items-center gap-3 transition-opacity duration-300 ${demoStep >= 1 ? 'opacity-100' : 'opacity-30'}`}>
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${demoStep > 1 ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
-                {demoStep > 1 ? <Check className="w-3 h-3" /> : '1'}
-              </div>
-              <span className="text-slate-700 dark:text-gray-300 font-medium">Fetching public profile data</span>
-            </div>
-            
-            <div className={`flex items-center gap-3 transition-opacity duration-300 ${demoStep >= 2 ? 'opacity-100' : 'opacity-30'}`}>
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${demoStep > 2 ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
-                {demoStep > 2 ? <Check className="w-3 h-3" /> : '2'}
-              </div>
-              <span className="text-slate-700 dark:text-gray-300 font-medium">Counting valid Skill Badges and Game Badges</span>
-            </div>
-
-            <div className={`flex items-center gap-3 transition-opacity duration-300 ${demoStep >= 3 ? 'opacity-100' : 'opacity-30'}`}>
-              <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${demoStep > 3 ? 'bg-green-500 text-white' : 'bg-blue-500 text-white'}`}>
-                {demoStep > 3 ? <Check className="w-3 h-3" /> : '3'}
-              </div>
-              <span className="text-slate-700 dark:text-gray-300 font-medium">Mapping points and checking milestone eligibility</span>
-            </div>
-          </div>
-        </motion.div>
-      )}
-
-        {result && (
+const newResultBlock = `{result && (
           <div className="relative">
             {/* 4 Floating Blurred Gradient Orbs */}
             <div className="absolute inset-0 overflow-visible pointer-events-none z-0">
@@ -454,12 +87,43 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                 const currentTierName = currentTierObj ? currentTierObj.name : "No Tier";
                 const nextTierObj = MILESTONES.find(m => totalPoints < m.requiredPoints);
                 const nextGoal = nextTierObj 
-                  ? `Earn ${nextTierObj.requiredPoints - totalPoints} more points to reach ${nextTierObj.name}.`
+                  ? \`Earn \${nextTierObj.requiredPoints - totalPoints} more points to reach \${nextTierObj.name}.\`
                   : "Max Tier Reached.";
 
                 const avatarInitials = result.name.substring(0, 2).toUpperCase();
 
+                // Generate confetti once on render if totalPoints > 0
+                React.useEffect(() => {
+                   if(totalPoints > 0) {
+                     setTimeout(() => {
+                       confetti({
+                         particleCount: 100,
+                         spread: 70,
+                         origin: { y: 0.6 },
+                         colors: ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#8B7CFA']
+                       });
+                     }, 1500); // Trigger after count up finishes
+                   }
+                }, [totalPoints]);
 
+                // Count-up hook
+                const AnimatedPoints = ({ endVal }) => {
+                  const [val, setVal] = React.useState(0);
+                  React.useEffect(() => {
+                    let startTime;
+                    const duration = 1500;
+                    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+                    
+                    const step = (timestamp) => {
+                      if (!startTime) startTime = timestamp;
+                      const progress = Math.min((timestamp - startTime) / duration, 1);
+                      setVal(Math.floor(easeOutCubic(progress) * endVal));
+                      if (progress < 1) requestAnimationFrame(step);
+                    };
+                    requestAnimationFrame(step);
+                  }, [endVal]);
+                  return <>{val}</>;
+                };
 
                 return (
                   <div className="flex flex-col gap-8 pb-10">
@@ -519,7 +183,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                                 className="p-2 rounded-full text-gray-400 hover:text-blue-500 bg-white/40 dark:bg-slate-700/40 hover:bg-white dark:hover:bg-slate-700 shadow-sm transition-all"
                                 title="Refresh Progress"
                               >
-                                <RefreshCw className={`w-5 h-5 ${isLoading ? 'animate-spin text-blue-500' : ''}`} />
+                                <RefreshCw className={\`w-5 h-5 \${isLoading ? 'animate-spin text-blue-500' : ''}\`} />
                               </button>
                             </div>
                             <p className="text-[#6b7280] dark:text-slate-400 text-sm">Member since {new Date().getFullYear()}</p>
@@ -585,118 +249,106 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                     >
                       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                         <h3 className="font-bold text-xl text-gray-900 dark:text-white flex items-center gap-2">
-                          Swags Tier Progress <Info className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+                          🏆 Swags Tier Progress
                         </h3>
                         <div className="flex items-center gap-3">
-                          <div className="flex bg-gray-100/80 dark:bg-slate-800/80 p-1.5 rounded-full border border-gray-200 dark:border-slate-700">
+                          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Facilitator Program</span>
+                          <div className="flex bg-gray-200/50 dark:bg-slate-700/50 p-1 rounded-xl border border-gray-300/50 dark:border-slate-600/50">
                             <button
                               onClick={() => setIsRegistered(true)}
-                              className={`px-5 py-2 text-sm rounded-full transition-all ${isRegistered ? 'bg-white dark:bg-slate-600 shadow-md text-purple-600 dark:text-purple-400 font-bold' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium bg-transparent'}`}
+                              className={\`px-4 py-1.5 text-sm rounded-lg transition-all \${isRegistered ? 'bg-white dark:bg-slate-600 shadow-sm text-indigo-600 dark:text-indigo-400 font-bold' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}\`}
                             >
                               Registered
                             </button>
                             <button
                               onClick={() => setIsRegistered(false)}
-                              className={`px-5 py-2 text-sm rounded-full transition-all ${!isRegistered ? 'bg-white dark:bg-slate-600 shadow-md text-purple-600 dark:text-purple-400 font-bold' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium bg-transparent'}`}
+                              className={\`px-4 py-1.5 text-sm rounded-lg transition-all \${!isRegistered ? 'bg-white dark:bg-slate-600 shadow-sm text-indigo-600 dark:text-indigo-400 font-bold' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}\`}
                             >
-                              Not Registered
+                              Not
                             </button>
                           </div>
                         </div>
                       </div>
 
                       {isRegistered && milestoneBonus > 0 && (
-                        <div className="mb-10 relative overflow-hidden bg-[#F0FDF4] dark:bg-green-900/20 border border-[#86EFAC] dark:border-green-800 rounded-full px-4 py-3.5 flex items-center justify-center text-[#15803D] dark:text-green-400 font-bold text-sm shadow-sm">
+                        <div className="mb-8 relative overflow-hidden bg-gradient-to-r from-green-500/10 via-green-400/20 to-green-500/10 border border-green-500/30 rounded-xl p-3 flex items-center justify-center text-green-700 dark:text-green-400 font-bold text-sm shadow-inner">
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
-                          <span className="mr-2 text-lg">🎁</span> Includes +{milestoneBonus} facilitator bonus points
+                          ✨ You have earned {milestoneBonus} Bonus Points!
                         </div>
                       )}
 
                       <div className="mt-8 relative pt-4 pb-4">
-                        <div className="hidden sm:block absolute top-[38px] left-8 right-8 h-1.5 bg-gray-200 dark:bg-slate-700 rounded-full">
+                        <div className="hidden sm:block absolute top-[36px] left-8 right-8 h-2 bg-gray-200 dark:bg-slate-700 rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-gradient-to-r from-[#4285F4] to-[#34A853] transition-[width] duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] relative rounded-full" 
+                            className="h-full bg-gradient-to-r from-blue-400 to-indigo-600 transition-all duration-1000 ease-out" 
                             style={{ 
-                              width: `${(() => {
-                                const m = MILESTONES;
-                                if (totalPoints <= m[0].requiredPoints) return (totalPoints / m[0].requiredPoints) * 12.5;
-                                else if (totalPoints <= m[1].requiredPoints) return 12.5 + ((totalPoints - m[0].requiredPoints) / (m[1].requiredPoints - m[0].requiredPoints)) * 25;
-                                else if (totalPoints <= m[2].requiredPoints) return 37.5 + ((totalPoints - m[1].requiredPoints) / (m[2].requiredPoints - m[1].requiredPoints)) * 25;
-                                else if (totalPoints <= m[3].requiredPoints) return 62.5 + ((totalPoints - m[2].requiredPoints) / (m[3].requiredPoints - m[2].requiredPoints)) * 25;
-                                else return Math.min(100, 87.5 + ((totalPoints - m[3].requiredPoints) / 30) * 12.5);
-                              })()}%`
+                              width: \`\${Math.min(100, Math.max(0, 
+                                totalPoints >= MILESTONES[0].requiredPoints ? 100 :
+                                totalPoints >= MILESTONES[1].requiredPoints ? 75 :
+                                totalPoints >= MILESTONES[2].requiredPoints ? 50 :
+                                totalPoints >= MILESTONES[3].requiredPoints ? 25 : 0
+                              ))}%\` 
                             }}
                           >
-                             {/* The glowing tip */}
-                             {totalPoints > 0 && totalPoints < MILESTONES[3].requiredPoints && (
-                               <div 
-                                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-5 h-5 bg-white border-[4px] rounded-full z-20 animate-pulse" 
-                                  style={{ borderColor: currentTierObj ? currentTierObj.colorClass.replace('bg-[', '').replace(']', '') : '#34A853', boxShadow: `0 0 15px ${currentTierObj ? currentTierObj.colorClass.replace('bg-[', '').replace(']', '') : '#34A853'}` }}
-                               ></div>
-                             )}
+                             <div className="w-full h-full relative">
+                               <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-r from-transparent to-white/50 opacity-50 blur-[2px] animate-pulse"></div>
+                             </div>
                           </div>
                         </div>
 
                         <div className="flex flex-col sm:flex-row justify-between gap-6 sm:gap-0 relative z-10">
-                          {MILESTONES.map((milestone, idx) => {
+                          {[...MILESTONES].reverse().map((milestone, idx) => {
                             const isComplete = totalPoints >= milestone.requiredPoints;
                             const isCurrent = currentTierObj && currentTierObj.id === milestone.id;
                             const isNext = nextTierObj && nextTierObj.id === milestone.id;
-                            const color = milestone.colorClass.replace('bg-[', '').replace(']', '');
                             
                             let circleClass = 'bg-white dark:bg-slate-800 border-gray-300 dark:border-slate-600 text-gray-400';
-                            let circleStyle: any = {};
+                            let circleStyle = {};
                             
                             if (isComplete) {
-                              circleClass = 'text-white border-transparent';
-                              circleStyle = { backgroundColor: color };
+                              circleClass = 'text-white border-transparent shadow-[0_0_15px_rgba(0,0,0,0.2)]';
+                              circleStyle = { backgroundColor: milestone.colorClass.replace('bg-[', '').replace(']', '') };
                             } else if (isNext) {
-                              circleClass = 'bg-white dark:bg-slate-800 border-[3px] bg-clip-padding';
-                              circleStyle = { borderColor: color, color: color };
-                            } else {
-                              circleClass = 'bg-white dark:bg-slate-800 border-[3px] border-gray-200 dark:border-slate-700 text-gray-400';
+                              circleClass = 'bg-white dark:bg-slate-800 text-gray-800 dark:text-white border-2 border-dashed border-gray-400 dark:border-gray-500';
                             }
+                            
+                            const tierColor = milestone.colorClass.replace('bg-[', '').replace(']', '');
 
                             return (
                               <div key={milestone.id} className="flex flex-row sm:flex-col items-center flex-1 relative bg-white/0 text-left sm:text-center z-10 sm:px-2">
-                                <div 
-                                  className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center sm:mb-4 mr-4 sm:mr-0 transition-all ${circleClass}`} 
-                                  style={{...circleStyle, ...(isCurrent ? { boxShadow: `0 0 35px 8px ${color}60` } : {})}}
-                                >
+                                <div className={\`w-14 h-14 shrink-0 rounded-full flex items-center justify-center sm:mb-4 mr-4 sm:mr-0 shadow-lg \${circleClass} \${isCurrent ? 'ring-4 ring-offset-2 dark:ring-offset-slate-900 ring-indigo-500/50 animate-pulse' : ''}\`} style={circleStyle}>
                                   {isComplete ? (
-                                    <Check className="w-7 h-7 stroke-[3]" />
+                                    <Check className="w-6 h-6 stroke-[3]" />
                                   ) : isNext ? (
-                                    <ChevronRight className="w-7 h-7 stroke-[3]" />
+                                    <div className="w-4 h-4 rounded-full bg-gray-400 dark:bg-gray-500"></div>
                                   ) : (
-                                    <Lock className="w-5 h-5 opacity-40" />
+                                    <Lock className="w-5 h-5 opacity-50" />
                                   )}
                                 </div>
                                 
                                 <div className="flex-1">
-                                  <div className="font-bold text-lg text-gray-900 dark:text-white">
+                                  <div className={\`font-bold text-lg \${isComplete ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-slate-400'}\`}>
                                     {milestone.name}
                                   </div>
-                                  <div className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">
+                                  <div className="text-sm font-semibold text-[#6b7280] dark:text-slate-400 mt-1">
                                     {milestone.requiredPoints} pts
                                   </div>
                                   
-                                  <div className="text-xs text-gray-400 dark:text-slate-500 mt-1">
+                                  <div className="text-xs bg-gray-100/80 dark:bg-slate-700/80 backdrop-blur-sm rounded-lg px-2 py-1 inline-block mt-2 text-gray-600 dark:text-slate-300 font-medium border border-gray-200/50 dark:border-slate-600/50 shadow-sm">
                                     {spotsLoading ? (
-                                       <span className="animate-pulse">— / — spots left</span>
+                                       <span className="animate-pulse opacity-50">— / — spots left</span>
                                     ) : (
-                                       <span>{spots[milestone.name.toLowerCase()].spotsLeft.toLocaleString()} / {spots[milestone.name.toLowerCase()].total.toLocaleString()} spots left</span>
+                                       <span>{spots[milestone.name.toLowerCase()].spotsLeft.toLocaleString()} / {spots[milestone.name.toLowerCase()].total.toLocaleString()} left</span>
                                     )}
                                   </div>
                                   
-                                  <div className="mt-2 h-5">
-                                    {isCurrent ? (
-                                      <div className="text-sm font-bold" style={{ color: color }}>Current Tier</div>
-                                    ) : isNext ? (
-                                      <div className="text-sm font-bold" style={{ color: color }}>{Number((milestone.requiredPoints - totalPoints).toFixed(1))} pts to unlock</div>
-                                    ) : !isComplete ? (
-                                      <div className="text-sm font-bold text-gray-400 dark:text-slate-500">{Number((milestone.requiredPoints - totalPoints).toFixed(1))} pts to unlock</div>
-                                    ) : null}
-                                  </div>
+                                  {isCurrent ? (
+                                    <div className="text-xs font-bold mt-2 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded-md inline-block">Current Tier</div>
+                                  ) : isNext ? (
+                                    <div className="text-xs font-bold mt-2 text-blue-500 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded-md inline-block">{Number((milestone.requiredPoints - totalPoints).toFixed(1))} pts to unlock</div>
+                                  ) : !isComplete ? (
+                                    <div className="text-xs font-medium text-gray-400 dark:text-slate-500 mt-2">{Number((milestone.requiredPoints - totalPoints).toFixed(1))} pts to unlock</div>
+                                  ) : null}
                                 </div>
                               </div>
                             );
@@ -776,7 +428,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                               <span className="text-2xl animate-[bounce_3.5s_ease-in-out_infinite]">🎮</span> Game Badges
                             </div>
                             <div className="w-16 text-center text-gray-600 dark:text-slate-400 font-bold bg-gray-100/50 dark:bg-slate-800/50 rounded-lg py-1">{displayGameBadges}</div>
-                            <div className={`w-16 text-right font-extrabold ${displayGameBadges > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-gray-900 dark:text-white'}`}>{displayGameBadges}</div>
+                            <div className={\`w-16 text-right font-extrabold \${displayGameBadges > 0 ? 'text-[#2563eb] dark:text-blue-400' : 'text-gray-900 dark:text-white'}\`}>{displayGameBadges}</div>
                           </div>
                         </div>
                       </motion.div>
@@ -786,19 +438,29 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
               })()}
             </motion.div>
           </div>
-        )}
+        )}`;
 
-      <BadgeTracker 
-        isOpen={isBadgeTrackerOpen} 
-        onClose={() => setIsBadgeTrackerOpen(false)} 
-        participant={result} 
-      />
-      <FacilitatorBadgeTracker 
-        isOpen={isFacilitatorBadgeTrackerOpen} 
-        onClose={() => setIsFacilitatorBadgeTrackerOpen(false)} 
-        participant={result}
-        isRegistered={isRegistered} 
-      />
-    </section>
-  );
+code = part1 + newResultBlock + part2;
+fs.writeFileSync('src/components/ProfileChecker.tsx', code, 'utf8');
+
+// I also need to make sure index.css has the custom keyframes for shimmer, wiggle and gradient
+let css = fs.readFileSync('src/index.css', 'utf8');
+if (!css.includes('@keyframes shimmer')) {
+  css += `
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
 }
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+`;
+  fs.writeFileSync('src/index.css', css, 'utf8');
+}
+
+console.log("Success");

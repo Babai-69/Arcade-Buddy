@@ -1,1 +1,40 @@
-{"games":[{"link":"https://www.skills.google/games/7399?utm_source=googleskills&utm_medium=lp&utm_campaign=special-Aug-arcade26","img":"https://services.google.com/fh/files/misc/special-aug.png","title":"Spans and Plans","code":"1q-schema-27083"},{"link":"https://www.skills.google/games/7397?utm_source=googleskills&utm_medium=lp&utm_campaign=specgame-Aug-arcade26","img":"https://services.google.com/fh/files/misc/simulater-aug.png","title":"Arcade Simulator: Network Security Engineer","code":"1q-network-51470"},{"link":"https://www.skills.google/games/7394?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Aug-arcade26","img":"https://services.google.com/fh/files/misc/bc-aug.png","title":"Arcade Base Camp","code":"1q-basecamp-10219"},{"link":"https://www.skills.google/games/7395?utm_source=googleskills&utm_medium=lp&utm_campaign=adv-Aug-arcade26","img":"https://services.google.com/fh/files/misc/adv-aug.png","title":"Arcade Adventure","code":"1q-datamgt-92372"},{"link":"https://www.skills.google/games/7398?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Aug-arcade26","img":"https://services.google.com/fh/files/misc/voyuge-aug.png","title":"Arcade Voyage","code":"1q-sheets-29185"},{"link":"https://www.skills.google/games/7396?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Aug-arcade26","img":"https://services.google.com/fh/files/misc/trail-aug.png","title":"Arcade Trail","code":"1q-delivery-31058"}]}
+{
+  "games":[
+    {
+      "link":"https://www.skills.google/games/7399?utm_source=googleskills&utm_medium=lp&utm_campaign=special-Aug-arcade26",
+      "img":"https://services.google.com/fh/files/misc/special-aug.png",
+      "title":"Spans and Plans",
+      "code":"1q-schema-27083"
+    },
+    {
+      "link":"https://www.skills.google/games/7397?utm_source=googleskills&utm_medium=lp&utm_campaign=specgame-Aug-arcade26",
+      "img":"https://services.google.com/fh/files/misc/simulater-aug.png",
+      "title":"Arcade Simulator: Network Security Engineer",
+      "code":"1q-network-51470"
+    },
+    {
+      "link":"https://www.skills.google/games/7394?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Aug-arcade26",
+      "img":"https://services.google.com/fh/files/misc/bc-aug.png",
+      "title":"Arcade Base Camp",
+      "code":"1q-basecamp-10219"
+    },
+    {
+      "link":"https://www.skills.google/games/7395?utm_source=googleskills&utm_medium=lp&utm_campaign=adv-Aug-arcade26",
+      "img":"https://services.google.com/fh/files/misc/adv-aug.png",
+      "title":"Arcade Adventure",
+      "code":"1q-datamgt-92372"
+    },
+    {
+      "link":"https://www.skills.google/games/7398?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Aug-arcade26",
+      "img":"https://services.google.com/fh/files/misc/voyuge-aug.png",
+      "title":"Arcade Voyage",
+      "code":"1q-sheets-29185"
+    },
+    {
+      "link":"https://www.skills.google/games/7396?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Aug-arcade26",
+      "img":"https://services.google.com/fh/files/misc/trail-aug.png",
+      "title":"Arcade Trail",
+      "code":"1q-delivery-31058"
+    }
+  ]
+}

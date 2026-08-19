@@ -438,16 +438,22 @@ app.post("/api/notify-query", async (req, res) => {
   });
 
   app.get("/api/calculator", async (req, res) => {
-    const { url, startDate, endDate } = req.query;
+    let { url, startDate, endDate } = req.query;
     if (!url || typeof url !== "string") {
       return res.status(400).json({ error: "Missing url parameter" });
     }
+    
+    // Rewrite skills.google to cloudskillsboost.google as it is more stable and prevents timeouts
+    if (url.includes('skills.google/public_profiles/')) {
+       url = url.replace('skills.google/public_profiles/', 'cloudskillsboost.google/public_profiles/');
+    }
+
 
     const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T00:00:00Z');
     const END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T18:29:00Z');
 
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { signal: AbortSignal.timeout(20000) });
       if (!response.ok) {
         return res.status(404).json({ error: "Profile not found or invalid URL" });
       }
