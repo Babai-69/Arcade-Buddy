@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
+import { ThreeBackground } from './components/ThreeBackground';
 import { Navbar } from './components/layout/Navbar';
 import { Footer } from './components/layout/Footer';
 import { PageTransition } from './components/layout/PageTransition';
@@ -46,7 +47,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col font-sans transition-colors duration-300">
       <ScrollToTop />
-      {location.pathname !== '/' && <div className="mesh-bg"></div>}
+      <ThreeBackground />
       <Navbar />
       <WelcomeTour />
       

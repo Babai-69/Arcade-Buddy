@@ -9,7 +9,7 @@ export function SwagsPage() {
   const tiers = ['All Tiers', 'Trooper', 'Ranger', 'Champion', 'Legend'];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 font-sans flex flex-col">
+    <div className="min-h-screen font-sans flex flex-col">
       <div className="flex-grow flex flex-col items-center pt-24 pb-12 px-4 max-w-5xl mx-auto w-full text-center">
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-4">Swag Drops</h1>
         <p className="text-slate-500 mb-12 max-w-2xl mx-auto text-[15px]">
@@ -71,7 +71,7 @@ export function SwagsPage() {
 
 function SwagCard({ image, name, milestone, color }: any) {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 text-left group">
+    <div className="glass-panel rounded-2xl overflow-hidden shadow-sm text-left group">
       <div className="aspect-square w-full overflow-hidden relative">
         <div className={`absolute top-3 right-3 px-3 py-1 text-[10px] font-bold rounded-full z-10 shadow-sm ${color}`}>
           {milestone}

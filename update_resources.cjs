@@ -1,4 +1,6 @@
-import React, { useState, useMemo } from 'react';
+const fs = require('fs');
+
+let code = `import React, { useState, useMemo } from 'react';
 import { ArrowRight, X, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -149,18 +151,18 @@ export function ResourcesPage() {
           <button
             key={cat.id}
             onClick={() => setActiveTab(cat.id)}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 ${
+            className={\`flex items-center gap-2 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 \${
               activeTab === cat.id 
                 ? 'bg-blue-400 text-slate-900 shadow-[0_0_20px_rgba(96,165,250,0.5)] dark:shadow-[0_0_20px_rgba(96,165,250,0.3)] transform -translate-y-0.5' 
                 : 'bg-white/40 dark:bg-slate-900/40 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:bg-white/80 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
-            }`}
+            }\`}
           >
             {cat.id}
-            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+            <span className={\`px-2 py-0.5 rounded-full text-xs font-bold \${
               activeTab === cat.id 
                 ? 'bg-blue-300/50 text-slate-900' 
                 : 'bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
-            }`}>
+            }\`}>
               {cat.count}
             </span>
           </button>
@@ -180,7 +182,7 @@ export function ResourcesPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
-              className={`glass-card flex flex-col h-full ${item.bg} overflow-hidden group hover:shadow-[0_0_30px_rgba(66,133,244,0.2)] dark:hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] dark:hover:border-indigo-500/50 hover:-translate-y-1 transition-all duration-300`}
+              className={\`glass-card flex flex-col h-full \${item.bg} overflow-hidden group hover:shadow-[0_0_30px_rgba(66,133,244,0.2)] dark:hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] dark:hover:border-indigo-500/50 hover:-translate-y-1 transition-all duration-300\`}
             >
               {(item.image || item.imageDark) && (
                 <div className="w-full h-48 md:h-56 relative overflow-hidden bg-slate-100 dark:bg-slate-900">
@@ -266,3 +268,7 @@ export function ResourcesPage() {
     </div>
   );
 }
+`;
+
+fs.writeFileSync('src/pages/ResourcesPage.tsx', code, 'utf8');
+console.log("Updated resources page");

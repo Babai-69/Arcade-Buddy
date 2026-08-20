@@ -1,11 +1,11 @@
 import React from 'react';
-import { ExternalLink, ShieldAlert, Cloud, Code, GitMerge, FileText, Gift, Award, Zap, Terminal, Database, Shield, HelpCircle, LayoutGrid, Gamepad2 } from 'lucide-react';
+import { ExternalLink, Users, Layers, Rocket, ShieldAlert, Cloud, Code, GitMerge, FileText, Gift, Award, Zap, Terminal, Database, Shield, HelpCircle, LayoutGrid, Gamepad2 } from 'lucide-react';
 import { FacilitatorCards } from '../components/FacilitatorCards';
 import { SupportSection } from '../components/SupportSection';
 
 export function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-[#030509] font-sans flex flex-col font-medium relative overflow-hidden">
+    <div className="min-h-screen font-sans flex flex-col font-medium relative overflow-hidden">
       {/* Background glow effects */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] bg-blue-500/10 dark:bg-blue-500/10 blur-[100px] rounded-full pointer-events-none" />
       
@@ -32,29 +32,30 @@ export function AboutPage() {
 
         {/* Section 1 */}
         <div className="w-full text-center mb-16">
-          <h2 className="text-3xl font-bold font-display text-slate-900 dark:text-white mb-8">What is Google Cloud Arcade?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-8">How Arcade <span className="text-[#4285F4]">Works</span></h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <FeatureCard icon={Gamepad2} title="Gamified Learning" desc="Structured challenges that make cloud learning engaging." colorClass="text-indigo-500 dark:text-indigo-400" bgClass="bg-indigo-50 dark:bg-indigo-500/10" />
-            <FeatureCard icon={FileText} title="Monthly Challenges" desc="New labs and challenges released regularly." colorClass="text-emerald-500 dark:text-emerald-400" bgClass="bg-emerald-50 dark:bg-emerald-500/10" />
-            <FeatureCard icon={Terminal} title="Hands-on Labs" desc="Practice real-world Google Cloud scenarios." colorClass="text-blue-500 dark:text-blue-400" bgClass="bg-blue-50 dark:bg-blue-500/10" />
-            <FeatureCard icon={Gift} title="Completely Free" desc="Accessible to everyone with no participation cost." colorClass="text-fuchsia-500 dark:text-fuchsia-400" bgClass="bg-fuchsia-50 dark:bg-fuchsia-500/10" />
+            <FeatureCard icon={Gamepad2} title="Gamified Learning" desc="Structured challenges that make cloud learning engaging." colorClass="text-indigo-500 dark:text-indigo-400" bgClass="bg-indigo-50 dark:bg-indigo-500/10" dotColor="bg-indigo-500" />
+            <FeatureCard icon={FileText} title="Monthly Challenges" desc="New labs and challenges released regularly." colorClass="text-emerald-500 dark:text-emerald-400" bgClass="bg-emerald-50 dark:bg-emerald-500/10" dotColor="bg-emerald-500" />
+            <FeatureCard icon={Terminal} title="Hands-on Labs" desc="Practice real-world Google Cloud scenarios." colorClass="text-blue-500 dark:text-blue-400" bgClass="bg-blue-50 dark:bg-blue-500/10" dotColor="bg-blue-500" />
+            <FeatureCard icon={Gift} title="Completely Free" desc="Accessible to everyone with no participation cost." colorClass="text-fuchsia-500 dark:text-fuchsia-400" bgClass="bg-fuchsia-50 dark:bg-fuchsia-500/10" dotColor="bg-amber-500" />
           </div>
         </div>
 
-        {/* Section 2 */}
+                {/* Section 2 */}
         <div className="w-full text-center mb-16">
-          <h2 className="text-3xl font-bold font-display text-slate-900 dark:text-white mb-8">Skills You Will Build</h2>
+          <div className="text-[#34A853] text-xs font-bold tracking-widest mb-3 uppercase">Skill Tree</div>
+          <h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-8">Skills You Will <span className="text-[#4285F4]">Build</span></h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <FeatureCard icon={Zap} title="Generative AI" desc="Hands-on with Gemini, Vertex AI, and GenAI workflows." colorClass="text-violet-500 dark:text-violet-400" bgClass="bg-violet-50 dark:bg-violet-500/10" />
-            <FeatureCard icon={Cloud} title="Cloud Fundamentals" desc="BigQuery, Kubernetes, Firebase, networking, and security." colorClass="text-cyan-500 dark:text-cyan-400" bgClass="bg-cyan-50 dark:bg-cyan-500/10" />
-            <FeatureCard icon={Code} title="Prompt Engineering" desc="Design prompts to maximize AI outputs." colorClass="text-amber-500 dark:text-amber-400" bgClass="bg-amber-50 dark:bg-amber-500/10" />
-            <FeatureCard icon={Database} title="Practical Experience" desc="Real labs to solidify learning through practice." colorClass="text-rose-500 dark:text-rose-400" bgClass="bg-rose-50 dark:bg-rose-500/10" />
+            <FeatureCard icon={Zap} title="Generative AI" desc="Hands-on with Gemini, Vertex AI, and GenAI workflows." colorClass="text-violet-500 dark:text-violet-400" bgClass="bg-violet-50 dark:bg-violet-500/10" dotColor="bg-violet-500" />
+            <FeatureCard icon={Cloud} title="Cloud Fundamentals" desc="BigQuery, Kubernetes, Firebase, networking, and security." colorClass="text-cyan-500 dark:text-cyan-400" bgClass="bg-cyan-50 dark:bg-cyan-500/10" dotColor="bg-cyan-500" />
+            <FeatureCard icon={Code} title="Prompt Engineering" desc="Design prompts to maximize AI outputs." colorClass="text-amber-500 dark:text-amber-400" bgClass="bg-amber-50 dark:bg-amber-500/10" dotColor="bg-amber-500" />
+            <FeatureCard icon={Database} title="Practical Experience" desc="Real labs to solidify learning through practice." colorClass="text-rose-500 dark:text-rose-400" bgClass="bg-rose-50 dark:bg-rose-500/10" dotColor="bg-rose-500" />
           </div>
         </div>
 
         {/* Section 3 */}
         <div className="w-full text-center mb-16">
-          <h2 className="text-3xl font-bold font-display text-slate-900 dark:text-white mb-8">How Arcade Works</h2>
+          <h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-8">The <span className="text-[#4285F4]">Journey</span></h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <FeatureCard icon={LayoutGrid} title="Choose Challenges" desc="Select labs based on your interests." colorClass="text-teal-500 dark:text-teal-400" bgClass="bg-teal-50 dark:bg-teal-500/10" />
             <FeatureCard icon={Award} title="Earn Points" desc="Complete labs to earn points and badges." colorClass="text-yellow-500 dark:text-yellow-400" bgClass="bg-yellow-50 dark:bg-yellow-500/10" />
@@ -65,7 +66,7 @@ export function AboutPage() {
         {/* Section 4 */}
         <div className="w-full text-center mb-16">
           <h2 className="text-3xl font-bold font-display text-slate-900 dark:text-white mb-8">About Google Cloud Arcade Buddy</h2>
-          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-[#0a0e17] dark:to-[#111827] border border-blue-100/80 dark:border-white/5 rounded-3xl p-8 md:p-10 text-left shadow-lg max-w-4xl mx-auto relative overflow-hidden group hover:border-blue-200 dark:hover:border-white/10 transition-colors">
+          <div className="glass-panel rounded-3xl p-8 md:p-10 text-left shadow-lg max-w-4xl mx-auto relative overflow-hidden group hover:border-blue-200 dark:hover:border-white/10 transition-colors">
              <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-5 group-hover:scale-110 transition-transform duration-700">
                 <Cloud className="w-48 h-48" />
              </div>
@@ -96,16 +97,23 @@ export function AboutPage() {
   );
 }
 
-function FeatureCard({ icon: Icon, title, desc, colorClass = "text-blue-500", bgClass = "bg-blue-50 dark:bg-blue-500/10" }: any) {
+function FeatureCard({ icon: Icon, title, desc, colorClass = "text-blue-500", bgClass = "bg-blue-50 dark:bg-blue-500/10", dotColor = "bg-blue-500" }: any) {
   return (
-    <div className="group bg-white dark:bg-[#0a0e17] border border-slate-200/80 dark:border-white/5 p-6 rounded-2xl text-left shadow-sm hover:shadow-xl hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 hover:-translate-y-1">
-       <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 ${bgClass} transition-colors`}>
-         <Icon className={`w-6 h-6 ${colorClass}`} />
+    <div className="group relative mt-2 glass-panel p-6 rounded-2xl text-left shadow-sm hover:shadow-[0_4px_24px_rgba(0,0,0,0.06)] hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300">
+       <div className="absolute top-0 left-6 -translate-y-1/2 flex items-center h-2">
+         <div className={`w-3.5 h-3.5 rounded-full ${dotColor} border-[3px] border-white dark:border-[#0a0e17]`}></div>
+         <div className="w-12 h-[1px] bg-slate-200 dark:bg-slate-700 ml-3 hidden sm:block"></div>
        </div>
-       <div className="text-slate-900 dark:text-white font-bold text-[15.5px] mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-         {title}
+
+       <div className="flex items-center gap-4 mb-4">
+         <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${bgClass} transition-colors`}>
+           <Icon className={`w-5 h-5 ${colorClass}`} />
+         </div>
+         <div className="text-slate-900 dark:text-white font-bold text-[16px] group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+           {title}
+         </div>
        </div>
-       <p className="text-slate-500 dark:text-slate-400 text-[13.5px] leading-relaxed">
+       <p className="text-slate-500 dark:text-slate-400 text-[14px] leading-relaxed">
          {desc}
        </p>
     </div>
