@@ -4,8 +4,7 @@ import { motion } from 'motion/react';
 import { Search, Trophy, Medal, Star, ChevronRight, Activity, AlertCircle, Lock, CheckCircle2, Check, RefreshCw, Info } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { Participant, MILESTONES } from '../types';
-import { BadgeTracker } from './BadgeTracker';
-import { FacilitatorBadgeTracker } from './FacilitatorBadgeTracker';
+import { InlineBadgeTracker } from './InlineBadgeTracker';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
@@ -49,9 +48,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   const [url, setUrl] = useState('');
   const [result, setResult] = useState<Participant | null>(null);
   const [error, setError] = useState('');
-  const [isBadgeTrackerOpen, setIsBadgeTrackerOpen] = useState(false);
-  const [isFacilitatorBadgeTrackerOpen, setIsFacilitatorBadgeTrackerOpen] = useState(false);
-  const [isRegistered, setIsRegistered] = useState(true);
+      const [isRegistered, setIsRegistered] = useState(true);
   const [rememberProfile, setRememberProfile] = useState(false);
   const [isDemoAnimation, setIsDemoAnimation] = useState(false);
 
@@ -463,20 +460,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
 
                 return (
                   <div className="flex flex-col gap-8 pb-10">
-                    {/* Centered pill CTA button */}
-                    <motion.div 
-                      initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
-                      className="flex justify-center mb-2"
-                    >
-                      <Link 
-                        to="/my-progress" 
-                        className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full font-bold text-white text-lg transition-all transform hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(139,124,250,0.4)] overflow-hidden"
-                      >
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#5B6CF9] via-[#8B5CF6] to-[#5B6CF9] bg-[length:200%_auto] animate-[gradient_3s_linear_infinite] group-hover:opacity-90"></div>
-                        <span className="relative z-10 drop-shadow-md">View Detailed Progress & Share Card</span>
-                        <ChevronRight className="w-5 h-5 relative z-10 transition-transform group-hover:translate-x-1" />
-                      </Link>
-                    </motion.div>
+
 
                     {/* TOP ROW: Profile & Points */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -528,12 +512,12 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                             <a href={result.profileUrl} target="_blank" rel="noopener noreferrer" className="w-full text-center py-2.5 px-4 rounded-xl border border-gray-300 dark:border-slate-600 text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-all shadow-sm">
                               View Profile
                             </a>
-                            <button 
-                              onClick={() => setIsFacilitatorBadgeTrackerOpen(true)}
-                              className="w-full text-center py-2.5 px-4 rounded-xl border border-amber-400/50 text-sm font-semibold text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-all shadow-sm"
+                            <Link 
+                              to="/my-progress"
+                              className="w-full text-center py-2.5 px-4 rounded-xl border border-emerald-400/50 text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all shadow-sm flex items-center justify-center gap-2"
                             >
-                              🗓️ Badge Tracker
-                            </button>
+                              📊 My Progress
+                            </Link>
                             <Link 
                               to="/roadmap"
                               state={{ participant: result }}
@@ -788,17 +772,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
           </div>
         )}
 
-      <BadgeTracker 
-        isOpen={isBadgeTrackerOpen} 
-        onClose={() => setIsBadgeTrackerOpen(false)} 
-        participant={result} 
-      />
-      <FacilitatorBadgeTracker 
-        isOpen={isFacilitatorBadgeTrackerOpen} 
-        onClose={() => setIsFacilitatorBadgeTrackerOpen(false)} 
-        participant={result}
-        isRegistered={isRegistered} 
-      />
+      <InlineBadgeTracker participant={result} />
     </section>
   );
 }

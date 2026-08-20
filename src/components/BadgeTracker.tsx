@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { X, Trophy, CheckCircle, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { BadgeRecord, Participant } from '../types';
 
 interface BadgeTrackerProps {
@@ -47,7 +48,7 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
     };
   }, [participant]);
 
-  if (!isOpen) return null;
+
 
   // Group eligible badges
   const gameBadges = eligibleBadges.filter(b => b.category === 'Game');
@@ -55,19 +56,30 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
   const labFreeBadges = eligibleBadges.filter(b => b.category === 'Lab-free');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true">
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" 
-        aria-hidden="true" 
-        onClick={onClose}
-      />
-      
-      {/* Modal */}
-      <div className="relative bg-slate-50 dark:bg-slate-900 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transition-all transform z-50 border border-slate-200 dark:border-slate-700">
+    <AnimatePresence>
+    {isOpen && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6" role="dialog" aria-modal="true">
+        {/* Backdrop */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" 
+          aria-hidden="true" 
+          onClick={onClose}
+        />
+        
+        {/* Modal */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          transition={{ type: "spring", bounce: 0, duration: 0.4 }}
+          className="relative bg-[#f8fafc] dark:bg-[#0f172a] shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden transition-all transform z-50 border border-white/20 dark:border-white/10 rounded-3xl"
+        >
         
         {/* Header */}
-        <div className="flex justify-between items-center px-6 py-5 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
+        <div className="flex justify-between items-center px-6 py-5 border-b border-slate-200 dark:border-slate-800 bg-white/95 backdrop-blur dark:bg-slate-900/95 shrink-0">
           <div>
             <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Trophy className="w-6 h-6 text-[#4285F4]" />
@@ -109,26 +121,26 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
 
               {/* Stats Row */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
+                <div className="bg-white dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm text-center">
                   <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">Eligible Badges</p>
                   <p className="text-3xl font-bold text-slate-900 dark:text-white">{stats.total}</p>
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
+                <div className="bg-white dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm text-center">
                   <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">Game Badges</p>
                   <p className="text-3xl font-bold text-[#4285F4]">{stats.games}</p>
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
+                <div className="bg-white dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm text-center">
                   <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">Skill Badges</p>
                   <p className="text-3xl font-bold text-[#FBBC05]">{stats.skills}</p>
                 </div>
-                <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
+                <div className="bg-white dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-200 dark:border-slate-700/50 shadow-sm text-center">
                   <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">Eligible Points</p>
                   <p className="text-3xl font-bold text-[#34A853]">{stats.points}</p>
                 </div>
               </div>
 
               {eligibleBadges.length === 0 ? (
-                <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+                <div className="text-center py-12 bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/50">
                   <p className="text-slate-600 dark:text-slate-400 mb-2">No badges found in the Jul 13 – Sep 14 window.</p>
                   <p className="font-medium text-slate-800 dark:text-slate-200">Keep earning badges to qualify for the facilitator bonus!</p>
                 </div>
@@ -142,7 +154,7 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {gameBadges.map(b => (
-                          <div key={b.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm flex flex-col">
+                          <div key={b.id} className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/50 p-4 shadow-sm flex flex-col">
                             <h4 className="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-2 flex-1 line-clamp-2">{b.title}</h4>
                             <div className="text-xs text-slate-500 dark:text-slate-400 mb-3">{b.earnedDate}</div>
                             <div className="flex justify-between items-center mt-auto">
@@ -167,7 +179,7 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {skillBadges.map(b => (
-                          <div key={b.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm flex flex-col">
+                          <div key={b.id} className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/50 p-4 shadow-sm flex flex-col">
                             <h4 className="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-2 flex-1 line-clamp-2">{b.title}</h4>
                             <div className="text-xs text-slate-500 dark:text-slate-400 mb-3">{b.earnedDate}</div>
                             <div className="flex justify-between items-center mt-auto">
@@ -192,7 +204,7 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {labFreeBadges.map(b => (
-                          <div key={b.id} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm flex flex-col">
+                          <div key={b.id} className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/50 p-4 shadow-sm flex flex-col">
                             <h4 className="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-2 flex-1 line-clamp-2">{b.title}</h4>
                             <div className="text-xs text-slate-500 dark:text-slate-400 mb-3">{b.earnedDate}</div>
                             <div className="flex justify-between items-center mt-auto">
@@ -246,7 +258,9 @@ export function BadgeTracker({ isOpen, onClose, participant }: BadgeTrackerProps
             </>
           )}
         </div>
+      </motion.div>
       </div>
-    </div>
+    )}
+    </AnimatePresence>
   );
 }

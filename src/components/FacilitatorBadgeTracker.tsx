@@ -70,7 +70,7 @@ export function FacilitatorBadgeTracker({ isOpen, onClose, participant, isRegist
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="relative bg-slate-50 dark:bg-slate-900 shadow-2xl w-full max-w-xl h-full flex flex-col border-l border-slate-200 dark:border-slate-800 z-50"
+            className="relative bg-slate-50 dark:bg-slate-900 shadow-2xl w-full max-w-xl h-full flex flex-col border-l border-slate-200 dark:border-slate-800 z-50 ml-auto"
           >
             
             {/* Header */}
