@@ -648,7 +648,7 @@ export function FacilitatorSyllabus() {
           </div>
           
           <p className="text-slate-600 dark:text-slate-300 mb-8 max-w-2xl mx-auto">
-            Use the <strong className="text-slate-900 dark:text-white">Arcade Points Calculator Dashboard</strong> to:
+            Use the <strong className="text-slate-900 dark:text-white">Arcade Buddy Points Calculator</strong> to:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto mb-10">
