@@ -67,7 +67,7 @@ export function Milestones() {
       >
         <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-4">
           <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-slate-900 dark:text-white">Swag Milestones</h2>
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-slate-900 dark:text-white tracking-tight">Swag Milestones</h2>
             <p className="text-slate-700 dark:text-slate-300">Track your progress and unlock exclusive rewards.</p>
           </div>
         </div>
@@ -95,7 +95,7 @@ export function Milestones() {
               <motion.div 
                 key={milestone.id}
                 whileHover={{ y: -5 }}
-                className="glass-card rounded-[2rem] p-6 relative overflow-hidden group border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow"
+                className="glass-panel rounded-[2rem] p-8 relative overflow-hidden group border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
               >
                 <div className={`absolute top-0 right-0 w-24 h-24 ${milestone.colorClass}/10 rounded-bl-full -z-10 group-hover:scale-125 transition-transform duration-500`} />
                 
