@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcade Buddy — Drop Your Feedback Coin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0a0c16;
+    --bg-1:#11142a;
+    --cabinet:#171b34;
+    --cabinet-edge:#232852;
+    --screen:#050710;
+    --blue:#4285F4;
+    --red:#EA4335;
+    --yellow:#FBBC05;
+    --green:#34A853;
+    --violet:#8b5cf6;
+    --ink:#eef0ff;
+    --ink-dim:#9aa0c7;
+    --card-border:rgba(255,255,255,.08);
+    --card-bg:rgba(255,255,255,.03);
+    --pixel: 'Press Start 2P', monospace;
+    --body: 'Space Grotesk', sans-serif;
+  }
+  html[data-theme="light"]{
+    --bg-0:#f4f5fb;
+    --bg-1:#eaecf8;
+    --cabinet:#ffffff;
+    --cabinet-edge:#dfe2f2;
+    --screen:#12142a;
+    --ink:#1a1c2e;
+    --ink-dim:#5b5f80;
+    --card-border:rgba(20,20,50,.10);
+    --card-bg:rgba(20,20,50,.03);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(66,133,244,.18), transparent 60%),
+      radial-gradient(ellipse 900px 500px at 85% 0%, rgba(234,67,53,.14), transparent 60%),
+      linear-gradient(180deg, var(--bg-0), var(--bg-1) 40%, var(--bg-0));
+    color:var(--ink);
+    font-family:var(--body);
+    overflow-x:hidden;
+    transition:background .3s ease, color .3s ease;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+  }
+
+  .grid-floor{
+    position:fixed; inset:auto 0 0 0; height:46vh; pointer-events:none; z-index:0;
+    background-image:
+      linear-gradient(rgba(66,133,244,.28) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(66,133,244,.28) 1px, transparent 1px);
+    background-size:48px 48px;
+    transform:perspective(400px) rotateX(60deg) translateY(0);
+    transform-origin:bottom;
+    mask-image:linear-gradient(to top, black, transparent 85%);
+    opacity:.35;
+  }
+  html[data-theme="light"] .grid-floor{opacity:.12;}
+  .scanlines{
+    position:fixed; inset:0; pointer-events:none; z-index:50; opacity:.05;
+    background:repeating-linear-gradient(0deg, #fff 0px, #fff 1px, transparent 1px, transparent 3px);
+  }
+  html[data-theme="light"] .scanlines{opacity:.02;}
+
+  a, button{font-family:inherit;}
+
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px;
+    background:rgba(10,12,22,.75);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--card-border);
+  }
+  html[data-theme="light"] .topbar{background:rgba(244,245,251,.8);}
+  .brand{display:flex; align-items:center; gap:10px; font-family:var(--pixel); font-size:12px; letter-spacing:.5px;}
+  .brand .dot{width:10px;height:10px;border-radius:2px;background:var(--yellow); box-shadow:0 0 12px var(--yellow); animation:blink 1.6s steps(2) infinite;}
+  @keyframes blink{50%{opacity:.25;}}
+  .top-right{display:flex; align-items:center; gap:12px;}
+  .credits{
+    font-family:var(--pixel); font-size:11px; color:var(--yellow);
+    border:1px solid rgba(251,188,5,.4); padding:8px 12px; border-radius:6px;
+    background:rgba(251,188,5,.08);
+  }
+  .theme-toggle{
+    width:38px; height:38px; border-radius:50%; border:1px solid var(--card-border);
+    background:var(--card-bg); cursor:pointer; display:flex; align-items:center; justify-content:center;
+    font-size:16px; transition:transform .15s ease;
+  }
+  .theme-toggle:hover{transform:rotate(20deg);}
+
+  .hero{
+    position:relative; z-index:1;
+    max-width:1180px; margin:0 auto; padding:64px 24px 20px;
+    display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center;
+  }
+  @media (max-width:900px){ .hero{grid-template-columns:1fr; padding-top:40px;} }
+
+  .eyebrow{
+    font-family:var(--pixel); font-size:10px; color:var(--green);
+    display:inline-flex; align-items:center; gap:8px; margin-bottom:18px;
+    letter-spacing:1px;
+  }
+  .eyebrow::before{content:"▸"; color:var(--green);}
+
+  h1.title{
+    font-family:var(--pixel);
+    font-size:clamp(26px, 4vw, 42px);
+    line-height:1.5;
+    margin:0 0 20px;
+  }
+  h1.title .hue{
+    background:linear-gradient(90deg, var(--blue), var(--violet) 45%, var(--red) 75%, var(--yellow));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .sub{ color:var(--ink-dim); font-size:17px; line-height:1.65; max-width:46ch; margin-bottom:28px; }
+  .hero-ctas{display:flex; gap:14px; flex-wrap:wrap;}
+  .btn-primary{
+    font-family:var(--pixel); font-size:12px; color:#0a0c16;
+    background:var(--yellow); border:none; padding:16px 22px; border-radius:8px;
+    cursor:pointer; box-shadow:0 6px 0 #b8890a, 0 10px 24px rgba(251,188,5,.25);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn-primary:hover{transform:translateY(-2px);}
+  .btn-primary:active{transform:translateY(4px); box-shadow:0 2px 0 #b8890a;}
+  .btn-ghost{
+    font-family:var(--pixel); font-size:11px; color:var(--ink);
+    background:transparent; border:1px solid var(--card-border); padding:16px 20px; border-radius:8px;
+    cursor:pointer; transition:border-color .15s, background .15s;
+  }
+  .btn-ghost:hover{border-color:var(--blue); background:rgba(66,133,244,.08);}
+
+  .cab-wrap{ perspective:1400px; display:flex; justify-content:center; }
+  .cabinet{
+    width:320px; padding:20px 20px 26px; border-radius:22px;
+    background:linear-gradient(160deg, var(--cabinet), var(--bg-1));
+    border:1px solid var(--cabinet-edge);
+    box-shadow: 0 30px 60px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.03);
+    transform-style:preserve-3d;
+    transition:transform .12s ease-out;
+    will-change:transform;
+  }
+  .cabinet .marquee{
+    text-align:center; font-family:var(--pixel); font-size:11px; letter-spacing:1px;
+    padding:10px 6px; border-radius:10px; margin-bottom:14px;
+    background:linear-gradient(90deg, var(--blue), var(--violet), var(--red));
+    color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.4);
+    box-shadow:0 0 24px rgba(139,92,246,.5);
+  }
+  .cabinet .screen{
+    background:var(--screen); border-radius:8px; padding:22px 16px;
+    border:6px solid #05060c; box-shadow:inset 0 0 40px rgba(66,133,244,.25), inset 0 0 2px #000;
+    min-height:220px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+    position:relative; overflow:hidden;
+  }
+  .cabinet .screen::before{
+    content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.04) 0px, transparent 2px, transparent 4px);
+    pointer-events:none;
+  }
+  .score-label{font-family:var(--pixel); font-size:9px; color:var(--green); letter-spacing:1px;}
+  .score-emoji{font-size:30px; transition:transform .3s ease; display:inline-block;}
+  .score-emoji.bump{animation:emojiPop .4s ease;}
+  @keyframes emojiPop{0%{transform:scale(1);} 50%{transform:scale(1.4) rotate(-8deg);} 100%{transform:scale(1);}}
+  .score-hint{font-family:var(--pixel); font-size:8px; color:#6b7099; letter-spacing:.5px; text-align:center;}
+  .dino-canvas{ width:100%; height:56px; display:block; image-rendering:pixelated; margin:4px 0 2px; }
+  .dev-quote{
+    font-family:'Space Grotesk', monospace; font-size:10.5px; color:#8fd6ff; text-align:center;
+    min-height:26px; line-height:1.4; padding:0 4px; transition:opacity .25s ease;
+  }
+  .dev-quote::before{content:"// "; color:#4a9; opacity:.8;}
+  .press-start{font-family:var(--pixel); font-size:9px; color:var(--ink-dim); animation:blink 1s steps(2) infinite;}
+  .cab-controls{display:flex; align-items:center; justify-content:space-between; margin-top:18px; padding:0 6px;}
+  .joystick{width:34px; height:34px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #ff6b6b, var(--red)); box-shadow:0 6px 0 #8f1f16, 0 0 16px rgba(234,67,53,.6);}
+  .arcade-btns{display:flex; gap:8px;}
+  .abtn{width:22px; height:22px; border-radius:50%; box-shadow:0 4px 0 rgba(0,0,0,.4);}
+  .abtn.b1{background:var(--blue);} .abtn.b2{background:var(--green);} .abtn.b3{background:var(--yellow);}
+
+  .section{position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:70px 24px;}
+  .section-head{text-align:center; margin-bottom:40px;}
+  .section-head .kicker{font-family:var(--pixel); font-size:10px; color:var(--blue); letter-spacing:1.5px;}
+  .section-head h2{font-family:var(--pixel); font-size:clamp(18px,2.6vw,24px); line-height:1.6; margin:14px 0 0;}
+  .section-head p.desc{color:var(--ink-dim); max-width:52ch; margin:14px auto 0; font-size:14px; line-height:1.6;}
+
+  .level-track{
+    max-width:640px; margin:0 auto 60px; background:var(--card-bg);
+    border-radius:999px; height:14px; overflow:hidden; border:1px solid var(--card-border);
+    position:relative;
+  }
+  .level-fill{
+    height:100%; width:20%; border-radius:999px;
+    background:linear-gradient(90deg, var(--green), var(--blue));
+    transition:width .5s cubic-bezier(.2,.9,.3,1.3);
+    box-shadow:0 0 16px rgba(66,133,244,.6);
+  }
+  .level-labels{display:flex; justify-content:space-between; max-width:640px; margin:8px auto 0; font-family:var(--pixel); font-size:9px; color:var(--ink-dim);}
+
+  .panel{
+    max-width:760px; margin:0 auto; border-radius:24px; padding:2px;
+    background:linear-gradient(135deg, var(--blue), var(--violet), var(--red), var(--yellow));
+    box-shadow:0 30px 70px rgba(0,0,0,.35);
+  }
+  .panel-inner{ background:var(--cabinet); border-radius:22px; padding:40px 36px; }
+  @media (max-width:640px){ .panel-inner{padding:28px 20px;} }
+
+  .step{display:none; animation:fadeUp .4s ease both;}
+  .step.active{display:block;}
+  @keyframes fadeUp{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
+
+  .q-label{font-family:var(--pixel); font-size:13px; line-height:1.8; margin-bottom:22px; color:var(--ink);}
+  .q-label .num{color:var(--yellow);}
+
+  .name-email-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+  @media (max-width:520px){ .name-email-grid{grid-template-columns:1fr;} }
+  .field label{display:block; font-size:11px; color:var(--ink-dim); font-weight:600; margin-bottom:8px; letter-spacing:.3px;}
+  .optional-tag{font-weight:400; color:#6b7099; font-size:10px;}
+
+  .mood-row{display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:8px;}
+  .mood-btn{
+    background:var(--card-bg); border:2px solid var(--card-border); border-radius:16px;
+    padding:18px 16px; width:104px; cursor:pointer; text-align:center;
+    transition:transform .15s ease, border-color .15s, box-shadow .15s;
+  }
+  .mood-btn .emoji{font-size:32px; display:block; margin-bottom:8px; transition:transform .2s;}
+  .mood-btn span.lbl{font-size:11px; color:var(--ink-dim); font-weight:600;}
+  .mood-btn:hover{transform:translateY(-6px) rotate(-1deg);}
+  .mood-btn:hover .emoji{transform:scale(1.2) rotate(6deg);}
+  .mood-btn.sel{border-color:var(--yellow); box-shadow:0 0 0 3px rgba(251,188,5,.2), 0 10px 24px rgba(251,188,5,.25); transform:translateY(-6px);}
+
+  .coin-row{display:flex; gap:16px; justify-content:center; margin:6px 0 4px;}
+  .coin{
+    width:56px; height:56px; border-radius:50%; cursor:pointer; position:relative;
+    background:radial-gradient(circle at 35% 30%, #ffe58a, var(--yellow) 70%);
+    box-shadow:0 6px 0 #b8890a; display:flex; align-items:center; justify-content:center;
+    font-family:var(--pixel); font-size:13px; color:#5c3d00;
+    transition:transform .15s ease, box-shadow .15s ease, filter .15s;
+    filter:grayscale(1) brightness(.7);
+  }
+  html[data-theme="light"] .coin{filter:grayscale(1) brightness(.9);}
+  .coin:hover{transform:translateY(-3px);}
+  .coin.lit{filter:grayscale(0) brightness(1); box-shadow:0 6px 0 #b8890a, 0 0 22px rgba(251,188,5,.7);}
+  .coin.pressed{transform:translateY(5px) scale(.94); box-shadow:0 1px 0 #b8890a;}
+  .rating-caption{text-align:center; font-family:var(--pixel); font-size:10px; color:var(--green); min-height:16px; margin-top:14px;}
+
+  textarea, input[type=text], input[type=email], select.select-like{
+    width:100%; background:var(--screen); border:2px solid var(--card-border); border-radius:12px;
+    color:var(--ink); padding:16px; font-family:var(--body); font-size:15px; resize:vertical;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  textarea:focus, input:focus, select:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 4px rgba(66,133,244,.18);}
+  textarea::placeholder, input::placeholder{color:#6b7099;}
+  .char-count{text-align:right; font-size:11px; color:var(--ink-dim); margin-top:6px;}
+
+  .chip-row{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:8px;}
+  .chip{
+    border:1px solid var(--card-border); background:var(--card-bg); color:var(--ink-dim);
+    padding:10px 16px; border-radius:999px; font-size:13px; cursor:pointer; font-weight:600;
+    transition:all .15s ease;
+  }
+  .chip:hover{border-color:var(--blue); color:var(--ink);}
+  .chip.sel{background:linear-gradient(90deg, var(--blue), var(--violet)); color:#fff; border-color:transparent; box-shadow:0 4px 14px rgba(66,133,244,.4);}
+
+  .step-nav{display:flex; justify-content:space-between; align-items:center; margin-top:34px;}
+  .nav-btn{ font-family:var(--pixel); font-size:11px; padding:14px 20px; border-radius:8px; cursor:pointer; border:none; transition:transform .12s ease; }
+  .nav-btn.next{background:var(--green); color:#062910; box-shadow:0 5px 0 #1c6b39;}
+  .nav-btn.next:hover{transform:translateY(-2px);}
+  .nav-btn.next:active{transform:translateY(3px); box-shadow:0 2px 0 #1c6b39;}
+  .nav-btn.back{background:transparent; color:var(--ink-dim); border:1px solid var(--card-border);}
+  .nav-btn.back:hover{color:var(--ink); border-color:var(--blue);}
+  .nav-btn:disabled{opacity:.3; cursor:not-allowed;}
+  .nav-btn.submit{background:var(--yellow); color:#0a0c16; box-shadow:0 5px 0 #b8890a;}
+  .nav-btn.submit:hover{transform:translateY(-2px);}
+
+  .dots{display:flex; gap:8px; justify-content:center; margin-top:26px;}
+  .dot-step{width:8px; height:8px; border-radius:50%; background:var(--card-border); transition:all .2s;}
+  .dot-step.on{background:var(--yellow); box-shadow:0 0 8px var(--yellow); width:22px; border-radius:4px;}
+
+  .success{display:none; text-align:center; padding:20px 0;}
+  .success.active{display:block; animation:fadeUp .5s ease both;}
+  .trophy{font-size:64px; display:block; margin-bottom:6px; animation:pop .6s cubic-bezier(.2,1.6,.4,1) both;}
+  @keyframes pop{0%{transform:scale(0);} 70%{transform:scale(1.15);} 100%{transform:scale(1);}}
+  .success h3{font-family:var(--pixel); font-size:16px; color:var(--yellow); margin:10px 0 8px;}
+  .success p{color:var(--ink-dim); max-width:44ch; margin:0 auto;}
+  .final-score{font-family:var(--pixel); font-size:34px; color:var(--green); margin-top:18px; text-shadow:0 0 14px var(--green);}
+
+  #confetti{position:fixed; inset:0; pointer-events:none; z-index:60;}
+
+  .perks{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:64px;}
+  @media (max-width:820px){ .perks{grid-template-columns:repeat(2,1fr);} }
+  .perk{ background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; padding:22px 18px; text-align:center; transition:transform .18s ease, border-color .18s; }
+  .perk:hover{transform:translateY(-6px); border-color:var(--blue);}
+  .perk .ic{font-size:28px; display:block; margin-bottom:10px;}
+  .perk h4{font-family:var(--pixel); font-size:10px; margin:0 0 8px; color:var(--yellow); letter-spacing:.5px;}
+  .perk p{font-size:12.5px; color:var(--ink-dim); margin:0; line-height:1.5;}
+
+  /* ---- LEVEL 2: roadmap / suggestions panel ---- */
+  .lvl2-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;}
+  @media (max-width:640px){ .lvl2-grid{grid-template-columns:1fr;} }
+  .select-like{
+    background:var(--screen); border:2px solid var(--card-border); border-radius:12px; color:#eef0ff;
+    padding:14px 16px; font-family:var(--body); font-size:14px; width:100%; cursor:pointer;
+  }
+  .lvl2-success{display:none; text-align:center; padding:10px 0;}
+  .lvl2-success.active{display:block; animation:fadeUp .4s ease both;}
+
+  /* ---- LEVEL 3: see you next year ---- */
+  .lvl3-wrap{ position:relative; text-align:center; padding:80px 20px; overflow:hidden; border-radius:24px;
+    background:var(--card-bg); border:1px solid var(--card-border); }
+  .lvl3-text{
+    font-family:var(--pixel); font-size:clamp(20px,4vw,36px); line-height:1.7; display:inline-block;
+    cursor:pointer; user-select:none; position:relative; transition:text-shadow .2s ease, transform .2s ease;
+    background:linear-gradient(90deg, var(--blue), var(--violet), var(--red), var(--yellow));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lvl3-text.glow{ filter:drop-shadow(0 0 18px rgba(139,92,246,.65)); transform:scale(1.03); }
+  .pop-particle{ position:absolute; font-size:22px; pointer-events:none; z-index:5; animation:popFloat 1s ease-out forwards; }
+  @keyframes popFloat{
+    0%{ opacity:1; transform:translate(0,0) scale(.6) rotate(0deg); }
+    100%{ opacity:0; transform:translate(var(--dx), -70px) scale(1.3) rotate(var(--dr)); }
+  }
+
+  footer{ text-align:center; padding:50px 20px 60px; color:var(--ink-dim); font-size:13px; border-top:1px solid var(--card-border); margin-top:40px; }
+  footer .fbrand{font-family:var(--pixel); font-size:11px; color:var(--ink); margin-bottom:10px;}
+</style>
+</head>
+<body>
+
+<div class="grid-floor"></div>
+<div class="scanlines"></div>
+<canvas id="confetti"></canvas>
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span> ARCADE BUDDY</div>
+  <div class="top-right">
+    <div class="credits">CREDITS: <span id="creditNum">01</span></div>
+    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark" aria-label="Toggle theme">🌙</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="eyebrow">Player feedback terminal</div>
+    <h1 class="title">Insert your thoughts.<br><span class="hue">Level up</span> Arcade Buddy.</h1>
+    <p class="sub">Every run you play helps us tune the next patch. Drop 60 seconds of feedback and earn your spot on today's leaderboard — no login, no forms that feel like homework.</p>
+    <div class="hero-ctas">
+      <button class="btn-primary" onclick="document.getElementById('feedback-panel').scrollIntoView({behavior:'smooth'})">▶ START FEEDBACK</button>
+      <button class="btn-ghost" onclick="document.getElementById('why').scrollIntoView({behavior:'smooth'})">WHY IT MATTERS</button>
+    </div>
+  </div>
+
+  <div class="cab-wrap">
+    <div class="cabinet" id="cabinet">
+      <div class="marquee">ARCADE BUDDY</div>
+      <div class="screen">
+        <div class="score-label">MOOD METER</div>
+        <div class="score-emoji" id="heroEmoji">🎲</div>
+        <canvas class="dino-canvas" id="dinoCanvas"></canvas>
+        <div class="dev-quote" id="devQuote">compiling good vibes...</div>
+        <div class="score-hint" id="heroHint">AWAITING PLAYER INPUT</div>
+      </div>
+      <div class="cab-controls">
+        <div class="joystick"></div>
+        <div class="arcade-btns">
+          <div class="abtn b1"></div>
+          <div class="abtn b2"></div>
+          <div class="abtn b3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="section" id="why">
+  <div class="section-head">
+    <div class="kicker">// WHY BOTHER</div>
+    <h2>Your feedback is the fuel behind every patch note</h2>
+  </div>
+  <div class="perks">
+    <div class="perk"><span class="ic">🕹️</span><h4>60-SECOND RUN</h4><p>Five quick prompts. No essay required, just your honest take.</p></div>
+    <div class="perk"><span class="ic">🏆</span><h4>NAMED ON PATCH NOTES</h4><p>Standout ideas get credited by name in our next release log.</p></div>
+    <div class="perk"><span class="ic">🎯</span><h4>DIRECTLY READ</h4><p>Every submission lands in front of the team building the game — not a queue.</p></div>
+    <div class="perk"><span class="ic">🎁</span><h4>SWAG DROPS</h4><p>Detailed feedback puts you in the pool for Arcade Buddy pins and stickers.</p></div>
+  </div>
+</section>
+
+<!-- LEVEL 1: FEEDBACK PANEL -->
+<section class="section" id="feedback-panel">
+  <div class="section-head">
+    <div class="kicker">// LEVEL 1 OF 3</div>
+    <h2>Play the feedback level</h2>
+  </div>
+
+  <div class="level-track"><div class="level-fill" id="levelFill"></div></div>
+  <div class="level-labels"><span>START</span><span id="levelPct">17% CHARGED</span><span>BOSS: SUBMIT</span></div>
+
+  <div class="panel">
+    <div class="panel-inner">
+
+      <!-- STEP 1: name + email -->
+      <div class="step active" data-step="1">
+        <div class="q-label"><span class="num">Q1.</span> Who's playing?</div>
+        <div class="name-email-grid">
+          <div class="field">
+            <label for="feedbackName">Name</label>
+            <input type="text" id="feedbackName" placeholder="Your name">
+          </div>
+          <div class="field">
+            <label for="feedbackEmail">Email</label>
+            <input type="email" id="feedbackEmail" placeholder="you@example.com">
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: mood -->
+      <div class="step" data-step="2">
+        <div class="q-label"><span class="num">Q2.</span> How's your run been so far?</div>
+        <div class="mood-row">
+          <div class="mood-btn" data-mood="Frustrated"><span class="emoji">😤</span><span class="lbl">Frustrated</span></div>
+          <div class="mood-btn" data-mood="Meh"><span class="emoji">😐</span><span class="lbl">It's okay</span></div>
+          <div class="mood-btn" data-mood="Good"><span class="emoji">🙂</span><span class="lbl">Pretty good</span></div>
+          <div class="mood-btn" data-mood="Loving it"><span class="emoji">🤩</span><span class="lbl">Loving it</span></div>
+        </div>
+      </div>
+
+      <!-- STEP 3: rating -->
+      <div class="step" data-step="3">
+        <div class="q-label"><span class="num">Q3.</span> Drop coins for how you'd rate Arcade Buddy overall</div>
+        <div class="coin-row" id="coinRow">
+          <div class="coin" data-val="1">1</div>
+          <div class="coin" data-val="2">2</div>
+          <div class="coin" data-val="3">3</div>
+          <div class="coin" data-val="4">4</div>
+          <div class="coin" data-val="5">5</div>
+        </div>
+        <div class="rating-caption" id="ratingCaption">&nbsp;</div>
+      </div>
+
+      <!-- STEP 4: chips -->
+      <div class="step" data-step="4">
+        <div class="q-label"><span class="num">Q4.</span> What stood out? (pick any that fit)</div>
+        <div class="chip-row" id="chipRow">
+          <div class="chip">Level design</div>
+          <div class="chip">Controls</div>
+          <div class="chip">Leaderboards</div>
+          <div class="chip">Loading speed</div>
+          <div class="chip">Visual style</div>
+          <div class="chip">Sound / music</div>
+          <div class="chip">Multiplayer</div>
+          <div class="chip">Something buggy</div>
+        </div>
+      </div>
+
+      <!-- STEP 5: free text -->
+      <div class="step" data-step="5">
+        <div class="q-label"><span class="num">Q5.</span> Anything specific we should know?</div>
+        <textarea id="feedbackText" rows="4" maxlength="500" placeholder="Type here — bugs, ideas, love letters to the leaderboard, all welcome..."></textarea>
+        <div class="char-count"><span id="charCount">0</span>/500</div>
+      </div>
+
+      <!-- SUCCESS -->
+      <div class="success" id="successStep">
+        <span class="trophy">🏆</span>
+        <h3>HIGH SCORE SUBMITTED!</h3>
+        <p>Thanks for playing the feedback level, <span id="successName">Player</span>. Your input just got queued straight to the Arcade Buddy team — watch the patch notes for your name.</p>
+        <div class="final-score" id="finalScore">+500 PTS</div>
+      </div>
+
+      <div class="step-nav" id="stepNav">
+        <button class="nav-btn back" id="backBtn" disabled>◂ BACK</button>
+        <button class="nav-btn next" id="nextBtn">NEXT ▸</button>
+      </div>
+      <div class="dots" id="dots">
+        <div class="dot-step on"></div>
+        <div class="dot-step"></div>
+        <div class="dot-step"></div>
+        <div class="dot-step"></div>
+        <div class="dot-step"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEVEL 2: ROADMAP / SUGGESTIONS -->
+<section class="section" id="level2">
+  <div class="section-head">
+    <div class="kicker">// LEVEL 2 OF 3</div>
+    <h2>Suggest the next upgrade</h2>
+    <p class="desc">Building the next Arcade Facilitator Program or a future arcade event? Drop a fix or feature idea here — it goes straight into our roadmap backlog.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-inner">
+      <div id="level2Form">
+        <div class="lvl2-grid">
+          <div class="field">
+            <label for="lvl2Category">Category</label>
+            <select class="select-like" id="lvl2Category">
+              <option>Arcade Facilitator Program</option>
+              <option>Upcoming Arcade Event</option>
+              <option>Bug Fix</option>
+              <option>New Feature Idea</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="lvl2Priority">How urgent does this feel?</label>
+            <select class="select-like" id="lvl2Priority">
+              <option>Nice to have</option>
+              <option>Would help a lot</option>
+              <option>Blocking / urgent</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="lvl2Text">Describe the improvement or fix</label>
+          <textarea id="lvl2Text" rows="4" maxlength="600" placeholder="e.g. Add a facilitator dashboard to track team scores live during events..."></textarea>
+        </div>
+        <div class="step-nav">
+          <span style="font-size:11px;color:var(--ink-dim);">Saved to the roadmap backlog — not public</span>
+          <button class="nav-btn submit" id="lvl2Submit">SAVE IDEA ▸</button>
+        </div>
+      </div>
+      <div class="lvl2-success" id="lvl2Success">
+        <span class="trophy" style="font-size:44px;">🧩</span>
+        <h3 style="font-family:var(--pixel);font-size:14px;color:var(--green);margin:10px 0 6px;">ADDED TO ROADMAP</h3>
+        <p style="color:var(--ink-dim);font-size:13px;">Thanks — this idea is now queued for the next Arcade Facilitator Program review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEVEL 3: SEE YOU NEXT YEAR -->
+<section class="section" id="level3">
+  <div class="section-head">
+    <div class="kicker">// LEVEL 3 OF 3</div>
+    <h2>Bonus round</h2>
+  </div>
+  <div class="lvl3-wrap" id="lvl3Wrap">
+    <div class="lvl3-text" id="lvl3Text">Let's do it again next year! 🎮</div>
+  </div>
+</section>
+
+<footer>
+  <div class="fbrand">ARCADE BUDDY</div>
+  © 2026 Arcade Buddy. Insert coin, share feedback, repeat.
+</footer>
+
+<script>
+(function(){
+  // ---- theme toggle ----
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyTheme(t){
+    root.setAttribute('data-theme', t);
+    themeToggle.textContent = t === 'light' ? '☀️' : '🌙';
+    localStorage.setItem('arcadeTheme', t);
+  }
+  const savedTheme = localStorage.getItem('arcadeTheme');
+  const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+  applyTheme(savedTheme || (prefersLight ? 'light' : 'dark'));
+  themeToggle.addEventListener('click', ()=>{
+    applyTheme(root.getAttribute('data-theme')==='light' ? 'dark' : 'light');
+  });
+
+  // ---- 3D cabinet tilt ----
+  const cabinet = document.getElementById('cabinet');
+  const wrap = document.querySelector('.cab-wrap');
+  wrap.addEventListener('mousemove', (e)=>{
+    const r = wrap.getBoundingClientRect();
+    const x = (e.clientX - r.left)/r.width - 0.5;
+    const y = (e.clientY - r.top)/r.height - 0.5;
+    cabinet.style.transform = `rotateY(${x*14}deg) rotateX(${-y*14}deg) translateZ(10px)`;
+  });
+  wrap.addEventListener('mouseleave', ()=>{ cabinet.style.transform = 'rotateY(0) rotateX(0)'; });
+
+  // ---- dev quotes ticker ----
+  const devQuotes = [
+    "works on my machine 🤷",
+    "TODO: fix this before demo",
+    "git commit -m 'final final v2'",
+    "npm install left-pad",
+    "console.log('why though')",
+    "// this is temporary (2019)",
+    "merge conflict resolved with vibes",
+    "it's not a bug, it's a feature",
+    "refactor later (never)",
+    "deploying on a friday, brave choice",
+    "0 warnings, 400 ignored",
+    "caffeine.exe has stopped responding",
+    "rm -rf node_modules && pray",
+    "unit tests? we ship on faith",
+    "chatgpt wrote half of this comment"
+  ];
+  const devQuoteEl = document.getElementById('devQuote');
+  let qIdx = 0;
+  function rotateQuote(){
+    devQuoteEl.style.opacity = 0;
+    setTimeout(()=>{
+      qIdx = (qIdx+1) % devQuotes.length;
+      devQuoteEl.textContent = devQuotes[qIdx];
+      devQuoteEl.style.opacity = 1;
+    }, 250);
+  }
+  setInterval(rotateQuote, 2600);
+
+  // ---- chrome-dino-style infinite runner on the LED screen ----
+  (function(){
+    const canvas = document.getElementById('dinoCanvas');
+    const ctx2 = canvas.getContext('2d');
+    function fit(){
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * 2;
+      canvas.height = rect.height * 2;
+      ctx2.setTransform(2,0,0,2,0,0);
+    }
+    fit();
+    window.addEventListener('resize', fit);
+
+    const groundY = 40;
+    let dino = { x:14, y:groundY, w:12, h:14, vy:0, jumping:false };
+    let obstacles = [];
+    let frame = 0;
+    let nextObstacleIn = 60;
+
+    function reset(){
+      obstacles = [];
+      frame = 0;
+      nextObstacleIn = 60 + Math.random()*40;
+      dino.y = groundY; dino.vy = 0; dino.jumping = false;
+    }
+    reset();
+
+    function step(){
+      const w = canvas.getBoundingClientRect().width;
+      frame++;
+
+      // spawn obstacles
+      nextObstacleIn--;
+      if(nextObstacleIn <= 0){
+        obstacles.push({ x: w+10, w: 6+Math.random()*4, h: 10+Math.random()*6 });
+        nextObstacleIn = 55 + Math.random()*50;
+      }
+
+      // move obstacles
+      obstacles.forEach(o=> o.x -= 2.6);
+      obstacles = obstacles.filter(o=> o.x > -20);
+
+      // auto-jump when close to an obstacle
+      const threat = obstacles.find(o=> o.x > dino.x && o.x < dino.x + 26);
+      if(threat && !dino.jumping){
+        dino.jumping = true;
+        dino.vy = -3.6;
+      }
+
+      // physics
+      if(dino.jumping){
+        dino.vy += 0.28;
+        dino.y += dino.vy;
+        if(dino.y >= groundY){ dino.y = groundY; dino.jumping = false; dino.vy = 0; }
+      }
+
+      // draw
+      ctx2.clearRect(0,0,w,60);
+      // ground line
+      ctx2.strokeStyle = 'rgba(66,133,244,.55)';
+      ctx2.lineWidth = 1;
+      ctx2.beginPath();
+      ctx2.moveTo(0, groundY+14); ctx2.lineTo(w, groundY+14);
+      ctx2.stroke();
+
+      // dino (blocky, LED-pixel style)
+      ctx2.fillStyle = '#34A853';
+      ctx2.shadowColor = '#34A853';
+      ctx2.shadowBlur = 6;
+      ctx2.fillRect(dino.x, dino.y, dino.w, dino.h);
+      ctx2.fillRect(dino.x+dino.w-3, dino.y-4, 5, 5); // little head bump
+
+      // obstacles (cacti, LED-pixel style)
+      ctx2.fillStyle = '#EA4335';
+      ctx2.shadowColor = '#EA4335';
+      obstacles.forEach(o=>{
+        ctx2.fillRect(o.x, groundY+14-o.h, o.w, o.h);
+      });
+      ctx2.shadowBlur = 0;
+
+      requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  })();
+
+  document.getElementById('creditNum').textContent = String(Math.floor(Math.random()*9)+1).padStart(2,'0');
+
+  // ---- hero emoji: confused/random until feedback given, then reflects sentiment ----
+  const heroEmoji = document.getElementById('heroEmoji');
+  const heroHint = document.getElementById('heroHint');
+  const confusedEmojis = ['🎲','❓','🌀','🤔','🎰','❔'];
+  let emojiTimer = null;
+  let sentimentLocked = false;
+
+  function bumpEmoji(newEmoji){
+    heroEmoji.textContent = newEmoji;
+    heroEmoji.classList.remove('bump'); void heroEmoji.offsetWidth; heroEmoji.classList.add('bump');
+  }
+  function startConfusedCycle(){
+    if(emojiTimer) return;
+    emojiTimer = setInterval(()=>{
+      if(sentimentLocked) return;
+      bumpEmoji(confusedEmojis[Math.floor(Math.random()*confusedEmojis.length)]);
+    }, 900);
+  }
+  startConfusedCycle();
+
+  const sentimentMap = {
+    negative: {emoji:['😞','💢','😠'], hint:'MOOD: NEEDS WORK'},
+    neutral:  {emoji:['😐','🎯','🙂'], hint:'MOOD: STEADY'},
+    positive: {emoji:['🤩','🎉','🔥'], hint:'MOOD: ON FIRE'}
+  };
+  function setSentiment(level){
+    sentimentLocked = true;
+    const pool = sentimentMap[level].emoji;
+    bumpEmoji(pool[Math.floor(Math.random()*pool.length)]);
+    heroHint.textContent = sentimentMap[level].hint;
+  }
+
+  // ---- form state ----
+  const state = { step:1, name:'', email:'', mood:null, rating:0, chips:new Set(), text:'' };
+  const totalSteps = 5;
+  const steps = document.querySelectorAll('.step');
+  const dots = document.querySelectorAll('.dot-step');
+  const backBtn = document.getElementById('backBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const levelFill = document.getElementById('levelFill');
+  const levelPct = document.getElementById('levelPct');
+  const stepNav = document.getElementById('stepNav');
+  const dotsWrap = document.getElementById('dots');
+  const panelInner = document.querySelector('#feedback-panel .panel-inner');
+
+  function updateLevel(){
+    const pct = Math.round((state.step-1)/totalSteps*83)+17;
+    levelFill.style.width = pct+'%';
+    levelPct.textContent = pct+'% CHARGED';
+  }
+
+  function renderStep(){
+    steps.forEach(s=> s.classList.toggle('active', Number(s.dataset.step)===state.step));
+    dots.forEach((d,i)=> d.classList.toggle('on', i===state.step-1));
+    backBtn.disabled = state.step===1;
+    nextBtn.textContent = state.step===totalSteps ? 'SUBMIT ▸' : 'NEXT ▸';
+    nextBtn.classList.toggle('submit', state.step===totalSteps);
+    nextBtn.classList.toggle('next', state.step!==totalSteps);
+    updateLevel();
+    validate();
+  }
+
+  function validate(){
+    let ok = true;
+    if(state.step===1) ok = state.name.trim().length>0 && /\S+@\S+\.\S+/.test(state.email);
+    if(state.step===2) ok = !!state.mood;
+    if(state.step===3) ok = state.rating>0;
+    nextBtn.disabled = !ok;
+  }
+
+  document.getElementById('feedbackName').addEventListener('input', e=>{ state.name = e.target.value; validate(); });
+  document.getElementById('feedbackEmail').addEventListener('input', e=>{ state.email = e.target.value; validate(); });
+
+  document.querySelectorAll('.mood-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      state.mood = btn.dataset.mood;
+      if(state.mood==='Frustrated') setSentiment('negative');
+      else if(state.mood==='Meh') setSentiment('neutral');
+      else setSentiment('positive');
+      validate();
+    });
+  });
+
+  const captions = {1:"Ouch. Let's fix that.", 2:"Room to grow.", 3:"Solid run!", 4:"Nice score!", 5:"MAX COMBO! 🔥"};
+  document.querySelectorAll('.coin').forEach(coin=>{
+    coin.addEventListener('click', ()=>{
+      const val = Number(coin.dataset.val);
+      state.rating = val;
+      document.querySelectorAll('.coin').forEach(c=>{ c.classList.toggle('lit', Number(c.dataset.val)<=val); });
+      coin.classList.add('pressed');
+      setTimeout(()=>coin.classList.remove('pressed'), 180);
+      document.getElementById('ratingCaption').textContent = captions[val];
+      if(val<=2) setSentiment('negative');
+      else if(val===3) setSentiment('neutral');
+      else setSentiment('positive');
+      validate();
+    });
+  });
+
+  document.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      chip.classList.toggle('sel');
+      const label = chip.textContent;
+      if(chip.classList.contains('sel')) state.chips.add(label);
+      else state.chips.delete(label);
+    });
+  });
+
+  const textarea = document.getElementById('feedbackText');
+  const charCount = document.getElementById('charCount');
+  textarea.addEventListener('input', ()=>{ state.text = textarea.value; charCount.textContent = textarea.value.length; });
+
+  nextBtn.addEventListener('click', ()=>{
+    if(nextBtn.disabled) return;
+    if(state.step < totalSteps){ state.step++; renderStep(); }
+    else submitForm();
+  });
+  backBtn.addEventListener('click', ()=>{ if(state.step>1){ state.step--; renderStep(); } });
+
+  function submitForm(){
+    // Send { name, email, mood, rating, chips, text } to your backend here.
+    window.parent.postMessage({
+      type: 'SUBMIT_FEEDBACK',
+      payload: {
+        name: state.name,
+        email: state.email,
+        mood: state.mood,
+        rating: state.rating,
+        review: state.text,
+        chips: Array.from(state.chips)
+      }
+    }, '*');
+    
+    steps.forEach(s=>s.classList.remove('active'));
+    document.getElementById('successStep').classList.add('active');
+    document.getElementById('successName').textContent = state.name || 'Player';
+    stepNav.style.display = 'none';
+    dotsWrap.style.display = 'none';
+    levelFill.style.width = '100%';
+    levelPct.textContent = '100% CHARGED';
+    const pts = 200 + state.rating*40 + state.chips.size*15 + (state.text.length>0?40:0);
+    document.getElementById('finalScore').textContent = '+' + pts + ' PTS';
+    fireConfetti(panelInner);
+  }
+
+  renderStep();
+
+  // ---- LEVEL 2: roadmap suggestion form ----
+  document.getElementById('lvl2Submit').addEventListener('click', ()=>{
+    const text = document.getElementById('lvl2Text').value.trim();
+    const category = document.getElementById('lvl2Category').value;
+    const priority = document.getElementById('lvl2Priority').value;
+    
+    if(!text) { document.getElementById('lvl2Text').focus(); return; }
+    
+    // Send { category, priority, text } to your backend here.
+    window.parent.postMessage({
+      type: 'SUBMIT_ROADMAP',
+      payload: {
+        category,
+        priority,
+        text
+      }
+    }, '*');
+
+    document.getElementById('level2Form').style.display = 'none';
+    document.getElementById('lvl2Success').classList.add('active');
+  });
+
+  // ---- LEVEL 3: hover glow + floating hearts/thumbs ----
+  const lvl3Text = document.getElementById('lvl3Text');
+  const lvl3Wrap = document.getElementById('lvl3Wrap');
+  const popEmojis = ['❤️','👍','🎉','✨'];
+  let popTimer = null;
+  function spawnPop(x, y){
+    const el = document.createElement('div');
+    el.className = 'pop-particle';
+    el.textContent = popEmojis[Math.floor(Math.random()*popEmojis.length)];
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+    el.style.setProperty('--dx', (Math.random()*80-40) + 'px');
+    el.style.setProperty('--dr', (Math.random()*60-30) + 'deg');
+    lvl3Wrap.appendChild(el);
+    setTimeout(()=> el.remove(), 1000);
+  }
+  function startPops(e){
+    lvl3Text.classList.add('glow');
+    if(popTimer) return;
+    const rect = ()=> lvl3Wrap.getBoundingClientRect();
+    popTimer = setInterval(()=>{
+      const r = rect();
+      const x = (lastX ?? r.width/2);
+      const y = (lastY ?? r.height/2);
+      spawnPop(x, y);
+    }, 180);
+  }
+  let lastX=null, lastY=null;
+  function trackPos(e){
+    const r = lvl3Wrap.getBoundingClientRect();
+    lastX = e.clientX - r.left;
+    lastY = e.clientY - r.top;
+  }
+  function stopPops(){
+    lvl3Text.classList.remove('glow');
+    clearInterval(popTimer);
+    popTimer = null;
+  }
+  lvl3Text.addEventListener('mouseenter', startPops);
+  lvl3Text.addEventListener('mousemove', trackPos);
+  lvl3Text.addEventListener('mouseleave', stopPops);
+  lvl3Text.addEventListener('touchstart', (e)=>{ trackPos(e.touches[0]); startPops(e); }, {passive:true});
+  lvl3Text.addEventListener('touchmove', (e)=>{ trackPos(e.touches[0]); }, {passive:true});
+  lvl3Text.addEventListener('touchend', stopPops);
+
+  // ---- confetti ----
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const colors = ['#4285F4','#EA4335','#FBBC05','#34A853','#8b5cf6'];
+  let particles = [];
+  function fireConfetti(originEl){
+    particles = [];
+    const rect = originEl.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    for(let i=0;i<140;i++){
+      particles.push({
+        x: cx + (Math.random()-0.5)*200, y: innerHeight*0.35,
+        vx:(Math.random()-0.5)*8, vy:-Math.random()*10-4, g:0.28,
+        size:Math.random()*6+4, color:colors[Math.floor(Math.random()*colors.length)],
+        rot:Math.random()*360, vr:(Math.random()-0.5)*12, life:120+Math.random()*40
+      });
+    }
+    requestAnimationFrame(tick);
+  }
+  function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    particles.forEach(p=>{
+      if(p.life<=0) return;
+      alive=true;
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
+      ctx.restore();
+    });
+    if(alive) requestAnimationFrame(tick); else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+})();
+</script>
+
+</body>
+</html>
