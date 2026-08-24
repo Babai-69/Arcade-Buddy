@@ -17,7 +17,6 @@ export const auth = getAuth(app);
 export const db = initializeFirestore(app, { experimentalForceLongPolling: true });
 export const storage = getStorage(app);
 export const googleProvider = new GoogleAuthProvider();
-
 export const loginWithGoogle = () => signInWithPopup(auth, googleProvider);
 export const loginWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 export const logout = () => signOut(auth);

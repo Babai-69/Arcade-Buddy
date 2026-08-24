@@ -1,0 +1,30 @@
+--- src/pages/FeedbackPage.tsx
++++ src/pages/FeedbackPage.tsx
+@@ -29,14 +29,15 @@
+           
+           iframeRef.current?.contentWindow?.postMessage({ type: 'SUBMIT_SUCCESS' }, '*');
+           setToastMessage('Feedback recorded successfully!');
+           setShowToast(true);
+           setTimeout(() => setShowToast(false), 5000);
+         } else if (type === 'SUBMIT_ROADMAP') {
+           await saveFeedbackToFirestore({
+             category: payload.category,
+             priority: payload.priority,
+             review: payload.text,
+             type: 'roadmap'
+           });
+           
+           iframeRef.current?.contentWindow?.postMessage({ type: 'SUBMIT_SUCCESS' }, '*');
+           setToastMessage('Idea added to roadmap backlog!');
+           setShowToast(true);
+           setTimeout(() => setShowToast(false), 5000);
+         }
+       } catch (err: any) {
+         console.error('Failed to save to Firestore:', err);
++        iframeRef.current?.contentWindow?.postMessage({ type: 'SUBMIT_ERROR', error: err.message }, '*');
++        setToastMessage(`Error: ${err.message}`);
++        setShowToast(true);
++        setTimeout(() => setShowToast(false), 8000);
+       }
+     };
+ 

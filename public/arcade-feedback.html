@@ -755,7 +755,7 @@
     steps.forEach(s=> s.classList.toggle('active', Number(s.dataset.step)===state.step));
     dots.forEach((d,i)=> d.classList.toggle('on', i===state.step-1));
     backBtn.disabled = state.step===1;
-    nextBtn.textContent = state.step===totalSteps ? 'SUBMIT ▸' : 'NEXT ▸';
+    nextBtn.innerHTML = state.step===totalSteps ? "SUBMIT ▸" : "NEXT ▸";
     nextBtn.classList.toggle('submit', state.step===totalSteps);
     nextBtn.classList.toggle('next', state.step!==totalSteps);
     updateLevel();
@@ -822,6 +822,9 @@
   backBtn.addEventListener('click', ()=>{ if(state.step>1){ state.step--; renderStep(); } });
 
   function submitForm(){
+    nextBtn.disabled = true;
+    nextBtn.innerHTML = 'SENDING...';
+    
     // Send { name, email, mood, rating, chips, text } to your backend here.
     window.parent.postMessage({
       type: 'SUBMIT_FEEDBACK',
@@ -835,16 +838,27 @@
       }
     }, '*');
     
-    steps.forEach(s=>s.classList.remove('active'));
-    document.getElementById('successStep').classList.add('active');
-    document.getElementById('successName').textContent = state.name || 'Player';
-    stepNav.style.display = 'none';
-    dotsWrap.style.display = 'none';
-    levelFill.style.width = '100%';
-    levelPct.textContent = '100% CHARGED';
-    const pts = 200 + state.rating*40 + state.chips.size*15 + (state.text.length>0?40:0);
-    document.getElementById('finalScore').textContent = '+' + pts + ' PTS';
-    fireConfetti(panelInner);
+    const listener = (e) => {
+      if(e.data?.type === 'SUBMIT_SUCCESS') {
+        window.removeEventListener('message', listener);
+        steps.forEach(s=>s.classList.remove('active'));
+        document.getElementById('successStep').classList.add('active');
+        document.getElementById('successName').textContent = state.name || 'Player';
+        stepNav.style.display = 'none';
+        dotsWrap.style.display = 'none';
+        levelFill.style.width = '100%';
+        levelPct.textContent = '100% CHARGED';
+        const pts = 200 + state.rating*40 + state.chips.size*15 + (state.text.length>0?40:0);
+        document.getElementById('finalScore').textContent = '+' + pts + ' PTS';
+        fireConfetti(panelInner);
+      } else if (e.data?.type === 'SUBMIT_ERROR') {
+        window.removeEventListener('message', listener);
+        nextBtn.disabled = false;
+        nextBtn.innerHTML = 'SUBMIT ▸';
+        alert('Failed to submit: ' + e.data.error);
+      }
+    };
+    window.addEventListener('message', listener);
   }
 
   renderStep();
@@ -854,8 +868,12 @@
     const text = document.getElementById('lvl2Text').value.trim();
     const category = document.getElementById('lvl2Category').value;
     const priority = document.getElementById('lvl2Priority').value;
+    const btn = document.getElementById('lvl2Submit');
     
     if(!text) { document.getElementById('lvl2Text').focus(); return; }
+    
+    btn.disabled = true;
+    btn.innerHTML = 'SAVING...';
     
     // Send { category, priority, text } to your backend here.
     window.parent.postMessage({
@@ -867,8 +885,19 @@
       }
     }, '*');
 
-    document.getElementById('level2Form').style.display = 'none';
-    document.getElementById('lvl2Success').classList.add('active');
+    const listener = (e) => {
+      if(e.data?.type === 'SUBMIT_SUCCESS') {
+        window.removeEventListener('message', listener);
+        document.getElementById('level2Form').style.display = 'none';
+        document.getElementById('lvl2Success').classList.add('active');
+      } else if (e.data?.type === 'SUBMIT_ERROR') {
+        window.removeEventListener('message', listener);
+        btn.disabled = false;
+        btn.innerHTML = 'SUBMIT IDEA';
+        alert('Failed to submit: ' + e.data.error);
+      }
+    };
+    window.addEventListener('message', listener);
   });
 
   // ---- LEVEL 3: hover glow + floating hearts/thumbs ----

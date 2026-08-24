@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { db } from '../lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import React, { useEffect, useState, useRef } from 'react';
 import { CheckCircle } from 'lucide-react';
+import { saveFeedbackToFirestore } from '../services/firebase';
 
 export function FeedbackPage() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
@@ -14,14 +14,13 @@ export function FeedbackPage() {
       
       try {
         if (type === 'SUBMIT_FEEDBACK') {
-          await addDoc(collection(db, 'feedbacks'), {
+          await saveFeedbackToFirestore({
             name: payload.name,
             email: payload.email,
             rating: payload.rating,
             mood: payload.mood,
             review: payload.review,
             chips: payload.chips,
-            createdAt: serverTimestamp(),
             type: 'general'
           });
           
@@ -32,24 +31,29 @@ export function FeedbackPage() {
             body: JSON.stringify(payload)
           }).catch(console.error);
           
+          iframeRef.current?.contentWindow?.postMessage({ type: 'SUBMIT_SUCCESS' }, '*');
           setToastMessage('Feedback recorded successfully!');
           setShowToast(true);
           setTimeout(() => setShowToast(false), 5000);
         } else if (type === 'SUBMIT_ROADMAP') {
-          await addDoc(collection(db, 'feedbacks'), {
+          await saveFeedbackToFirestore({
             category: payload.category,
             priority: payload.priority,
             review: payload.text,
-            createdAt: serverTimestamp(),
             type: 'roadmap'
           });
           
+          iframeRef.current?.contentWindow?.postMessage({ type: 'SUBMIT_SUCCESS' }, '*');
           setToastMessage('Idea added to roadmap backlog!');
           setShowToast(true);
           setTimeout(() => setShowToast(false), 5000);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error('Failed to save to Firestore:', err);
+        iframeRef.current?.contentWindow?.postMessage({ type: 'SUBMIT_ERROR', error: err.message }, '*');
+        setToastMessage(`Error: ${err.message}`);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 8000);
       }
     };
 
@@ -60,6 +64,7 @@ export function FeedbackPage() {
   return (
     <div className="w-full" style={{ height: 'calc(100vh - 73px)' }}>
       <iframe 
+        ref={iframeRef}
         src="/arcade-feedback.html" 
         className="w-full h-full border-0 block"
         title="Arcade Buddy Feedback Terminal"

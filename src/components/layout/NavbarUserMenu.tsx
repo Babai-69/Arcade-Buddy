@@ -203,6 +203,16 @@ export function NavbarUserMenu() {
                 <button
                   onClick={() => {
                     setIsOpen(false);
+                    navigate('/admin-feedback');
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-colors"
+                >
+                  <Settings className="w-4 h-4 text-blue-500" />
+                  Admin: Feedback
+                </button>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
                     navigate('/leaderboard');
                   }}
                   className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-colors"

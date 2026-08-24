@@ -1,0 +1,39 @@
+--- src/pages/AdminFeedbackPage.tsx
++++ src/pages/AdminFeedbackPage.tsx
+@@ -32,10 +32,12 @@
+   const [error, setError] = useState<string | null>(null);
+   const [page, setPage] = useState(1);
+   const [isAdmin, setIsAdmin] = useState(false);
++  const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
+   const itemsPerPage = 10;
+ 
+   useEffect(() => {
+     const unsubscribe = onAuthStateChanged(auth, (user) => {
++      setCurrentUserEmail(user?.email || null);
+       if (user) {
+         setIsAdmin(true); // Actual rule check happens on Firestore side
+         fetchFeedbacks();
+@@ -66,7 +68,7 @@
+         <div className="text-center">
+           <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+           <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Access Denied</h2>
+-          <p className="text-slate-600 dark:text-slate-400 mt-2">You need administrator privileges to view this dashboard.</p>
++          <p className="text-slate-600 dark:text-slate-400 mt-2">You need administrator privileges to view this dashboard. Current user: {currentUserEmail || 'Not logged in'}</p>
+         </div>
+       </div>
+     );
+@@ -107,6 +109,14 @@
+ 
+         {error ? (
+           <div className="p-4 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl text-red-700 dark:text-red-400 flex items-start gap-3">
+             <AlertCircle className="w-5 h-5 shrink-0" />
+-            <p>{error}</p>
++            <div>
++              <p className="font-semibold">{error}</p>
++              <p className="text-sm mt-1">
++                This usually means you are logged in with an unauthorized email address. 
++                <br/>Your current email: <strong>{currentUserEmail}</strong>
++              </p>
++            </div>
+           </div>
+         ) : loading && feedbacks.length === 0 ? (
