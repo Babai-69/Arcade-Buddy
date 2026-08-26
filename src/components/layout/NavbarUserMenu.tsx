@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, LogOut, ChartBar, Settings, Upload, Award } from 'lucide-react';
-import { auth, loginWithGoogleRedirect, logout } from '../../lib/firebase';
+import { User, LogOut, ChartBar, Settings, Upload, Award, Bell, Clock } from 'lucide-react';
+import { auth, db, loginWithGoogleRedirect, logout } from '../../lib/firebase';
 import { ensureUserExists } from '../../lib/userProgressService';
 import { onAuthStateChanged } from 'firebase/auth';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { LoginModal } from '../auth/LoginModal';
 import { CertificateModal } from '../auth/CertificateModal';
 
@@ -12,6 +13,7 @@ export function NavbarUserMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCertificateModalOpen, setIsCertificateModalOpen] = useState(false);
+  const [pendingQueries, setPendingQueries] = useState<any[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -20,6 +22,19 @@ export function NavbarUserMenu() {
       setUser(currentUser);
       if (currentUser) {
         await ensureUserExists(currentUser);
+        // Check for queries if admin
+        const adminEmails = ['deya58690@gmail.com', 'tripti.arcade.25@gmail.com'];
+        if (currentUser.email && adminEmails.includes(currentUser.email)) {
+          const q = query(collection(db, 'queries'), where('status', '==', 'pending'));
+          try {
+            const snapshot = await getDocs(q);
+            const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            // Only keep ones that are within 48 hours or overdue
+            setPendingQueries(docs);
+          } catch(e) {
+            console.error("Failed to load queries", e);
+          }
+        }
       }
     });
     return () => unsubscribe();
@@ -68,7 +83,8 @@ export function NavbarUserMenu() {
   const isAdmin = user.email === 'deya58690@gmail.com' || user.email === 'tripti.arcade.25@gmail.com';
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative flex items-center gap-4" ref={dropdownRef}>
+      
       <div
         style={{
           position: 'relative',
@@ -136,9 +152,9 @@ export function NavbarUserMenu() {
             color: '#fff',
             zIndex: 2
           }}>
-            {user?.displayName?.charAt(0).toUpperCase() 
-             || user?.email?.charAt(0).toUpperCase() 
-             || 'A'}
+            {user?.displayName?.charAt(0).toUpperCase()
+              || user?.email?.charAt(0).toUpperCase()
+              || 'A'}
           </div>
         )}
 
@@ -155,10 +171,25 @@ export function NavbarUserMenu() {
           zIndex: 3,
           animation: 'pulse 2.5s ease-in-out infinite'
         }}/>
+        
+        {/* Red notification dot if pending queries */}
+        {isAdmin && pendingQueries.length > 0 && (
+          <span style={{
+            position: 'absolute',
+            top: -2,
+            right: -2,
+            width: '12px',
+            height: '12px',
+            borderRadius: '50%',
+            background: '#ef4444',
+            border: '2px solid #0f1117',
+            zIndex: 4,
+          }}/>
+        )}
       </div>
 
       {isOpen && (
-        <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl py-2 z-50">
+        <div className="absolute right-0 top-full mt-3 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl py-2 z-50">
           <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
             <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
               {user.displayName || 'Student'}
@@ -209,6 +240,23 @@ export function NavbarUserMenu() {
                 >
                   <Settings className="w-4 h-4 text-blue-500" />
                   Admin: Feedback
+                </button>
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    navigate('/admin-queries');
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center justify-between transition-colors"
+                >
+                  <span className="flex items-center gap-3">
+                    <Settings className="w-4 h-4 text-red-500" />
+                    Manage Queries & Feedback
+                  </span>
+                  {pendingQueries.length > 0 && (
+                    <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                      {pendingQueries.length}
+                    </span>
+                  )}
                 </button>
                 <button
                   onClick={() => {

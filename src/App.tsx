@@ -27,6 +27,7 @@ import { AdminProgressPage } from './pages/AdminProgressPage';
 import { SupportPage } from './pages/SupportPage';
 import { FeedbackPage } from './pages/FeedbackPage';
 import { AdminFeedbackPage } from './pages/AdminFeedbackPage';
+import { AdminQueriesPage } from './pages/AdminQueriesPage';
 import { BonusMilestonePage } from './pages/BonusMilestonePage';
 import { NotFound404 } from './pages/NotFound404';
 import { AdminPanel } from './components/AdminPanel';
@@ -75,6 +76,7 @@ export default function App() {
               <Route path="/my-progress" element={<PageTransition><MyProgressPage /></PageTransition>} />
               <Route path="/admin-progress" element={<PageTransition><AdminProgressPage /></PageTransition>} />
               <Route path="/admin-feedback" element={<PageTransition><AdminFeedbackPage /></PageTransition>} />
+              <Route path="/admin-queries" element={<PageTransition><AdminQueriesPage /></PageTransition>} />
               <Route path="/faq" element={<PageTransition><FaqPage /></PageTransition>} />
               <Route path="/privacy" element={<PageTransition><PrivacyPage /></PageTransition>} />
               <Route path="/terms" element={<PageTransition><TermsPage /></PageTransition>} />

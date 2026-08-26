@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcade Buddy — Help & Support Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f0f0f; --paper:#f5f2ea; --ink:#0f0f0f; --ink-dim:#5a5648;
+    --lime:#d4ff3f; --coral:#ff5c4d; --sky:#5cc8ff; --violet:#b98bff;
+    --border:3px solid var(--ink);
+    --display:'Archivo Black', sans-serif; --body:'Space Grotesk', sans-serif; --mono:'JetBrains Mono', monospace;
+  }
+  html[data-theme="light"]{ --bg:#f5f2ea; --paper:#0f0f0f; --ink:#f5f2ea; --ink-dim:#c9c4b4; }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--paper); font-family:var(--body); overflow-x:hidden;
+    transition:background .3s ease, color .3s ease;
+  }
+  @media (prefers-reduced-motion: reduce){ *{animation-duration:.001ms !important; transition-duration:.001ms !important;} }
+
+  a, button{ font-family:inherit; }
+
+  .topbar{
+    position:sticky; top:0; z-index:40; display:flex; align-items:center; justify-content:space-between;
+    padding:18px 30px; background:var(--bg); border-bottom:var(--border);
+  }
+  .brand{ font-family:var(--display); font-size:18px; letter-spacing:-.5px; color:var(--paper); display:flex; align-items:center; gap:8px; }
+  .brand .spark{ display:inline-block; animation:spin 4s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .theme-toggle{
+    width:42px; height:42px; border:var(--border); background:var(--paper); color:var(--bg); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:4px 4px 0 var(--paper);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .theme-toggle:hover{ transform:translate(2px,2px); box-shadow:2px 2px 0 var(--paper); }
+
+  .marquee-strip{
+    background:var(--lime); color:#0f0f0f; border-bottom:var(--border); overflow:hidden; white-space:nowrap;
+    padding:8px 0; font-family:var(--mono); font-weight:600; font-size:12.5px; letter-spacing:.5px;
+  }
+  .marquee-strip .track{ display:inline-flex; }
+  .marquee-strip .track span{ display:inline-block; padding-right:60px; animation:marqueeScroll 32s linear infinite; }
+  @keyframes marqueeScroll{ from{ transform:translateX(0); } to{ transform:translateX(-100%); } }
+
+  .hero{ max-width:900px; margin:0 auto; padding:70px 24px 30px; text-align:center; }
+  .hero .tag{
+    display:inline-block; font-family:var(--mono); font-size:11.5px; font-weight:600; letter-spacing:1.5px;
+    text-transform:uppercase; background:var(--paper); color:var(--bg); border:var(--border); padding:6px 16px;
+    margin-bottom:22px; transform:rotate(-2deg);
+  }
+  h1.title{
+    font-family:var(--display); font-size:clamp(34px,7vw,64px); line-height:1; letter-spacing:-1px; margin:0 0 18px;
+    text-transform:uppercase;
+  }
+  h1.title .hue{ color:var(--lime); -webkit-text-stroke:2px var(--paper); }
+  .sub{ color:var(--paper); opacity:.75; font-size:16px; line-height:1.7; max-width:52ch; margin:0 auto; font-family:var(--body); }
+
+  .wrap{ max-width:1200px; margin:0 auto; padding:50px 24px 100px; display:grid; grid-template-columns:.85fr 1.15fr; gap:30px; align-items:start; }
+  @media (max-width:980px){ .wrap{ grid-template-columns:1fr; } }
+  .col{ display:flex; flex-direction:column; gap:28px; }
+
+  /* neobrutalist card */
+  .brut{
+    background:var(--paper); color:var(--bg); border:var(--border); border-radius:0;
+    box-shadow:8px 8px 0 var(--paper); padding:28px; position:relative; transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .brut:hover{ transform:translate(-3px,-3px); box-shadow:11px 11px 0 var(--paper); }
+  .issue-tag{
+    position:absolute; top:-14px; left:22px; background:var(--bg); color:var(--paper); font-family:var(--mono);
+    font-size:10.5px; font-weight:700; padding:4px 10px; border:var(--border); letter-spacing:.5px;
+  }
+  .brut h3.section-title{ font-family:var(--display); font-size:19px; text-transform:uppercase; margin:6px 0 20px; }
+
+  .subcard{ border:2px solid var(--bg); padding:18px; margin-bottom:16px; background:transparent; position:relative; }
+  .subcard:last-child{ margin-bottom:0; }
+  .subcard .row-h{ display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .subcard .ic-badge{ font-size:20px; }
+  .subcard h4{ font-family:var(--display); font-size:14px; margin:0; text-transform:uppercase; }
+  .issue-tint{ background:var(--coral); color:#1a0400; }
+  .support-tint{ background:var(--sky); color:#031824; }
+  .subcard p.desc{ font-size:13.5px; line-height:1.6; margin:0 0 12px; font-family:var(--body); }
+  .subcard ul{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px; }
+  .subcard ul li{ font-size:13px; display:flex; align-items:center; gap:8px; font-weight:600; }
+  .subcard ul li::before{ content:"▪"; }
+
+  .response-brut{ text-align:center; background:var(--lime); color:#0f0f0f; }
+  .response-brut .orbit-ic{
+    width:60px; height:60px; margin:0 auto 14px; border:2px solid #0f0f0f; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-size:26px; animation:wiggle 1.8s ease-in-out infinite;
+  }
+  @keyframes wiggle{ 0%,100%{ transform:rotate(-6deg); } 50%{ transform:rotate(6deg); } }
+  .response-brut h4{ font-family:var(--display); font-size:19px; margin:0 0 10px; text-transform:uppercase; }
+  .response-brut p{ font-size:13.5px; line-height:1.65; max-width:34ch; margin:0 auto 20px; font-family:var(--body); }
+  .link-brut{
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; margin-top:10px;
+    background:#0f0f0f; color:var(--lime); font-weight:700; font-size:13px; text-decoration:none; cursor:pointer;
+    border:2px solid #0f0f0f; box-shadow:4px 4px 0 #0f0f0f; text-transform:uppercase; font-family:var(--mono);
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .link-brut:hover{ transform:translate(2px,2px); box-shadow:2px 2px 0 #0f0f0f; }
+
+  .notice-brut{ display:flex; gap:16px; align-items:flex-start; background:var(--violet); color:#0f0018; }
+  .notice-brut .ic{ font-size:24px; flex-shrink:0; }
+  .notice-brut h4{ font-family:var(--display); font-size:15px; margin:0 0 8px; text-transform:uppercase; }
+  .notice-brut p{ font-size:13.5px; line-height:1.65; margin:0; font-family:var(--body); }
+
+  .form-brut{ padding:34px; }
+  @media (max-width:600px){ .form-brut{ padding:24px 18px; } }
+  .form-head{ display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+  .form-head .badge{
+    width:48px; height:48px; border:var(--border) var(--bg); background:var(--lime); display:flex; align-items:center;
+    justify-content:center; font-size:20px; flex-shrink:0;
+  }
+  .form-head h3{ font-family:var(--display); font-size:22px; margin:0; text-transform:uppercase; }
+  .form-sub{ font-size:13.5px; margin:8px 0 28px; opacity:.75; font-family:var(--body); }
+
+  .field{ margin-bottom:22px; }
+  .field label{
+    display:block; font-family:var(--mono); font-size:11.5px; font-weight:700; margin-bottom:9px; letter-spacing:.5px;
+    text-transform:uppercase;
+  }
+  .field-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:520px){ .field-grid{ grid-template-columns:1fr; } }
+
+  input[type=text], input[type=email], input[type=url], textarea, select{
+    width:100%; background:transparent; border:2px solid var(--bg); border-radius:0; color:var(--bg);
+    padding:14px 16px; font-family:var(--body); font-size:14.5px; resize:vertical; transition:box-shadow .15s ease, transform .1s ease;
+  }
+  select option { background: var(--paper); color: var(--bg); }
+  select{ appearance:none; -webkit-appearance:none; cursor:pointer;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%230f0f0f'/></svg>");
+    background-repeat:no-repeat; background-position:right 18px center; padding-right:40px; }
+  input:focus, textarea:focus, select:focus{ outline:none; box-shadow:4px 4px 0 var(--bg); transform:translate(-2px,-2px); }
+  input::placeholder, textarea::placeholder{ color:var(--ink-dim); opacity:.7; }
+
+  .file-drop{
+    border:2px dashed var(--bg); padding:24px; text-align:center; cursor:pointer; position:relative;
+    transition:background .2s ease;
+  }
+  .file-drop:hover, .file-drop.drag{ background:rgba(15,15,15,.06); }
+  .file-drop input{ position:absolute; inset:0; opacity:0; cursor:pointer; }
+  .file-drop .ic{ font-size:26px; display:block; margin-bottom:8px; }
+  .file-drop .txt{ font-size:13px; font-family:var(--body); opacity:.75; }
+  .file-drop .fname{ font-size:12.5px; font-weight:700; margin-top:8px; word-break:break-all; }
+
+  .char-count{ text-align:right; font-size:11px; opacity:.65; margin-top:8px; font-family:var(--mono); }
+
+  .submit-btn{
+    width:100%; font-family:var(--display); font-size:15px; color:#0f0f0f; border:var(--border) var(--bg); border-radius:0;
+    padding:18px; cursor:pointer; background:var(--lime); box-shadow:6px 6px 0 var(--bg); text-transform:uppercase;
+    display:flex; align-items:center; justify-content:center; gap:10px; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .submit-btn:hover{ transform:translate(-2px,-2px); box-shadow:8px 8px 0 var(--bg); }
+  .submit-btn:active{ transform:translate(3px,3px); box-shadow:2px 2px 0 var(--bg); }
+  .submit-btn .spinner{ display:none; width:15px; height:15px; border:2px solid rgba(15,15,15,.3); border-top-color:#0f0f0f; border-radius:50%; animation:spin2 .7s linear infinite; }
+  .submit-btn.loading .spinner{ display:inline-block; }
+  .submit-btn.loading .btn-txt{ opacity:.6; }
+  @keyframes spin2{ to{ transform:rotate(360deg); } }
+
+  .success-box{ display:none; text-align:center; padding:20px 0; }
+  .success-box.active{ display:block; animation:fadeUp .5s ease both; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(16px); } to{ opacity:1; transform:translateY(0); } }
+  .success-box .stamp{
+    width:84px; height:84px; margin:0 auto 18px; border:3px solid var(--bg); border-radius:50%; display:flex;
+    align-items:center; justify-content:center; font-size:36px; transform:rotate(-8deg); animation:pop .6s cubic-bezier(.2,1.6,.4,1) both;
+    background:var(--coral);
+  }
+  @keyframes pop{ 0%{ transform:scale(0) rotate(-8deg); } 70%{ transform:scale(1.12) rotate(-8deg); } 100%{ transform:scale(1) rotate(-8deg); } }
+  .success-box h4{ font-family:var(--display); font-size:20px; margin:0 0 14px; text-transform:uppercase; }
+  .success-box .retro-msg{
+    font-family:var(--body); font-size:14px; line-height:1.7; max-width:36ch; margin:0 auto; border:2px solid var(--bg);
+    padding:18px 20px; background:var(--sky); color:#031824;
+  }
+  .success-box .retro-msg strong{ text-decoration:underline; text-decoration-color:var(--coral); }
+  .ticket-id{ font-family:var(--mono); font-weight:700; font-size:13px; margin-top:18px; letter-spacing:1px; }
+
+  #confetti{ position:fixed; inset:0; pointer-events:none; z-index:60; }
+
+  footer{ text-align:center; padding:40px 20px 54px; border-top:var(--border); font-family:var(--body); opacity:.7; font-size:13.5px; }
+  footer .fbrand{ font-family:var(--display); font-size:16px; margin-bottom:10px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+
+<div class="topbar">
+  <div class="brand"><span class="spark">✦</span> ARCADE BUDDY</div>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
+</div>
+
+<div class="marquee-strip"><div class="track">
+  <span>SUPPORT DESK OPEN ★ 24–48HR REPLIES ★ NO BOTS, REAL HUMANS ★ SUPPORT DESK OPEN ★ 24–48HR REPLIES ★ NO BOTS, REAL HUMANS ★</span>
+  <span aria-hidden="true">SUPPORT DESK OPEN ★ 24–48HR REPLIES ★ NO BOTS, REAL HUMANS ★ SUPPORT DESK OPEN ★ 24–48HR REPLIES ★ NO BOTS, REAL HUMANS ★</span>
+</div></div>
+
+<section class="hero">
+  <div class="tag">ISSUE #00 — SUPPORT DESK</div>
+  <h1 class="title">Help & <span class="hue">Support</span> Center</h1>
+  <p class="sub">Report issues, ask questions, or get help from our community to maximize your Arcade points.</p>
+</section>
+
+<div class="wrap">
+  <div class="col">
+    <div class="brut" data-tilt>
+      <div class="issue-tag">ISSUE #01</div>
+      <h3 class="section-title">How Can We Help?</h3>
+
+      <div class="subcard issue-tint">
+        <div class="row-h"><span class="ic-badge">⚠️</span><h4>Technical Issues</h4></div>
+        <p class="desc">Report calculation errors, missing badges, or technical problems with the points system.</p>
+        <ul>
+          <li>Points calculation errors</li>
+          <li>Missing badges</li>
+          <li>System malfunctions</li>
+          <li>Data sync issues</li>
+        </ul>
+      </div>
+
+      <div class="subcard support-tint">
+        <div class="row-h"><span class="ic-badge">💬</span><h4>General Support</h4></div>
+        <p class="desc">For general inquiries about the Arcade program, join our community platforms for quick assistance.</p>
+        <ul>
+          <li>Program questions</li>
+          <li>How-to guides</li>
+          <li>General inquiries</li>
+          <li>Community discussions</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="brut response-brut" data-tilt>
+      <div class="issue-tag">ISSUE #02</div>
+      <div class="orbit-ic">⏱️</div>
+      <h4>Response Time</h4>
+      <p>We strive to respond to all queries within 24-48 hours. For urgent matters, please reach out through our communities for faster assistance.</p>
+      <a href="https://t.me/cloudarcade" target="_blank" class="link-brut">📨 Telegram Community</a>
+      <a href="#" class="link-brut">💚 WhatsApp Group</a>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="brut notice-brut" data-tilt>
+      <div class="issue-tag">ISSUE #03</div>
+      <span class="ic">ℹ️</span>
+      <div>
+        <h4>Before Submitting a Query</h4>
+        <p>Please check our FAQ section for common questions. For technical issues like missing badges or calculation errors, use the form below with detailed information for faster resolution.</p>
+      </div>
+    </div>
+
+    <div class="brut form-brut" data-tilt>
+      <div class="issue-tag">ISSUE #04 — SUBMIT</div>
+      <div class="form-head">
+        <div class="badge">📝</div>
+        <h3>Submit Your Query</h3>
+      </div>
+      <p class="form-sub">Please provide detailed information about your issue.</p>
+
+      <form id="queryForm">
+        <div class="field-grid">
+          <div class="field">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="Your full name" required>
+          </div>
+          <div class="field">
+            <label for="emailAddr">Email Address</label>
+            <input type="email" id="emailAddr" placeholder="you@example.com" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="profileUrl">Public Profile URL</label>
+          <input type="url" id="profileUrl" placeholder="https://www.cloudskillsboost.google/public_profiles/PROFILE_ID">
+        </div>
+
+        <div class="field">
+          <label for="queryType">Type of Query</label>
+          <select id="queryType" required>
+            <option value="" disabled selected>Select query type...</option>
+            <option>Points calculation error</option>
+            <option>Missing badge</option>
+            <option>System malfunction</option>
+            <option>Data sync issue</option>
+            <option>Program / general question</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="fileInput">Proof Attachments</label>
+          <div class="file-drop" id="fileDrop">
+            <!-- No file input natively processing here, just text. We won't handle actual files via postMessage for simplicity unless we use base64, but let's just ignore the file logic for this HTML mockup or only send the filenames to the parent. -->
+            <input type="file" id="fileInput" multiple>
+            <span class="ic">📎</span>
+            <div class="txt">Choose files or drag & drop screenshots here</div>
+            <div class="fname" id="fileName"></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="detailMsg">Detailed Message</label>
+          <textarea id="detailMsg" rows="5" maxlength="800" placeholder="Please describe your issue in detail. Include badge names, completion dates, or any error messages you encountered..." required></textarea>
+          <div class="char-count"><span id="msgCount">0</span>/800 — the more details, the faster we help.</div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="spinner"></span>
+          <span class="btn-txt">🚀 Submit Query</span>
+        </button>
+      </form>
+
+      <div class="success-box" id="successBox">
+        <div class="stamp">✔</div>
+        <h4>Query Received</h4>
+        <p class="retro-msg">😊 You'll receive your answer within <strong>24–48 hours</strong>. Hang tight — our team's on it!</p>
+        <div class="ticket-id" id="ticketId">TICKET · AB-0000</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fbrand">Arcade Buddy</div>
+  © 2026 Arcade Buddy. Open a ticket, get it fixed, keep playing.
+</footer>
+
+<script>
+(function(){
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  function applyTheme(t){
+    root.setAttribute('data-theme', t);
+    themeToggle.textContent = t==='light' ? '☀️' : '🌙';
+    localStorage.setItem('arcadeTheme', t);
+  }
+  const saved = localStorage.getItem('arcadeTheme');
+  applyTheme(saved || 'dark');
+  themeToggle.addEventListener('click', ()=> applyTheme(root.getAttribute('data-theme')==='light' ? 'dark' : 'light'));
+
+  // subtle tilt only on top-level brut cards
+  document.querySelectorAll('[data-tilt]').forEach(el=>{
+    el.addEventListener('mousemove', (e)=>{
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left)/r.width - 0.5;
+      const y = (e.clientY - r.top)/r.height - 0.5;
+      el.style.transform = `translate(${-x*4}px, ${-y*4}px)`;
+    });
+    el.addEventListener('mouseleave', ()=>{ el.style.transform = 'translate(0,0)'; });
+  });
+
+  const fileInput = document.getElementById('fileInput');
+  const fileDrop = document.getElementById('fileDrop');
+  const fileNameEl = document.getElementById('fileName');
+  fileInput.addEventListener('change', ()=>{
+    const files = Array.from(fileInput.files).map(f=>f.name);
+    fileNameEl.textContent = files.length ? `${files.length} file(s): ${files.join(', ')}` : '';
+  });
+  ['dragenter','dragover'].forEach(ev=> fileDrop.addEventListener(ev, e=>{ e.preventDefault(); fileDrop.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev=> fileDrop.addEventListener(ev, e=>{ e.preventDefault(); fileDrop.classList.remove('drag'); }));
+  fileDrop.addEventListener('drop', e=>{
+    if(e.dataTransfer.files.length){ fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
+  });
+
+  const detailMsg = document.getElementById('detailMsg');
+  const msgCount = document.getElementById('msgCount');
+  detailMsg.addEventListener('input', ()=> msgCount.textContent = detailMsg.value.length);
+
+  const form = document.getElementById('queryForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const successBox = document.getElementById('successBox');
+  const formBrut = document.querySelector('.form-brut');
+  
+  // Try to grab pre-fill data from parent if possible
+  window.addEventListener('message', (e) => {
+    if (e.data?.type === 'PREFILL_USER_DATA') {
+      document.getElementById('fullName').value = e.data.name || '';
+      document.getElementById('emailAddr').value = e.data.email || '';
+    } else if (e.data?.type === 'SUBMIT_SUCCESS') {
+      submitBtn.classList.remove('loading');
+      form.style.display = 'none';
+      successBox.classList.add('active');
+      const ticketNum = e.data.ticketId || Math.floor(1000+Math.random()*9000);
+      document.getElementById('ticketId').textContent = 'TICKET · AB-' + ticketNum;
+      fireConfetti(formBrut);
+    } else if (e.data?.type === 'SUBMIT_ERROR') {
+      submitBtn.classList.remove('loading');
+      alert('Failed to submit: ' + e.data.error);
+    }
+  });
+
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    if(!form.checkValidity()){ form.reportValidity(); return; }
+    submitBtn.classList.add('loading');
+    
+    // We will use postMessage to send to React app
+    window.parent.postMessage({
+      type: 'SUBMIT_QUERY',
+      payload: {
+        fullName: document.getElementById('fullName').value,
+        emailAddr: document.getElementById('emailAddr').value,
+        profileUrl: document.getElementById('profileUrl').value,
+        queryType: document.getElementById('queryType').value,
+        detailMsg: document.getElementById('detailMsg').value
+        // Not sending file binaries directly due to postMessage limitations, 
+        // normally we would upload here or send a base64 encoded array. Let's ignore attachments for this.
+      }
+    }, '*');
+  });
+
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  function resize(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const colors = ['#d4ff3f','#ff5c4d','#5cc8ff','#b98bff'];
+  let particles = [];
+  function fireConfetti(originEl){
+    particles = [];
+    const rect = originEl.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    for(let i=0;i<130;i++){
+      particles.push({
+        x: cx + (Math.random()-0.5)*220, y: innerHeight*0.3,
+        vx:(Math.random()-0.5)*7, vy:-Math.random()*9-4, g:0.26,
+        size:Math.random()*7+4, color:colors[Math.floor(Math.random()*colors.length)],
+        rot:Math.random()*360, vr:(Math.random()-0.5)*10, life:120+Math.random()*40
+      });
+    }
+    requestAnimationFrame(tick);
+  }
+  function tick(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    particles.forEach(p=>{
+      if(p.life<=0) return;
+      alive=true;
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.color; ctx.fillRect(-p.size/2,-p.size/2,p.size,p.size*0.6);
+      ctx.restore();
+    });
+    if(alive) requestAnimationFrame(tick); else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+})();
+</script>
+
+</body>
+</html>
