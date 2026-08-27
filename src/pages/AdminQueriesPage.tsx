@@ -333,12 +333,26 @@ export function AdminQueriesPage() {
               : `${Math.floor(hoursRemaining)}h ${Math.floor((hoursRemaining % 1) * 60)}m remaining`;
             
             const isSelected = selectedIds.has(q.id);
+            
+            let rowClasses = "group flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ";
+            
+            if (isSelected) {
+              rowClasses += "bg-blue-50/80 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700 ring-1 ring-blue-500/50";
+            } else if (q.status === 'resolved') {
+              rowClasses += "bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 opacity-70 hover:opacity-100 hover:bg-slate-100 dark:hover:bg-slate-800/80";
+            } else if (isOverdue) {
+              rowClasses += "bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900/30 hover:bg-red-100/50 dark:hover:bg-red-900/20";
+            } else if (isYellow) {
+              rowClasses += "bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-900/30 hover:bg-yellow-100/50 dark:hover:bg-yellow-900/20";
+            } else {
+              rowClasses += "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700/50";
+            }
 
             return (
               <div 
                 key={q.id} 
                 onClick={() => setSelectedQuery(q)}
-                className={`group flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition ${q.status === 'resolved' ? 'bg-slate-50 dark:bg-slate-900/50 border-slate-200 dark:border-slate-800 opacity-70 hover:opacity-100' : isOverdue ? 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-900/30' : isYellow ? 'bg-yellow-50 dark:bg-yellow-900/10 border-yellow-200 dark:border-yellow-900/30' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:shadow-md'}`}
+                className={rowClasses}
               >
                 <div onClick={(e) => toggleSelection(q.id, e)} className="shrink-0 p-2 text-slate-400 hover:text-blue-500 transition">
                   {isSelected ? <CheckSquare className="w-5 h-5 text-blue-500" /> : <Square className="w-5 h-5" />}

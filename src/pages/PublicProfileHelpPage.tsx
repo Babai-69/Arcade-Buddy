@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { AlertCircle, CheckCircle2, Ban, ExternalLink, Siren } from 'lucide-react';
 
 export function PublicProfileHelpPage() {
@@ -105,12 +106,12 @@ export function PublicProfileHelpPage() {
             <p className="text-green-400 mb-8 max-w-2xl text-sm leading-relaxed">
               Now that you have your public profile URL, you can use it with our Arcade Points Calculator to track your progress and see how many points you've earned!
             </p>
-            <a 
-              href="/facilitator"
+            <Link 
+              to="/calculator"
               className="inline-flex items-center gap-2 bg-[#1a7f37] hover:bg-[#1a7f37]/80 text-white font-medium px-6 py-3 rounded-xl transition-colors"
             >
               🔗 Go to Points Calculator
-            </a>
+            </Link>
           </div>
         </div>
 

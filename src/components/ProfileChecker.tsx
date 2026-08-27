@@ -45,6 +45,7 @@ const AnimatedPoints = ({ endVal }: { endVal: number }) => {
 
 export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   const [user, setUser] = useState<User | null>(null);
+  const [authLoading, setAuthLoading] = useState(true);
   const [url, setUrl] = useState('');
   const [result, setResult] = useState<Participant | null>(null);
   const [error, setError] = useState('');
@@ -64,6 +65,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setAuthLoading(false);
       if (currentUser) {
         const savedUrl = localStorage.getItem(`arcadeProfileUrl_${currentUser.uid}`);
         if (savedUrl) {
@@ -240,6 +242,29 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   const getCurrentMilestone = (points: number) => {
     return [...MILESTONES].reverse().find(m => points >= m.requiredPoints);
   };
+
+  if (authLoading) {
+    return (
+      <section id="calculator" className="py-10 w-full mx-auto px-0 animate-pulse">
+        <div className="text-center mb-10 space-y-4">
+          <div className="h-12 bg-slate-200 dark:bg-slate-800/80 rounded-xl w-3/4 max-w-md mx-auto"></div>
+          <div className="h-4 bg-slate-200 dark:bg-slate-800/80 rounded w-1/2 max-w-sm mx-auto mt-4"></div>
+        </div>
+        <div className="bg-white/50 dark:bg-[#111111]/50 border border-slate-200/50 dark:border-[#2a2a2a]/50 rounded-[24px] p-6 sm:p-8 max-w-3xl mx-auto mb-10 min-h-[300px]">
+           <div className="flex items-center gap-3 mb-6">
+             <div className="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-800"></div>
+             <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded w-32"></div>
+           </div>
+           <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-64 mb-8"></div>
+           <div className="h-14 bg-slate-200 dark:bg-slate-800 rounded-xl w-full"></div>
+           <div className="mt-6 flex justify-between">
+             <div className="h-6 w-12 rounded-full bg-slate-200 dark:bg-slate-800"></div>
+             <div className="h-6 w-24 rounded bg-slate-200 dark:bg-slate-800"></div>
+           </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="calculator" className="py-10 w-full mx-auto px-0">
