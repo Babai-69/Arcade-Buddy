@@ -397,7 +397,7 @@ export function FacilitatorSyllabus() {
                   <img 
                     src={game.img} 
                     alt={game.title || `Game ${idx + 1}`} 
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
                 
@@ -509,7 +509,7 @@ export function FacilitatorSyllabus() {
                     <img 
                       src={game.img} 
                       alt={gameName} 
-                      className="w-full h-full object-cover grayscale"
+                      className="w-full h-full object-cover grayscale transition-transform duration-500 group-hover:scale-110"
                     />
                   </div>
                   
@@ -560,6 +560,41 @@ export function FacilitatorSyllabus() {
             <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/5 text-slate-700 dark:text-slate-300 font-medium">
               <span className="text-green-500 dark:text-green-400 text-lg">⭐</span> 2 Badges = 1 Point
             </div>
+          </div>
+        </motion.div>
+
+        {/* Fast-Track Section */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="bg-[#FFFAF0] dark:bg-amber-900/10 border border-[#FBE6A2] dark:border-amber-500/20 rounded-2xl p-5 md:p-7 mb-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-8 shadow-sm w-full"
+        >
+          <div className="flex-1 space-y-4">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-[#FDF1D5] dark:bg-amber-500/20 rounded-md text-xs font-bold text-[#B46B18] dark:text-amber-500 tracking-wide uppercase">
+              <Zap className="w-3.5 h-3.5 text-[#F59E0B] fill-current" /> FAST-TRACK SKILL BADGES
+            </div>
+            
+            <h3 className="text-xl md:text-2xl font-display font-bold text-slate-900 dark:text-white leading-tight">
+              Skip Preparatory Labs & Take Only the Challenge Lab!
+            </h3>
+            
+            <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+              Unlike Game Badges (which require completing every lab under the badge), <strong className="text-slate-900 dark:text-white">Skill Badges</strong> can be earned instantly by skipping preparatory labs and directly completing only the final <strong className="text-[#F59E0B] dark:text-amber-500">Challenge Lab</strong>.
+            </p>
+
+            <p className="text-slate-600 dark:text-slate-300 text-base leading-relaxed">
+              Click any Skill Badge link below to open its course page. Then, locate and click the option to take the challenge (as shown in the preview) to jump straight to the Challenge Lab!
+            </p>
+          </div>
+          
+          <div className="w-full lg:w-[40%] max-w-[420px] shrink-0 overflow-hidden rounded-xl border border-[#E2E8F0] dark:border-slate-700 shadow-md">
+            <img 
+              src="https://arcadecalc.netlify.app/images/skillbadges-challenge.png" 
+              alt="Challenge Lab Preview" 
+              className="w-full h-auto transition-transform duration-500 hover:scale-[1.03] cursor-pointer"
+            />
           </div>
         </motion.div>
 
