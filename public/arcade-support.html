@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcade Buddy — Help & Support Center</title>
+<title>Arcade — Help & Support Center</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -131,6 +131,7 @@
     padding:14px 16px; font-family:var(--body); font-size:14.5px; resize:vertical; transition:box-shadow .15s ease, transform .1s ease;
   }
   select option { background: var(--paper); color: var(--bg); }
+  html[data-theme="light"] select option { background: #f5f2ea; color: #0f0f0f; }
   select{ appearance:none; -webkit-appearance:none; cursor:pointer;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%230f0f0f'/></svg>");
     background-repeat:no-repeat; background-position:right 18px center; padding-right:40px; }
@@ -188,10 +189,7 @@
 
 <canvas id="confetti"></canvas>
 
-<div class="topbar">
-  <div class="brand"><span class="spark">✦</span> ARCADE BUDDY</div>
-  <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">🌙</button>
-</div>
+
 
 <div class="marquee-strip"><div class="track">
   <span>SUPPORT DESK OPEN ★ 24–48HR REPLIES ★ NO BOTS, REAL HUMANS ★ SUPPORT DESK OPEN ★ 24–48HR REPLIES ★ NO BOTS, REAL HUMANS ★</span>
@@ -239,7 +237,7 @@
       <h4>Response Time</h4>
       <p>We strive to respond to all queries within 24-48 hours. For urgent matters, please reach out through our communities for faster assistance.</p>
       <a href="https://t.me/cloudarcade" target="_blank" class="link-brut">📨 Telegram Community</a>
-      <a href="#" class="link-brut">💚 WhatsApp Group</a>
+      <a href="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s" class="link-brut">💚 WhatsApp Group</a>
     </div>
   </div>
 
@@ -325,22 +323,25 @@
 </div>
 
 <footer>
-  <div class="fbrand">Arcade Buddy</div>
-  © 2026 Arcade Buddy. Open a ticket, get it fixed, keep playing.
+  <div class="fbrand"></div>
+  © 2026 Arcade. Open a ticket, get it fixed, keep playing.
 </footer>
 
 <script>
 (function(){
   const root = document.documentElement;
-  const themeToggle = document.getElementById('themeToggle');
   function applyTheme(t){
     root.setAttribute('data-theme', t);
-    themeToggle.textContent = t==='light' ? '☀️' : '🌙';
     localStorage.setItem('arcadeTheme', t);
   }
   const saved = localStorage.getItem('arcadeTheme');
   applyTheme(saved || 'dark');
-  themeToggle.addEventListener('click', ()=> applyTheme(root.getAttribute('data-theme')==='light' ? 'dark' : 'light'));
+  
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'THEME_UPDATE') {
+      applyTheme(e.data.theme);
+    }
+  });
 
   // subtle tilt only on top-level brut cards
   document.querySelectorAll('[data-tilt]').forEach(el=>{

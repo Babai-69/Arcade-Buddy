@@ -61,13 +61,39 @@ export function FeedbackPage() {
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      iframeRef.current?.contentWindow?.postMessage({ 
+        type: 'THEME_UPDATE', 
+        theme: isDark ? 'dark' : 'light' 
+      }, '*');
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleIframeLoad = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    iframeRef.current?.contentWindow?.postMessage({ 
+      type: 'THEME_UPDATE', 
+      theme: isDark ? 'dark' : 'light' 
+    }, '*');
+  };
+
   return (
     <div className="w-full" style={{ height: 'calc(100vh - 73px)' }}>
       <iframe 
         ref={iframeRef}
+        onLoad={handleIframeLoad}
         src="/arcade-feedback.html" 
         className="w-full h-full border-0 block"
-        title="Arcade Buddy Feedback Terminal"
+        title="Feedback Terminal"
       />
       
       {showToast && (

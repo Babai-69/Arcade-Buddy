@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Arcade Buddy — Drop Your Feedback Coin</title>
+<title>Arcade — Drop Your Feedback Coin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -252,9 +252,13 @@
   .rating-caption{text-align:center; font-family:var(--pixel); font-size:10px; color:var(--green); min-height:16px; margin-top:14px;}
 
   textarea, input[type=text], input[type=email], select.select-like{
-    width:100%; background:var(--screen); border:2px solid var(--card-border); border-radius:12px;
+    width:100%; background:var(--bg-0); border:2px solid var(--card-border); border-radius:12px;
     color:var(--ink); padding:16px; font-family:var(--body); font-size:15px; resize:vertical;
     transition:border-color .15s, box-shadow .15s;
+  }
+  select.select-like option {
+    background: var(--bg-0);
+    color: var(--ink);
   }
   textarea:focus, input:focus, select:focus{outline:none; border-color:var(--blue); box-shadow:0 0 0 4px rgba(66,133,244,.18);}
   textarea::placeholder, input::placeholder{color:#6b7099;}
@@ -306,7 +310,7 @@
   .lvl2-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;}
   @media (max-width:640px){ .lvl2-grid{grid-template-columns:1fr;} }
   .select-like{
-    background:var(--screen); border:2px solid var(--card-border); border-radius:12px; color:#eef0ff;
+    background:var(--bg-0); border:2px solid var(--card-border); border-radius:12px; color:var(--ink);
     padding:14px 16px; font-family:var(--body); font-size:14px; width:100%; cursor:pointer;
   }
   .lvl2-success{display:none; text-align:center; padding:10px 0;}
@@ -338,19 +342,13 @@
 <div class="scanlines"></div>
 <canvas id="confetti"></canvas>
 
-<div class="topbar">
-  <div class="brand"><span class="dot"></span> ARCADE BUDDY</div>
-  <div class="top-right">
-    <div class="credits">CREDITS: <span id="creditNum">01</span></div>
-    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark" aria-label="Toggle theme">🌙</button>
-  </div>
-</div>
+
 
 <!-- HERO -->
 <section class="hero">
   <div>
     <div class="eyebrow">Player feedback terminal</div>
-    <h1 class="title">Insert your thoughts.<br><span class="hue">Level up</span> Arcade Buddy.</h1>
+    <h1 class="title">Insert your thoughts.<br><span class="hue">Level up</span> the arcade.</h1>
     <p class="sub">Every run you play helps us tune the next patch. Drop 60 seconds of feedback and earn your spot on today's leaderboard — no login, no forms that feel like homework.</p>
     <div class="hero-ctas">
       <button class="btn-primary" onclick="document.getElementById('feedback-panel').scrollIntoView({behavior:'smooth'})">▶ START FEEDBACK</button>
@@ -390,7 +388,7 @@
     <div class="perk"><span class="ic">🕹️</span><h4>60-SECOND RUN</h4><p>Five quick prompts. No essay required, just your honest take.</p></div>
     <div class="perk"><span class="ic">🏆</span><h4>NAMED ON PATCH NOTES</h4><p>Standout ideas get credited by name in our next release log.</p></div>
     <div class="perk"><span class="ic">🎯</span><h4>DIRECTLY READ</h4><p>Every submission lands in front of the team building the game — not a queue.</p></div>
-    <div class="perk"><span class="ic">🎁</span><h4>SWAG DROPS</h4><p>Detailed feedback puts you in the pool for Arcade Buddy pins and stickers.</p></div>
+    <div class="perk"><span class="ic">🎁</span><h4>SWAG DROPS</h4><p>Detailed feedback puts you in the pool for  pins and stickers.</p></div>
   </div>
 </section>
 
@@ -435,7 +433,7 @@
 
       <!-- STEP 3: rating -->
       <div class="step" data-step="3">
-        <div class="q-label"><span class="num">Q3.</span> Drop coins for how you'd rate Arcade Buddy overall</div>
+        <div class="q-label"><span class="num">Q3.</span> Drop coins for how you'd rate  overall</div>
         <div class="coin-row" id="coinRow">
           <div class="coin" data-val="1">1</div>
           <div class="coin" data-val="2">2</div>
@@ -472,7 +470,7 @@
       <div class="success" id="successStep">
         <span class="trophy">🏆</span>
         <h3>HIGH SCORE SUBMITTED!</h3>
-        <p>Thanks for playing the feedback level, <span id="successName">Player</span>. Your input just got queued straight to the Arcade Buddy team — watch the patch notes for your name.</p>
+        <p>Thanks for playing the feedback level, <span id="successName">Player</span>. Your input just got queued straight to the  team — watch the patch notes for your name.</p>
         <div class="final-score" id="finalScore">+500 PTS</div>
       </div>
 
@@ -552,24 +550,25 @@
 
 <footer>
   <div class="fbrand">ARCADE BUDDY</div>
-  © 2026 Arcade Buddy. Insert coin, share feedback, repeat.
+  © 2026 Arcade. Insert coin, share feedback, repeat.
 </footer>
 
 <script>
 (function(){
   // ---- theme toggle ----
   const root = document.documentElement;
-  const themeToggle = document.getElementById('themeToggle');
   function applyTheme(t){
     root.setAttribute('data-theme', t);
-    themeToggle.textContent = t === 'light' ? '☀️' : '🌙';
     localStorage.setItem('arcadeTheme', t);
   }
   const savedTheme = localStorage.getItem('arcadeTheme');
   const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
   applyTheme(savedTheme || (prefersLight ? 'light' : 'dark'));
-  themeToggle.addEventListener('click', ()=>{
-    applyTheme(root.getAttribute('data-theme')==='light' ? 'dark' : 'light');
+
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'THEME_UPDATE') {
+      applyTheme(e.data.theme);
+    }
   });
 
   // ---- 3D cabinet tilt ----

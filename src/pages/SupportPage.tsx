@@ -24,8 +24,31 @@ export function SupportPage() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      iframeRef.current?.contentWindow?.postMessage({ 
+        type: 'THEME_UPDATE', 
+        theme: isDark ? 'dark' : 'light' 
+      }, '*');
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   // Also send user data when iframe loads
   const handleIframeLoad = () => {
+    const isDark = document.documentElement.classList.contains('dark');
+    iframeRef.current?.contentWindow?.postMessage({
+      type: 'THEME_UPDATE',
+      theme: isDark ? 'dark' : 'light'
+    }, '*');
+
     if (user && iframeRef.current) {
       iframeRef.current.contentWindow?.postMessage({
         type: 'PREFILL_USER_DATA',
@@ -79,7 +102,7 @@ export function SupportPage() {
         onLoad={handleIframeLoad}
         src="/arcade-support.html" 
         className="w-full h-full border-0 block"
-        title="Arcade Buddy Support Center"
+        title="Support Center"
       />
       
       {showToast && (
