@@ -8,23 +8,14 @@ export interface ArcadeGame {
 }
 
 export const fetchArcadeGames = async (): Promise<ArcadeGame[]> => {
-  try {
-    const response = await fetch('/api/arcade-activity');
-    if (!response.ok) {
-      throw new Error('Failed to fetch arcade games');
-    }
-    const contentType = response.headers.get("content-type");
-    if (!contentType || contentType.indexOf("application/json") === -1) {
-      const text = await response.text();
-      console.error("API returned non-JSON:", text.substring(0, 100));
-      return [];
-    }
-    const data = await response.json();
-    return data.games || [];
-  } catch (error) {
-    console.error('Error fetching arcade games:', error);
-    return [];
-  }
+  return [
+    { title: "Arcade Simulator: DevOps Engineer", img: "https://services.google.com/fh/files/events/gcaf26_arcade_sim_sep.png", code: "1q-devops-065131", link: "https://www.skills.google/games/7445?utm_source=googleskills&utm_medium=lp&utm_campaign=spegame-Sep-arcade26" },
+    { title: "Pitch Perfect", img: "https://services.google.com/fh/files/events/gcaf26_pitch_perfect_game_sep.png", code: "1q-analysis-5026", link: "https://www.skills.google/games/7446?utm_source=googleskills&utm_medium=lp&utm_campaign=Special-Sep-arcade26" },
+    { title: "Arcade Base Camp September 2026", img: "https://services.google.com/fh/files/events/gcaf26_basecamp_sep.png", code: "1q-basecamp-09304", link: "https://www.skills.google/games/7444?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Sep-arcade26" },
+    { title: "Arcade Adventure September 2026", img: "https://services.google.com/fh/files/events/gcaf26_adventure_sep.png", code: "1q-architecture-01381", link: "https://www.skills.google/games/7441?utm_source=qwiklabs&utm_medium=lp&utm_campaign=adv-Sep-arcade26" },
+    { title: "Arcade Voyage September 2026", img: "https://services.google.com/fh/files/events/gcaf26_voyage_sep.png", code: "1q-microservice-9210", link: "https://www.skills.google/games/7442?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Sep-arcade26" },
+    { title: "Arcade Trail September 2026", img: "https://services.google.com/fh/files/events/gcaf26_trail_sep.png", code: "1q-vpcpeering-3469", link: "https://www.skills.google/games/7443?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Sep-arcade26" }
+  ];
 };
 
 export const useArcadeGames = () => {

@@ -1,5 +1,35 @@
 export const gameBadges = [
   {
+    "name": "Arcade Simulator: DevOps Engineer",
+    "image": "https://services.google.com/fh/files/events/gcaf26_arcade_sim_sep.png",
+    "link": "https://www.skills.google/games/7445?utm_source=googleskills&utm_medium=lp&utm_campaign=spegame-Sep-arcade26"
+  },
+  {
+    "name": "Pitch Perfect",
+    "image": "https://services.google.com/fh/files/events/gcaf26_pitch_perfect_game_sep.png",
+    "link": "https://www.skills.google/games/7446?utm_source=googleskills&utm_medium=lp&utm_campaign=Special-Sep-arcade26"
+  },
+  {
+    "name": "Arcade Base Camp September 2026",
+    "image": "https://services.google.com/fh/files/events/gcaf26_basecamp_sep.png",
+    "link": "https://www.skills.google/games/7444?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Sep-arcade26"
+  },
+  {
+    "name": "Arcade Adventure September 2026",
+    "image": "https://services.google.com/fh/files/events/gcaf26_adventure_sep.png",
+    "link": "https://www.skills.google/games/7441?utm_source=qwiklabs&utm_medium=lp&utm_campaign=adv-Sep-arcade26"
+  },
+  {
+    "name": "Arcade Voyage September 2026",
+    "image": "https://services.google.com/fh/files/events/gcaf26_voyage_sep.png",
+    "link": "https://www.skills.google/games/7442?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Sep-arcade26"
+  },
+  {
+    "name": "Arcade Trail September 2026",
+    "image": "https://services.google.com/fh/files/events/gcaf26_trail_sep.png",
+    "link": "https://www.skills.google/games/7443?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Sep-arcade26"
+  },
+  {
     "name": "Arcade Simulator: Network Security Engineer",
     "image": "https://cdn.qwiklabs.com/KU0Jp50XMAj26Vmx1iNYlmxJUltgvVVAa3YI0Xgssjg%3D",
     "link": "https://www.skills.google/games/7397"

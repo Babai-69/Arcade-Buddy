@@ -27,6 +27,8 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
       const isBReTrail = bName.includes('re-trail') || bName.includes('retrail');
 
       const isMatch = 
+             (bName.includes('devops engineer') && cbTitle.includes('devops engineer')) ||
+             (bName.includes('pitch perfect') && cbTitle.includes('pitch perfect')) ||
              (bName.includes('network security') && cbTitle.includes('network security')) ||
              (bName.includes('spans and plans') && cbTitle.includes('spans and plans')) ||
              (bName.includes('base camp') && cbTitle.includes('base camp')) ||
@@ -38,9 +40,10 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
       
       const isGeneric = ['base camp', 'adventure', 'voyage', 'trail'].some(kw => bName.includes(kw) && cbTitle !== bName);
       if (isGeneric) {
-        if (!cb.earnedDate || (!cb.earnedDate.includes('Aug') && !cb.earnedDate.includes('Sep'))) {
-          return false;
-        }
+        if (!cb.earnedDate) return false;
+        if (bName.includes('sep') && !cb.earnedDate.includes('Sep')) return false;
+        if (bName.includes('aug') && !cb.earnedDate.includes('Aug')) return false;
+        if (bName.includes('jul') && !cb.earnedDate.includes('Jul')) return false;
       }
       return true;
     });
@@ -90,6 +93,8 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
           const isDbReTrail = dbName.includes('re-trail') || dbName.includes('retrail');
 
           const isMatch = 
+          (dbName.includes('devops engineer') && bTitle.includes('devops engineer')) ||
+          (dbName.includes('pitch perfect') && bTitle.includes('pitch perfect')) ||
           (dbName.includes('network security') && bTitle.includes('network security')) ||
           (dbName.includes('spans and plans') && bTitle.includes('spans and plans')) ||
           (dbName.includes('base camp') && bTitle.includes('base camp')) ||
@@ -101,9 +106,10 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
           
           const isGeneric = ['base camp', 'adventure', 'voyage', 'trail'].some(kw => dbName.includes(kw) && dbName !== bTitle);
           if (isGeneric) {
-            if (!b.earnedDate || (!b.earnedDate.includes('Aug') && !b.earnedDate.includes('Sep'))) {
-              return false;
-            }
+            if (!b.earnedDate) return false;
+            if (dbName.includes('sep') && !b.earnedDate.includes('Sep')) return false;
+            if (dbName.includes('aug') && !b.earnedDate.includes('Aug')) return false;
+            if (dbName.includes('jul') && !b.earnedDate.includes('Jul')) return false;
           }
           return true;
         });
@@ -251,11 +257,14 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
                     }`}>
                       {badge.type}
                     </span>
-                    {(badge.name.toLowerCase().includes('july') || (badge.link && badge.link.toLowerCase().includes('july'))) ? (
-                      <span className="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 dark:bg-slate-900 text-white">
-                        JULY
-                      </span>
-                    ) : null}
+                    {(() => {
+                      const name = badge.name.toLowerCase();
+                      const link = badge.link ? badge.link.toLowerCase() : '';
+                      if (name.includes('july') || link.includes('july')) return <span className="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 dark:bg-slate-900 text-white">JULY</span>;
+                      if (name.includes('august') || link.includes('august')) return <span className="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 dark:bg-slate-900 text-white">AUGUST</span>;
+                      if (name.includes('september') || link.includes('sep')) return <span className="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 dark:bg-slate-900 text-white">SEPTEMBER</span>;
+                      return null;
+                    })()}
                   </div>
 
                   <div className="flex justify-center mb-6">

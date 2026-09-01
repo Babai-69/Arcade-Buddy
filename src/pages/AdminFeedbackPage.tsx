@@ -113,7 +113,7 @@ export function AdminFeedbackPage() {
 
   const chipData = Object.entries(chipCounts)
     .map(([name, value]) => ({ name, count: value }))
-    .sort((a, b) => b.count - a.count);
+    .sort((a, b) => (Number(b.count) || 0) - (Number(a.count) || 0));
 
   // Pagination calculations
   const totalPages = Math.ceil(feedbacks.length / itemsPerPage);

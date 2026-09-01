@@ -14,6 +14,15 @@ const julyGames = [
   { title: "Safe Spaces", img: "https://services.google.com/fh/files/misc/new-special-game.png", code: "LOCKED" }
 ];
 
+const augustGames = [
+  { title: "Arcade Base Camp", img: "https://cdn.qwiklabs.com/nXo%2Bc%2FLavbtJXZma1hYLmBxApy6Cr6CZiR1Bnukj5dk%3D", code: "LOCKED" },
+  { title: "Arcade Adventure: Data Vault", img: "https://cdn.qwiklabs.com/vQwBzyge8g7JI%2Fs9rWfu%2BvXJurcIOnP0A9wKR7U4i14%3D", code: "LOCKED" },
+  { title: "Arcade Voyage: Google Sheets", img: "https://cdn.qwiklabs.com/yn3KXIRZy6Md4qAEmKiYk6SEuHg0a7gDEaqc2H4o1Cs%3D", code: "LOCKED" },
+  { title: "Arcade Trail: Cloud Delivery Systems", img: "https://cdn.qwiklabs.com/fRCfiQc6gVA%2BSEUkSvc7agSfPUGUiHmYaI4kslS9mSw%3D", code: "LOCKED" },
+  { title: "Arcade Simulator: Network Security Engineer", img: "https://cdn.qwiklabs.com/KU0Jp50XMAj26Vmx1iNYlmxJUltgvVVAa3YI0Xgssjg%3D", code: "LOCKED" },
+  { title: "Spans and Plans", img: "https://cdn.qwiklabs.com/jf0VYLPQlpqie%2FRI4cjTeBwtiL3xPto3PBIM5b8iSzI%3D", code: "LOCKED" },
+];
+
 const beginnerBadges = [
   { title: "Create Your First Gemini Enterprise Application", labs: 1, credits: 0, link: "https://www.skills.google/paths/3546/course_templates/1586" },
   { title: "Develop AI-Powered Prototypes in Google AI Studio", labs: 4, credits: 0, link: "https://www.skills.google/course_templates/1426" },
@@ -128,12 +137,15 @@ export function FacilitatorSyllabus() {
   const [openSections, setOpenSections] = useState<string[]>([]);
   const { activeGames, loading, error } = useArcadeGames();
 
-  const currentMonth = new Date().getMonth(); // 0 = Jan ... 5 = Jun, 6 = Jul, 7 = Aug
+  const currentMonth = new Date().getMonth(); // 0 = Jan ... 5 = Jun, 6 = Jul, 7 = Aug, 8 = Sep
   
   const isJulyActive = currentMonth === 6;
   const isJulyPast = currentMonth > 6;
   
   const isAugustActive = currentMonth === 7;
+  const isAugustPast = currentMonth > 7;
+
+  const isSeptemberActive = currentMonth === 8;
   
   const toggleSection = (section: string) => {
     setOpenSections(prev => 
@@ -357,8 +369,8 @@ export function FacilitatorSyllabus() {
             className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6"
           >
             <div className="flex items-center gap-3">
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white">August 2026 Games</h3>
-              {isAugustActive ? (
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white">September 2026 Games</h3>
+              {isSeptemberActive ? (
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-wider">
                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                   Active Now
@@ -373,6 +385,14 @@ export function FacilitatorSyllabus() {
             
             <div className="flex items-center gap-3">
               <div className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-medium">
+                August 2026 
+                {isAugustActive ? (
+                  <span className="text-green-600 dark:text-green-400 ml-1">— Active Now</span>
+                ) : (
+                  <span className="opacity-70 ml-1">— Closed</span>
+                )}
+              </div>
+              <div className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 text-sm font-medium hidden md:block">
                 July 2026 
                 {isJulyActive ? (
                   <span className="text-green-600 dark:text-green-400 ml-1">— Active Now</span>
@@ -384,9 +404,9 @@ export function FacilitatorSyllabus() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {isAugustActive && activeGames.length > 0 ? activeGames.map((game, idx) => (
+            {isSeptemberActive && activeGames.length > 0 ? activeGames.map((game, idx) => (
               <motion.div 
-                key={`august-active-${idx}`}
+                key={`september-active-${idx}`}
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -468,11 +488,66 @@ export function FacilitatorSyllabus() {
 
           <div className="flex flex-col items-center mb-10">
             <p className="text-sm font-medium text-slate-500 mb-3">
-              This month: {activeGames.length} of {activeGames.length > 0 ? activeGames.length : 3} games shown · More releasing throughout September
+              This month: {activeGames.length} of {activeGames.length > 0 ? activeGames.length : 3} games shown 
             </p>
             <div className="w-full max-w-md h-1.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
               <div className="h-full bg-blue-500 rounded-full w-full" />
             </div>
+          </div>
+
+          <div className="flex items-center gap-4 my-10">
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+            <span className="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">
+              August 2026 — {isAugustActive ? "Active" : "Closed"}
+            </span>
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {augustGames.map((game, idx) => {
+              const gameName = game.title || `Game ${idx + 1}`;
+              
+              return (
+                <motion.div 
+                  key={`august-${idx}`}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="relative bg-white dark:bg-[#1a1d27] border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col items-center group transition-all duration-300 opacity-60"
+                >
+                  <div className="absolute inset-0 z-10 flex items-center justify-center">
+                    <Lock className="w-16 h-16 text-slate-400 opacity-80" />
+                  </div>
+                  <div className="w-full aspect-square rounded-xl overflow-hidden bg-[#0d1117] flex items-center justify-center mb-6">
+                    <img 
+                      src={game.img} 
+                      alt={gameName} 
+                      className="w-full h-full object-cover grayscale transition-transform duration-500 group-hover:scale-110"
+                    />
+                  </div>
+                  
+                  <div className="w-full mt-auto">
+                    <div className="flex items-center justify-between mb-4">
+                      <h4 className="font-bold text-slate-900 dark:text-white text-lg">{gameName}</h4>
+                      <span className="px-2.5 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold">
+                        CLOSED
+                      </span>
+                    </div>
+                    
+                    <div className="space-y-1.5 mb-4">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold">Access Code</p>
+                      <div className="flex items-center justify-between bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-lg border border-slate-200 dark:border-white/5 opacity-50 cursor-not-allowed">
+                        <code className="font-mono text-sm text-slate-400">
+                          LOCKED
+                        </code>
+                        <Lock className="w-4 h-4 text-slate-400" />
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
           </div>
 
           <div className="flex items-center gap-4 my-10">
