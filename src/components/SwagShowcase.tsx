@@ -122,7 +122,7 @@ export function SwagShowcase() {
           {/* 2023 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=2023+Cohort+1+Collection" alt="2023 Cohort 1" className="w-full h-full object-cover" />
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2023-swags.png" alt="2023 Cohort 1" className="w-full h-full object-cover" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -136,7 +136,7 @@ export function SwagShowcase() {
           {/* 2023 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=2023+Season+2+Collection" alt="2023 Season 2" className="w-full h-full object-cover" />
+               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-2-2023-swags_t6bxpv.png" alt="2023 Season 2" className="w-full h-full object-cover" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -150,7 +150,7 @@ export function SwagShowcase() {
           {/* 2024 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=2024+Season+1+Collection" alt="2024 Season 1" className="w-full h-full object-cover" />
+               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-1-2024-swags_p8brbr.png" alt="2024 Season 1" className="w-full h-full object-cover" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -164,7 +164,7 @@ export function SwagShowcase() {
           {/* 2024 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=2024+Season+2+Collection" alt="2024 Season 2" className="w-full h-full object-cover" />
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2024-swags.jpg" alt="2024 Season 2" className="w-full h-full object-cover" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -178,7 +178,7 @@ export function SwagShowcase() {
           {/* 2025 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=2025+Season+1+Collection" alt="2025 Season 1" className="w-full h-full object-cover" />
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2025-swags.jpg" alt="2025 Season 1" className="w-full h-full object-cover" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -192,7 +192,7 @@ export function SwagShowcase() {
           {/* 2025 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://via.placeholder.com/1200x600/1e293b/e2e8f0?text=2025+Season+2+Collection" alt="2025 Season 2" className="w-full h-full object-cover" />
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2025-swags.jpg" alt="2025 Season 2" className="w-full h-full object-cover" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
