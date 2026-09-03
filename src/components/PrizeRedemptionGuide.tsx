@@ -326,7 +326,7 @@ export function PrizeRedemptionGuide() {
             <Link to="/calculator" className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
               Check My Swag Tier <ArrowRight className="w-4 h-4" />
             </Link>
-            <Link to="/swags" className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl transition-colors border border-slate-700">
+            <Link to="/resources/swag-showcase-page" className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl transition-colors border border-slate-700">
               View Swag Tiers Showcase
             </Link>
           </div>
