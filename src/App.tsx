@@ -12,6 +12,10 @@ import { LeaderboardPage as DashboardPage } from './pages/LeaderboardPage';
 import { CalculatorPage } from './pages/CalculatorPage';
 import { FacilitatorPage } from './pages/FacilitatorPage';
 import { ResourcesPage } from './pages/ResourcesPage';
+import { PointSystemPage } from './pages/PointSystemPage';
+import { PrizeCounterGuidePage } from './pages/PrizeCounterGuidePage';
+import { GearBadgesPage } from './pages/GearBadgesPage';
+import { SwagShowcasePage } from './pages/SwagShowcasePage';
 import { QuickStartPage } from './pages/QuickStartPage';
 import { FreeCreditsPage } from './pages/FreeCreditsPage';
 import { SwagsPage } from './pages/SwagsPage';
@@ -65,6 +69,10 @@ export default function App() {
               <Route path="/facilitator" element={<PageTransition><FacilitatorPage /></PageTransition>} />
               <Route path="/syllabus" element={<PageTransition><SyllabusPage /></PageTransition>} />
               <Route path="/resources" element={<PageTransition><ResourcesPage /></PageTransition>} />
+              <Route path="/resources/point-system" element={<PageTransition><PointSystemPage /></PageTransition>} />
+              <Route path="/resources/prize-counter-guide" element={<PageTransition><PrizeCounterGuidePage /></PageTransition>} />
+              <Route path="/resources/gear-badges" element={<PageTransition><GearBadgesPage /></PageTransition>} />
+              <Route path="/resources/swag-showcase-page" element={<PageTransition><SwagShowcasePage /></PageTransition>} />
               <Route path="/resources/bonus-milestone" element={<PageTransition><BonusMilestonePage /></PageTransition>} />
               <Route path="/quick-start" element={<PageTransition><QuickStartPage /></PageTransition>} />
               <Route path="/free-credits" element={<PageTransition><FreeCreditsPage /></PageTransition>} />
