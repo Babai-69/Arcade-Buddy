@@ -109,7 +109,6 @@ export function Leaderboard({ participants = [] }: LeaderboardProps) {
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800/50 block md:table-row-group">
                 {filteredAndSorted.map((p, idx) => {
-                   const rC = p.previousRank - p.currentRank; 
                    return (
                   <motion.tr 
                     initial={{ opacity: 0, y: 10 }}
@@ -127,7 +126,7 @@ export function Leaderboard({ participants = [] }: LeaderboardProps) {
                        </div>
                     </td>
                     <td className="px-6 py-4 block md:table-cell whitespace-nowrap">
-                      <div className="font-semibold">{p.name}</div>
+                      <div className="font-semibold">{p.name.trim()}</div>
                       <div className="text-xs text-slate-500 md:hidden mt-1">{p.email}</div>
                     </td>
                     <td className="px-6 py-4 block md:table-cell font-bold text-[#4285F4] whitespace-nowrap">{p.arcadePoints}</td>
@@ -140,9 +139,6 @@ export function Leaderboard({ participants = [] }: LeaderboardProps) {
                         ) : (
                           <span className="text-xs text-slate-400">-</span>
                         )}
-                        {rC > 0 && <span className="text-xs text-[#34A853] ml-2 flex items-center" title={`Improved by ${rC} positions`}><ChevronUp className="h-3 w-3"/>{rC}</span>}
-                        {rC < 0 && <span className="text-xs text-[#EA4335] ml-2 flex items-center" title={`Dropped by ${Math.abs(rC)} positions`}><ChevronDown className="h-3 w-3"/>{Math.abs(rC)}</span>}
-                        {rC === 0 && <span className="text-xs text-slate-400 ml-2 flex items-center"><Minus className="h-3 w-3"/></span>}
                       </div>
                     </td>
                     <td className="px-6 py-4 block md:table-cell whitespace-nowrap">

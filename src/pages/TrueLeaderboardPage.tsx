@@ -110,7 +110,7 @@ export function TrueLeaderboardPage() {
 
         return {
           id: String(r['User Name'] || Math.random()),
-          name: r['User Name'] || '—',
+          name: (r['User Name'] || '—').trim(),
           skill,
           game,
           trivia,
@@ -250,8 +250,8 @@ export function TrueLeaderboardPage() {
   const statPoints = Math.round(data.reduce((s, r) => s + r.points, 0) * 10) / 10;
   const statMilestone = data.filter(r => r.milestone !== 'No Milestone').length;
 
-  const top3 = useMemo(() => {
-    return [...data].sort((a, b) => b.points - a.points).slice(0, 3);
+  const top5 = useMemo(() => {
+    return [...data].sort((a, b) => b.points - a.points).slice(0, 5);
   }, [data]);
 
   return (
@@ -345,14 +345,17 @@ export function TrueLeaderboardPage() {
         </div>
       )}
 
-      {/* TOP 3 LEADERBOARD */}
-      {data.length >= 3 && !isLoading && (
-        <div className="mb-12 mt-4 text-center">
+      {/* TOP 5 LEADERBOARD */}
+      {data.length >= 5 && !isLoading && (
+        <div className="mb-16 mt-10 text-center">
           
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4 md:gap-6 max-w-4xl mx-auto">
-            {top3[1] && <TopCard participant={top3[1]} rank={2} />}
-            {top3[0] && <TopCard participant={top3[0]} rank={1} />}
-            {top3[2] && <TopCard participant={top3[2]} rank={3} />}
+          <div className="relative flex justify-center items-end gap-3 md:gap-6 max-w-5xl mx-auto h-[320px]">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-yellow-400/20 dark:bg-yellow-500/10 blur-3xl rounded-full pointer-events-none -z-10"></div>
+            {top5[3] && <PodiumStep participant={top5[3]} rank={4} />}
+            {top5[1] && <PodiumStep participant={top5[1]} rank={2} />}
+            {top5[0] && <PodiumStep participant={top5[0]} rank={1} />}
+            {top5[2] && <PodiumStep participant={top5[2]} rank={3} />}
+            {top5[4] && <PodiumStep participant={top5[4]} rank={5} />}
           </div>
         </div>
       )}
@@ -380,7 +383,7 @@ export function TrueLeaderboardPage() {
       </div>
 
       {/* TABLE */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm max-w-[1148px] mx-auto w-full">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
@@ -409,17 +412,16 @@ export function TrueLeaderboardPage() {
                     <td className="px-6 py-4 whitespace-nowrap font-mono font-semibold text-slate-500 dark:text-slate-400">
                        <div className="flex items-center gap-2">
                          <span>{r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : `#${r.rank}`}</span>
-                         {r.previousRank && r.rank < r.previousRank && <ChevronUp className="w-4 h-4 text-green-500" />}
-                         {r.previousRank && r.rank > r.previousRank && <ChevronDown className="w-4 h-4 text-red-500" />}
-                         {r.previousRank && r.rank === r.previousRank && <Minus className="w-4 h-4 text-slate-400" />}
                        </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                       <div className="font-semibold text-slate-900 dark:text-white">{r.name}</div>
+                       <div className="font-semibold text-slate-900 dark:text-white">{r.name.trim()}</div>
                        <div className="text-[11px] text-slate-500 mt-0.5">Skill: {r.skill} | Game: {r.game} | Trivia: {r.trivia} | Lab: {r.lab}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap font-mono font-bold text-blue-600 dark:text-blue-400">
-                       {r.points}
+                       <div className="flex items-center gap-1.5">
+                         {r.points}
+                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                        <div className="flex gap-1.5 flex-wrap">
@@ -517,64 +519,124 @@ function TierPill({ tier }: { tier: string }) {
   return <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold whitespace-nowrap ${clr}`}>{tier}</span>;
 }
 
-function TopCard({ participant, rank }: { participant: any; rank: number }) {
+function PodiumStep({ participant, rank }: { participant: any; rank: number }) {
   const isFirst = rank === 1;
   const isSecond = rank === 2;
-  
-  const bgClass = isFirst 
-    ? 'bg-gradient-to-br from-[#FFF3D6] via-[#F8E2AC] to-[#E8D490] dark:from-[#4a3f15] dark:via-[#7c631b] dark:to-[#a18121] border-[#DCA821] dark:border-[#F8E2AC] shadow-[0_0_20px_rgba(234,179,8,0.3)] dark:shadow-[0_0_30px_rgba(234,179,8,0.5)]'
-    : isSecond
-      ? 'bg-gradient-to-br from-[#F8FAFC] via-[#E2E8F0] to-[#CBD5E1] dark:from-[#1E293B] dark:via-[#334155] dark:to-[#475569] border-[#94A3B8] dark:border-[#CBD5E1] shadow-[0_0_20px_rgba(148,163,184,0.2)] dark:shadow-[0_0_25px_rgba(148,163,184,0.3)]'
-      : 'bg-gradient-to-br from-[#FDF2E9] via-[#EED3BC] to-[#E3C2A4] dark:from-[#432311] dark:via-[#6B3718] dark:to-[#8B4513] border-[#CE7424] dark:border-[#EED3BC] shadow-[0_0_20px_rgba(217,119,6,0.2)] dark:shadow-[0_0_25px_rgba(217,119,6,0.3)]';
-      
-  const rankColor = isFirst ? 'text-[#B45309] dark:text-[#FFF3D6]' : isSecond ? 'text-[#475569] dark:text-[#F8FAFC]' : 'text-[#9A3412] dark:text-[#FDF2E9]';
-  const rankBg = isFirst ? 'bg-amber-100 dark:bg-yellow-900/60' : isSecond ? 'bg-slate-200 dark:bg-slate-800/80' : 'bg-orange-100 dark:bg-orange-900/60';
+  const isThird = rank === 3;
+  const isFourth = rank === 4;
+  const isFifth = rank === 5;
 
-  const avatarBgColor = isFirst ? 'E91E63' : isSecond ? '111111' : '607D8B';
-  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name)}&background=${avatarBgColor}&color=fff&size=128`;
+  let heightClass = "h-[100px]"; 
+  let podiumColorClass = "";
+  let borderColorClass = "";
+  let textColorClass = "";
+  let numberTextClass = "text-3xl";
+
+  let pointsColorClass = "";
+  let avatarBgColor = '607D8B';
+  let avatarBorderClass = "border-slate-200 dark:border-slate-700";
+  let hoverGlowClass = "";
   
-  const sizeClass = isFirst ? 'w-[280px] h-[220px] md:scale-105 z-10' : 'w-[260px] h-[200px]';
+  if (isFirst) {
+    heightClass = "h-[180px]";
+    podiumColorClass = "bg-[#FFF5CC] dark:bg-[#433108]";
+    borderColorClass = "border-[#FDE047] dark:border-[#a18121]";
+    textColorClass = "text-[#EAB308] dark:text-[#FDE047]";
+    numberTextClass = "text-5xl font-display font-black";
+    pointsColorClass = "bg-[#F59E0B] text-white border-transparent shadow-sm";
+    avatarBgColor = "EA580C";
+    avatarBorderClass = "border-[#EA580C] border-[3px]";
+    hoverGlowClass = "group-hover:shadow-[0_0_40px_rgba(250,204,21,0.6)] group-hover:border-[#FDE047]";
+  } else if (isSecond) {
+    heightClass = "h-[140px]";
+    podiumColorClass = "bg-[#F5F3FF] dark:bg-[#2e264d]";
+    borderColorClass = "border-[#DDD6FE] dark:border-[#5b4d99]";
+    textColorClass = "text-[#8B5CF6] dark:text-[#DDD6FE]";
+    numberTextClass = "text-4xl font-display font-bold";
+    pointsColorClass = "bg-[#F5F3FF] text-[#8B5CF6] border-[#DDD6FE] dark:bg-[#2e264d] dark:text-[#DDD6FE] dark:border-[#5b4d99]";
+    avatarBgColor = "8B5CF6";
+    avatarBorderClass = "border-[#C4B5FD] border-[2px]";
+    hoverGlowClass = "group-hover:shadow-[0_0_40px_rgba(167,139,250,0.6)] group-hover:border-[#DDD6FE]";
+  } else if (isThird) {
+    heightClass = "h-[110px]";
+    podiumColorClass = "bg-[#FFFBEB] dark:bg-[#433716]";
+    borderColorClass = "border-[#FEF08A] dark:border-[#85712c]";
+    textColorClass = "text-[#F59E0B] dark:text-[#FEF08A]";
+    numberTextClass = "text-4xl font-display font-bold";
+    pointsColorClass = "bg-[#FFFBEB] text-[#F59E0B] border-[#FEF08A] dark:bg-[#433716] dark:text-[#FEF08A] dark:border-[#85712c]";
+    avatarBgColor = "F59E0B";
+    avatarBorderClass = "border-[#FDE047] border-[2px]";
+    hoverGlowClass = "group-hover:shadow-[0_0_40px_rgba(251,191,36,0.6)] group-hover:border-[#FDE047]";
+  } else if (isFourth) {
+    heightClass = "h-[80px]";
+    podiumColorClass = "bg-[#F8FAFC] dark:bg-[#1E293B]";
+    borderColorClass = "border-[#E2E8F0] dark:border-[#334155]";
+    textColorClass = "text-[#94A3B8] dark:text-[#CBD5E1]";
+    numberTextClass = "text-3xl font-display font-bold";
+    pointsColorClass = "bg-[#F8FAFC] text-[#64748B] border-[#E2E8F0] dark:bg-[#1E293B] dark:text-[#94A3B8] dark:border-[#334155]";
+    avatarBgColor = "06B6D4";
+    avatarBorderClass = "border-[#E2E8F0] border-[2px]";
+    hoverGlowClass = "group-hover:shadow-[0_0_30px_rgba(148,163,184,0.5)] group-hover:border-[#CBD5E1]";
+  } else if (isFifth) {
+    heightClass = "h-[65px]";
+    podiumColorClass = "bg-[#F8FAFC] dark:bg-[#1E293B]";
+    borderColorClass = "border-[#E2E8F0] dark:border-[#334155]";
+    textColorClass = "text-[#94A3B8] dark:text-[#CBD5E1]";
+    numberTextClass = "text-3xl font-display font-bold";
+    pointsColorClass = "bg-[#F8FAFC] text-[#64748B] border-[#E2E8F0] dark:bg-[#1E293B] dark:text-[#94A3B8] dark:border-[#334155]";
+    avatarBgColor = "64748B";
+    avatarBorderClass = "border-[#E2E8F0] border-[2px]";
+    hoverGlowClass = "group-hover:shadow-[0_0_30px_rgba(148,163,184,0.5)] group-hover:border-[#CBD5E1]";
+  }
+
+  // Handle name avatars
+  const avatarUrl = participant.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(participant.name.trim())}&background=${avatarBgColor}&color=fff&size=128`;
   
-  // Animation settings
-  const delay = isFirst ? 0 : isSecond ? 0.2 : 0.4;
-  const yOffset = isFirst ? -20 : -10;
+  // Animation delay
+  const delay = rank * 0.1;
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 50, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.6, delay: delay, type: "spring", bounce: 0.4 }}
-      whileHover={{ y: yOffset, scale: 1.05, transition: { duration: 0.2 } }}
-      className={`relative rounded-2xl flex flex-col items-center justify-center p-6 border shadow-lg hover:shadow-2xl transition-all duration-300 ${bgClass} ${sizeClass} mx-auto md:mx-0`}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -10 }}
+      transition={{ duration: 0.5, delay: delay }}
+      className={`flex flex-col items-center justify-end w-[70px] md:w-[130px] group cursor-pointer`}
     >
-      {isFirst && (
+      <div className="flex flex-col items-center justify-center mb-3 z-10 w-full relative">
+        {isFirst && (
+          <motion.div 
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, type: "spring" }}
+            className="absolute -top-10 text-4xl drop-shadow-md z-20 flex justify-center w-full"
+          >
+            <div className="relative flex items-center justify-center">
+              <Crown className="w-8 h-8 text-[#EA580C] fill-[#EA580C]" />
+            </div>
+          </motion.div>
+        )}
+        
         <motion.div 
-          initial={{ rotate: -15, scale: 0 }}
-          animate={{ rotate: 0, scale: 1 }}
-          transition={{ delay: 0.6, type: "spring", bounce: 0.6 }}
-          className="absolute -top-4 text-4xl drop-shadow-md"
+          whileHover={{ scale: 1.1 }}
+          className={`rounded-full overflow-hidden bg-white dark:bg-slate-800 shadow-sm ${isFirst ? 'w-16 h-16 md:w-20 md:h-20' : 'w-12 h-12 md:w-16 md:h-16'} ${avatarBorderClass} mb-2`}
         >
-          👑
+           <img src={avatarUrl} alt={participant.name} className="w-full h-full object-cover" />
         </motion.div>
-      )}
-      <div className={`absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shadow-sm ${rankColor} ${rankBg}`}>
-        #{rank}
+        
+        <h3 className="font-bold text-slate-900 dark:text-white text-[10px] md:text-sm mb-1.5 text-center w-[150%] md:w-[130%] truncate px-1">
+          {participant.name.trim()}
+        </h3>
+        
+        <div className={`px-2 py-0.5 md:px-3 md:py-1 rounded-full font-semibold text-[9px] md:text-xs border flex items-center justify-center gap-0.5 md:gap-1 ${pointsColorClass} whitespace-nowrap`}>
+          {participant.points} Pts
+        </div>
       </div>
       
-      <motion.div 
-        whileHover={{ rotate: 5, scale: 1.1 }}
-        className={`rounded-full p-1 bg-white dark:bg-slate-800 mb-3 ${isFirst ? 'w-24 h-24' : 'w-20 h-20'} shadow-md flex items-center justify-center`}
-      >
-         <div className="w-full h-full rounded-full border-[3px] border-[#A87CFA] overflow-hidden">
-            <img src={avatarUrl} alt={participant.name} className="w-full h-full object-cover" />
-         </div>
-      </motion.div>
-      
-      <h3 className="font-bold text-slate-900 dark:text-white text-[15px] mb-2 text-center w-full truncate px-2">
-        {participant.name}
-      </h3>
-      <div className="px-3 py-1 bg-[#DBCDF7]/80 dark:bg-[#7B46F1]/20 rounded-full text-[#7B46F1] dark:text-[#DBCDF7] font-semibold text-[11px]">
-        {participant.points} points
+      <div className={`w-full rounded-t-xl md:rounded-t-2xl border-t border-l border-r transition-all duration-300 ${podiumColorClass} ${borderColorClass} ${hoverGlowClass} flex items-center justify-center relative ${heightClass}`}>
+         <span className={`absolute top-[20%] md:top-1/4 ${textColorClass} ${numberTextClass}`}>
+           {rank}
+         </span>
       </div>
     </motion.div>
   );

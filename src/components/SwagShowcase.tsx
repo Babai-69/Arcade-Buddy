@@ -3,8 +3,38 @@ import { ArrowRight, Trophy, Sparkles, Medal } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export function SwagShowcase() {
-  // Placeholder images for the gallery
-  const placeholders = Array(20).fill("https://via.placeholder.com/300x300/1e293b/94a3b8?text=Swag+Photo");
+  const swagsGallery = [
+    "https://media.licdn.com/dms/image/v2/D4D22AQECxW1pKRz08Q/feedshare-shrink_800/feedshare-shrink_800/0/1704548452062?e=1790208000&v=beta&t=dm2sPnEmXS3qqduSAtEQCXhr-LW7ufdiN1EVuj87HvE",
+    "https://media.licdn.com/dms/image/v2/D4D22AQFS4btTeQNHHg/feedshare-shrink_800/feedshare-shrink_800/0/1711896520626?e=2147483647&v=beta&t=GzYFFMyHZSOXL9pMTgYtPDxvoLbr21Q_qjdYYp4JSWo",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-2-2025-legend-swags.jpg",
+    "https://media.licdn.com/dms/image/v2/D4D22AQFJEtmTj9qrPA/feedshare-shrink_800/B4DZXCO6ZUG4Ak-/0/1742720447177?e=2147483647&v=beta&t=G2v_3TILQPkocjR98A-neAKVFVFvftr-4xmkk3QD2mY",
+    "https://d8it4huxumps7.cloudfront.net/uploads/images/festival/gallery/69e7e490907b2_screenshot_2026_0420_121818.jpg?d=600x600",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-swags-showcase-2.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-2-2025-champion-swags.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-2-2025-trooper-2.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-2-2025-cloud-lego-ranger.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-2025-facilitator-swags.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-1-2025-champion-swags.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-swags-showcase-4.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-1-2025-trooper-swags-3.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-2-2025-champion-pack.jpg",
+    "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-2-2025-trooper-swags.jpg",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVpDAwUisUJ2tclVD1CzjvYSMim_wLfRvkHZX9HJIe8A&s=10",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYKOTdyK-DMDIua53xSITMiQHcBb2BFOKSV0Uj15lAUigMAxqfCe4GCq8&s=10",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHg2dl0RpPVeYch7s7c43S6rgWb6mH7injPOx4U_nqajpel7m29WziDBE&s=10",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEqWLXGaI9L8luIjz0j95P67lymLVAN7STqzBq_4vY3xX-jwwvNvBeLM79&s=10",
+    "https://i.ytimg.com/vi/cd7iDnC3bUM/sddefault.jpg",
+    "https://pbs.twimg.com/media/G0de9CXW4AAJVuL.jpg",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG3aP6sGitmhrpqpr8CyhCCOqx7fv2pJ52yej2Ty0ygg&s=10",
+    "https://media.licdn.com/dms/image/v2/C5622AQEjKmC-d9Dmbw/feedshare-shrink_800/feedshare-shrink_800/0/1641145492325?e=2147483647&v=beta&t=bi8qy4uLKMenqeHXFRNCIeRMklOzIIQBaNuNS07qGkM",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM2fYK7hpVSLUo2XhP8-jevpe6b9-pSFA6ZW-l3KdorA&s=10",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAKXsZGDK5SD20V7GiCWdAjZzX2WNB5XpT6Ysb3u6vyQ&s=10",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYXILV6ScoN-AGQl2OoVWTfKuOgGso9_2Bx5bRqeSiKg&s=10",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBOszEpO8bbz4RPwGAJ87nn1J5s0NXKOdI2LVrZzq4d2Aka7fK0s8gLRk&s=10",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRB4w7VbPHFgwpIU1ZN85BsjZqAPwcGE4e6YhpsWTKJJQ&s=10",
+    "https://media.licdn.com/dms/image/v2/D5622AQHAosUdfa3f1g/feedshare-shrink_800/B56ZXXE.baGoAk-/0/1743070172233?e=2147483647&v=beta&t=Y7fQ6JVVock_tY5j-7IlfiVgT7WZXMXGcBh6wHmNAbY",
+    "https://preview.redd.it/finally-got-my-google-prizes-being-a-non-engineer-v0-zbaycm2j69wf1.jpeg?auto=webp&s=43b39d4bc979b82ac2e2ea3c8882c90e94bd3f2f"
+  ];
 
   return (
     <div className="bg-slate-50 dark:bg-[#0d1117] text-slate-900 dark:text-slate-100 font-sans max-w-6xl mx-auto">
@@ -121,8 +151,8 @@ export function SwagShowcase() {
         <div className="space-y-6">
           {/* 2023 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
-             <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2023-swags.png" alt="2023 Cohort 1" className="w-full h-full object-cover" />
+             <div className="w-full bg-slate-800 relative">
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2023-swags.png" alt="2023 Cohort 1" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -135,8 +165,8 @@ export function SwagShowcase() {
 
           {/* 2023 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
-             <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-2-2023-swags_t6bxpv.png" alt="2023 Season 2" className="w-full h-full object-cover" />
+             <div className="w-full bg-slate-800 relative">
+               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-2-2023-swags_t6bxpv.png" alt="2023 Season 2" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -149,8 +179,8 @@ export function SwagShowcase() {
 
           {/* 2024 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
-             <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-1-2024-swags_p8brbr.png" alt="2024 Season 1" className="w-full h-full object-cover" />
+             <div className="w-full bg-slate-800 relative">
+               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-1-2024-swags_p8brbr.png" alt="2024 Season 1" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -163,8 +193,8 @@ export function SwagShowcase() {
 
           {/* 2024 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
-             <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2024-swags.jpg" alt="2024 Season 2" className="w-full h-full object-cover" />
+             <div className="w-full bg-slate-800 relative">
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2024-swags.jpg" alt="2024 Season 2" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -177,8 +207,8 @@ export function SwagShowcase() {
 
           {/* 2025 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
-             <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2025-swags.jpg" alt="2025 Season 1" className="w-full h-full object-cover" />
+             <div className="w-full bg-slate-800 relative">
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2025-swags.jpg" alt="2025 Season 1" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -191,8 +221,8 @@ export function SwagShowcase() {
 
           {/* 2025 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
-             <div className="w-full h-48 md:h-80 bg-slate-800 relative">
-               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2025-swags.jpg" alt="2025 Season 2" className="w-full h-full object-cover" />
+             <div className="w-full bg-slate-800 relative">
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2025-swags.jpg" alt="2025 Season 2" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -212,17 +242,17 @@ export function SwagShowcase() {
           Real Google Cloud Arcade participants showcasing their delivered swag kits and reward boxes around the world!
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
-          {placeholders.map((src, i) => (
-             <div key={i} className="aspect-square rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 hover:shadow-lg transition-all group">
-               <img src={src} alt={`Winner ${i+1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        <div className="columns-2 md:columns-4 lg:columns-5 gap-3 md:gap-4">
+          {swagsGallery.map((src, i) => (
+             <div key={i} className="mb-3 md:mb-4 break-inside-avoid rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 hover:shadow-lg transition-all group">
+               <img src={src} alt={`Winner ${i+1}`} className="w-full h-auto block group-hover:scale-105 transition-transform duration-500" />
              </div>
           ))}
         </div>
       </div>
 
       {/* Footer Banner */}
-      <div className="bg-[#111827] text-white rounded-3xl p-8 relative overflow-hidden mt-12 border border-slate-800" style={{ width: '1298px' }}>
+      <div className="bg-[#111827] text-white rounded-3xl p-8 relative overflow-hidden mt-12 border border-slate-800" style={{ width: '1149.87.px' }}>
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-grow">
             <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-[#FBBF24] mb-3 uppercase">

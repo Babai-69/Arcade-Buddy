@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {  ExternalLink, Beaker, Coins, Gamepad2, Layers, ChevronDown, ChevronUp, Lock, Copy, Check , Calendar, Gift, Zap } from 'lucide-react';
+import {  ExternalLink, Beaker, Coins, Gamepad2, Layers, ChevronDown, ChevronUp, Lock, Copy, Check , Calendar, Gift, Zap, Info } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useArcadeGames } from '../utils/arcadeApi';
 
@@ -154,25 +154,46 @@ export function FacilitatorSyllabus() {
   };
 
   return (
-    <section className="py-12 bg-transparent">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="pb-12 bg-transparent pt-4">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="mb-16 text-center">
-          <h1 className="text-5xl md:text-6xl font-display font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
-            Syllabus for the program
-          </h1>
+        <div className="flex flex-col items-center text-center">
+          {/* Breadcrumbs */}
+          <div className="flex items-center justify-center gap-2 text-[10px] font-bold tracking-widest text-slate-500 mb-6 uppercase">
+            <Link to="/" className="hover:text-indigo-500 transition-colors">&larr; HOME</Link> 
+            &nbsp;&middot;&nbsp; 
+            <span className="text-indigo-500 dark:text-indigo-400">SYLLABUS</span>
+          </div>
+
+          {/* Title */}
+          <div className="mb-6">
+            <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight">
+              Syllabus for the <span className="text-[#7C3AED] dark:text-[#a78bfa]">Program</span><br/>
+              <span className="text-[#7C3AED] dark:text-[#a78bfa]">Arcade</span> <span className="bg-[#FBBC04] text-slate-900 px-3 py-1.5 rounded-lg shadow-sm inline-block transform -rotate-1 mt-1">Games & Badges</span>
+            </h1>
+          </div>
+
+          {/* Description */}
+          <p className="text-slate-600 dark:text-slate-400 mb-8 max-w-2xl mx-auto text-[15px]">
+            While you can find all the active games on the <a href="https://go.cloudskillsboost.google/arcade" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">Google Skills Arcade website</a> directly, we are maintaining a copy of the same here so that it becomes easier for you to find badges and complete them to earn "Arcade Points". 
+            <br/><br/>
+            (<Link to="/resources/point-system" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">See points system</Link> for more details)
+          </p>
         </div>
 
-        <div className="mb-8 text-slate-700 dark:text-slate-300">
-          <p className="mb-4">
-            While you can find all the active games on the <a href="https://go.cloudskillsboost.google/arcade" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">Google Skills Arcade website</a> directly, we are maintaining a copy of the same here so that it becomes easier for you to find badges and complete them so that you can earn <strong>"Arcade Points"</strong>. <em>(See <Link to="/facilitator#milestones" className="text-blue-600 dark:text-blue-400 hover:underline">points system</Link> for more details)</em>
-          </p>
-          <p>
-            <strong>Recommended</strong> - Its better to complete the Arcade games first since they have a deadline in a given month. Complete as many skill badges as you can later to earn more "Arcade Points".
-          </p>
+        {/* Alert Box */}
+        <div className="bg-[#FFFBEB] border border-[#FEF08A] dark:bg-[#433716]/30 dark:border-[#85712c] rounded-xl p-5 mb-20 max-w-4xl mx-auto flex gap-4 text-left shadow-sm">
+          <div className="mt-0.5">
+            <Info className="w-5 h-5 text-[#D97706] dark:text-[#FBBF24]" />
+          </div>
+          <div>
+            <h4 className="font-bold text-[#92400E] dark:text-[#FDE68A] text-sm mb-1">Recommended Strategy</h4>
+            <p className="text-sm text-[#B45309] dark:text-[#FCD34D] leading-relaxed">
+              It's better to complete the Arcade games first since they have a deadline in a given month. Complete as many skill badges as you can later to earn more "Arcade Points".
+            </p>
+          </div>
         </div>
 
-        
         {/* GEAR Badges Section */}
         <div className="mb-20">
           <div className="text-center mb-10">
@@ -666,7 +687,7 @@ export function FacilitatorSyllabus() {
           
           <div className="w-full lg:w-[40%] max-w-[420px] shrink-0 overflow-hidden rounded-xl border border-[#E2E8F0] dark:border-slate-700 shadow-md">
             <img 
-              src="https://arcadecalc.netlify.app/images/skillbadges-challenge.png" 
+              src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788548209/Screenshot_2026-09-05_002616_fhtlcf.png" 
               alt="Challenge Lab Preview" 
               className="w-full h-auto transition-transform duration-500 hover:scale-[1.03] cursor-pointer"
             />
@@ -799,17 +820,28 @@ export function FacilitatorSyllabus() {
             </div>
           </div>
 
-          <Link 
-            to="/my-progress"
-            className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-xl transition-all hover:scale-105 shadow-lg shadow-blue-500/25"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-            </svg>
-            View My Progress
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <Link 
+              to="/my-progress"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white text-sm font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-blue-500/25"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+              </svg>
+              View My Progress
+            </Link>
+            
+            <Link 
+              to="/calculator" 
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#7C3AED] hover:bg-[#6d28d9] text-white text-sm font-bold rounded-xl transition-all hover:scale-105 shadow-md shadow-[#7C3AED]/20"
+            >
+              Calculate My Points
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
         </div>
-
       </div>
     </section>
   );
