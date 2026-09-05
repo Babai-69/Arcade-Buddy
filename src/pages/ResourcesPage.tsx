@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ArrowRight, X, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -135,6 +135,12 @@ const resources = [
 export function ResourcesPage() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<string>('ALL');
+
+  useEffect(() => {
+    const handleCloseAll = () => setActiveModal(null);
+    window.addEventListener('close-all-modals', handleCloseAll);
+    return () => window.removeEventListener('close-all-modals', handleCloseAll);
+  }, []);
 
   const categories = useMemo(() => {
     const counts: Record<string, number> = { ALL: resources.length };

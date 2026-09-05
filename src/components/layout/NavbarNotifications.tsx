@@ -122,6 +122,12 @@ export function NavbarNotifications() {
   const unreadNotifications = notifications.filter(n => !readIds.includes(n.id));
 
   useEffect(() => {
+    const handleCloseAll = () => setIsOpen(false);
+    window.addEventListener('close-all-modals', handleCloseAll);
+    return () => window.removeEventListener('close-all-modals', handleCloseAll);
+  }, []);
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);

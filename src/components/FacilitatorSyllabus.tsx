@@ -324,6 +324,14 @@ export function FacilitatorSyllabus() {
               Earning BOTH the <a href="https://youtu.be/_vTVDxbVlhQ" target="_blank" rel="noopener noreferrer" className="text-blue-700 dark:text-blue-400 hover:underline font-bold">GEAR program enrollment badge</a> & <a href="https://youtu.be/HdmX2tQFRVI?si=09aPtP7WVp3A9Xa0" target="_blank" rel="noopener noreferrer" className="text-blue-700 dark:text-blue-400 hover:underline font-bold">Arcade - GEAR badge</a> on your Google Developer Profile is <strong className="text-red-600 dark:text-red-400 font-extrabold uppercase bg-red-100 dark:bg-red-900/30 px-2 py-0.5 rounded shadow-sm inline-block transform -rotate-1">MANDATORY / REQUIRED</strong> for you to be eligible to receive <strong>Bonus Points</strong> when you reach a milestone.
             </p>
           </motion.div>
+
+          {/* Guide Section Link */}
+          <div className="mt-8 flex justify-center">
+             <Link to="/resources/gear-badges" className="bg-[#eff6ff] hover:bg-[#dbeafe] dark:bg-blue-900/20 dark:hover:bg-blue-900/40 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800 font-bold py-3.5 px-6 rounded-xl flex items-center gap-3 transition-colors shadow-sm">
+               <Info className="w-5 h-5" />
+               View Guide: How to Get GEAR Badges
+             </Link>
+          </div>
         </div>
 
 {/* Arcade Games Section */}

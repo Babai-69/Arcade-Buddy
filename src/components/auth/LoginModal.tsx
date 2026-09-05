@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { auth, loginWithGoogle, loginWithGoogleRedirect } from '../../lib/firebase';
@@ -20,6 +20,12 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const handleCloseAll = () => onClose();
+    window.addEventListener('close-all-modals', handleCloseAll);
+    return () => window.removeEventListener('close-all-modals', handleCloseAll);
+  }, [onClose]);
 
   if (!isOpen) return null;
 

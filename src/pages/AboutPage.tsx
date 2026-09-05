@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'motion/react';
 import { ExternalLink, Users, Layers, Rocket, ShieldAlert, Cloud, Code, GitMerge, FileText, Gift, Award, Zap, Terminal, Database, Shield, HelpCircle, LayoutGrid, Gamepad2 } from 'lucide-react';
 import { FacilitatorCards } from '../components/FacilitatorCards';
 import { SupportSection } from '../components/SupportSection';
@@ -11,6 +13,21 @@ export function AboutPage() {
       
       <div className="flex-grow flex flex-col items-center pt-24 pb-12 px-4 max-w-5xl mx-auto w-full relative z-10">
         
+        {/* Breadcrumbs */}
+        <div className="flex items-center justify-center gap-2 text-[10px] font-bold tracking-widest text-slate-500 mb-6 uppercase">
+          <Link to="/" className="hover:text-indigo-500 transition-colors">&larr; HOME</Link> 
+          &nbsp;&middot;&nbsp; 
+          <span className="text-indigo-500 dark:text-indigo-400">ABOUT PROGRAM</span>
+        </div>
+
+        {/* Title */}
+        <div className="mb-10 text-center">
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight">
+            About the <span className="text-[#7C3AED] dark:text-[#a78bfa]">Program</span><br/>
+            <span className="text-[#7C3AED] dark:text-[#a78bfa]">Arcade</span> <span className="bg-[#FBBC04] text-slate-900 px-3 py-1.5 rounded-lg shadow-sm inline-block transform -rotate-1 mt-1">Buddy Platform</span>
+          </h1>
+        </div>
+
         {/* Animated SVG Header */}
         <div className="w-full flex flex-col items-center mb-12">
           <img 
@@ -21,18 +38,34 @@ export function AboutPage() {
         </div>
 
         {/* Important Note */}
-        <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-200/60 dark:border-amber-800/50 rounded-2xl p-6 mb-16 max-w-4xl w-full text-left shadow-sm">
-          <div className="flex items-center gap-2 mb-3 text-amber-700 dark:text-amber-500 font-bold">
-            <ShieldAlert className="w-5 h-5" /> Important Note
+        <div className="bg-[#FFFBEB] border border-[#FEF08A] dark:bg-[#433716]/30 dark:border-[#85712c] rounded-xl p-5 mb-16 max-w-4xl w-full flex gap-4 text-left shadow-sm">
+          <div className="mt-0.5 shrink-0">
+            <ShieldAlert className="w-5 h-5 text-[#D97706] dark:text-[#FBBF24]" />
           </div>
-          <p className="text-amber-900/80 dark:text-amber-200/70 text-[13.5px] sm:text-sm leading-relaxed">
-            Although this site offers details about The Arcade, please note that our <a href="https://arcade-buddy.onrender.com" target="_blank" rel="noopener noreferrer" className="text-amber-700 dark:text-amber-400 font-bold hover:underline cursor-pointer">Google Cloud Arcade Buddy</a> is an independent, unofficial tool and has no connection to or endorsement from Google. For accurate and official information about the Arcade program, including any support needs, please use the official resources listed above or reach out to Google Skills support directly via email: <a href="mailto:support-skills@google.com" className="text-amber-700 dark:text-amber-400 font-bold hover:underline">support-skills@google.com</a>.
-          </p>
+          <div>
+            <h4 className="font-bold text-[#92400E] dark:text-[#FDE68A] text-sm mb-1">Important Note</h4>
+            <p className="text-[#B45309] dark:text-[#FCD34D] text-[13.5px] sm:text-sm leading-relaxed">
+              Although this site offers details about The Arcade, please note that our <a href="https://arcade-buddy.onrender.com" target="_blank" rel="noopener noreferrer" className="font-bold hover:underline cursor-pointer">Google Cloud Arcade Buddy</a> is an independent, unofficial tool and has no connection to or endorsement from Google. For accurate and official information about the Arcade program, including any support needs, please use the official resources listed above or reach out to Google Skills support directly via email: <a href="mailto:support-skills@google.com" className="font-bold hover:underline">support-skills@google.com</a>.
+            </p>
+          </div>
         </div>
 
         {/* Section 1 */}
         <div className="w-full text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-8">How Arcade <span className="text-[#4285F4]">Works</span></h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-slate-50 dark:bg-slate-900 w-full rounded-2xl p-8 md:p-10 mb-10 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-blue-500/30 dark:border-blue-500/50 shadow-sm mb-4">
+              <span className="text-sm font-medium text-blue-600 dark:text-blue-400">⚙️ Mechanics</span>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
+              How Arcade <span className="bg-gradient-to-r from-[#4285F4] to-[#7c3aed] bg-clip-text text-transparent">Works</span>
+            </h2>
+          </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <FeatureCard icon={Gamepad2} title="Gamified Learning" desc="Structured challenges that make cloud learning engaging." colorClass="text-indigo-500 dark:text-indigo-400" bgClass="bg-indigo-50 dark:bg-indigo-500/10" dotColor="bg-indigo-500" />
             <FeatureCard icon={FileText} title="Monthly Challenges" desc="New labs and challenges released regularly." colorClass="text-emerald-500 dark:text-emerald-400" bgClass="bg-emerald-50 dark:bg-emerald-500/10" dotColor="bg-emerald-500" />
@@ -41,10 +74,22 @@ export function AboutPage() {
           </div>
         </div>
 
-                {/* Section 2 */}
+        {/* Section 2 */}
         <div className="w-full text-center mb-16">
-          <div className="text-[#34A853] text-xs font-bold tracking-widest mb-3 uppercase">Skill Tree</div>
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-8">Skills You Will <span className="text-[#4285F4]">Build</span></h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-slate-50 dark:bg-slate-900 w-full rounded-2xl p-8 md:p-10 mb-10 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-green-500/30 dark:border-green-500/50 shadow-sm mb-4">
+              <span className="text-sm font-medium text-green-600 dark:text-green-400">🌱 Skill Tree</span>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
+              Skills You Will <span className="bg-gradient-to-r from-[#34A853] to-[#10b981] bg-clip-text text-transparent">Build</span>
+            </h2>
+          </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <FeatureCard icon={Zap} title="Generative AI" desc="Hands-on with Gemini, Vertex AI, and GenAI workflows." colorClass="text-violet-500 dark:text-violet-400" bgClass="bg-violet-50 dark:bg-violet-500/10" dotColor="bg-violet-500" />
             <FeatureCard icon={Cloud} title="Cloud Fundamentals" desc="BigQuery, Kubernetes, Firebase, networking, and security." colorClass="text-cyan-500 dark:text-cyan-400" bgClass="bg-cyan-50 dark:bg-cyan-500/10" dotColor="bg-cyan-500" />
@@ -55,7 +100,20 @@ export function AboutPage() {
 
         {/* Section 3 */}
         <div className="w-full text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-8">The <span className="text-[#4285F4]">Journey</span></h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-slate-50 dark:bg-slate-900 w-full rounded-2xl p-8 md:p-10 mb-10 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-amber-500/30 dark:border-amber-500/50 shadow-sm mb-4">
+              <span className="text-sm font-medium text-amber-600 dark:text-amber-400">🚀 Path to Success</span>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
+              The <span className="bg-gradient-to-r from-[#FBBC05] to-[#f59e0b] bg-clip-text text-transparent">Journey</span>
+            </h2>
+          </motion.div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <FeatureCard icon={LayoutGrid} title="Choose Challenges" desc="Select labs based on your interests." colorClass="text-teal-500 dark:text-teal-400" bgClass="bg-teal-50 dark:bg-teal-500/10" />
             <FeatureCard icon={Award} title="Earn Points" desc="Complete labs to earn points and badges." colorClass="text-yellow-500 dark:text-yellow-400" bgClass="bg-yellow-50 dark:bg-yellow-500/10" />
@@ -65,7 +123,20 @@ export function AboutPage() {
 
         {/* Section 4 */}
         <div className="w-full text-center mb-16">
-          <h2 className="text-3xl font-bold font-display text-slate-900 dark:text-white mb-8">About Google Cloud Arcade Buddy</h2>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-slate-50 dark:bg-slate-900 w-full rounded-2xl p-8 md:p-10 mb-10 text-center flex flex-col items-center border border-slate-200 dark:border-white/10"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-900 border border-indigo-500/30 dark:border-indigo-500/50 shadow-sm mb-4">
+              <span className="text-sm font-medium text-indigo-600 dark:text-indigo-400">✨ Platform Info</span>
+            </div>
+            
+            <h2 className="text-4xl md:text-5xl font-display font-bold text-slate-900 dark:text-white mb-2">
+              About <span className="bg-gradient-to-r from-[#7c3aed] to-[#3b82f6] bg-clip-text text-transparent">Arcade Buddy</span>
+            </h2>
+          </motion.div>
           <div className="glass-panel rounded-3xl p-8 md:p-10 text-left shadow-lg max-w-4xl mx-auto relative overflow-hidden group hover:border-blue-200 dark:hover:border-white/10 transition-colors">
              <div className="absolute top-0 right-0 p-8 opacity-5 dark:opacity-5 group-hover:scale-110 transition-transform duration-700">
                 <Cloud className="w-48 h-48" />

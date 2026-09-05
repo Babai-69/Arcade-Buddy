@@ -32,6 +32,12 @@ export function CertificateModal({ isOpen, onClose, userEmail }: CertificateModa
     }
   }, [profileUrl]);
 
+  useEffect(() => {
+    const handleCloseAll = () => onClose();
+    window.addEventListener('close-all-modals', handleCloseAll);
+    return () => window.removeEventListener('close-all-modals', handleCloseAll);
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   // Program ends Sept 14, 2026.

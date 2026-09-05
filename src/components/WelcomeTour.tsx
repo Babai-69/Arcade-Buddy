@@ -26,6 +26,15 @@ export function WelcomeTour() {
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const handleCloseAll = () => {
+      if (showWelcome) setShowWelcome(false);
+      if (tourActive) setTourActive(false);
+    };
+    window.addEventListener('close-all-modals', handleCloseAll);
+    return () => window.removeEventListener('close-all-modals', handleCloseAll);
+  }, [showWelcome, tourActive]);
+
+  useEffect(() => {
     const dismissedTime = localStorage.getItem('arcadeBuddyWelcomeDismissedTime');
     const now = Date.now();
     let shouldShow = true;

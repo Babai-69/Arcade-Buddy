@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BookOpen, X, Youtube, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export function RegistrationGuideWidget() {
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const handleCloseAll = () => setIsOpen(false);
+    window.addEventListener('close-all-modals', handleCloseAll);
+    return () => window.removeEventListener('close-all-modals', handleCloseAll);
+  }, []);
+
   // Use the preview URL instead of edit URL for cleaner display
   const docUrl = "https://docs.google.com/document/d/1NDgPcOeDHYHkbIAFaXe0h-MaurN3zNUad2vm78UnEag/preview";
 

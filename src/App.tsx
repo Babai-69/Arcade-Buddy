@@ -43,10 +43,14 @@ import { Participant } from './types';
 import { RoadmapPage } from './pages/RoadmapPage';
 import { DisclaimerPage } from './pages/DisclaimerPage';
 import { WelcomeTour } from './components/WelcomeTour';
+import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
 
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>(mockParticipants);
   const location = useLocation();
+
+  // Initialize global keyboard shortcuts
+  useGlobalShortcuts();
 
 
 
