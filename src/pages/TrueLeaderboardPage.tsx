@@ -3,7 +3,7 @@ import Papa from 'papaparse';
 import { collection, doc, writeBatch, onSnapshot, getDocs } from 'firebase/firestore';
 import { db, auth, loginWithGoogle, loginWithGoogleRedirect, logout } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { Search, Clock, ChevronUp, ChevronDown, Minus, Lock, Unlock, UploadCloud, FileText, Trash2, Trophy, Medal, Crown } from 'lucide-react';
+import { Search, Clock, ChevronUp, ChevronDown, Minus, Lock, Unlock, UploadCloud, FileText, Trash2, Trophy, Medal, Crown, Gift } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ArcadeLoader } from '../components/ArcadeLoader';
 
@@ -258,38 +258,51 @@ export function TrueLeaderboardPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 min-h-screen">
       
       {/* HEADER BANNER */}
-      <div className="bg-slate-100 dark:bg-[#0b2144] rounded-2xl p-8 mb-10 text-slate-900 dark:text-white max-w-4xl mx-auto shadow-sm border border-slate-200 dark:border-[#1e3a6a] text-center">
-         <h2 className="text-3xl md:text-4xl font-bold font-display flex items-center justify-center gap-3 mb-4 text-slate-900 dark:text-white">
-           🏆 Arcade Leaderboard 🏆
-         </h2>
-         <p className="text-slate-700 dark:text-slate-200 text-lg mb-4 max-w-2xl mx-auto font-medium">
-           Climb the ranks, earn exclusive rewards, and secure your spot among the top achievers!
-         </p>
-         <p className="text-[#e29302] dark:text-[#FBBC05] font-semibold text-lg mb-8">
-           ✨ Top achievers can earn exclusive vouchers from the Arcade Team. ✨
-         </p>
-         
-         <div className="bg-white dark:bg-[#4d5e75] border border-slate-200 dark:border-white/20 rounded-xl p-6 shadow-sm mb-8">
-           <h3 className="text-[#e29302] dark:text-[#FBBC05] font-bold text-xl md:text-2xl mb-2">Want to win exclusive rewards?</h3>
-           <p className="text-slate-800 dark:text-white font-medium">Keep earning points and climb the leaderboard to receive Arcade-exclusive rewards!</p>
-         </div>
+      <div className="relative rounded-3xl mb-12 overflow-hidden shadow-lg border border-slate-200/50 dark:border-slate-800/50 bg-white dark:bg-[#0f172a] mx-auto max-w-5xl">
+        
+        {/* Background Decorative Elements */}
+        <div className="absolute top-0 right-0 -z-10 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute -top-[20%] -right-[10%] w-[50%] h-[120%] bg-gradient-to-bl from-blue-400/20 via-indigo-500/10 to-transparent dark:from-blue-600/20 dark:via-indigo-600/10 rounded-full blur-3xl transform rotate-12"></div>
+          <div className="absolute -bottom-[20%] -left-[10%] w-[40%] h-[80%] bg-gradient-to-tr from-emerald-400/20 via-teal-500/10 to-transparent dark:from-emerald-600/20 dark:via-teal-600/10 rounded-full blur-3xl transform -rotate-12"></div>
+          
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] dark:bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]"></div>
+        </div>
 
-         <div className="bg-[#f4f7fc] dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800/50 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row items-start md:items-center gap-4 text-left shadow-sm">
-           <div className="bg-[#e4effe] dark:bg-blue-800/50 p-3 rounded-2xl flex-shrink-0">
-             <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-           </div>
-           <div>
-             <div className="flex flex-wrap items-center gap-3 mb-1">
-               <h4 className="font-bold text-slate-900 dark:text-white text-[15px] md:text-base">Daily Leaderboard Update</h4>
-               <span className="bg-[#e4effe] dark:bg-blue-800/50 text-blue-600 dark:text-blue-300 text-[11px] font-bold px-3 py-1 rounded-full whitespace-nowrap">
-                 Once Every 24 Hours
-               </span>
-             </div>
-             <p className="text-[13.5px] md:text-[14.5px] text-slate-600 dark:text-slate-300 leading-relaxed mt-1 md:mt-0">
-               The leaderboard updates once every 24 hours, specifically between <span className="text-blue-600 dark:text-blue-400 font-bold">1:00 PM and 8:00 PM</span> daily.
-             </p>
-           </div>
-         </div>
+        <div className="p-8 md:p-12 relative z-10 flex flex-col items-center text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-amber-200/80 dark:border-amber-800/50 text-amber-600 dark:text-amber-400 text-xs font-bold tracking-widest uppercase mb-6 shadow-sm bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm">
+            <Crown className="w-4 h-4" /> Leaderboard Rankings
+          </div>
+          
+          <h2 className="text-4xl md:text-5xl font-black font-display mb-4 text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400">
+            Arcade Leaderboard
+          </h2>
+          
+          <p className="text-slate-600 dark:text-slate-300 text-lg md:text-xl mb-10 max-w-2xl mx-auto font-medium leading-relaxed">
+            Climb the ranks, master the cloud, and secure your spot among the elite achievers to win exclusive rewards.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl mx-auto">
+            <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl p-6 border border-slate-200 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-start gap-4 text-left hover:-translate-y-1 transition-transform">
+               <div className="bg-amber-100 dark:bg-amber-900/30 p-3 rounded-xl flex-shrink-0">
+                 <Gift className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+               </div>
+               <div>
+                 <h3 className="font-bold text-slate-900 dark:text-white text-base mb-1">Exclusive Vouchers</h3>
+                 <p className="text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed">Top achievers can earn exclusive vouchers and rewards directly from the Arcade Team.</p>
+               </div>
+            </div>
+
+            <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl p-6 border border-slate-200 dark:border-slate-700/50 shadow-[0_8px_30px_rgb(0,0,0,0.02)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex items-start gap-4 text-left hover:-translate-y-1 transition-transform">
+               <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-xl flex-shrink-0">
+                 <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+               </div>
+               <div>
+                 <h3 className="font-bold text-slate-900 dark:text-white text-base mb-1">Daily Sync</h3>
+                 <p className="text-[13px] text-slate-600 dark:text-slate-400 leading-relaxed">The leaderboard updates every 24 hours between <span className="font-bold text-blue-600 dark:text-blue-400">1:00 PM – 8:00 PM</span>.</p>
+               </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {isAdmin && (
@@ -408,7 +421,13 @@ export function TrueLeaderboardPage() {
                 <tr><td colSpan={7} className="text-center py-12 text-slate-500">No participants match filters.</td></tr>
               ) : (
                 paginated.map((r, i) => (
-                  <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                  <motion.tr 
+                    key={i} 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap font-mono font-semibold text-slate-500 dark:text-slate-400">
                        <div className="flex items-center gap-2">
                          <span>{r.rank === 1 ? '🥇' : r.rank === 2 ? '🥈' : r.rank === 3 ? '🥉' : `#${r.rank}`}</span>
@@ -441,7 +460,7 @@ export function TrueLeaderboardPage() {
                        <span className={`inline-block w-2 h-2 rounded-full mr-1.5 ${r.access === 'Yes' ? 'bg-green-500' : 'bg-red-500'}`}></span>
                        {r.access === 'Yes' ? 'Redeemed' : 'Pending'}
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))
               )}
             </tbody>

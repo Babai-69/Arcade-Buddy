@@ -1,5 +1,5 @@
-import React from 'react';
-import { Info, ChevronRight, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Info, ChevronRight, ArrowRight, Gift } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { DeliveryTimelineCard } from '../components/RewardDeliveryCard';
 
@@ -61,6 +61,9 @@ export function SwagsPage() {
             <SwagCard image="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Legend.png?raw=true" name="Arcade Legend" milestone="120+ PTS" color="bg-[#EA4335] text-white" />
           </div>
         </div>
+
+        {/* Swag Drops Section */}
+        <SwagDropsSection />
 
         {/* Timeline Integration */}
         <div className="w-full max-w-4xl mx-auto mb-24">
@@ -158,6 +161,68 @@ function SwagCard({ image, name, milestone, color }: any) {
         <h3 className="font-bold text-slate-900 dark:text-white mb-1">{name}</h3>
         <p className="text-xs text-slate-500">Official Swag Bundle</p>
       </div>
+    </div>
+  );
+}
+
+function SwagDropsSection() {
+  const [activeTab, setActiveTab] = useState('All Tiers');
+  const tabs = ['All Tiers', 'Trooper', 'Ranger', 'Champion', 'Legend'];
+
+  return (
+    <div className="w-full max-w-5xl mx-auto mb-24 relative z-10 pt-4">
+       {/* Subtle Grid Background for this section */}
+       <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_20%,#000_70%,transparent_100%)] dark:bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]"></div>
+       
+       <div className="absolute top-0 right-10 -z-10 w-96 h-96 bg-amber-200/20 dark:bg-amber-900/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+       <div className="text-center mb-10">
+         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-orange-200/80 dark:border-orange-800/50 text-orange-500 dark:text-orange-400 text-[10px] font-bold tracking-widest uppercase mb-6 shadow-sm bg-white/80 dark:bg-slate-900/50 backdrop-blur-sm">
+           <Gift className="w-3.5 h-3.5" /> REWARDS VAULT
+         </div>
+         <h2 className="text-4xl md:text-5xl font-black text-[#1e293b] dark:text-white mb-4">Swag Drops</h2>
+         <p className="text-slate-500 text-[15px] max-w-lg mx-auto leading-relaxed">
+           Unlock exclusive Arcade swag by completing challenges and reaching prize tiers.
+         </p>
+       </div>
+       
+       {/* Tabs */}
+       <div className="flex flex-wrap justify-center gap-3 mb-10">
+         {tabs.map(tab => (
+           <button 
+             key={tab}
+             onClick={() => setActiveTab(tab)}
+             className={`px-6 py-2.5 rounded-full text-[13px] font-bold transition-all border ${
+               activeTab === tab 
+                 ? 'bg-[#4285F4] text-white border-[#4285F4] shadow-[0_4px_14px_rgba(66,133,244,0.3)]' 
+                 : 'bg-white dark:bg-[#161b22] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm'
+             }`}
+           >
+             {tab}
+           </button>
+         ))}
+       </div>
+
+       {/* Empty State Box */}
+       <div className="border border-dashed border-slate-300 dark:border-slate-700 rounded-[32px] p-12 md:p-24 flex flex-col items-center justify-center text-center bg-white/60 dark:bg-[#161b22]/40 backdrop-blur-md relative overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.02)] mx-4 md:mx-0">
+          <div className="relative mb-8 flex items-center justify-center">
+            {/* Concentric rings */}
+            <div className="absolute w-[100px] h-[100px] rounded-full border border-dashed border-amber-200/80 dark:border-amber-900/50 animate-[spin_20s_linear_infinite]"></div>
+            <div className="absolute w-[120px] h-[120px] rounded-full border border-dashed border-amber-100 dark:border-amber-900/30 animate-[spin_30s_linear_infinite_reverse]"></div>
+            
+            {/* Icon circle */}
+            <div className="w-20 h-20 rounded-full bg-[#FFFBEB] dark:bg-amber-900/20 flex items-center justify-center relative z-10 shadow-sm border border-amber-100 dark:border-amber-900/30">
+              <Gift className="w-10 h-10 text-[#F59E0B] drop-shadow-sm" strokeWidth={2.5} />
+            </div>
+          </div>
+          
+          <h3 className="text-[20px] font-black text-slate-900 dark:text-white mb-4">No Swag Drops Announced Yet</h3>
+          <p className="text-slate-500 text-[14px] max-w-[360px] mx-auto leading-relaxed">
+            Arcade has not officially revealed any Arcade Season 2026 swag rewards yet.
+            <br/><br/>
+            Check back later once rewards are announced.
+          </p>
+       </div>
     </div>
   );
 }

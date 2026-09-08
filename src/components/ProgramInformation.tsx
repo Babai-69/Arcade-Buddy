@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, PlayCircle, Info } from 'lucide-react';
+import { Calendar, Clock, PlayCircle, Info, Star } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export function ProgramInformation() {
@@ -11,6 +11,8 @@ export function ProgramInformation() {
   });
   const [timerState, setTimerState] = useState<'upcoming' | 'registration' | 'live' | 'ended'>('upcoming');
   const [isPlaying, setIsPlaying] = useState(false);
+  const [showChanges, setShowChanges] = useState(false);
+  const [showPoints, setShowPoints] = useState(false);
 
   useEffect(() => {
     const startDate = new Date('2026-07-13T11:30:00Z').getTime();
@@ -52,8 +54,27 @@ export function ProgramInformation() {
       <div className="text-center mb-12">
         <h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">Google Cloud Arcade 2026 Program Information</h2>
         <p className="text-sm text-slate-500">Our arcade points calculator is specifically designed for the 2026 Google Cloud Arcade program.</p>
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+          <button 
+            onClick={() => setShowChanges(!showChanges)}
+            className="px-6 py-2.5 rounded-full font-bold text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800 transition-all flex items-center gap-2 shadow-sm"
+          >
+            <Info className="w-4 h-4" /> 
+            {showChanges ? "Hide Arcade Changes" : "What's Changing in 2026?"}
+          </button>
+          
+          <button 
+            onClick={() => setShowPoints(!showPoints)}
+            className="px-6 py-2.5 rounded-full font-bold text-sm bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800 transition-all flex items-center gap-2 shadow-sm"
+          >
+            <Star className="w-4 h-4" /> 
+            {showPoints ? "Hide Points System" : "View Arcade Points System"}
+          </button>
+        </div>
       </div>
 
+      {showChanges && (
+      <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-500">
       {/* What's Changing Section */}
       <div className="glass-panel rounded-[2rem] p-6 md:p-10 shadow-xl border border-blue-100 dark:border-blue-900/30 relative overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">
         <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -z-10 group-hover:bg-blue-500/10 transition-colors duration-500" />
@@ -84,89 +105,15 @@ export function ProgramInformation() {
            </li>
          </ul>
       </div>
+      </div>
+      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Important Program Dates + Video */}
-        <div className="glass-panel rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200/50 dark:border-slate-700/50 relative overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl -z-10 group-hover:bg-purple-500/10 transition-colors duration-500" />
-          <div className="flex items-center gap-2 mb-6 text-blue-600">
-            <Calendar className="w-5 h-5 text-[#4285F4]" />
-            <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white">Program Important Information</h3>
-          </div>
-          
-          <div className="space-y-6">
-            {/* The YouTube Video Replaces the timeline section here */}
-            {isPlaying ? (
-               <div className="w-full aspect-video rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800">
-                 <iframe 
-                   className="w-full h-full"
-                   src="https://www.youtube.com/embed/UEiw3fJ1xKI?autoplay=1" 
-                   title="YouTube video player" 
-                   frameBorder="0" 
-                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                   referrerPolicy="strict-origin-when-cross-origin" 
-                   allowFullScreen>
-                 </iframe>
-               </div>
-            ) : (
-               <div 
-                 onClick={() => setIsPlaying(true)}
-                 className="w-full aspect-[16/9] rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 cursor-pointer relative group bg-slate-100 flex items-center justify-center"
-               >
-                 <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782035047/Skill_Badge_wokmgx.png" alt="How to Enable CHECK MY PROGRESS" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90" />
-                 <div className="absolute inset-0 bg-black/20 flex flex-col items-center justify-center transition-colors group-hover:bg-black/30">
-                   <PlayCircle className="w-16 h-16 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all shadow-xl rounded-full" />
-                   <div className="mt-4 bg-white/90 px-4 py-2 rounded-full shadow-lg">
-                      <p className="text-xs font-bold text-slate-900">Click to watch</p>
-                   </div>
-                 </div>
-               </div>
-            )}
-
-            <div className="bg-white/40 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 border border-slate-200/50 dark:border-slate-700/50 mt-6 shadow-inner">
-              <div className="flex items-center gap-2 mb-4">
-                <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />
-                <h4 className="font-bold text-sm font-display text-slate-800 dark:text-slate-200">
-                  {timerState === 'upcoming' ? 'Facilitator Program Starts In:' : timerState === 'registration' ? 'Deadline to fill the registration form:' : timerState === 'live' ? 'Time Left to Complete Program:' : 'Facilitator Program Status:'}
-                </h4>
-              </div>
-
-              {timerState === 'ended' ? (
-                <div className="text-center py-4 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl">
-                   <span className="text-xl font-bold text-slate-500 dark:text-slate-400 flex items-center justify-center gap-2">
-                     PROGRAM HAS ENDED
-                   </span>
-                </div>
-              ) : (
-                <div className="grid grid-cols-4 gap-3 text-center">
-                  <div className="bg-white dark:bg-slate-800 rounded-xl p-3 shadow-sm border border-slate-100 dark:border-slate-700">
-                    <div className="text-2xl font-bold font-display text-[#4285F4]">{timeLeft.days}</div>
-                    <div className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider">DAYS</div>
-                  </div>
-                  <div className="bg-white dark:bg-slate-800 rounded-xl p-3 shadow-sm border border-slate-100 dark:border-slate-700">
-                    <div className="text-2xl font-bold font-display text-[#4285F4]">{timeLeft.hours}</div>
-                    <div className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider">HOURS</div>
-                  </div>
-                  <div className="bg-white dark:bg-slate-800 rounded-xl p-3 shadow-sm border border-slate-100 dark:border-slate-700">
-                    <div className="text-2xl font-bold font-display text-[#4285F4]">{timeLeft.minutes}</div>
-                    <div className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider">MINUTES</div>
-                  </div>
-                  <div className="bg-white dark:bg-slate-800 rounded-xl p-3 shadow-sm border border-slate-100 dark:border-slate-700">
-                    <div className="text-2xl font-bold font-display text-[#4285F4]">{timeLeft.seconds}</div>
-                    <div className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400 tracking-wider">SECONDS</div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Arcade Points System */}
-        <div className="glass-panel rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200/50 dark:border-slate-700/50 relative overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">
-          <div className="absolute top-0 left-0 w-64 h-64 bg-green-500/5 rounded-full blur-3xl -z-10 group-hover:bg-green-500/10 transition-colors duration-500" />
-           <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white text-center mb-6">Arcade Points System</h3>
-           
-           <div className="space-y-3">
+              {showPoints && (
+        <div className="animate-in fade-in slide-in-from-right-8 duration-500">
+          <div className="glass-panel rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200/50 dark:border-slate-700/50 relative overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">
+            <div className="absolute top-0 left-0 w-64 h-64 bg-green-500/5 rounded-full blur-3xl -z-10 group-hover:bg-green-500/10 transition-colors duration-500" />
+            <h3 className="text-xl font-bold font-display text-slate-900 dark:text-white text-center mb-6">Arcade Points System</h3>
+            <div className="space-y-3">
               <PointRow icon="🚀" name="Arcade Adventure" points="1 pt each" color="bg-[#8b5cf6]" />
               <PointRow icon="🚢" name="Arcade Voyage" points="1 pt each" color="bg-[#0ea5e9]" />
               <PointRow icon="🧭" name="Arcade Trail" points="1 pt each" color="bg-[#8b5cf6]" />
@@ -174,9 +121,10 @@ export function ProgramInformation() {
               <PointRow icon="⚡" name="Base Camp" points="1 pt each" color="bg-[#f97316]" />
               <PointRow icon="🛠️" name="Skill Badge" points="0.5 pt each" color="bg-[#22c55e]" />
               <PointRow icon="🏆" name="Facilitator Milestones" points="Bonus pts" color="bg-[#0ea5e9]" />
-           </div>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

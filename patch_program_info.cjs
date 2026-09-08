@@ -1,54 +1,40 @@
 const fs = require('fs');
 let code = fs.readFileSync('src/components/ProgramInformation.tsx', 'utf8');
 
-// Header
-code = code.replace(
-  '<div className="text-center mb-8">',
-  '<div className="text-center mb-12">'
-);
-code = code.replace(
-  '<h2 className="text-2xl md:text-3xl font-bold font-display text-slate-900 dark:text-white mb-2">Google Cloud Arcade 2026 Program Information</h2>',
-  '<h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">Google Cloud Arcade 2026 Program Information</h2>'
-);
+if (!code.includes('showChanges')) {
+  // Add state variables
+  code = code.replace(
+    "const [isPlaying, setIsPlaying] = useState(false);",
+    "const [isPlaying, setIsPlaying] = useState(false);\n  const [showChanges, setShowChanges] = useState(false);\n  const [showPoints, setShowPoints] = useState(false);"
+  );
 
-// Box 1: What's Changing
-code = code.replace(
-  '<div className="bg-white dark:bg-slate-900 border border-[#b2dbfb] dark:border-blue-900/50 rounded-2xl p-6 md:p-8 shadow-sm">',
-  '<div className="glass-panel rounded-[2rem] p-6 md:p-10 shadow-xl border border-blue-100 dark:border-blue-900/30 relative overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">\n        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -z-10 group-hover:bg-blue-500/10 transition-colors duration-500" />'
-);
-code = code.replace(
-  '<h3 className="text-xl font-bold font-display text-slate-900 dark:text-white mb-4">',
-  '<h3 className="text-2xl font-bold font-display text-slate-900 dark:text-white mb-4 flex items-center gap-2"><div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400"><Info className="w-4 h-4" /></div> '
-);
-code = code.replace('What\'s Changing in the Arcade</h3>', 'What\'s Changing in the Arcade</h3>');
+  // Add Star to imports
+  if (!code.includes('Star')) {
+    code = code.replace("import { Clock, Calendar, Info, PlayCircle } from 'lucide-react';", "import { Clock, Calendar, Info, PlayCircle, Star } from 'lucide-react';");
+  }
 
-// Box 2: Important Dates
-code = code.replace(
-  '<div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 md:p-8 shadow-sm">',
-  '<div className="glass-panel rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200/50 dark:border-slate-700/50 relative overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">\n          <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl -z-10 group-hover:bg-purple-500/10 transition-colors duration-500" />'
-);
+  // Inject the toggle buttons below the subtitle
+  const headerSection = `<p className="text-sm text-slate-500">Our arcade points calculator is specifically designed for the 2026 Google Cloud Arcade program.</p>\n      </div>`;
+  const toggleButtons = `<p className="text-sm text-slate-500">Our arcade points calculator is specifically designed for the 2026 Google Cloud Arcade program.</p>\n        <div className="flex flex-wrap items-center justify-center gap-4 mt-6">\n          <button \n            onClick={() => setShowChanges(!showChanges)}\n            className="px-6 py-2.5 rounded-full font-bold text-sm bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800 transition-all flex items-center gap-2 shadow-sm"\n          >\n            <Info className="w-4 h-4" /> \n            {showChanges ? "Hide Arcade Changes" : "What's Changing in 2026?"}\n          </button>\n          \n          <button \n            onClick={() => setShowPoints(!showPoints)}\n            className="px-6 py-2.5 rounded-full font-bold text-sm bg-green-50 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800 transition-all flex items-center gap-2 shadow-sm"\n          >\n            <Star className="w-4 h-4" /> \n            {showPoints ? "Hide Points System" : "View Arcade Points System"}\n          </button>\n        </div>\n      </div>`;
+  code = code.replace(headerSection, toggleButtons);
 
-code = code.replace(
-  '<div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 mt-6">',
-  '<div className="bg-white/40 dark:bg-slate-800/40 backdrop-blur-md rounded-2xl p-6 border border-slate-200/50 dark:border-slate-700/50 mt-6 shadow-inner">'
-);
+  // Wrap "What's Changing Section"
+  const changesStart = `{/* What's Changing Section */}`;
+  const changesEnd = `</ul>\n      </div>`;
+  code = code.replace(changesStart, `{showChanges && (\n      <div className="mb-6 animate-in fade-in slide-in-from-top-4 duration-500">\n      {/* What's Changing Section */}`);
+  code = code.replace(changesEnd, `</ul>\n      </div>\n      </div>\n      )}`);
 
-// Box 3: Points System
-code = code.replace(
-  '<div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 md:p-8 shadow-sm">',
-  '<div className="glass-panel rounded-[2rem] p-6 md:p-8 shadow-xl border border-slate-200/50 dark:border-slate-700/50 relative overflow-hidden group hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl">\n          <div className="absolute top-0 left-0 w-64 h-64 bg-green-500/5 rounded-full blur-3xl -z-10 group-hover:bg-green-500/10 transition-colors duration-500" />'
-);
+  // Update layout for Video + Points System
+  // From: <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  const layoutStart = `<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">`;
+  const newLayoutStart = `<div className={\`grid grid-cols-1 \${showPoints ? 'lg:grid-cols-2' : 'max-w-4xl mx-auto'} gap-6\`}>`;
+  code = code.replace(layoutStart, newLayoutStart);
 
-code = code.replace(
-  '<h3 className="text-lg font-bold font-display text-slate-900 dark:text-white text-center mb-6">Arcade Points System</h3>',
-  '<h3 className="text-xl font-bold font-display text-slate-900 dark:text-white text-center mb-6">Arcade Points System</h3>'
-);
-
-// PointRow updates
-code = code.replace(
-  '<div className="flex items-center justify-between p-3.5 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-xl border border-slate-100 dark:border-slate-700 transition-colors">',
-  '<div className="flex items-center justify-between p-3.5 bg-white/50 hover:bg-white dark:bg-slate-800/50 dark:hover:bg-slate-800 rounded-xl border border-slate-200/50 dark:border-slate-700/50 transition-all shadow-sm hover:shadow-md hover:scale-[1.02]">'
-);
-
-fs.writeFileSync('src/components/ProgramInformation.tsx', code, 'utf8');
-console.log("Patched ProgramInformation.tsx");
+  // Wrap "Arcade Points System"
+  const pointsStart = `{/* Arcade Points System */}`;
+  const pointsEnd = `</div>\n        </div>\n      </div>\n    </div>`;
+  code = code.replace(pointsStart, `{showPoints && (\n        <div className="animate-in fade-in slide-in-from-right-8 duration-500">\n        {/* Arcade Points System */}`);
+  code = code.replace(pointsEnd, `</div>\n        </div>\n        </div>\n      )}\n      </div>\n    </div>`);
+  
+  fs.writeFileSync('src/components/ProgramInformation.tsx', code);
+}

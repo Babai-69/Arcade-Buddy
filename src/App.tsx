@@ -7,8 +7,9 @@ import { Footer } from './components/layout/Footer';
 import { PageTransition } from './components/layout/PageTransition';
 import { Home } from './pages/Home';
 import { AboutPage } from './pages/AboutPage';
+import { ContactUsPage } from './pages/ContactUsPage';
 import { TrueLeaderboardPage } from './pages/TrueLeaderboardPage';
-import { LeaderboardPage as DashboardPage } from './pages/LeaderboardPage';
+import { DashboardPage } from './pages/DashboardPage';
 import { CalculatorPage } from './pages/CalculatorPage';
 import { FacilitatorPage } from './pages/FacilitatorPage';
 import { ResourcesPage } from './pages/ResourcesPage';
@@ -82,6 +83,7 @@ export default function App() {
               <Route path="/free-credits" element={<PageTransition><FreeCreditsPage /></PageTransition>} />
               <Route path="/public-profile-help" element={<PageTransition><PublicProfileHelpPage /></PageTransition>} />
               <Route path="/swags" element={<PageTransition><SwagsPage /></PageTransition>} />
+              <Route path="/contact-us" element={<PageTransition><ContactUsPage /></PageTransition>} />
               <Route path="/about" element={<PageTransition><AboutPage /></PageTransition>} />
               <Route path="/roadmap" element={<PageTransition><RoadmapPage /></PageTransition>} />
               <Route path="/disclaimer" element={<PageTransition><DisclaimerPage /></PageTransition>} />

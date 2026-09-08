@@ -13,6 +13,13 @@ export function MyProgressPage() {
           element.scrollIntoView({ behavior: 'smooth' });
         }
       }, 100);
+    } else if (location.pathname.includes('/my-points')) {
+      setTimeout(() => {
+        const element = document.getElementById('my-points');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
     }
   }, [location]);
 

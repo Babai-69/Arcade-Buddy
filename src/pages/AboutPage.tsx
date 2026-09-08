@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ExternalLink, Users, Layers, Rocket, ShieldAlert, Cloud, Code, GitMerge, FileText, Gift, Award, Zap, Terminal, Database, Shield, HelpCircle, LayoutGrid, Gamepad2 } from 'lucide-react';
 import { FacilitatorCards } from '../components/FacilitatorCards';
-import { SupportSection } from '../components/SupportSection';
 
 export function AboutPage() {
   return (
@@ -156,11 +155,6 @@ export function AboutPage() {
         {/* Developer Profile */}
         <div className="w-full max-w-5xl mx-auto mb-16">
            <FacilitatorCards />
-        </div>
-
-        {/* Support Section */}
-        <div className="w-full max-w-5xl mx-auto mb-16">
-           <SupportSection />
         </div>
 
       </div>

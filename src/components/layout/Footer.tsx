@@ -113,6 +113,11 @@ export function Footer() {
                   <Cloud className="h-4 w-4 text-[#EA4335]" /> GDG Announcements
                 </a>
               </li>
+              <li>
+                <Link to="/contact-us" className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-[#FBBC04] transition-colors">
+                  <span>📧</span> Contact Us
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
