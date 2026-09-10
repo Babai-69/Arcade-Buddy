@@ -290,9 +290,6 @@ function DashboardContent({ data, spots, participants }: { data: any, spots: any
         
         {/* Facilitator Milestones */}
         <div className="mt-12 text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-blue-500 text-white mb-4">
-            🏆
-          </div>
           <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Facilitator Milestones</h2>
           <p className="text-blue-500 font-medium mb-1">Your progress between 13th Jul. & 14th Sept. 2026</p>
           <p className="text-xs text-slate-500 italic mb-8">You will only receive bonus points for the milestone that you earn and not for the ones before that.</p>
@@ -480,7 +477,7 @@ function ActivityMonth({ badges }: { badges: any[] }) {
           
           <div className="min-h-[20px] mt-2 text-xs text-center text-slate-600 dark:text-slate-300 font-medium">
             {selectedDay ? (
-              <span><span className="font-bold text-slate-900 dark:text-white">${selectedDay.count} badges</span> on ${selectedDay.dateStr}</span>
+              <span><span className="font-bold text-slate-900 dark:text-white">{selectedDay.count} badges</span> on {selectedDay.dateStr}</span>
             ) : (
               <span className="text-slate-400 italic">Click a day to see details</span>
             )}

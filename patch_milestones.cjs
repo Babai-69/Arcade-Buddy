@@ -1,16 +1,19 @@
 const fs = require('fs');
 let code = fs.readFileSync('src/components/Milestones.tsx', 'utf8');
 
-code = code.replace(
-  'className="glass-card rounded-[2rem] p-6 relative overflow-hidden group border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow"',
-  'className="glass-panel rounded-[2rem] p-8 relative overflow-hidden group border border-slate-200/50 dark:border-slate-700/50 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"'
-);
+const oldHeader = `<div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-4">
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-slate-900 dark:text-white tracking-tight">Swag Milestones</h2>
+            <p className="text-slate-700 dark:text-slate-300">Track your progress and unlock exclusive rewards.</p>
+          </div>
+        </div>`;
 
-// Title of Swag Milestones
-code = code.replace(
-  '<h2 className="text-3xl md:text-4xl font-display font-bold mb-4 text-slate-900 dark:text-white">Swag Milestones</h2>',
-  '<h2 className="text-4xl md:text-5xl font-display font-bold mb-4 text-slate-900 dark:text-white tracking-tight">Swag Milestones</h2>'
-);
+const newHeader = `<div className="flex flex-col items-center justify-center text-center mb-16 gap-4">
+          <div className="text-center">
+            <h2 className="text-4xl md:text-5xl font-display font-black mb-4 text-slate-900 dark:text-white tracking-tight">Swag Milestones</h2>
+            <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto leading-relaxed">Track your progress and unlock exclusive rewards as you conquer Arcade challenges.</p>
+          </div>
+        </div>`;
 
-fs.writeFileSync('src/components/Milestones.tsx', code, 'utf8');
-console.log("Patched Milestones.tsx");
+code = code.replace(oldHeader, newHeader);
+fs.writeFileSync('src/components/Milestones.tsx', code);
