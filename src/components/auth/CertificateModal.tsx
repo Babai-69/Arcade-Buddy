@@ -259,6 +259,9 @@ export function CertificateModal({ isOpen, onClose, userEmail }: CertificateModa
           )}
         </div>
       </div>
+      <div className="fixed top-[-9999px] left-[-9999px] opacity-0 pointer-events-none">
+        <CertificateTemplate name={name} qrCodeUrl={qrCodeUrl} innerRef={certificateRef} id="user-certificate" />
+      </div>
     </div>,
     document.body
   );

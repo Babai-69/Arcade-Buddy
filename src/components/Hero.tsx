@@ -201,12 +201,18 @@ export function Hero({ participants }: { participants: Participant[] }) {
             </div>
           )}
           {timerState === 'ended' && (
-            <div className="max-w-4xl mx-auto bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 mb-8">
-              <div className="flex items-center gap-2 justify-center">
-                <Clock className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-                <h4 className="font-bold font-display text-slate-800 dark:text-slate-200">
-                  Facilitator Program has ended.
-                </h4>
+            <div className="max-w-3xl mx-auto rounded-3xl p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 shadow-xl mb-12 overflow-hidden relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 opacity-20 blur-2xl group-hover:opacity-40 transition-opacity duration-500"></div>
+              <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-[22px] p-8 md:p-12 flex flex-col items-center justify-center relative z-10 text-center">
+                <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-900/40 dark:to-amber-900/10 rounded-full flex items-center justify-center mb-6 border border-amber-200 dark:border-amber-800/50 shadow-inner">
+                   <Award className="w-10 h-10 text-amber-500 drop-shadow-sm" />
+                </div>
+                <h3 className="text-3xl md:text-4xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 mb-4 tracking-tight">
+                  Season 2026 Concluded
+                </h3>
+                <p className="text-slate-600 dark:text-slate-400 max-w-lg mx-auto text-lg leading-relaxed">
+                  The Google Cloud Arcade Facilitator Program 2026 has officially ended. Thank you to all participants for an incredible season of cloud learning!
+                </p>
               </div>
             </div>
           )}
@@ -216,19 +222,22 @@ export function Hero({ participants }: { participants: Participant[] }) {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.1 }}
-          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-8"
+          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-12"
         >
           {[
             { icon: Cloud, color: 'text-[#4285F4]', bg: 'bg-[#4285F4]/10', title: 'Learn Cloud Tech', desc: 'Complete hands-on labs and skill badges on Cloud Skills Boost.' },
             { icon: Sparkles, color: 'text-[#FBBC05]', bg: 'bg-[#FBBC05]/10', title: 'Earn Points', desc: 'Every badge earns you Arcade Points. Climb the leaderboard daily.' },
             { icon: Award, color: 'text-[#34A853]', bg: 'bg-[#34A853]/10', title: 'Unlock Swag', desc: 'Reach milestones to claim exclusive Google Cloud merchandise.' }
           ].map((feature, idx) => (
-            <div key={idx} className="glass-panel p-6 rounded-3xl text-left border border-white/50 dark:border-slate-800 backdrop-blur-xl">
-              <div className={`w-12 h-12 rounded-2xl ${feature.bg} flex items-center justify-center mb-4`}>
-                <feature.icon className={`h-6 w-6 ${feature.color}`} />
+            <div key={idx} className="bg-white dark:bg-[#161b22] p-8 rounded-[2rem] text-center border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden">
+              <div className={`absolute top-0 right-0 w-24 h-24 ${feature.bg} rounded-bl-full -z-10 group-hover:scale-125 transition-transform duration-500 opacity-50`}></div>
+              <div className="flex justify-center mb-6">
+                <div className={`w-14 h-14 rounded-2xl ${feature.bg} flex items-center justify-center`}>
+                  <feature.icon className={`h-7 w-7 ${feature.color}`} />
+                </div>
               </div>
-              <h3 className="font-display font-semibold text-lg mb-2">{feature.title}</h3>
-              <p className="text-slate-500 dark:text-slate-400 text-sm">{feature.desc}</p>
+              <h3 className="font-display font-bold text-xl mb-3 text-slate-900 dark:text-white">{feature.title}</h3>
+              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">{feature.desc}</p>
             </div>
           ))}
         </motion.div>

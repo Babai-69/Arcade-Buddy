@@ -51,38 +51,23 @@ export const CertificateTemplate = ({ name, qrCodeUrl, innerRef, id }: Certifica
       </p>
 
       {/* Title */}
-      <h1 className="text-5xl font-bold mb-6 tracking-tight" style={{ color: '#4A6CF7' }}>
+      <h1 className="text-5xl font-bold mb-10 tracking-tight" style={{ color: '#4A6CF7' }}>
         Certificate of Appreciation
       </h1>
       
       {/* Recipient Name */}
-      <h2 className="text-6xl font-bold font-serif mb-1" style={{ color: '#F4A300',  fontFamily: 'Georgia, serif' }}>
+      <h2 className="text-6xl font-bold font-serif mb-10" style={{ color: '#F4A300',  fontFamily: 'Georgia, serif' }}>
         {name || 'Student Name'}
       </h2>
       
-      {/* Dotted underline */}
-      <div className="w-2/3 max-w-[600px] mx-auto border-b-2 border-dotted mb-5" style={{ borderColor: '#9aa0a6' }}></div>
+      
 
       {/* Body Text */}
       <p className="text-lg leading-relaxed max-w-[700px] mx-auto mb-6 font-medium" style={{ color: '#1e7a4d' }}>
         For successfully completing the <span className="font-bold">Ultimate Milestone</span> of the Google Cloud Arcade Facilitator Program 2026, demonstrating outstanding consistency, dedication and cloud learning excellence during the program timeline.
       </p>
 
-      {/* Info Pill */}
-      <div 
-        className="inline-flex justify-center items-center gap-8 rounded-2xl px-8 py-3 text-[15px] mb-4 bg-white"
-        style={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb', borderWidth: '1px', borderStyle: 'solid', color: '#374151', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}
-      >
-        <div className="flex flex-col items-center">
-          <span className="font-bold text-[11px] uppercase tracking-wider mb-0.5" style={{ color: '#4285F4' }}>Program Duration</span>
-          <span className="font-medium" style={{ color: '#1f2937' }}>13th July 2026 – 14th September 2026</span>
-        </div>
-        <div className="w-px h-8" style={{ backgroundColor: '#e5e7eb' }}></div>
-        <div className="flex flex-col items-center">
-          <span className="font-bold text-[11px] uppercase tracking-wider mb-0.5" style={{ color: '#4285F4' }}>Milestone Achieved</span>
-          <span className="font-medium" style={{ color: '#1f2937' }}>12 Game Badges + 66 Skill Badges</span>
-        </div>
-      </div>
+      
     </div>
 
     {/* Footer Row */}
@@ -92,7 +77,7 @@ export const CertificateTemplate = ({ name, qrCodeUrl, innerRef, id }: Certifica
         <img 
           src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782921503/signature_mqwxcl.png" 
           alt="Signature" 
-          className="h-16 object-contain mb-2 mix-blend-multiply" 
+          className="h-16 object-contain mb-0 mix-blend-multiply" 
           crossOrigin="anonymous"
         />
         <div className="w-full border-b border-dotted mb-2" style={{ borderColor: '#9aa0a6' }}></div>
@@ -119,7 +104,7 @@ export const CertificateTemplate = ({ name, qrCodeUrl, innerRef, id }: Certifica
         <img 
           src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782921368/f50b015a-ad12-4117-bba1-0d21503e0ff5_lz3yej.png" 
           alt="Signature" 
-          className="h-16 object-contain mb-2 mix-blend-multiply"
+          className="h-16 object-contain mb-0 mix-blend-multiply"
           crossOrigin="anonymous" 
         />
         <div className="w-full border-b border-dotted mb-2" style={{ borderColor: '#9aa0a6' }}></div>

@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { ArrowRight, X, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { LabLimitAnimation } from '../components/LabLimitAnimation';
 
 const resources = [
   {
@@ -89,12 +88,11 @@ const resources = [
     bg: "bg-yellow-50 dark:bg-slate-800",
   },
   {
-    id: "lab-limit",
     category: "INFO",
     title: "Daily Lab Limit — How it works",
     description: "Understand the daily lab limits, what happens when you exceed them, and how to track your progress.",
     linkText: "Read More ➡",
-    link: "#",
+    link: "/resources/daily-lab-limit-guide",
     internal: true,
     image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782318350/12_a0wpls.png",
     bg: "bg-blue-50 dark:bg-slate-800",
@@ -110,12 +108,11 @@ const resources = [
     bg: "bg-emerald-50 dark:bg-slate-800",
   },
   {
-    id: "tier-waterfall",
     category: "INFO",
     title: "Tier Swag Distribution System",
     description: "Understand the Google Cloud Arcade 2026 Waterfall Tier System.",
     linkText: "CHECK IT ➡",
-    link: "#",
+    link: "/resources/swag-distribution-system",
     internal: true,
     image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782320743/image_nnuehs.png",
     bg: "bg-purple-50 dark:bg-slate-800",
@@ -266,39 +263,6 @@ export function ResourcesPage() {
         </AnimatePresence>
       </motion.div>
 
-      {/* Modals */}
-      {activeModal === 'tier-waterfall' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={() => setActiveModal(null)} />
-          <div className="relative bg-transparent rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl z-50">
-            <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 p-2 bg-white/20 hover:bg-white/40 rounded-full text-white transition-colors z-10 border border-white/20 backdrop-blur-sm">
-              <X className="w-5 h-5" />
-            </button>
-            <div className="w-full h-full min-h-[600px] bg-[#0d1117] rounded-2xl overflow-hidden border border-slate-700">
-              <iframe 
-                src="/tier-waterfall.html" 
-                className="w-full h-full border-0" 
-                style={{ minHeight: '600px' }}
-                title="Tier Waterfall Animation"
-              ></iframe>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeModal === 'lab-limit' && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
-          <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={() => setActiveModal(null)} />
-          <div className="relative bg-white dark:bg-slate-900 rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl z-50 border border-slate-200 dark:border-slate-800">
-            <button onClick={() => setActiveModal(null)} className="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors z-10">
-              <X className="w-5 h-5" />
-            </button>
-            <div className="p-6 pt-12 md:p-8 md:pt-14">
-              <LabLimitAnimation defaultOpen={true} />
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+      </div>
   );
 }

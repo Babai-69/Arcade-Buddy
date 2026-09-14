@@ -34,6 +34,8 @@ import { FeedbackPage } from './pages/FeedbackPage';
 import { AdminFeedbackPage } from './pages/AdminFeedbackPage';
 import { AdminQueriesPage } from './pages/AdminQueriesPage';
 import { BonusMilestonePage } from './pages/BonusMilestonePage';
+import { DailyLabLimitGuidePage } from './pages/DailyLabLimitGuidePage';
+import { SwagDistributionSystemPage } from './pages/SwagDistributionSystemPage';
 import { NotFound404 } from './pages/NotFound404';
 import { AdminPanel } from './components/AdminPanel';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -79,6 +81,8 @@ export default function App() {
               <Route path="/resources/gear-badges" element={<PageTransition><GearBadgesPage /></PageTransition>} />
               <Route path="/resources/swag-showcase-page" element={<PageTransition><SwagShowcasePage /></PageTransition>} />
               <Route path="/resources/bonus-milestone" element={<PageTransition><BonusMilestonePage /></PageTransition>} />
+              <Route path="/resources/daily-lab-limit-guide" element={<PageTransition><DailyLabLimitGuidePage /></PageTransition>} />
+              <Route path="/resources/swag-distribution-system" element={<PageTransition><SwagDistributionSystemPage /></PageTransition>} />
               <Route path="/quick-start" element={<PageTransition><QuickStartPage /></PageTransition>} />
               <Route path="/free-credits" element={<PageTransition><FreeCreditsPage /></PageTransition>} />
               <Route path="/public-profile-help" element={<PageTransition><PublicProfileHelpPage /></PageTransition>} />
