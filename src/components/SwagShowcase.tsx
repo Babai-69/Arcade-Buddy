@@ -266,11 +266,11 @@ export function SwagShowcase() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-            <Link to="/calculator" className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
-              <Medal className="w-4 h-4" /> Check My Swag Tier
+            <Link to="/resources/swag-distribution-system" className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
+              <Medal className="w-4 h-4" /> How it works?
             </Link>
             <Link to="/resources/prize-counter-guide" className="w-full sm:w-auto text-center bg-transparent hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl transition-colors border border-slate-700">
-              Prize Redemption Guide <ArrowRight className="inline-block w-4 h-4 ml-1" />
+              Prize Redemption Guide  <ArrowRight className="inline-block w-4 h-4 ml-1" />
             </Link>
           </div>
         </div>

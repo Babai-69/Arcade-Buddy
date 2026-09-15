@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Award, Download, CheckCircle, XCircle } from 'lucide-react';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import QRCode from 'qrcode';
 
 import { CertificateTemplate } from './CertificateTemplate';
@@ -48,16 +48,12 @@ export function AdminCertificatePreview() {
     if (!certificateRef.current) return;
     
     try {
-      // Create a wrapper div to temporarily hold a clone without scale for clean capture
-      const canvas = await html2canvas(certificateRef.current, {
-        scale: 2, // high resolution
-        useCORS: true,
+      const imgData = await toPng(certificateRef.current, {
+        pixelRatio: 2,
         backgroundColor: '#ffffff',
         width: 1000,
         height: 700
       });
-      
-      const imgData = canvas.toDataURL('image/png', 1.0);
       
       // Force A4 portrait regardless of landscape content
       const pdf = new jsPDF({
@@ -106,8 +102,8 @@ export function AdminCertificatePreview() {
           </div>
           
           <p className="text-slate-600 dark:text-slate-400 mb-6">
-            This module generates the Ultimate Milestone Certificate for users who meet the criteria within the program timeline. 
-            <strong> Criteria: &ge;66 Skill Badges AND &ge;12 Game Badges.</strong>
+            This module generates the Certificate for users who meet at least Milestone 1 criteria within the program timeline.
+            <strong> Criteria: &ge;18 Skill Badges AND &ge;6 Game Badges.</strong>
           </p>
           
           <form onSubmit={handleTestGeneration} className="space-y-4 bg-slate-50 dark:bg-slate-800/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">

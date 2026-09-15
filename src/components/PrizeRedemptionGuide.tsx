@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Download, AlertTriangle, Lightbulb, ExternalLink, ShieldAlert, ArrowRight, Clock, Trophy } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { DeliveryTimelineCard } from './RewardDeliveryCard';
 
 export function PrizeRedemptionGuide() {
   const [timeLeft, setTimeLeft] = useState({
@@ -187,6 +188,11 @@ export function PrizeRedemptionGuide() {
           </div>
         </div>
       </div>
+      {/* Timeline Integration */}
+      <div className="w-full mx-auto mb-16">
+        <DeliveryTimelineCard />
+      </div>
+  
 
       {/* Waterfall System */}
       <div className="mb-8">
@@ -323,7 +329,7 @@ export function PrizeRedemptionGuide() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-            <Link to="/calculator" className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
+            <Link to="/my-progress" className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
               Check My Swag Tier <ArrowRight className="w-4 h-4" />
             </Link>
             <Link to="/resources/swag-showcase-page" className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl transition-colors border border-slate-700">

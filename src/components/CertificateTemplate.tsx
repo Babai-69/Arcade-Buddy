@@ -1,13 +1,14 @@
 import React from 'react';
 
 interface CertificateTemplateProps {
+  milestoneName?: string;
   name: string;
   qrCodeUrl: string;
   innerRef?: React.Ref<HTMLDivElement>;
   id?: string;
 }
 
-export const CertificateTemplate = ({ name, qrCodeUrl, innerRef, id }: CertificateTemplateProps) => (
+export const CertificateTemplate = ({ name, qrCodeUrl, milestoneName, innerRef, id }: CertificateTemplateProps) => (
   <div 
     ref={innerRef}
     id={id}
@@ -64,7 +65,7 @@ export const CertificateTemplate = ({ name, qrCodeUrl, innerRef, id }: Certifica
 
       {/* Body Text */}
       <p className="text-lg leading-relaxed max-w-[700px] mx-auto mb-6 font-medium" style={{ color: '#1e7a4d' }}>
-        For successfully completing the <span className="font-bold">Ultimate Milestone</span> of the Google Cloud Arcade Facilitator Program 2026, demonstrating outstanding consistency, dedication and cloud learning excellence during the program timeline.
+        For successfully completing <span className="font-bold">{milestoneName || 'the Ultimate Milestone'}</span> of the Google Cloud Arcade Facilitator Program 2026, demonstrating outstanding consistency, dedication and cloud learning excellence during the program timeline.
       </p>
 
       

@@ -1,4 +1,5 @@
-import React from 'react';
+const fs = require('fs');
+const content = `import React from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, Snowflake, Shield, Zap, Star, Crown, AlertTriangle, Megaphone, Target, ArrowDownCircle, Info, Truck, CheckCircle2, Route, Clock, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -344,3 +345,5 @@ export function SwagDistributionSystemPage() {
     </div>
   );
 }
+`;
+fs.writeFileSync('src/pages/SwagDistributionSystemPage.tsx', content);
