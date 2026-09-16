@@ -147,7 +147,7 @@ export function SwagsPage() {
 
 function SwagCard({ image, name, milestone, color }: any) {
   return (
-    <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm text-center group hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+    <div className="bg-white dark:bg-[#161b22] border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm text-center group hover:shadow-[0_0_40px_rgba(59,130,246,0.6)] dark:hover:shadow-[0_0_40px_rgba(255,140,40,0.6)] transition-all duration-300 hover:-translate-y-1">
       <div className="aspect-[4/3] w-full overflow-hidden relative bg-slate-50 dark:bg-[#0d1117] p-6 flex items-center justify-center">
         <img src={image} alt={name} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
       </div>
@@ -230,7 +230,7 @@ function SwagDropsSection() {
                key={swag.id}
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
-               className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer group"
+               className="bg-white dark:bg-slate-900 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-[0_0_40px_rgba(59,130,246,0.6)] dark:hover:shadow-[0_0_40px_rgba(255,140,40,0.6)] transition-all duration-300 cursor-pointer group"
                onClick={() => setSelectedSwag(swag)}
              >
                <div className="aspect-[4/3] bg-slate-100 dark:bg-slate-800 relative overflow-hidden flex items-center justify-center p-6">
@@ -272,6 +272,18 @@ function SwagDropsSection() {
             </p>
          </div>
        )}
+
+       {/* Coming Soon Indicator */}
+       <div className="mt-12 flex justify-center w-full pb-8">
+         <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[12px] bg-gradient-to-b from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 text-slate-500 dark:text-slate-300 font-bold text-sm shadow-inner border border-slate-300/50 dark:border-slate-600/50">
+           {/* Animated CSS Clock */}
+           <div className="relative w-[14px] h-[14px] rounded-full border-[2px] border-current flex items-center justify-center opacity-80">
+             <div className="absolute top-1/2 left-1/2 w-[1.5px] h-1.5 bg-current origin-[50%_100%] -translate-x-1/2 -translate-y-full animate-[spin_12s_linear_infinite]" style={{ borderTopLeftRadius: '1px', borderTopRightRadius: '1px' }} />
+             <div className="absolute top-1/2 left-1/2 w-[1px] h-2 bg-current origin-[50%_100%] -translate-x-1/2 -translate-y-full animate-[spin_2s_linear_infinite]" style={{ borderTopLeftRadius: '1px', borderTopRightRadius: '1px' }} />
+           </div>
+           Coming Soon
+         </div>
+       </div>
 
        {/* Modal for Swag Details */}
        <AnimatePresence>
