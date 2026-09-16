@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { ChevronLeft, Snowflake, Shield, Zap, Star, Crown, AlertTriangle, Megaphone, Target, ArrowDownCircle, Info, Truck, CheckCircle2, Route, Clock, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { SnowballWidget } from '../components/SnowballWidget';
 
 export function SwagDistributionSystemPage() {
   return (
@@ -274,6 +275,8 @@ export function SwagDistributionSystemPage() {
             </div>
           </div>
           
+          <SnowballWidget />
+
           {/* Why the Changes & Tracking */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white dark:bg-[#161b22] rounded-[2rem] p-8 shadow-sm border border-slate-200 dark:border-slate-800">

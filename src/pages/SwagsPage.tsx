@@ -97,9 +97,15 @@ export function SwagsPage() {
             <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 flex-grow leading-relaxed">
               At the end of the season, if you have enough points, you will receive an official email from Google Cloud with your unique redemption link.
             </p>
-            <div className="w-full bg-slate-900 dark:bg-slate-800 text-white text-xs font-bold py-3 rounded-lg text-center opacity-50 cursor-not-allowed">
+            <a 
+              href="https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              onClick={() => console.log("[Analytics] Event: 'Check Email Inbox' button clicked")}
+              className="w-full block bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white text-xs font-bold py-3 rounded-lg text-center transition-colors"
+            >
               Check Email Inbox
-            </div>
+            </a>
           </div>
 
           {/* Step 3 */}
