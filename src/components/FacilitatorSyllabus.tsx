@@ -136,8 +136,19 @@ function AccordionSection({ title, isOpen, onToggle, children }: { title: React.
 export function FacilitatorSyllabus() {
   const [openSections, setOpenSections] = useState<string[]>([]);
   const { activeGames, loading, error } = useArcadeGames();
+  const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null);
 
   const currentMonth = new Date().getMonth(); // 0 = Jan ... 5 = Jun, 6 = Jul, 7 = Aug, 8 = Sep
+
+  const handleCopyCode = (code: string, id: string) => {
+    if (code && code !== "Coming Soon!") {
+      navigator.clipboard.writeText(code);
+      setCopiedCodeId(id);
+      setTimeout(() => {
+        setCopiedCodeId(null);
+      }, 2000);
+    }
+  };
   
   const isJulyActive = currentMonth === 6;
   const isJulyPast = currentMonth > 6;
@@ -466,15 +477,18 @@ export function FacilitatorSyllabus() {
                         {game.code || "Coming Soon!"}
                       </code>
                       <button 
-                        className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors"
-                        onClick={() => {
-                          if (game.code && game.code !== "Coming Soon!") {
-                            navigator.clipboard.writeText(game.code);
-                          }
-                        }}
+                        className="text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors flex items-center gap-1.5"
+                        onClick={() => handleCopyCode(game.code, `september-active-${idx}`)}
                         title="Copy code"
                       >
-                        <Copy className="w-4 h-4" />
+                        {copiedCodeId === `september-active-${idx}` ? (
+                          <>
+                            <span className="text-xs text-green-600 dark:text-green-400 font-medium">Copied!</span>
+                            <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
+                          </>
+                        ) : (
+                          <Copy className="w-4 h-4" />
+                        )}
                       </button>
                     </div>
                   </div>

@@ -149,9 +149,15 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
 
   const displayedBadges = filteredBadges.slice(0, visibleCount);
   const remainingCount = filteredBadges.length - visibleCount;
+  
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const handleCopy = (text: string) => {
+  const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => {
+      setCopiedId(null);
+    }, 2000);
   };
 
   const getSlug = (name: string) => {
@@ -228,7 +234,7 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
         <>
           <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <AnimatePresence mode="popLayout">
-              {displayedBadges.map((badge) => (
+              {displayedBadges.map((badge, index) => (
                 <motion.div 
                   layout
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -287,8 +293,15 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
                     {badge.type === 'GAME' ? (
                       <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-full text-xs text-slate-500 dark:text-slate-400">
                         <span className="truncate max-w-[100px]">{getSlug(badge.name)}</span>
-                        <button onClick={() => handleCopy(getSlug(badge.name))} className="hover:text-slate-800 dark:hover:text-white transition-colors">
-                          <Copy className="w-3.5 h-3.5" />
+                        <button onClick={() => handleCopy(getSlug(badge.name), `badge-${index}`)} className="hover:text-slate-800 dark:hover:text-white transition-colors flex items-center gap-1">
+                          {copiedId === `badge-${index}` ? (
+                            <>
+                              <span className="text-[10px] text-green-600 dark:text-green-400 font-bold">Copied!</span>
+                              <CheckCircle2 className="w-3.5 h-3.5 text-green-600 dark:text-green-400" />
+                            </>
+                          ) : (
+                            <Copy className="w-3.5 h-3.5" />
+                          )}
                         </button>
                       </div>
                     ) : (

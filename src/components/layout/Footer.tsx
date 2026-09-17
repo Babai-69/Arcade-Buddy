@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MessageCircle, Send, BookOpen, Star, HelpCircle, Gamepad2, Cloud, Shield, Instagram, Github, Linkedin, Twitter, Users, User, UserCheck } from 'lucide-react';
+import { MessageCircle, Send, BookOpen, Star, HelpCircle, Gamepad2, Cloud, Shield, Instagram, Github, Linkedin, Twitter, Users, User, UserCheck, Youtube } from 'lucide-react';
 import footerLogo from '../../assets/images/regenerated_image_1782574219934.png';
 
 export function Footer() {
@@ -91,6 +91,7 @@ export function Footer() {
               <li><Link to="/syllabus" className="flex items-center gap-2 hover:text-[#4285F4]"><BookOpen className="w-4 h-4 text-[#34A853]"/> Syllabus</Link></li>
               <li><a href="/facilitator#point-system" className="flex items-center gap-2 hover:text-[#4285F4]"><Star className="w-4 h-4 text-[#EA4335]"/> Points System</a></li>
               <li><Link to="/faq" className="flex items-center gap-2 hover:text-[#4285F4]"><HelpCircle className="w-4 h-4 text-[#4285F4]"/> FAQs</Link></li>
+              <li><Link to="/resources" className="flex items-center gap-2 hover:text-[#4285F4]"><span className="w-4 h-4 flex items-center justify-center text-sm">💡</span> Resources</Link></li>
               <li><a href="https://go.cloudskillsboost.google/arcade" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#4285F4]"><Gamepad2 className="w-4 h-4 text-[#34A853]"/> Official Arcade</a></li>
               <li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#4285F4]"><Shield className="w-4 h-4 text-[#EA4335]"/> Privacy Policy</a></li>
             </ul>
@@ -117,6 +118,11 @@ export function Footer() {
                 <Link to="/contact-us" className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-[#FBBC04] transition-colors">
                   <span>📧</span> Contact Us
                 </Link>
+              </li>
+              <li>
+                <a href="https://www.youtube.com/@ARCADEWITHUS_We" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-[#FF0000] transition-colors">
+                  <Youtube className="h-4 w-4 text-[#FF0000]" /> YouTube Guide
+                </a>
               </li>
             </ul>
           </div>
