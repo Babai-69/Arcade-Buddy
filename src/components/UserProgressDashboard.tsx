@@ -19,6 +19,7 @@ import { MilestoneOverview } from './MilestoneOverview';
 import { MilestoneProgress } from './MilestoneProgress';
 import { BonusMilestoneTracker } from './BonusMilestoneTracker';
 import { WeeklyProgress } from './WeeklyProgress';
+import { showNotification } from './ArcadeNotification';
 
 export function UserProgressDashboard() {
   const [user, setUser] = useState<any>(null);
@@ -120,8 +121,8 @@ export function UserProgressDashboard() {
       if (initialUrl) {
         setProfileUrl(initialUrl);
         setIsEditingUrl(false);
-        // If we have local storage data for this exact URL, use it temporarily
-        if (initialUrl === savedUrl && savedData) {
+        const hasOfflineCache = initialUrl === savedUrl && savedData;
+        if (hasOfflineCache) {
           try {
             setData(JSON.parse(savedData));
           } catch (e) {
@@ -129,8 +130,8 @@ export function UserProgressDashboard() {
           }
         }
         
-        // Auto-fetch fresh data
-        fetchProgress(undefined, initialUrl);
+        // Auto-fetch in background without wiping the screen if offline preview is available
+        fetchProgress(undefined, initialUrl, !!hasOfflineCache);
       } else {
         setIsEditingUrl(true);
       }
@@ -141,12 +142,20 @@ export function UserProgressDashboard() {
     return () => { isMounted = false; };
   }, [user]);
 
-  const fetchProgress = async (e?: React.FormEvent, urlOverride?: string) => {
+  const fetchProgress = async (e?: React.FormEvent, urlOverride?: string, isBackground = false) => {
     if (e) e.preventDefault();
     const targetUrl = urlOverride || profileUrl;
     if (!targetUrl) return;
 
-    setLoading(true);
+    if (!isBackground) {
+      setLoading(true);
+    } else {
+      showNotification({
+        id: 'user-progress-sync',
+        message: 'Updating Profile Data...',
+        type: 'loading',
+      });
+    }
     setError('');
     setIsEditingUrl(false);
     
@@ -156,11 +165,7 @@ export function UserProgressDashboard() {
         await setDoc(userRef, { profileUrl: targetUrl }, { merge: true });
       }
 
-      // Create date objects taking timezone into account or pass directly
-      // appending Z or offset if needed, but since server expects ISO we can just pass
       let queryStr = `url=${encodeURIComponent(targetUrl)}`;
-      // Removed frontend startDate
-      // Removed frontend endDate
       
       const res = await fetch(`/api/calculator?${queryStr}`);
       if (!res.ok) throw new Error("Could not fetch profile. Ensure your profile is public.");
@@ -169,6 +174,14 @@ export function UserProgressDashboard() {
       if (result.error) throw new Error(result.error);
       
       setData(result);
+      if (isBackground) {
+        showNotification({
+          id: 'user-progress-sync',
+          message: 'Profile Data Updated!',
+          type: 'success',
+          duration: 2600,
+        });
+      }
       
       // Save progress to Firebase so admins can see it
       if (user) {
@@ -199,8 +212,17 @@ export function UserProgressDashboard() {
         return newRecent;
       });
     } catch (err: any) {
-      setError(err.message || 'Error fetching progress');
-      setIsEditingUrl(true);
+      if (isBackground) {
+        showNotification({
+          id: 'user-progress-sync',
+          message: 'Showing Offline Preview',
+          type: 'info',
+          duration: 2400,
+        });
+      } else {
+        setError(err.message || 'Error fetching progress');
+        setIsEditingUrl(true);
+      }
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar } from 'lucide-react';
+import { Calendar, AlertCircle } from 'lucide-react';
 
 export function FacilitatorDetails() {
   return (
@@ -12,8 +12,14 @@ export function FacilitatorDetails() {
       </p>
       
       <div className="flex mb-8">
-        <a href="https://arcade-buddy.onrender.com/#register" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors">
-          Enrollments are closed
+        <a
+          href="https://arcade-buddy.onrender.com/#register"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-1.5 md:px-5 md:py-2 rounded-full bg-[#FFF0F2] dark:bg-rose-950/40 border border-[#FFCCD5] dark:border-rose-900/60 text-[#C50036] dark:text-rose-400 font-bold text-sm md:text-base shadow-sm transition-opacity hover:opacity-90 whitespace-nowrap max-w-full overflow-hidden text-ellipsis"
+        >
+          <AlertCircle className="w-4 h-4 md:w-4.5 md:h-4.5 text-[#C50036] dark:text-rose-400 flex-shrink-0" strokeWidth={2.2} />
+          <span className="whitespace-nowrap">Program Registrations Officially Closed</span>
         </a>
       </div>
       

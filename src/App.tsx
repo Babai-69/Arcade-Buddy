@@ -47,6 +47,7 @@ import { RoadmapPage } from './pages/RoadmapPage';
 import { DisclaimerPage } from './pages/DisclaimerPage';
 import { WelcomeTour } from './components/WelcomeTour';
 import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
+import { ArcadeNotificationContainer } from './components/ArcadeNotification';
 
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>(mockParticipants);
@@ -63,6 +64,7 @@ export default function App() {
       <ThreeBackground />
       <Navbar />
       <WelcomeTour />
+      <ArcadeNotificationContainer position="bottom-right" />
       
       <main className="flex-grow pt-16">
         <AccessGuard>

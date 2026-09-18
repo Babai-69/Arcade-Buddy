@@ -1,20 +1,44 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RefreshCw, Zap, CheckCircle2, CloudOff } from 'lucide-react';
 import { PosterModal } from '../components/PosterModal';
 import { DashboardSkeleton } from '../components/DashboardSkeleton';
 import { ProgramInformation } from '../components/ProgramInformation';
 import { Milestones } from '../components/Milestones';
+import { showNotification } from '../components/ArcadeNotification';
 
 export function DashboardPage({ participants }: { participants: any[] }) {
   const [user, setUser] = useState<any>(null);
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+
+  // 1. Instantly read offline preview from localStorage (0ms delay)
+  const [data, setData] = useState<any>(() => {
+    try {
+      const saved = localStorage.getItem('arcadeProgressData');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const [isOfflinePreview, setIsOfflinePreview] = useState<boolean>(() => {
+    return !!localStorage.getItem('arcadeProgressData');
+  });
+
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(() => {
+    return localStorage.getItem('arcadeLastSyncTime') || null;
+  });
+
+  // If cached data is present, NEVER block with skeleton loader!
+  const [loading, setLoading] = useState<boolean>(() => {
+    return !localStorage.getItem('arcadeProgressData');
+  });
+
   const [spots, setSpots] = useState<any>({
     trooper: { spotsLeft: 6000, total: 6000 },
     ranger: { spotsLeft: 4000, total: 4000 },
@@ -22,43 +46,130 @@ export function DashboardPage({ participants }: { participants: any[] }) {
     legend: { spotsLeft: 2500, total: 2500 },
   });
 
+  const syncInProgressRef = useRef(false);
+
+  // Auto-sync in background without blocking user
+  const syncProfileData = async (url: string, force = false) => {
+    if (!url || syncInProgressRef.current) return;
+
+    // Check if user session has already performed the sync
+    const alreadySyncedInSession = sessionStorage.getItem('arcadeSessionDashboardSynced') === 'true';
+    if (!force && alreadySyncedInSession) {
+      // 2nd time onwards in this browser session: show offline preview with 0 waiting!
+      return;
+    }
+
+    syncInProgressRef.current = true;
+    setIsSyncing(true);
+
+    // Show retro arcade notification in right-side corner directly above chatbot
+    showNotification({
+      id: 'profile-sync',
+      message: 'Updating Profile Data...',
+      type: 'loading',
+    });
+
+    try {
+      const res = await fetch(`/api/calculator?url=${encodeURIComponent(url)}`);
+      if (res.ok) {
+        const result = await res.json();
+        if (!result.error && (result.badges || result.arcadePoints !== undefined)) {
+          setData(result);
+          setIsOfflinePreview(false);
+          localStorage.setItem('arcadeProgressData', JSON.stringify(result));
+          localStorage.setItem('arcadeProfileUrl', url);
+          const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          localStorage.setItem('arcadeLastSyncTime', timeStr);
+          setLastSyncTime(timeStr);
+          sessionStorage.setItem('arcadeSessionDashboardSynced', 'true');
+
+          // Retro success notification
+          showNotification({
+            id: 'profile-sync',
+            message: 'Profile Data Updated!',
+            type: 'success',
+            duration: 2600,
+          });
+        } else {
+          showNotification({
+            id: 'profile-sync',
+            message: 'Showing Offline Preview',
+            type: 'info',
+            duration: 2400,
+          });
+        }
+      } else {
+        showNotification({
+          id: 'profile-sync',
+          message: 'Showing Offline Preview',
+          type: 'info',
+          duration: 2400,
+        });
+      }
+    } catch (e) {
+      showNotification({
+        id: 'profile-sync',
+        message: 'Showing Offline Preview',
+        type: 'info',
+        duration: 2400,
+      });
+    } finally {
+      syncInProgressRef.current = false;
+      setIsSyncing(false);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetch('/api/arcade-spots').then(r => r.json()).then(d => setSpots(d)).catch(() => {});
+
+    const savedUrl = localStorage.getItem('arcadeProfileUrl') || (data && data.profileUrl);
+    const sessionSynced = sessionStorage.getItem('arcadeSessionDashboardSynced') === 'true';
+
+    // If we have saved URL and session hasn't synced yet, start background update immediately
+    if (savedUrl && !sessionSynced) {
+      syncProfileData(savedUrl, false);
+    }
     
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+      let targetUrl = savedUrl;
+
       if (currentUser) {
         try {
           const userRef = doc(db, 'users', currentUser.uid);
           const userSnap = await getDoc(userRef);
           if (userSnap.exists() && userSnap.data().profileUrl) {
-            const url = userSnap.data().profileUrl;
-            fetchProgress(url);
-          } else {
-             const savedData = localStorage.getItem('arcadeProgressData');
-             if(savedData) setData(JSON.parse(savedData));
-             setLoading(false);
+            targetUrl = userSnap.data().profileUrl;
           }
-        } catch(e) { setLoading(false); }
+        } catch(e) {
+          console.error(e);
+        }
+      }
+
+      if (targetUrl) {
+        if (!data) {
+          // Brand new visitor with no cache: load once
+          setLoading(true);
+          syncProfileData(targetUrl, true);
+        } else if (!sessionSynced) {
+          // Has offline preview: auto-update in background silently
+          syncProfileData(targetUrl, false);
+        } else {
+          setLoading(false);
+        }
       } else {
-        const savedData = localStorage.getItem('arcadeProgressData');
-        if(savedData) setData(JSON.parse(savedData));
         setLoading(false);
       }
     });
     return () => unsubscribe();
   }, []);
 
-  const fetchProgress = async (url: string) => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(url)}`);
-      if (res.ok) {
-        const result = await res.json();
-        if (!result.error) setData(result);
-      }
-    } catch(e) {}
-    setLoading(false);
+  const handleManualSync = () => {
+    const targetUrl = data?.profileUrl || localStorage.getItem('arcadeProfileUrl');
+    if (targetUrl) {
+      syncProfileData(targetUrl, true);
+    }
   };
 
   if (loading) {
@@ -76,10 +187,36 @@ export function DashboardPage({ participants }: { participants: any[] }) {
     );
   }
 
-  return <DashboardContent data={data} spots={spots} participants={participants} />;
+  return (
+    <DashboardContent
+      data={data}
+      spots={spots}
+      participants={participants}
+      isOfflinePreview={isOfflinePreview}
+      isSyncing={isSyncing}
+      lastSyncTime={lastSyncTime}
+      onManualSync={handleManualSync}
+    />
+  );
 }
 
-function DashboardContent({ data, spots, participants }: { data: any, spots: any, participants: any[] }) {
+function DashboardContent({
+  data,
+  spots,
+  participants,
+  isOfflinePreview,
+  isSyncing,
+  lastSyncTime,
+  onManualSync,
+}: {
+  data: any;
+  spots: any;
+  participants: any[];
+  isOfflinePreview?: boolean;
+  isSyncing?: boolean;
+  lastSyncTime?: string | null;
+  onManualSync?: () => void;
+}) {
   const [isEnrolled, setIsEnrolled] = useState(true);
   const [isPosterOpen, setIsPosterOpen] = useState(false);
 
@@ -299,6 +436,76 @@ function DashboardContent({ data, spots, participants }: { data: any, spots: any
             <MilestoneCard name="Milestone 2" bonus={15} gamesReq={8} skillsReq={34} games={gameBadgesCount} skills={skillBadgesCount} color="purple" />
             <MilestoneCard name="Milestone 3" bonus={25} gamesReq={10} skillsReq={50} games={gameBadgesCount} skills={skillBadgesCount} color="green" />
             <MilestoneCard name="Ultimate" bonus={35} gamesReq={12} skillsReq={66} games={gameBadgesCount} skills={skillBadgesCount} color="orange" />
+          </div>
+        </div>
+
+        {/* Offline Preview / Fast Session Status Bar - Below Facilitator Milestones */}
+        <div
+          id="dashboard-sync-status-bar"
+          className="bg-white dark:bg-slate-800 rounded-2xl p-4 md:px-6 md:py-3.5 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-wrap items-center justify-between gap-4 transition-all duration-200"
+        >
+          <div className="flex items-center gap-3">
+            {isSyncing ? (
+              <>
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-amber-500"></span>
+                </span>
+                <div>
+                  <div className="font-bold text-amber-600 dark:text-amber-400 flex items-center gap-1.5 text-xs md:text-sm">
+                    <Zap className="w-4 h-4 animate-pulse text-amber-500" />
+                    Auto-updating profile progress in background...
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Checking Google Cloud Skills Boost for newly earned badges
+                  </div>
+                </div>
+              </>
+            ) : isOfflinePreview ? (
+              <>
+                <span className="flex h-3 w-3 rounded-full bg-blue-500 ring-4 ring-blue-500/20" />
+                <div>
+                  <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs md:text-sm flex items-center gap-2">
+                    <span>Showing <strong className="text-blue-600 dark:text-blue-400 font-bold">Offline Preview</strong></span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300 border border-blue-200 dark:border-blue-700/50">
+                      FAST LOAD
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                    Cached session snapshot {lastSyncTime ? `from ${lastSyncTime}` : ''} • Click Sync Now to fetch live updates
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <span className="flex h-3 w-3 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
+                <div>
+                  <div className="font-semibold text-slate-800 dark:text-slate-200 text-xs md:text-sm flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    <span>Live Profile Data Synced</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50">
+                      LIVE
+                    </span>
+                  </div>
+                  <div className="text-[11px] text-slate-500 dark:text-slate-400">
+                    All badges and points are up to date {lastSyncTime ? `(Last sync: ${lastSyncTime})` : ''}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              id="dashboard-manual-sync-btn"
+              onClick={onManualSync}
+              disabled={isSyncing}
+              className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-black text-white dark:bg-slate-700 dark:hover:bg-slate-600 text-xs md:text-sm font-bold rounded-xl shadow-sm transition-all transform active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Refresh profile progress from Skills Boost"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-amber-400' : ''}`} />
+              <span>{isSyncing ? 'Syncing...' : 'Sync Now'}</span>
+            </button>
           </div>
         </div>
         

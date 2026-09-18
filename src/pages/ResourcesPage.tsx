@@ -3,7 +3,20 @@ import { ArrowRight, X, Compass } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 
-const resources = [
+interface ResourceItem {
+  id?: string;
+  category: string;
+  title: string;
+  description: string;
+  linkText: string;
+  link: string;
+  internal: boolean;
+  image: string;
+  imageDark?: string;
+  bg: string;
+}
+
+const resources: ResourceItem[] = [
   {
     category: "GUIDE",
     title: "Quick-Start Guide 2026",
