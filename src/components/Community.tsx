@@ -3,7 +3,7 @@ import { Send, MessageCircle } from 'lucide-react';
 
 export function Community() {
   return (
-    <section className="py-8 bg-slate-900 border-y border-slate-800 text-white">
+    <section className="py-12 sm:py-16 bg-slate-900 border-y border-slate-800 text-white">
       <div className="max-w-4xl mx-auto px-4 text-center">
         <h2 className="text-4xl font-display font-bold mb-4 flex items-center justify-center gap-3">
           🤝 Join Our Community

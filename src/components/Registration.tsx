@@ -13,9 +13,9 @@ export function Registration() {
   };
 
   return (
-    <section id="register" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Join the Program Now</h2>
+    <section id="register" className="pt-2 pb-16 sm:pt-4 sm:pb-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center mb-10 sm:mb-12">
+        <h2 className="text-3xl md:text-4xl font-display font-bold mb-3">Join the Program Now</h2>
         <p className="text-slate-500 dark:text-slate-400">Registrations are already closed. See you Soon.</p>
       </div>
 

@@ -8,7 +8,6 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { ChevronLeft, ChevronRight, RefreshCw, Zap, CheckCircle2, CloudOff } from 'lucide-react';
 import { PosterModal } from '../components/PosterModal';
 import { DashboardSkeleton } from '../components/DashboardSkeleton';
-import { ProgramInformation } from '../components/ProgramInformation';
 import { Milestones } from '../components/Milestones';
 import { showNotification } from '../components/ArcadeNotification';
 
@@ -265,7 +264,6 @@ function DashboardContent({
   return (
     <div className="min-h-screen bg-[#F0F4F9] dark:bg-[#0B0F19] pt-24 pb-20 px-4 font-sans">
       <div className="max-w-7xl mx-auto space-y-6">
-        <ProgramInformation />
         <Milestones />
 
         
