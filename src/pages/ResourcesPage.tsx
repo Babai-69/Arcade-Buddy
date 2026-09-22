@@ -77,7 +77,7 @@ const resources: ResourceItem[] = [
     linkText: "View Gallery ➡",
     link: "/resources/swag-showcase-page",
     internal: true,
-    image: "https://d2yds90mtvelsl.cloudfront.net/original/3X/c/9/c9510d1f0ec87f932f291138a04ba9e0d6a5722d.gif",
+    image: "https://d2yds90mtvelsl.cloudfront.net/original/4X/0/b/5/0b54f368c9a6fc241e212b7aad7fbf7a548ce2ed.gif",
     bg: "bg-green-50 dark:bg-slate-800",
   },
   {
@@ -127,7 +127,7 @@ const resources: ResourceItem[] = [
     linkText: "CHECK IT ➡",
     link: "/resources/swag-distribution-system",
     internal: true,
-    image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782320743/image_nnuehs.png",
+    image: "https://d2yds90mtvelsl.cloudfront.net/original/3X/c/9/c9510d1f0ec87f932f291138a04ba9e0d6a5722d.gif",
     bg: "bg-purple-50 dark:bg-slate-800",
   },
   {
