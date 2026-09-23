@@ -9,6 +9,7 @@ import { ChevronLeft, ChevronRight, RefreshCw, Zap, CheckCircle2, CloudOff } fro
 import { PosterModal } from '../components/PosterModal';
 import { DashboardSkeleton } from '../components/DashboardSkeleton';
 import { Milestones } from '../components/Milestones';
+import { ArcadeWelcomeHero } from '../components/ArcadeWelcomeHero';
 import { showNotification } from '../components/ArcadeNotification';
 
 export function DashboardPage({ participants }: { participants: any[] }) {
@@ -264,9 +265,15 @@ function DashboardContent({
   return (
     <div className="min-h-screen bg-[#F0F4F9] dark:bg-[#0B0F19] pt-24 pb-20 px-4 font-sans">
       <div className="max-w-7xl mx-auto space-y-6">
-        <Milestones />
-
         
+        {/* Retro Arcade Zine Welcome Hero */}
+        <ArcadeWelcomeHero
+          data={data}
+          totalPoints={totalPoints}
+          currentTier={currentTier}
+          isEnrolled={isEnrolled}
+        />
+
         {/* Top Row: Profile (Left) + Stats (Right) */}
         <div className="flex flex-col lg:flex-row gap-6">
           
@@ -506,14 +513,19 @@ function DashboardContent({
             </button>
           </div>
         </div>
+
+        {/* Swag Milestones (Tier Spots & Rewards) - Positioned at bottom below status bar */}
+        <div className="pt-2">
+          <Milestones />
+        </div>
         
-            <PosterModal 
-        isOpen={isPosterOpen} 
-        onClose={() => setIsPosterOpen(false)} 
-        name={data.name || 'Student'} 
-        points={totalPoints} 
-        tier={currentTier} 
-      />
+        <PosterModal 
+          isOpen={isPosterOpen} 
+          onClose={() => setIsPosterOpen(false)} 
+          name={data.name || 'Student'} 
+          points={totalPoints} 
+          tier={currentTier} 
+        />
     </div>
   </div>
   );
