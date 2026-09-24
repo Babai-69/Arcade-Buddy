@@ -92,10 +92,10 @@ export function Footer() {
               <li><Link to="/facilitator" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><BookOpen className="w-4 h-4 text-[#4285F4] flex-shrink-0"/> About Program</Link></li>
               <li><Link to="/leaderboard" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><Star className="w-4 h-4 text-[#FBBC04] flex-shrink-0"/> Leaderboard</Link></li>
               <li><Link to="/syllabus" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><BookOpen className="w-4 h-4 text-[#34A853] flex-shrink-0"/> Syllabus</Link></li>
-              <li><a href="/facilitator#point-system" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><Star className="w-4 h-4 text-[#EA4335] flex-shrink-0"/> Points System</a></li>
+              <li><a href="/resources/point-system" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><Star className="w-4 h-4 text-[#EA4335] flex-shrink-0"/> Points System</a></li>
               <li><Link to="/faq" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><HelpCircle className="w-4 h-4 text-[#4285F4] flex-shrink-0"/> FAQs</Link></li>
               <li><Link to="/resources" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><span className="w-4 h-4 flex items-center justify-center text-sm flex-shrink-0">💡</span> Resources</Link></li>
-              <li><a href="https://go.cloudskillsboost.google/arcade" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><Gamepad2 className="w-4 h-4 text-[#34A853] flex-shrink-0"/> Official Arcade</a></li>
+              <li><a href="/swags" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><Gamepad2 className="w-4 h-4 text-[#34A853] flex-shrink-0"/> Swags</a></li>
               <li><a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-[#4285F4] whitespace-nowrap transition-colors"><Shield className="w-4 h-4 text-[#EA4335] flex-shrink-0"/> Privacy Policy</a></li>
             </ul>
           </div>

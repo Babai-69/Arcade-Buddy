@@ -113,32 +113,6 @@ export function ArcadeWelcomeHero({
       </div>
 
       <div className="relative z-10 max-w-5xl">
-        {/* Top Row: Eyebrow Stack (Left) + Status Badges (Right) */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3.5 mb-6 pr-16 sm:pr-20">
-          {/* 3-line stacked eyebrow label */}
-          <div className="flex flex-col text-[10px] sm:text-[11px] font-['Archivo_Black',sans-serif] tracking-[2.5px] leading-tight text-[var(--arcade-hero-muted)] uppercase">
-            <span>RULE</span>
-            <span>YOUR</span>
-            <span className="text-[var(--arcade-hero-cyan)]">RANK</span>
-          </div>
-
-          {/* Pill Badges with Thin Border and Icons */}
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wider border border-[var(--arcade-hero-border)] bg-black/5 dark:bg-white/5 text-[var(--arcade-hero-cyan)] shadow-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[var(--arcade-hero-cyan)] animate-pulse" />
-              <span>⚡ ACTIVE</span>
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wider border border-[var(--arcade-hero-border)] bg-black/5 dark:bg-white/5 text-[var(--arcade-hero-magenta)] shadow-sm">
-              <span>🔥 {streakDays}D STREAK</span>
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-bold tracking-wider border border-[var(--arcade-hero-border)] bg-black/5 dark:bg-white/5 text-[var(--arcade-hero-yellow)] shadow-sm">
-              <span>🎮 {isEnrolled ? 'ENROLLED' : 'NOT ENROLLED'}</span>
-            </div>
-          </div>
-        </div>
-
         {/* Huge Headline in Archivo Black with Neon Accent & Outlined Stroke Effect */}
         <div className="relative inline-block mb-2">
           <h1 className="font-['Archivo_Black',sans-serif] text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight leading-[0.92] text-[var(--arcade-hero-text)]">

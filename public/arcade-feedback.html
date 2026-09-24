@@ -50,7 +50,8 @@
     transition:background .3s ease, color .3s ease;
   }
   @media (prefers-reduced-motion: reduce){
-    *{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+    *:not(.pop-particle){animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+    .pop-particle{animation-duration:0.8s !important;}
   }
 
   .grid-floor{
@@ -318,18 +319,20 @@
 
   /* ---- LEVEL 3: see you next year ---- */
   .lvl3-wrap{ position:relative; text-align:center; padding:80px 20px; overflow:hidden; border-radius:24px;
-    background:var(--card-bg); border:1px solid var(--card-border); }
+    background:var(--card-bg); border:1px solid var(--card-border); transition:border-color .3s ease, box-shadow .3s ease; }
+  .lvl3-wrap.near{ border-color:rgba(139,92,246,.5); box-shadow:0 0 40px rgba(139,92,246,.2); }
   .lvl3-text{
     font-family:var(--pixel); font-size:clamp(20px,4vw,36px); line-height:1.7; display:inline-block;
-    cursor:pointer; user-select:none; position:relative; transition:text-shadow .2s ease, transform .2s ease;
+    cursor:pointer; user-select:none; position:relative; transition:text-shadow .2s ease, transform .2s ease, filter .2s ease;
     background:linear-gradient(90deg, var(--blue), var(--violet), var(--red), var(--yellow));
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  .lvl3-text.glow{ filter:drop-shadow(0 0 18px rgba(139,92,246,.65)); transform:scale(1.03); }
-  .pop-particle{ position:absolute; font-size:22px; pointer-events:none; z-index:5; animation:popFloat 1s ease-out forwards; }
+  .lvl3-text.glow{ filter:drop-shadow(0 0 20px rgba(139,92,246,.8)) drop-shadow(0 0 35px rgba(255,45,149,.6)); transform:scale(1.05); }
+  .pop-particle{ position:absolute; font-size:28px; pointer-events:none; z-index:50; user-select:none; animation:popFloat 1.2s cubic-bezier(0.16,1,0.3,1) forwards; filter:drop-shadow(0 2px 10px rgba(255,45,149,.5)); }
   @keyframes popFloat{
-    0%{ opacity:1; transform:translate(0,0) scale(.6) rotate(0deg); }
-    100%{ opacity:0; transform:translate(var(--dx), -70px) scale(1.3) rotate(var(--dr)); }
+    0%{ opacity:1; transform:translate(-50%, -50%) scale(.4) rotate(0deg); }
+    35%{ opacity:1; transform:translate(calc(-50% + var(--dx)*.5), calc(-50% - 40px)) scale(1.35) rotate(calc(var(--dr)*.5)); }
+    100%{ opacity:0; transform:translate(calc(-50% + var(--dx)), calc(-50% - 100px)) scale(1.1) rotate(var(--dr)); }
   }
 
   footer{ text-align:center; padding:50px 20px 60px; color:var(--ink-dim); font-size:13px; border-top:1px solid var(--card-border); margin-top:40px; }
@@ -697,7 +700,10 @@
     requestAnimationFrame(step);
   })();
 
-  document.getElementById('creditNum').textContent = String(Math.floor(Math.random()*9)+1).padStart(2,'0');
+  const creditEl = document.getElementById('creditNum');
+  if (creditEl) {
+    creditEl.textContent = String(Math.floor(Math.random()*9)+1).padStart(2,'0');
+  }
 
   // ---- hero emoji: confused/random until feedback given, then reflects sentiment ----
   const heroEmoji = document.getElementById('heroEmoji');
@@ -899,50 +905,131 @@
     window.addEventListener('message', listener);
   });
 
-  // ---- LEVEL 3: hover glow + floating hearts/thumbs ----
+  // ---- LEVEL 3: proximity/hover glow + floating hearts/exciting emojis ----
   const lvl3Text = document.getElementById('lvl3Text');
   const lvl3Wrap = document.getElementById('lvl3Wrap');
-  const popEmojis = ['❤️','👍','🎉','✨'];
+  const popEmojis = ['❤️', '💖', '💝', '💕', '🔥', '🎉', '✨', '⭐', '👾', '🕹️', '🥳', '🚀', '💫', '💯', '👑', '🤩'];
   let popTimer = null;
-  function spawnPop(x, y){
+  let lastSpawnTime = 0;
+  let lastX = null, lastY = null;
+
+  function spawnPop(x, y, scale = 1){
+    if (!lvl3Wrap) return;
     const el = document.createElement('div');
     el.className = 'pop-particle';
-    el.textContent = popEmojis[Math.floor(Math.random()*popEmojis.length)];
+    el.textContent = popEmojis[Math.floor(Math.random() * popEmojis.length)];
     el.style.left = x + 'px';
     el.style.top = y + 'px';
-    el.style.setProperty('--dx', (Math.random()*80-40) + 'px');
-    el.style.setProperty('--dr', (Math.random()*60-30) + 'deg');
+    el.style.setProperty('--dx', (Math.random() * 90 - 45) + 'px');
+    el.style.setProperty('--dr', (Math.random() * 60 - 30) + 'deg');
+    if (scale !== 1) {
+      el.style.fontSize = (28 * scale) + 'px';
+    }
     lvl3Wrap.appendChild(el);
-    setTimeout(()=> el.remove(), 1000);
+    setTimeout(() => el.remove(), 1200);
   }
-  function startPops(e){
-    lvl3Text.classList.add('glow');
-    if(popTimer) return;
-    const rect = ()=> lvl3Wrap.getBoundingClientRect();
-    popTimer = setInterval(()=>{
-      const r = rect();
-      const x = (lastX ?? r.width/2);
-      const y = (lastY ?? r.height/2);
-      spawnPop(x, y);
-    }, 180);
-  }
-  let lastX=null, lastY=null;
-  function trackPos(e){
+
+  function burstPops(count = 14, originX = null, originY = null){
+    if (!lvl3Wrap) return;
     const r = lvl3Wrap.getBoundingClientRect();
-    lastX = e.clientX - r.left;
-    lastY = e.clientY - r.top;
+    const cx = originX !== null ? originX : r.width / 2;
+    const cy = originY !== null ? originY : r.height / 2;
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const ox = cx + (Math.random() * 80 - 40);
+        const oy = cy + (Math.random() * 40 - 20);
+        spawnPop(ox, oy, 1 + Math.random() * 0.4);
+      }, i * 35);
+    }
   }
+
+  function checkProximity(clientX, clientY){
+    if (!lvl3Text || !lvl3Wrap) return;
+    const rText = lvl3Text.getBoundingClientRect();
+    const textCenterX = rText.left + rText.width / 2;
+    const textCenterY = rText.top + rText.height / 2;
+    const dist = Math.hypot(clientX - textCenterX, clientY - textCenterY);
+
+    const rWrap = lvl3Wrap.getBoundingClientRect();
+    const isInsideWrap = (
+      clientX >= rWrap.left && clientX <= rWrap.right &&
+      clientY >= rWrap.top && clientY <= rWrap.bottom
+    );
+
+    // If within 280px of text or inside wrap
+    if (dist < 280 || isInsideWrap) {
+      lvl3Text.classList.add('glow');
+      lvl3Wrap.classList.add('near');
+
+      lastX = clientX - rWrap.left;
+      lastY = clientY - rWrap.top;
+
+      // Throttle mousemove particle spawns (every 65ms)
+      const now = Date.now();
+      if (now - lastSpawnTime > 65) {
+        lastSpawnTime = now;
+        spawnPop(lastX, lastY);
+      }
+
+      // Continuous trickle while cursor stays nearby
+      if (!popTimer) {
+        popTimer = setInterval(() => {
+          const wr = lvl3Wrap.getBoundingClientRect();
+          const tr = lvl3Text.getBoundingClientRect();
+          const defaultX = (tr.left + tr.width / 2) - wr.left + (Math.random() * 90 - 45);
+          const defaultY = (tr.top + tr.height / 2) - wr.top + (Math.random() * 30 - 15);
+          const px = (lastX !== null && lastX > 0 && lastX < wr.width) ? lastX : defaultX;
+          const py = (lastY !== null && lastY > 0 && lastY < wr.height) ? lastY : defaultY;
+          spawnPop(px, py);
+        }, 130);
+      }
+    } else {
+      stopPops();
+    }
+  }
+
   function stopPops(){
-    lvl3Text.classList.remove('glow');
-    clearInterval(popTimer);
-    popTimer = null;
+    if (lvl3Text) lvl3Text.classList.remove('glow');
+    if (lvl3Wrap) lvl3Wrap.classList.remove('near');
+    if (popTimer) {
+      clearInterval(popTimer);
+      popTimer = null;
+    }
   }
-  lvl3Text.addEventListener('mouseenter', startPops);
-  lvl3Text.addEventListener('mousemove', trackPos);
-  lvl3Text.addEventListener('mouseleave', stopPops);
-  lvl3Text.addEventListener('touchstart', (e)=>{ trackPos(e.touches[0]); startPops(e); }, {passive:true});
-  lvl3Text.addEventListener('touchmove', (e)=>{ trackPos(e.touches[0]); }, {passive:true});
-  lvl3Text.addEventListener('touchend', stopPops);
+
+  // Window-level mouse tracking detects moving cursor NEAR the text
+  window.addEventListener('mousemove', (e) => {
+    checkProximity(e.clientX, e.clientY);
+  });
+
+  // Direct element interactions
+  if (lvl3Wrap) {
+    lvl3Wrap.addEventListener('mouseleave', stopPops);
+    lvl3Wrap.addEventListener('click', (e) => {
+      const r = lvl3Wrap.getBoundingClientRect();
+      const clickX = e.clientX - r.left;
+      const clickY = e.clientY - r.top;
+      burstPops(16, clickX, clickY);
+      if (typeof fireConfetti === 'function') {
+        fireConfetti(lvl3Text || lvl3Wrap);
+      }
+    });
+
+    // Touch support for mobile devices
+    lvl3Wrap.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      checkProximity(t.clientX, t.clientY);
+      const r = lvl3Wrap.getBoundingClientRect();
+      burstPops(10, t.clientX - r.left, t.clientY - r.top);
+    }, { passive: true });
+
+    lvl3Wrap.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      checkProximity(t.clientX, t.clientY);
+    }, { passive: true });
+
+    lvl3Wrap.addEventListener('touchend', stopPops);
+  }
 
   // ---- confetti ----
   const canvas = document.getElementById('confetti');

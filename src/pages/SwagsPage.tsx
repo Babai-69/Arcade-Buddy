@@ -170,6 +170,21 @@ function SwagCard({ image, name, milestone, color }: any) {
   );
 }
 
+const getTierBadgeColor = (tier: string) => {
+  switch (tier) {
+    case 'Trooper':
+      return 'bg-[#4285F4] text-white';
+    case 'Ranger':
+      return 'bg-[#34A853] text-white';
+    case 'Champion':
+      return 'bg-[#FBBC05] text-slate-900';
+    case 'Legend':
+      return 'bg-[#EA4335] text-white';
+    default:
+      return 'bg-indigo-600 text-white';
+  }
+};
+
 const swagDrops = [
   {
     id: 1,
@@ -182,6 +197,19 @@ const swagDrops = [
       { title: "Total draft block", desc: "High collar, custom Velcro cuffs, and a ribbed elastic hem lock warmth in." },
       { title: "Secure cargo", desc: "Deep zippered hand-warmer pockets keep your essentials safe." },
       { title: "Weightless mobility", desc: "Technical performance without the heavy winter bulk." }
+    ]
+  },
+  {
+    id: 2,
+    name: "The Arcade Backpack",
+    image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1790234352/ChatGPT_Image_Sep_24_2026_12_44_20_PM_iss75e.png",
+    tiers: ["Ranger"],
+    specs: [
+      { title: "Weather-resistant", desc: "Water-resistant polyester protects gear from sudden drizzle and rain." },
+      { title: "Padded laptop sleeve", desc: "Dedicated cushioned sleeve securely fits laptops up to 15 inches." },
+      { title: "All-day comfort", desc: "Ergonomic shoulder straps and ventilated mesh back panel for effortless carry." },
+      { title: "Room for essentials", desc: "Dual zip compartments plus quick-access exterior pocket for daily gear." },
+      { title: "Smart design", desc: "Clean black-and-grey color blocking with subtle Google Cloud branding." }
     ]
   }
 ];
@@ -247,7 +275,7 @@ function SwagDropsSection() {
                  />
                  <div className="absolute top-4 left-4 flex gap-2">
                    {swag.tiers.filter(t => activeTab === 'All Tiers' || t === activeTab).map(t => (
-                     <span key={t} className={`px-2 py-1 text-[10px] font-bold uppercase rounded-full ${t === 'Champion' ? 'bg-[#FBBC05] text-slate-900' : 'bg-[#EA4335] text-white'}`}>
+                     <span key={t} className={`px-2 py-1 text-[10px] font-bold uppercase rounded-full ${getTierBadgeColor(t)}`}>
                        {t}
                      </span>
                    ))}
@@ -327,7 +355,7 @@ function SwagDropsSection() {
                  />
                  <div className="absolute bottom-6 left-6 flex gap-2">
                    {selectedSwag.tiers.filter((t: string) => activeTab === 'All Tiers' || t === activeTab).map((t: string) => (
-                     <span key={t} className={`px-3 py-1 text-xs font-bold uppercase rounded-full shadow-sm ${t === 'Champion' ? 'bg-[#FBBC05] text-slate-900' : 'bg-[#EA4335] text-white'}`}>
+                     <span key={t} className={`px-3 py-1 text-xs font-bold uppercase rounded-full shadow-sm ${getTierBadgeColor(t)}`}>
                        {t}
                      </span>
                    ))}
