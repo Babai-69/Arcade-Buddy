@@ -472,9 +472,21 @@ export function TrueLeaderboardPage() {
           <span className="text-slate-500">
              Showing {filtered.length === 0 ? 0 : (currentPage - 1) * perPage + 1}–{Math.min(currentPage * perPage, filtered.length)} of {filtered.length}
           </span>
-          <div className="flex gap-1">
-             <button disabled={currentPage === 1} onClick={() => setCurrentPage(p => p - 1)} className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Prev</button>
-             <button disabled={currentPage === totalPages || totalPages === 0} onClick={() => setCurrentPage(p => p + 1)} className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Next</button>
+          <div className="flex gap-2">
+             <button
+               disabled={currentPage === 1}
+               onClick={() => setCurrentPage(p => p - 1)}
+               className="btn-press btn-press--sm btn-press--secondary disabled:opacity-40 disabled:cursor-not-allowed"
+             >
+               Prev
+             </button>
+             <button
+               disabled={currentPage === totalPages || totalPages === 0}
+               onClick={() => setCurrentPage(p => p + 1)}
+               className="btn-press btn-press--sm btn-press--secondary disabled:opacity-40 disabled:cursor-not-allowed"
+             >
+               Next
+             </button>
           </div>
         </div>
       </div>
@@ -640,7 +652,7 @@ function PodiumStep({ participant, rank }: { participant: any; rank: number }) {
           whileHover={{ scale: 1.1 }}
           className={`rounded-full overflow-hidden bg-white dark:bg-slate-800 shadow-sm ${isFirst ? 'w-16 h-16 md:w-20 md:h-20' : 'w-12 h-12 md:w-16 md:h-16'} ${avatarBorderClass} mb-2`}
         >
-           <img src={avatarUrl} alt={participant.name} className="w-full h-full object-cover" />
+           <img src={avatarUrl} alt={`${participant.name.trim()}'s leaderboard avatar photo`} className="w-full h-full object-cover" />
         </motion.div>
         
         <h3 className="font-bold text-slate-900 dark:text-white text-[10px] md:text-sm mb-1.5 text-center w-[150%] md:w-[130%] truncate px-1">

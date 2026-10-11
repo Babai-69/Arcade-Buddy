@@ -77,7 +77,7 @@ export const CertificateTemplate = ({ name, qrCodeUrl, milestoneName, innerRef, 
       <div className="flex flex-col items-center w-[250px]">
         <img 
           src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782921503/signature_mqwxcl.png" 
-          alt="Signature" 
+          alt="Abir Dey - Facilitator Signature" 
           className="h-16 object-contain mb-0 mix-blend-multiply" 
           crossOrigin="anonymous"
         />
@@ -90,7 +90,7 @@ export const CertificateTemplate = ({ name, qrCodeUrl, milestoneName, innerRef, 
       <div className="flex flex-col items-center justify-end pb-1">
         <div className="p-1.5 rounded-xl mb-2 bg-white" style={{ backgroundColor: '#ffffff', borderColor: '#e5e7eb', borderWidth: '1px', borderStyle: 'solid', boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)' }}>
           {qrCodeUrl ? (
-            <img src={qrCodeUrl} alt="QR Code" className="w-[96px] h-[96px] rounded-lg" />
+            <img src={qrCodeUrl} alt="Certificate Verification QR Code" className="w-[96px] h-[96px] rounded-lg" />
           ) : (
             <div className="w-[96px] h-[96px] flex items-center justify-center rounded-lg" style={{ backgroundColor: '#f9fafb', borderColor: '#d1d5db', borderWidth: '1px', borderStyle: 'dashed' }}>
               <span className="text-[10px] text-center p-2 leading-tight" style={{ color: '#9ca3af' }}>Enter URL<br/>to generate<br/>QR</span>
@@ -104,7 +104,7 @@ export const CertificateTemplate = ({ name, qrCodeUrl, milestoneName, innerRef, 
       <div className="flex flex-col items-center w-[250px]">
         <img 
           src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1782921368/f50b015a-ad12-4117-bba1-0d21503e0ff5_lz3yej.png" 
-          alt="Signature" 
+          alt="Tripti Gupta - Facilitator Signature" 
           className="h-16 object-contain mb-0 mix-blend-multiply"
           crossOrigin="anonymous" 
         />

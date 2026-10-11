@@ -13,6 +13,7 @@ import { DashboardPage } from './pages/DashboardPage';
 import { CalculatorPage } from './pages/CalculatorPage';
 import { FacilitatorPage } from './pages/FacilitatorPage';
 import { ResourcesPage } from './pages/ResourcesPage';
+import { LearnWithCommunitiesPage } from './pages/LearnWithCommunitiesPage';
 import { PointSystemPage } from './pages/PointSystemPage';
 import { PrizeCounterGuidePage } from './pages/PrizeCounterGuidePage';
 import { GearBadgesPage } from './pages/GearBadgesPage';
@@ -48,6 +49,7 @@ import { DisclaimerPage } from './pages/DisclaimerPage';
 import { WelcomeTour } from './components/WelcomeTour';
 import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
 import { ArcadeNotificationContainer } from './components/ArcadeNotification';
+import { SEO } from './components/SEO';
 
 export default function App() {
   const [participants, setParticipants] = useState<Participant[]>(mockParticipants);
@@ -56,10 +58,9 @@ export default function App() {
   // Initialize global keyboard shortcuts
   useGlobalShortcuts();
 
-
-
   return (
     <div className="min-h-screen flex flex-col font-sans transition-colors duration-300">
+      <SEO />
       <ScrollToTop />
       <ThreeBackground />
       <Navbar />
@@ -78,6 +79,7 @@ export default function App() {
               <Route path="/facilitator" element={<PageTransition><FacilitatorPage /></PageTransition>} />
               <Route path="/syllabus" element={<PageTransition><SyllabusPage /></PageTransition>} />
               <Route path="/resources" element={<PageTransition><ResourcesPage /></PageTransition>} />
+              <Route path="/resources/learn-with-communities" element={<PageTransition><LearnWithCommunitiesPage /></PageTransition>} />
               <Route path="/resources/point-system" element={<PageTransition><PointSystemPage /></PageTransition>} />
               <Route path="/resources/prize-counter-guide" element={<PageTransition><PrizeCounterGuidePage /></PageTransition>} />
               <Route path="/resources/gear-badges" element={<PageTransition><GearBadgesPage /></PageTransition>} />

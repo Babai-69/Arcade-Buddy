@@ -3,8 +3,8 @@ import { AdminProgressDashboard } from '../components/AdminProgressDashboard';
 
 export function AdminProgressPage() {
   return (
-    <main className="flex-grow pt-16">
+    <div className="w-full">
       <AdminProgressDashboard />
-    </main>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ export interface SkillBadge {
 export const SKILL_BADGES: SkillBadge[] = [
   {
     "name": "Implement Sensitive Data Protection on Google Cloud",
-    "link": "#"
+    "link": "https://www.skills.google/course_templates/750"
   },
   {
     "name": "Analyze BigQuery Data in Connected Sheets",

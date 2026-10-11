@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Core Tracking & Dashboards -->
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-home.png</image:loc>
+      <image:title>Arcade Buddy - Google Cloud Arcade Facilitator Hub</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/leaderboard</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-leaderboard.png</image:loc>
+      <image:title>Google Cloud Arcade Live Leaderboard Rankings</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/dashboard</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-dashboard.png</image:loc>
+      <image:title>Participant Dashboard &amp; Milestone Progress</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/calculator</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-calculator.png</image:loc>
+      <image:title>Arcade Points &amp; Swag Calculator</image:title>
+    </image:image>
+  </url>
+
+  <!-- Educational Syllabus & Program Hub -->
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/syllabus</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-syllabus.png</image:loc>
+      <image:title>Arcade Syllabus, Games &amp; Skill Badges Directory</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/facilitator</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-facilitator.png</image:loc>
+      <image:title>Google Cloud Facilitator Hub &amp; Toolkit</image:title>
+    </image:image>
+  </url>
+
+  <!-- Swags & Rewards -->
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/swags</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-swags.png</image:loc>
+      <image:title>Arcade Swag Tiers &amp; Goodies</image:title>
+    </image:image>
+  </url>
+
+  <!-- Knowledge Base & Resources -->
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/resources</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-resources.png</image:loc>
+      <image:title>Arcade Knowledge Base &amp; Guides</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/resources/point-system</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-point-system.png</image:loc>
+      <image:title>Arcade Point System Breakdown Guide</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/resources/prize-counter-guide</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-prize-counter.png</image:loc>
+      <image:title>Prize Counter Claim &amp; Redemption Guide</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/resources/gear-badges</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-gear-badges.png</image:loc>
+      <image:title>GEAR Badges Enrolment Guide</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/resources/swag-showcase-page</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-swags.png</image:loc>
+      <image:title>Past Seasons Swag Collections Showcase</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/resources/bonus-milestone</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-point-system.png</image:loc>
+      <image:title>Facilitator Bonus Milestones Guide</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/resources/daily-lab-limit-guide</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-resources.png</image:loc>
+      <image:title>Skills Boost Daily Lab Limit Quota Guide</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/resources/swag-distribution-system</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-prize-counter.png</image:loc>
+      <image:title>Swag Delivery, Customs and Shipping System</image:title>
+    </image:image>
+  </url>
+
+  <!-- Beginner Onboarding & Credits -->
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/quick-start</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-quickstart.png</image:loc>
+      <image:title>Arcade 5-Step Quick Start Guide</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/free-credits</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-free-credits.png</image:loc>
+      <image:title>Free Google Cloud Skills Boost Credits &amp; Passes</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/public-profile-help</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-profile-help.png</image:loc>
+      <image:title>How to Set Public Profile URL</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/my-progress</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-progress.png</image:loc>
+      <image:title>My Progress Live Profile Audit</image:title>
+    </image:image>
+  </url>
+
+  <!-- Community, Support & Roadmap -->
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/faq</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-faq.png</image:loc>
+      <image:title>Frequently Asked Questions</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/support</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-support.png</image:loc>
+      <image:title>Arcade Help &amp; Support Ticket Desk</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/feedback</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-support.png</image:loc>
+      <image:title>Participant Feedback &amp; Suggestions</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/about</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-about.png</image:loc>
+      <image:title>About Arcade Buddy Mission &amp; Team</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/roadmap</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-roadmap.png</image:loc>
+      <image:title>Arcade Season Roadmap &amp; Release Schedule</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/contact-us</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-about.png</image:loc>
+      <image:title>Contact Us - Support &amp; Facilitator Help</image:title>
+    </image:image>
+  </url>
+
+  <!-- Legal & Program Guidelines -->
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/disclaimer</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-legal.png</image:loc>
+      <image:title>Arcade Buddy Disclaimer &amp; Notice</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/privacy</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-legal.png</image:loc>
+      <image:title>Arcade Buddy Privacy Policy</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/terms</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-legal.png</image:loc>
+      <image:title>Terms of Service</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/code-of-conduct</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-legal.png</image:loc>
+      <image:title>Arcade Community Code of Conduct</image:title>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/program-tncs</loc>
+    <lastmod>2026-10-09</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+    <image:image>
+      <image:loc>https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/og/og-legal.png</image:loc>
+      <image:title>Google Cloud Arcade Program Terms &amp; Conditions</image:title>
+    </image:image>
+  </url>
+</urlset>

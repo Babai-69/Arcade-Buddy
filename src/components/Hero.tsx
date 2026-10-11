@@ -1,246 +1,224 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Cloud, Award, Sparkles, ChevronRight, Users, Activity, TrendingUp, Clock, Instagram, Github, Linkedin, Compass } from 'lucide-react';
-import { Participant } from '../types';
+import {
+  Award,
+  Sparkles,
+  ArrowRight,
+  Trophy,
+  Compass,
+  Calendar,
+  Gamepad2,
+  CheckCircle2,
+  Users,
+  ShieldCheck,
+} from 'lucide-react';
+import heroIllustration from '../assets/images/arcade_cloud_hero_1790871983170.jpg';
 
-export function Hero({ participants }: { participants: Participant[] }) {
-  const safeParticipants = participants || [];
-  const totalParticipants = safeParticipants.length;
-  const totalPoints = safeParticipants.reduce((sum, p) => sum + p.arcadePoints, 0);
-  const activeToday = safeParticipants.filter(p => p.arcadePoints > 0).length;
+export function Hero({ participants = [] }: { participants?: any[] }) {
+  const totalCount = participants.length > 0 ? participants.length : 1290;
+  const activeCount = participants.filter((p) => (p?.arcadePoints || 0) > 0).length || 864;
 
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
+  // Prize Counter opening date: January 7, 2027 at 05:30:00 (matching Prize Redemption Guide)
+  const targetDate = new Date('2027-01-07T05:30:00').getTime();
+
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const now = Date.now();
+    const diff = Math.max(0, targetDate - now);
+    return {
+      days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((diff / (1000 * 60)) % 60),
+      seconds: Math.floor((diff / 1000) % 60),
+    };
   });
-  const [timerState, setTimerState] = useState<'upcoming' | 'registration' | 'live' | 'ended'>('upcoming');
 
   useEffect(() => {
-    // Target date: July 13, 2026 17:00:00 GMT+0530 (IST) -> 11:30:00Z
-    const startDate = new Date('2026-07-13T11:30:00Z').getTime();
-    // Registration end date: July 20, 2026 23:59:00 GMT+0530 (IST) -> 18:29:00Z
-    const registrationEndDate = new Date('2026-07-20T18:29:00Z').getTime();
-    // End date: September 14, 2026 23:59:00 GMT+0530 (IST) -> 18:29:00Z
-    const endDate = new Date('2026-09-14T18:29:00Z').getTime();
-
-    const interval = setInterval(() => {
-      const now = new Date().getTime();
-      
-      let distance = 0;
-      if (now < startDate) {
-        setTimerState('upcoming');
-        distance = startDate - now;
-      } else if (now >= startDate && now < registrationEndDate) {
-        setTimerState('registration');
-        distance = registrationEndDate - now;
-      } else if (now >= registrationEndDate && now <= endDate) {
-        setTimerState('live');
-        distance = endDate - now;
-      } else {
-        setTimerState('ended');
-        clearInterval(interval);
-        return;
-      }
-
+    const timer = setInterval(() => {
+      const now = Date.now();
+      const diff = Math.max(0, targetDate - now);
       setTimeLeft({
-        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
-        seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        minutes: Math.floor((diff / (1000 * 60)) % 60),
+        seconds: Math.floor((diff / 1000) % 60),
       });
     }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearInterval(timer);
+  }, [targetDate]);
 
   return (
-    <section className="relative pt-20 pb-10 overflow-hidden" id="about">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          {(timerState === 'upcoming' || timerState === 'registration' || timerState === 'live') && (
-            <div style={{
-              position: 'relative',
-              borderRadius: '999px',
-              padding: '2px',
-              display: 'inline-flex',
-              marginBottom: '24px'
-            }}>
-              {/* Traveling comet glow ring */}
-              <div style={{
-                position: 'absolute',
-                inset: 0,
-                borderRadius: '999px',
-                overflow: 'hidden'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  width: '200%',
-                  height: '200%',
-                  top: '-50%',
-                  left: '-50%',
-                  background: `conic-gradient(
-                    from 0deg,
-                    transparent 0%,
-                    transparent 62%,
-                    #4285F4 70%,
-                    #7c3aed 78%,
-                    #EA4335 85%,
-                    #FBBC05 91%,
-                    #34A853 96%,
-                    transparent 100%
-                  )`,
-                  animation: 'spinCW 6s linear infinite'
-                }}/>
-              </div>
+    <section className="relative pt-12 pb-16 md:pt-16 md:pb-24 overflow-hidden">
+      {/* Subtle ambient background glow */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-gradient-to-tr from-blue-500/10 via-indigo-500/10 to-emerald-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
-              {/* Inner pill content */}
-              <div 
-                className="bg-white dark:bg-slate-900"
-                style={{
-                  position: 'relative',
-                  borderRadius: '999px',
-                  padding: '9px 18px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '9px',
-                  zIndex: 1
-                }}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Top Announcement Bar */}
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-100/90 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700/60 shadow-2xs text-xs font-medium text-slate-700 dark:text-slate-300">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+            <span>Google Cloud Arcade 2026 is Active</span>
+            <span className="text-slate-300 dark:text-slate-600">·</span>
+            <span className="text-blue-600 dark:text-blue-400 font-semibold">OCT Games Live</span>
+          </div>
+        </div>
+
+        {/* Main Grid: Value Proposition + Cinematic Visual */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Left Column: Typography & Intentional CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="lg:col-span-7 text-center lg:text-left space-y-6"
+          >
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12]">
+              Master Cloud Skills.{' '}
+              <span className="block mt-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-teal-500 bg-clip-text text-transparent">
+                Track Arcade Rewards.
+              </span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+              The premier companion for the Google Cloud Arcade Program. Complete hands-on cloud labs, calculate milestone points in real time, follow live leaderboards, and prepare for the 2027 Prize Counter.
+            </p>
+
+            {/* Primary Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2">
+              <Link
+                to="/syllabus"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-white bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 transition-all whitespace-nowrap"
               >
-                <span style={{
-                  width: '7px', height: '7px',
-                  borderRadius: '50%',
-                  background: '#34A853',
-                  display: 'inline-block',
-                  flexShrink: 0,
-                  animation: 'pulse 2s ease-in-out infinite'
-                }}/>
-                <span className="text-[13px] font-medium text-slate-800 dark:text-white/85 whitespace-nowrap">
-                  {timerState === 'upcoming' 
-                    ? 'Arcade 2026 is starting soon — get ready!' 
-                    : 'Arcade Facilitator 2026 is live now'}
-                </span>
-              </div>
-            </div>
-          )}
-          
-          <h1 className="text-5xl md:text-7xl font-display font-bold tracking-tight mb-6 text-slate-900 dark:text-white">
-            Google Cloud <span className="text-gradient-google">Arcade Buddy</span>
-            <br />
-            <span className="text-3xl md:text-5xl text-slate-700 dark:text-slate-300 mt-2 block">
-              Facilitator Program 2026
-            </span>
-          </h1>
+                <Gamepad2 className="w-4 h-4" />
+                <span>Explore Syllabus & Games</span>
+                <ArrowRight className="w-4 h-4 ml-0.5" />
+              </Link>
 
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-slate-700 dark:text-slate-300 mb-6 leading-relaxed tracking-wide">
-            Master Cloud Skills. Earn Badges & Bonus Points. Unlock Exclusive Google Cloud Rewards right to your doorstep.
-          </p>
-          
-          <div className="flex lg:hidden justify-center gap-4 mb-10">
-            <a href="https://www.instagram.com/dey_babai001/" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white dark:bg-slate-800 rounded-full shadow-md flex items-center justify-center text-slate-500 hover:text-pink-600 transition-colors">
-              <Instagram className="w-5 h-5" />
-            </a>
-            <a href="https://github.com/Arcade-With-Us/" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white dark:bg-slate-800 rounded-full shadow-md flex items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
-              <Github className="w-5 h-5" />
-            </a>
-            <a href="https://www.linkedin.com/in/abir-dey-a34914254/" target="_blank" rel="noreferrer" className="w-10 h-10 bg-white dark:bg-slate-800 rounded-full shadow-md flex items-center justify-center text-slate-500 hover:text-[#0a66c2] transition-colors">
-              <Linkedin className="w-5 h-5" />
-            </a>
-          </div>
+              <Link
+                to="/leaderboard"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm text-slate-800 dark:text-slate-100 bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-750 hover:-translate-y-0.5 transition-all whitespace-nowrap"
+              >
+                <Trophy className="w-4 h-4 text-amber-500" />
+                <span>Live Leaderboard</span>
+              </Link>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
-            <a href="/#register" className="flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-full font-semibold hover:scale-105 transition-transform shadow-lg">
-              Join the Program <ChevronRight className="h-5 w-5" />
-            </a>
-            <a href="/leaderboard" className="flex items-center gap-2 bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-8 py-4 rounded-full font-semibold border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">
-              <Award className="h-5 w-5 text-[#FBBC05]" /> View Leaderboard
-            </a>
-          </div>
-          
-          <div className="flex justify-center mb-16">
-             <button 
+              <button
+                type="button"
                 onClick={() => window.dispatchEvent(new Event('start-welcome-tour'))}
-                className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-400 text-white px-6 py-3 rounded-full font-semibold shadow-[0_6px_18px_rgba(26,115,232,0.35)] hover:-translate-y-1 transition-transform"
-             >
-                <Compass className="w-5 h-5" /> Take a Quick Tour
-             </button>
-          </div>
+                className="inline-flex items-center gap-1.5 px-4 py-3.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+              >
+                <Compass className="w-4 h-4 text-slate-400" />
+                <span>Guided Tour</span>
+              </button>
+            </div>
 
-          {timerState !== 'ended' && (
-            <div className="max-w-4xl mx-auto bg-slate-50 dark:bg-slate-900/50 rounded-2xl p-6 border border-slate-100 dark:border-slate-800 mb-8">
-              <div className="flex items-center gap-2 mb-6 justify-center">
-                <Clock className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-                <h4 className="font-bold font-display text-slate-800 dark:text-slate-200">
-                  {timerState === 'upcoming' ? 'Facilitator Program Starts In:' : timerState === 'registration' ? 'Deadline to fill the registration form:' : 'Time Left to Complete the Program:'}
-                </h4>
+            {/* Trust Markers & Adjacency Proof */}
+            <div className="pt-4 border-t border-slate-200/70 dark:border-slate-800/80 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                <span>Official Google Cloud Curated Labs</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                <span><strong className="font-semibold text-slate-800 dark:text-slate-200">{totalCount.toLocaleString()}+</strong> Active Learners</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Award className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                <span>100% Free Hands-on Access</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Column: Visual Showcase Card + Live Countdown Anchor */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="lg:col-span-5 relative"
+          >
+            <div className="relative rounded-3xl p-2 bg-gradient-to-b from-slate-200/80 via-white to-slate-200/60 dark:from-slate-700/60 dark:via-slate-800/80 dark:to-slate-900/90 shadow-2xl border border-white/40 dark:border-slate-700/40 backdrop-blur-xl">
+              {/* Main Media Showcase Container */}
+              <div className="relative rounded-2xl overflow-hidden aspect-[16/10] bg-slate-900 group">
+                <img
+                  src={heroIllustration}
+                  alt="Google Cloud Arcade Computing Ecosystem"
+                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  referrerPolicy="no-referrer"
+                />
+                {/* Contrast scrim */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
+
+                {/* Floating Badge in Media */}
+                <div className="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-[11px] font-semibold text-white border border-white/10">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Arcade Companion 2026</span>
+                </div>
+
+                {/* Bottom Overlay Info */}
+                <div className="absolute bottom-3.5 left-3.5 right-3.5 flex items-center justify-between text-white">
+                  <div>
+                    <p className="text-xs font-semibold text-blue-300">Prize Redemption Window</p>
+                    <p className="text-sm font-bold text-white">Opens January 7, 2027</p>
+                  </div>
+                  <Link
+                    to="/resources/prize-counter-guide"
+                    className="text-xs font-semibold bg-white/20 hover:bg-white/30 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20 transition-colors"
+                  >
+                    Guide →
+                  </Link>
+                </div>
               </div>
 
-              <div className="grid grid-cols-4 gap-4 text-center max-w-2xl mx-auto">
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-700">
-                  <div className="text-3xl lg:text-4xl font-bold font-display text-[#4285F4] mb-1">{timeLeft.days}</div>
-                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">DAYS</div>
+              {/* Live Live Countdown Module Below Visual */}
+              <div className="p-4 sm:p-5 mt-2 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-100 dark:border-slate-800/80">
+                <div className="flex items-center justify-between mb-3 text-xs">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-800 dark:text-slate-200">
+                    <Calendar className="w-3.5 h-3.5 text-blue-500" />
+                    <span>Prize Counter Countdown</span>
+                  </div>
+                  <span className="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                    Estimated 2027
+                  </span>
                 </div>
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-700">
-                  <div className="text-3xl lg:text-4xl font-bold font-display text-[#4285F4] mb-1">{timeLeft.hours}</div>
-                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">HOURS</div>
-                </div>
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-700">
-                  <div className="text-3xl lg:text-4xl font-bold font-display text-[#4285F4] mb-1">{timeLeft.minutes}</div>
-                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">MINUTES</div>
-                </div>
-                <div className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-100 dark:border-slate-700">
-                  <div className="text-3xl lg:text-4xl font-bold font-display text-[#4285F4] mb-1">{timeLeft.seconds}</div>
-                  <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 tracking-wider">SECONDS</div>
+
+                <div className="grid grid-cols-4 gap-2 text-center">
+                  <div className="py-2 px-1 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60">
+                    <span className="block text-xl sm:text-2xl font-black font-display text-blue-600 dark:text-blue-400 tabular-nums">
+                      {timeLeft.days}
+                    </span>
+                    <span className="text-[9px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
+                      Days
+                    </span>
+                  </div>
+                  <div className="py-2 px-1 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60">
+                    <span className="block text-xl sm:text-2xl font-black font-display text-indigo-600 dark:text-indigo-400 tabular-nums">
+                      {String(timeLeft.hours).padStart(2, '0')}
+                    </span>
+                    <span className="text-[9px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
+                      Hours
+                    </span>
+                  </div>
+                  <div className="py-2 px-1 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60">
+                    <span className="block text-xl sm:text-2xl font-black font-display text-purple-600 dark:text-purple-400 tabular-nums">
+                      {String(timeLeft.minutes).padStart(2, '0')}
+                    </span>
+                    <span className="text-[9px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
+                      Mins
+                    </span>
+                  </div>
+                  <div className="py-2 px-1 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60">
+                    <span className="block text-xl sm:text-2xl font-black font-display text-emerald-600 dark:text-emerald-400 tabular-nums">
+                      {String(timeLeft.seconds).padStart(2, '0')}
+                    </span>
+                    <span className="text-[9px] font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
+                      Secs
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          )}
-          {timerState === 'ended' && (
-            <div className="max-w-3xl mx-auto rounded-3xl p-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 shadow-xl mb-12 overflow-hidden relative group">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 opacity-20 blur-2xl group-hover:opacity-40 transition-opacity duration-500"></div>
-              <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-[22px] p-8 md:p-12 flex flex-col items-center justify-center relative z-10 text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-900/40 dark:to-amber-900/10 rounded-full flex items-center justify-center mb-6 border border-amber-200 dark:border-amber-800/50 shadow-inner">
-                   <Award className="w-10 h-10 text-amber-500 drop-shadow-sm" />
-                </div>
-                <h3 className="text-3xl md:text-4xl font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-300 mb-4 tracking-tight">
-                  Season 2026 Concluded
-                </h3>
-                <p className="text-slate-600 dark:text-slate-400 max-w-lg mx-auto text-lg leading-relaxed">
-                  The Google Cloud Arcade Facilitator Program 2026 has officially ended. Thank you to all participants for an incredible season of cloud learning!
-                </p>
-              </div>
-            </div>
-          )}
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto border-t border-slate-200 dark:border-slate-800 pt-12"
-        >
-          {[
-            { icon: Cloud, color: 'text-[#4285F4]', bg: 'bg-[#4285F4]/10', title: 'Learn Cloud Tech', desc: 'Complete hands-on labs and skill badges on Cloud Skills Boost.' },
-            { icon: Sparkles, color: 'text-[#FBBC05]', bg: 'bg-[#FBBC05]/10', title: 'Earn Points', desc: 'Every badge earns you Arcade Points. Climb the leaderboard daily.' },
-            { icon: Award, color: 'text-[#34A853]', bg: 'bg-[#34A853]/10', title: 'Unlock Swag', desc: 'Reach milestones to claim exclusive Google Cloud merchandise.' }
-          ].map((feature, idx) => (
-            <div key={idx} className="bg-white dark:bg-[#161b22] p-8 rounded-[2rem] text-center border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 group relative overflow-hidden">
-              <div className={`absolute top-0 right-0 w-24 h-24 ${feature.bg} rounded-bl-full -z-10 group-hover:scale-125 transition-transform duration-500 opacity-50`}></div>
-              <div className="flex justify-center mb-6">
-                <div className={`w-14 h-14 rounded-2xl ${feature.bg} flex items-center justify-center`}>
-                  <feature.icon className={`h-7 w-7 ${feature.color}`} />
-                </div>
-              </div>
-              <h3 className="font-display font-bold text-xl mb-3 text-slate-900 dark:text-white">{feature.title}</h3>
-              <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-xs mx-auto">{feature.desc}</p>
-            </div>
-          ))}
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

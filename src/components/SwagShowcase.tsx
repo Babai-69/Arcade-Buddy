@@ -62,9 +62,21 @@ export function SwagShowcase() {
           <h3 className="text-xl font-bold mb-1">How to Claim Your Swags & Mandatory Rules</h3>
           <p className="text-sm text-slate-400">Learn claim code timelines, essential eligibility rules, and how to receive your rewards.</p>
         </div>
-        <Link to="/resources/prize-counter-guide" className="shrink-0 bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold py-2.5 px-6 rounded-lg flex items-center gap-2 text-sm transition-colors shadow-sm">
-          Read Redemption Guide <ArrowRight className="w-4 h-4" />
-        </Link>
+        <div className="flex flex-col items-center md:items-end gap-1.5 shrink-0">
+          <span 
+            style={{ fontFamily: "'Caveat', cursive" }} 
+            className="text-amber-400 text-base font-bold -rotate-1 select-none hidden sm:inline-block"
+          >
+            step-by-step claims guide 📋
+          </span>
+          <Link 
+            to="/resources/prize-counter-guide" 
+            className="bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold py-3 px-6 rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg shadow-yellow-500/20 transform hover:-translate-y-0.5 active:translate-y-0 border border-yellow-400/50 flex items-center gap-2 text-sm shrink-0"
+          >
+            <span>Read Redemption Guide</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </div>
 
       {/* 2026 Edition Tiers */}
@@ -81,7 +93,7 @@ export function SwagShowcase() {
           {/* Trooper */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
             <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl aspect-square flex items-center justify-center mb-4 overflow-hidden p-4">
-               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Trooper.png?raw=true" alt="Trooper" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Trooper.png?raw=true" alt="Google Cloud Arcade Trooper Tier Swags Collection" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
             </div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold">Trooper Tier</h3>
@@ -96,7 +108,7 @@ export function SwagShowcase() {
           {/* Ranger */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
             <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl aspect-square flex items-center justify-center mb-4 overflow-hidden p-4">
-               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Ranger.png?raw=true" alt="Ranger" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Ranger.png?raw=true" alt="Google Cloud Arcade Ranger Tier Swags Collection" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
             </div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold">Ranger Tier</h3>
@@ -111,7 +123,7 @@ export function SwagShowcase() {
           {/* Champion */}
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
             <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl aspect-square flex items-center justify-center mb-4 overflow-hidden p-4">
-               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Champian.png?raw=true" alt="Champion" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
+               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Champian.png?raw=true" alt="Google Cloud Arcade Champion Tier Swags Collection" className="w-full h-full object-contain" referrerPolicy="no-referrer" />
             </div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold">Champion Tier</h3>
@@ -127,7 +139,7 @@ export function SwagShowcase() {
           <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col">
             <div className="bg-slate-50 dark:bg-slate-800/50 rounded-xl aspect-square flex items-center justify-center mb-4 overflow-hidden p-4 relative">
                <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-400/20 blur-xl rounded-full"></div>
-               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Legend.png?raw=true" alt="Legend" className="w-full h-full object-contain relative z-10" referrerPolicy="no-referrer" />
+               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Legend.png?raw=true" alt="Google Cloud Arcade Legend Tier Swags Collection" className="w-full h-full object-contain relative z-10" referrerPolicy="no-referrer" />
             </div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-bold">Legend Tier</h3>
@@ -152,7 +164,7 @@ export function SwagShowcase() {
           {/* 2023 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full bg-slate-800 relative">
-               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2023-swags.png" alt="2023 Cohort 1" className="w-full h-auto object-contain" />
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2023-swags.png" alt="Google Cloud Arcade 2023 Cohort 1 Swags Showcase" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -166,7 +178,7 @@ export function SwagShowcase() {
           {/* 2023 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full bg-slate-800 relative">
-               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-2-2023-swags_t6bxpv.png" alt="2023 Season 2" className="w-full h-auto object-contain" />
+               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-2-2023-swags_t6bxpv.png" alt="Google Cloud Arcade 2023 Season 2 Swags Showcase" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -180,7 +192,7 @@ export function SwagShowcase() {
           {/* 2024 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full bg-slate-800 relative">
-               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-1-2024-swags_p8brbr.png" alt="2024 Season 1" className="w-full h-auto object-contain" />
+               <img src="https://res.cloudinary.com/dqj9yaa0g/image/upload/v1788457913/arcade-season-1-2024-swags_p8brbr.png" alt="Google Cloud Arcade 2024 Season 1 Swags Showcase" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -194,7 +206,7 @@ export function SwagShowcase() {
           {/* 2024 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full bg-slate-800 relative">
-               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2024-swags.jpg" alt="2024 Season 2" className="w-full h-auto object-contain" />
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2024-swags.jpg" alt="Google Cloud Arcade 2024 Season 2 Swags Showcase" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -208,7 +220,7 @@ export function SwagShowcase() {
           {/* 2025 S1 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full bg-slate-800 relative">
-               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2025-swags.jpg" alt="2025 Season 1" className="w-full h-auto object-contain" />
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-1-2025-swags.jpg" alt="Google Cloud Arcade 2025 Season 1 Swags Showcase" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -222,7 +234,7 @@ export function SwagShowcase() {
           {/* 2025 S2 */}
           <div className="bg-slate-900 rounded-2xl overflow-hidden border border-slate-800 shadow-lg">
              <div className="w-full bg-slate-800 relative">
-               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2025-swags.jpg" alt="2025 Season 2" className="w-full h-auto object-contain" />
+               <img src="https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/past-swags-collection/arcade-season-2-2025-swags.jpg" alt="Google Cloud Arcade 2025 Season 2 Swags Showcase" className="w-full h-auto object-contain" />
              </div>
              <div className="p-6">
                <div className="flex justify-between items-center mb-2">
@@ -245,14 +257,14 @@ export function SwagShowcase() {
         <div className="columns-2 md:columns-4 lg:columns-5 gap-3 md:gap-4">
           {swagsGallery.map((src, i) => (
              <div key={i} className="mb-3 md:mb-4 break-inside-avoid rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 hover:shadow-lg transition-all group">
-               <img src={src} alt={`Winner ${i+1}`} className="w-full h-auto block group-hover:scale-105 transition-transform duration-500" />
+               <img src={src} alt={`Google Cloud Arcade Winner ${i + 1} Delivered Swags Unboxing`} className="w-full h-auto block group-hover:scale-105 transition-transform duration-500" />
              </div>
           ))}
         </div>
       </div>
 
       {/* Footer Banner */}
-      <div className="bg-[#111827] text-white rounded-3xl p-8 relative overflow-hidden mt-12 border border-slate-800" style={{ width: '1149.87.px' }}>
+      <div className="bg-[#111827] text-white rounded-3xl p-8 relative overflow-hidden mt-12 border border-slate-800">
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex-grow">
             <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest text-[#FBBF24] mb-3 uppercase">
@@ -266,12 +278,36 @@ export function SwagShowcase() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-            <Link to="/resources/swag-distribution-system" className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
-              <Medal className="w-4 h-4" /> How it works?
-            </Link>
-            <Link to="/resources/prize-counter-guide" className="w-full sm:w-auto text-center bg-transparent hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-xl transition-colors border border-slate-700">
-              Prize Redemption Guide  <ArrowRight className="inline-block w-4 h-4 ml-1" />
-            </Link>
+            <div className="flex flex-col items-center sm:items-start gap-1 w-full sm:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-amber-400 text-lg font-bold -rotate-2 hidden sm:inline-block select-none"
+              >
+                🌊 waterfall rules explained
+              </span>
+              <Link 
+                to="/resources/swag-distribution-system" 
+                className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/35 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 border border-yellow-400/50 text-sm"
+              >
+                <Medal className="w-4 h-4" />
+                <span>How it works?</span>
+              </Link>
+            </div>
+            <div className="flex flex-col items-center sm:items-start gap-1 w-full sm:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-slate-400 text-lg font-bold rotate-2 hidden sm:inline-block select-none"
+              >
+                🎁 step-by-step walkthrough
+              </span>
+              <Link 
+                to="/resources/prize-counter-guide" 
+                className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 border border-slate-700 hover:border-slate-600 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 text-sm"
+              >
+                <span>Prize Redemption Guide</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

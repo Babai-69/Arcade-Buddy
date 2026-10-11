@@ -190,15 +190,20 @@ export function WelcomeTour() {
         @keyframes wave { 0%, 100% { transform: rotate(0deg); } 20% { transform: rotate(-32deg); } 40% { transform: rotate(-8deg); } 60% { transform: rotate(-28deg); } 80% { transform: rotate(-6deg); } }
         @keyframes antennaPulse { 0%, 100% { fill: #FBBC04; filter: drop-shadow(0 0 2px #FBBC04); } 50% { fill: #EA4335; filter: drop-shadow(0 0 6px #EA4335); } }
       `}</style>
-      <button className={`fab-chat fixed bottom-6 right-6 ${tourActive && steps[currentStep].custom === 'chat' ? 'z-[600]' : 'z-[60]'} w-[52px] h-[52px] rounded-full bg-white border border-[#DADCE0] flex items-center justify-center text-[20px] shadow-[0_8px_20px_rgba(32,33,36,0.12)] cursor-pointer text-[#5F6368] hover:bg-slate-50 transition-colors`} title="Chatbot">
-        <MessageCircle size={24} />
+      <button
+        className={`fab-chat fixed bottom-6 right-6 ${tourActive && steps[currentStep].custom === 'chat' ? 'z-[600]' : 'z-[60]'} btn-press btn-press--icon cursor-pointer`}
+        style={{ background: 'var(--card)', color: 'var(--ink)' }}
+        title="Chatbot"
+        aria-label="Chatbot"
+      >
+        <MessageCircle size={22} />
       </button>
 
       {showWelcome && createPortal(
         <div id="welcome" className="fixed inset-0 z-[700] flex items-start justify-center pt-10 px-4 overflow-y-auto" style={{ background: 'radial-gradient(1200px 600px at 50% -10%, rgba(26,115,232,.10), transparent 60%), rgba(20,22,26,.45)', backdropFilter: 'blur(6px)' }}>
           <div className="relative w-full max-w-[432px] mx-auto bg-white rounded-[26px] shadow-[0_30px_80px_rgba(20,22,26,.35),_0_4px_14px_rgba(20,22,26,.08)] overflow-hidden text-left animate-[welcomeIn_0.5s_cubic-bezier(0.2,0.8,0.2,1)] mb-10">
             <div className="h-[6px] w-full" style={{ background: 'linear-gradient(90deg,#1A73E8,#34A853,#FBBC04,#EA4335,#1A73E8)', backgroundSize: '200% 100%', animation: 'shimmer 5s linear infinite' }}></div>
-            <button onClick={closeWelcome} className="absolute top-4 right-4 w-[30px] h-[30px] rounded-full flex items-center justify-center text-[#80868B] text-base cursor-pointer bg-transparent border-none hover:bg-[#F6F8FC] hover:text-[#202124] transition-colors" aria-label="Close">✕</button>
+            <button onClick={closeWelcome} className="absolute top-4 right-4 btn-press btn-press--icon" style={{ width: '32px', height: '32px', background: 'var(--card)' }} aria-label="Close">✕</button>
             <div className="pt-[26px] px-[28px] pb-[22px] max-sm:px-5">
               
               <div className="flex justify-center">
@@ -241,7 +246,7 @@ export function WelcomeTour() {
                     <div className="mt-[9px] inline-flex items-center gap-1.5 text-xs font-medium text-[#1A73E8]">👥 1000+ Members</div>
                   </div>
                 </div>
-                <a href="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s" target="_blank" rel="noopener" className="mt-3.5 w-full flex justify-center bg-[#25D366] text-white py-[13px] rounded-full font-bold text-[14.5px] shadow-[0_8px_18px_rgba(37,211,102,.32)] hover:-translate-y-[1px] transition-transform">Join on WhatsApp</a>
+                <a href="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s" target="_blank" rel="noopener" className="btn-press btn-press--green mt-3.5 w-full flex justify-center py-[13px] font-bold text-[14.5px]">Join on WhatsApp</a>
               </div>
 
               <div className="mt-3 bg-[#F6F8FC] border border-[#DADCE0] rounded-[18px] py-[15px] px-4 flex items-center justify-between gap-3">
@@ -249,14 +254,14 @@ export function WelcomeTour() {
                   <div className="font-display font-bold text-[13.5px] text-[#202124]">Prefer Telegram?</div>
                   <div className="mt-[3px] text-xs text-[#5F6368] leading-[1.5]">Receive the same essential community updates.</div>
                 </div>
-                <a href="https://t.me/arcadebuddy" target="_blank" rel="noopener" className="shrink-0 bg-white border border-[#DADCE0] py-[9px] px-[14px] rounded-full text-[12.5px] font-semibold text-[#202124] inline-flex items-center gap-[7px] whitespace-nowrap hover:bg-[#F6F8FC] transition-colors">
+                <a href="https://t.me/arcadebuddy" target="_blank" rel="noopener" className="btn-press btn-press--sm btn-press--secondary shrink-0 inline-flex items-center gap-[7px] whitespace-nowrap">
                   <span className="w-5 h-5 rounded-full bg-[#229ED9] text-white flex items-center justify-center text-[11px]">➤</span>
                   Join Telegram
                 </a>
               </div>
 
               <div className="mt-[22px]">
-                <button onClick={startTour} className="w-full flex justify-center text-white py-[14px] rounded-full font-medium text-[14.5px] shadow-[0_6px_18px_rgba(26,115,232,.35)] hover:-translate-y-[2px] transition-transform" style={{ background: 'linear-gradient(90deg,#1A73E8,#4FA8FF)' }}>🧭 Take the quick tour with me</button>
+                <button onClick={startTour} className="btn-press btn-press--primary w-full flex justify-center py-[14px] font-medium text-[14.5px]">🧭 Take the quick tour with me</button>
               </div>
 
               <div className="mt-5 text-center text-[12.5px] font-medium text-[#1A73E8]">
@@ -340,8 +345,8 @@ export function WelcomeTour() {
               </div>
               <div className="flex gap-2 items-center">
                 <span onClick={endTour} className="text-xs text-[#80868B] cursor-pointer underline mr-1 hover:text-[#5F6368]">Skip tour</span>
-                <button onClick={() => setCurrentStep(s => Math.max(0, s - 1))} disabled={currentStep === 0} className={`py-2 px-4 rounded-full text-[12.5px] font-medium cursor-pointer border border-[#DADCE0] bg-white text-[#202124] hover:bg-slate-50 transition-colors ${currentStep === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}>Back</button>
-                <button onClick={() => currentStep === steps.length - 1 ? endTour() : setCurrentStep(s => s + 1)} className="py-2 px-4 rounded-full text-[12.5px] font-medium cursor-pointer border border-[#1A73E8] bg-[#1A73E8] text-white hover:bg-blue-700 transition-colors">{currentStep === steps.length - 1 ? 'Finish' : 'Next'}</button>
+                <button onClick={() => setCurrentStep(s => Math.max(0, s - 1))} disabled={currentStep === 0} className={`btn-press btn-press--sm btn-press--secondary ${currentStep === 0 ? 'opacity-40 cursor-not-allowed' : ''}`}>Back</button>
+                <button onClick={() => currentStep === steps.length - 1 ? endTour() : setCurrentStep(s => s + 1)} className="btn-press btn-press--sm btn-press--primary">{currentStep === steps.length - 1 ? 'Finish' : 'Next'}</button>
               </div>
             </div>
 

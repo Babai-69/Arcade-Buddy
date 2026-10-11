@@ -81,15 +81,23 @@ export function PrizeRedemptionGuide() {
           Complete guide on <strong className="text-slate-800 dark:text-slate-200">how to claim your official Arcade swags</strong> once you reach your target prize tier, mandatory eligibility prerequisites, and a quick overview of the new <span className="text-indigo-500 font-semibold">Waterfall Distribution System</span>.
         </p>
 
-        <a 
-          href="https://docs.google.com/document/d/1qvB9uGy3AG6k843OaSa2jVTroNusWx-dJiR8OYiLyVc/edit?tab=t.0"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md hover:shadow-indigo-500/25 transform hover:-translate-y-0.5"
-        >
-          <Download className="w-5 h-5" />
-          Download Guide to Order Swags
-        </a>
+        <div className="flex flex-col items-center gap-2">
+          <span 
+            style={{ fontFamily: "'Caveat', cursive" }} 
+            className="text-indigo-600 dark:text-indigo-400 text-xl font-bold -rotate-2 select-none"
+          >
+            ✨ Official step-by-step PDF guide!
+          </span>
+          <a 
+            href="https://docs.google.com/document/d/1qvB9uGy3AG6k843OaSa2jVTroNusWx-dJiR8OYiLyVc/export?format=pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-600 hover:from-indigo-500 hover:via-indigo-600 hover:to-purple-500 text-white font-bold py-3.5 px-8 rounded-2xl transition-all duration-200 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transform hover:-translate-y-0.5 active:translate-y-0 border border-indigo-400/30 text-base"
+          >
+            <Download className="w-5 h-5" />
+            <span>Download Guide to Order Swags</span>
+          </a>
+        </div>
       </div>
 
       {/* Prerequisites Section */}
@@ -114,9 +122,25 @@ export function PrizeRedemptionGuide() {
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 flex-grow leading-relaxed">
               Make sure your Google Cloud Skills Boost account, the official Arcade Registration Form, and any Facilitator registrations use the <strong className="underline decoration-2 underline-offset-2">exact same email address</strong>.
             </p>
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLScwpRj34Ysw5GEjeubPlkG49MECZTG3z820O_2Uz85IxJ9qcg/viewform" target="_blank" rel="noopener noreferrer" className="w-full bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors">
-              Fill Registration Form <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="mt-auto pt-2 space-y-1.5">
+              <div className="text-right">
+                <span 
+                  style={{ fontFamily: "'Caveat', cursive" }} 
+                  className="text-amber-600 dark:text-amber-400 text-base font-bold -rotate-1 inline-block select-none"
+                >
+                  takes 30 seconds ~
+                </span>
+              </div>
+              <a 
+                href="https://docs.google.com/forms/d/e/1FAIpQLScwpRj34Ysw5GEjeubPlkG49MECZTG3z820O_2Uz85IxJ9qcg/viewform" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-full bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-yellow-500/20 transform hover:-translate-y-0.5 active:translate-y-0 border border-yellow-500/40"
+              >
+                <span>Fill Registration Form</span>
+                <ExternalLink className="w-4 h-4 text-slate-800" />
+              </a>
+            </div>
           </div>
 
           {/* Step 2 */}
@@ -129,9 +153,23 @@ export function PrizeRedemptionGuide() {
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 flex-grow leading-relaxed">
               Your Skills Boost profile must be set to <strong className="text-slate-800 dark:text-slate-200">Public</strong> so Google Cloud automated verification scripts can index your completed badges and record your points.
             </p>
-            <Link to="/public-profile-help" className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors">
-              Public Profile Guide <ArrowRight className="w-4 h-4" />
-            </Link>
+            <div className="mt-auto pt-2 space-y-1.5">
+              <div className="text-right">
+                <span 
+                  style={{ fontFamily: "'Caveat', cursive" }} 
+                  className="text-purple-600 dark:text-purple-400 text-base font-bold rotate-1 inline-block select-none"
+                >
+                  quick visual guide 📸
+                </span>
+              </div>
+              <Link 
+                to="/public-profile-help" 
+                className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm transition-all duration-200 shadow-sm hover:shadow-md shadow-purple-500/20 transform hover:-translate-y-0.5 active:translate-y-0 border border-purple-400/30"
+              >
+                <span>Public Profile Guide</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
 
           {/* Step 3 */}
@@ -329,12 +367,35 @@ export function PrizeRedemptionGuide() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-            <Link to="/my-progress" className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
-              Check My Swag Tier <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link to="/resources/swag-showcase-page" className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl transition-colors border border-slate-700">
-              View Swag Tiers Showcase
-            </Link>
+            <div className="flex flex-col items-center sm:items-start gap-1 w-full sm:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-amber-400 text-lg font-bold -rotate-2 hidden sm:inline-block select-none"
+              >
+                ⚡ check your live tier in 2s!
+              </span>
+              <Link 
+                to="/my-progress" 
+                className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/35 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 border border-yellow-400/50"
+              >
+                <span>Check My Swag Tier</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="flex flex-col items-center sm:items-start gap-1 w-full sm:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-slate-400 text-lg font-bold rotate-2 hidden sm:inline-block select-none"
+              >
+                🎁 real swag box photos
+              </span>
+              <Link 
+                to="/resources/swag-showcase-page" 
+                className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 border border-slate-700 hover:border-slate-600 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+              >
+                <span>View Swag Tiers Showcase</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

@@ -45,7 +45,8 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
 
     if (participant && participant.badges) {
       participant.badges.forEach(badge => {
-        if (badge.validForProgram) {
+        const isArcadeEligible = (badge.validForArcade !== false && (badge.validForProgram || badge.validForArcade)) || (badge.points && badge.points > 0);
+        if (isArcadeEligible) {
           eligible.push(badge);
           if (badge.category === 'Game') {
             gameCount++;
@@ -98,19 +99,19 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
         <div>
           <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <Trophy className="w-6 h-6 text-[#4285F4]" />
-            Facilitator Program Badge Tracker
+            Arcade & Facilitator Badge Tracker
           </h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Showing badges earned: Jul 13, 5:00 PM → Sep 14, 11:59 PM IST
+            Arcade 2026 Season: Jul 13 → Dec 31, 2026 &middot; Facilitator Milestone Window: Jul 13 → Sep 14, 2026
           </p>
         </div>
       </div>
       
       <div className="p-6">
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-8 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-500 shrink-0 mt-0.5" />
-          <p className="text-amber-800 dark:text-amber-200 text-sm font-medium">
-            Only badges in this window count toward the Facilitator bonus milestone criteria
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-8 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+          <p className="text-blue-900 dark:text-blue-200 text-sm font-medium">
+            Arcade program runs through December 31, 2026. All active games (+1 Pt) and verified skill badges (+0.5 Pt) continuously accumulate toward your total Arcade points and Swag Tiers. (Facilitator bonus milestones were evaluated on badges earned by Sep 14).
           </p>
         </div>
 
@@ -182,7 +183,7 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
                       <div className="flex gap-3">
                         {getBadgeImage(b.title) ? (
                           <div className="w-12 h-12 rounded-lg bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-1 flex-shrink-0 group-hover:scale-105 transition-transform">
-                            <img src={getBadgeImage(b.title)!} alt="badge" className="w-full h-full object-contain" />
+                            <img src={getBadgeImage(b.title)!} alt={`${b.title} badge icon`} className="w-full h-full object-contain" />
                           </div>
                         ) : (
                           <div className="w-12 h-12 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
@@ -199,7 +200,7 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
                           {b.points} pt
                         </span>
                         <span className="inline-flex items-center gap-1 text-[#34A853] text-xs font-medium">
-                          <CheckCircle className="w-3.5 h-3.5" /> Eligible
+                          <CheckCircle className="w-3.5 h-3.5" /> {b.validForProgram ? 'Facilitator & Arcade' : 'Arcade Points Active'}
                         </span>
                       </div>
                     </div>
@@ -213,7 +214,7 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
                       <div className="flex gap-3">
                         {getBadgeImage(b.title) ? (
                           <div className="w-12 h-12 rounded-lg bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 p-1 flex-shrink-0 group-hover:scale-105 transition-transform">
-                            <img src={getBadgeImage(b.title)!} alt="badge" className="w-full h-full object-contain" />
+                            <img src={getBadgeImage(b.title)!} alt={`${b.title} badge icon`} className="w-full h-full object-contain" />
                           </div>
                         ) : (
                           <div className="w-12 h-12 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center flex-shrink-0">
@@ -230,7 +231,7 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
                           {b.points} pt
                         </span>
                         <span className="inline-flex items-center gap-1 text-[#34A853] text-xs font-medium">
-                          <CheckCircle className="w-3.5 h-3.5" /> Eligible
+                          <CheckCircle className="w-3.5 h-3.5" /> {b.validForProgram ? 'Facilitator & Arcade' : 'Arcade Points Active'}
                         </span>
                       </div>
                     </div>
@@ -292,7 +293,7 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
                       <div key={`excl-${b.id}-${i}`} className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-3 shadow-sm flex items-center gap-3">
                         {getBadgeImage(b.title) ? (
                           <div className="w-8 h-8 rounded bg-slate-50 dark:bg-slate-900 flex-shrink-0">
-                            <img src={getBadgeImage(b.title)!} alt="" className="w-full h-full object-contain" />
+                            <img src={getBadgeImage(b.title)!} alt={`${b.title} badge`} className="w-full h-full object-contain" />
                           </div>
                         ) : (
                           <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-700 flex items-center justify-center flex-shrink-0">

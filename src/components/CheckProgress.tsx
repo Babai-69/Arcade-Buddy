@@ -275,7 +275,7 @@ export function CheckProgress({ completedBadges, activeGames = [] }: CheckProgre
 
                   <div className="flex justify-center mb-6">
                     {badge.image && badge.image !== 'No Image' ? (
-                      <img src={badge.image} alt={badge.name} className="w-32 h-32 object-contain" onError={(e) => {
+                      <img src={badge.image} alt={`${badge.name} digital badge icon`} className="w-32 h-32 object-contain" onError={(e) => {
                         (e.target as HTMLImageElement).style.display = 'none';
                         (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
                       }} />

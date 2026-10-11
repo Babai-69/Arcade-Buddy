@@ -74,6 +74,19 @@ export function SupportPage() {
             status: 'pending',
             createdAt: serverTimestamp()
           });
+
+          // Forward to backend notification endpoint
+          fetch('/api/notify-query', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: payload.fullName,
+              email: payload.emailAddr,
+              profileUrl: payload.profileUrl,
+              queryType: payload.queryType,
+              message: payload.detailMsg
+            })
+          }).catch((err) => console.warn('Could not dispatch query notification:', err));
           
           const ticketId = docRef.id.substring(0, 4).toUpperCase();
           

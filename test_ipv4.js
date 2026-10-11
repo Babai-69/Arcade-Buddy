@@ -1,3 +1,0 @@
-const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
-console.log('done');

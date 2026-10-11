@@ -22,7 +22,36 @@ import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import nodemailer from "nodemailer";
 import { SKILL_BADGES } from "./src/data/skillBadges";
-import { gameBadges as syllabusGameBadges } from "./src/data/badgesData";
+import { gameBadges as syllabusGameBadges, skillBadges as syllabusSkillBadges } from "./src/data/badgesData";
+import { getPageSEO } from "./src/data/pageSEO";
+
+function injectPageMetadata(html: string, pathname: string, host: string, protocol: string) {
+  try {
+    const seo = getPageSEO(pathname);
+    const origin = `${protocol}://${host}`;
+    const fullUrl = `${origin}${pathname}`;
+    const imageUrl = seo.image.startsWith('http') ? seo.image : `${origin}${seo.image.startsWith('/') ? '' : '/'}${seo.image}`;
+
+    let updated = html.replace(/<title>.*?<\/title>/i, `<title>${seo.title}</title>`);
+    updated = updated.replace(/<meta name="description" content=".*?"\s*\/?>/i, `<meta name="description" content="${seo.description}" />`);
+    updated = updated.replace(/<meta property="og:title" content=".*?"\s*\/?>/i, `<meta property="og:title" content="${seo.title}" />`);
+    updated = updated.replace(/<meta property="og:description" content=".*?"\s*\/?>/i, `<meta property="og:description" content="${seo.description}" />`);
+    updated = updated.replace(/<meta property="og:image" content=".*?"\s*\/?>/i, `<meta property="og:image" content="${imageUrl}" />`);
+    updated = updated.replace(/<meta property="og:image:alt" content=".*?"\s*\/?>/i, `<meta property="og:image:alt" content="${seo.imageAlt}" />`);
+    updated = updated.replace(/<meta name="twitter:title" content=".*?"\s*\/?>/i, `<meta name="twitter:title" content="${seo.title}" />`);
+    updated = updated.replace(/<meta name="twitter:description" content=".*?"\s*\/?>/i, `<meta name="twitter:description" content="${seo.description}" />`);
+    updated = updated.replace(/<meta name="twitter:image" content=".*?"\s*\/?>/i, `<meta name="twitter:image" content="${imageUrl}" />`);
+    updated = updated.replace(/<meta name="twitter:image:alt" content=".*?"\s*\/?>/i, `<meta name="twitter:image:alt" content="${seo.imageAlt}" />`);
+
+    const extraMeta = `
+    <link rel="canonical" href="${fullUrl}" />
+    <meta property="og:url" content="${fullUrl}" />`;
+
+    return updated.replace('</head>', `${extraMeta}\n  </head>`);
+  } catch (e) {
+    return html;
+  }
+}
 
 async function startServer() {
   // Check required env vars on startup
@@ -73,6 +102,7 @@ async function startServer() {
 
   app.use(express.json({ limit: '50mb' }));
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
+  app.use(express.static(path.join(process.cwd(), 'public')));
 
   // API Configuration
   app.get("/api/health", (req, res) => {
@@ -450,7 +480,9 @@ app.post("/api/notify-query", async (req, res) => {
 
 
     const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T00:00:00Z');
-    const END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T18:29:00Z');
+    const FACILITATOR_END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T18:29:00Z');
+    // The Arcade program continues until December 31, 2026
+    const ARCADE_END_DATE = new Date('2026-12-31T23:59:59Z');
 
     try {
       const response = await fetch(url, { signal: AbortSignal.timeout(20000) });
@@ -467,6 +499,8 @@ app.post("/api/notify-query", async (req, res) => {
       let gameBadges = 0;
       let skillBadges = 0;
       let specialBadges = 0;
+      let facilitatorGameBadges = 0;
+      let facilitatorSkillBadges = 0;
 
       const seenBadges = new Set<string>();
       const badgesList: any[] = [];
@@ -484,26 +518,33 @@ app.post("/api/notify-query", async (req, res) => {
         }
 
         const title = $(el).find(".badge-title, .ql-title-medium").text().trim() || $(el).attr('alt') || rawText || "";
-        const titleLower = title.toLowerCase();
+        const titleLower = title.toLowerCase().trim();
 
-        // Extract the year and check timeline
+        // Extract the date and check timeline
         const dateText = $(el).find(".ql-body-medium.l-mbs, .ql-body-medium").text().trim();
         let earnedDate = dateText;
-        let validForProgram = true;
+        let validForArcade = true;
+        let validForFacilitator = true;
         let cleanDateStr = "";
         let parsedDate = null;
         if (dateText) {
           cleanDateStr = dateText.replace("Earned ", "").replace(/ EDT| EST| PDT| PST/g, "").trim();
           parsedDate = new Date(cleanDateStr + " UTC");
           if (!isNaN(parsedDate.getTime())) {
-            console.log("title", title, "cleanDateStr", cleanDateStr, "parsedDate", parsedDate.toISOString(), "START_DATE", START_DATE.toISOString(), "parsedDate < START_DATE", parsedDate < START_DATE);
-
-            if (parsedDate < START_DATE || parsedDate > END_DATE) validForProgram = false;
+            if (parsedDate < START_DATE || parsedDate > ARCADE_END_DATE) {
+              validForArcade = false;
+            }
+            if (parsedDate < START_DATE || parsedDate > FACILITATOR_END_DATE) {
+              validForFacilitator = false;
+            }
           } else {
             const match = dateText.match(/(20\d\d)/);
             if (match) {
               const year = parseInt(match[1], 10);
-              if (year !== 2026) validForProgram = false;
+              if (year !== 2026) {
+                validForArcade = false;
+                validForFacilitator = false;
+              }
             }
           }
         }
@@ -511,12 +552,16 @@ app.post("/api/notify-query", async (req, res) => {
         if (!titleLower || seenBadges.has(titleLower)) return;
         seenBadges.add(titleLower);
 
-        let category = "Other";
+        let category = "Lab-free";
         let points = 0;
 
         const isSyllabusGame = syllabusGameBadges.some(
           gb => gb.name.toLowerCase().trim() === titleLower
         );
+
+        // Check if title matches valid skill badges
+        const isValidSkillBadge = SKILL_BADGES.some(b => b.name.toLowerCase().trim() === titleLower) ||
+                                  syllabusSkillBadges.some(b => b.name.toLowerCase().trim() === titleLower);
 
         // Classify badges
         if (
@@ -533,15 +578,18 @@ app.post("/api/notify-query", async (req, res) => {
           titleLower.includes("monthly game") ||
           titleLower.includes("simulator") ||
           titleLower.includes("spans and plans") ||
+          titleLower.includes("pitch perfect") ||
+          titleLower.includes("trick-or-metric") ||
           titleLower.includes("base camp")
         ) {
-          if (validForProgram) gameBadges++;
           category = "Game";
           points = 1;
+          if (validForArcade) gameBadges++;
+          if (validForFacilitator) facilitatorGameBadges++;
         } else if (titleLower.includes("trivia") || titleLower.includes("quiz")) {
-          if (validForProgram) triviaBadges++;
           category = "Trivia";
           points = 1;
+          if (validForArcade) triviaBadges++;
         } else if (
           titleLower.includes("facilitator") ||
           titleLower.includes("work meet play") ||
@@ -550,49 +598,18 @@ app.post("/api/notify-query", async (req, res) => {
           titleLower.includes("bonus") ||
           (titleLower.includes("event") && !titleLower.includes("eventarc") && !titleLower.includes("event-driven"))
         ) {
-          if (validForProgram) specialBadges++;
           category = "Special";
           points = 1;
+          if (validForArcade) specialBadges++;
+        } else if (isValidSkillBadge) {
+          category = "Skill";
+          points = 0.5;
+          if (validForArcade) skillBadges += 1;
+          if (validForFacilitator) facilitatorSkillBadges += 1;
         } else {
-          // Check for Lab-free courses (known titles from syllabus or similar matching)
-          const labFreeTitles = [
-            "digital transformation with google cloud",
-            "exploring data transformation with google cloud",
-            "infrastructure and application modernization with google cloud",
-            "scaling with google cloud operations",
-            "innovating with google cloud artificial intelligence",
-            "trust and security with google cloud",
-            "gen ai: beyond the chatbot",
-            "gen ai: unlock foundational concepts",
-            "google drive",
-            "google docs",
-            "google slides",
-            "google meet",
-            "google sheets",
-            "google calendar",
-            "gen ai: navigate the landscape",
-            "gen ai apps: transform your work",
-            "introduction to large language models",
-            "responsible ai: applying ai principles with google cloud",            
-            "responsible ai for digital leaders with google cloud",
-            "ai infrastructure: introduction to ai hypercomputer",
-            "machine learning operations (mlops) with vertex ai: model evaluation",
-            "conversational ai on vertex ai and dialogflow cx",
-            "building complex end to end self-service experiences in dialogflow cx",
-            "gen ai agents: transform your organization"
-          ];
-          
-          if (labFreeTitles.includes(titleLower)) {
-            category = "Lab-free";
-            points = 0;
-          } else if (SKILL_BADGES.some(b => b.name.toLowerCase() === titleLower)) {
-            if (validForProgram) skillBadges += 1;
-            category = "Skill";
-            points = 0.5;
-          } else {
-            // Exclude entirely as a Completion Badge
-            return;
-          }
+          // Unknown badges are treated as lab-free badges and contain 0 points
+          category = "Lab-free";
+          points = 0;
         }
 
         badgesList.push({
@@ -600,15 +617,17 @@ app.post("/api/notify-query", async (req, res) => {
           title: title,
           earnedDate: earnedDate,
           category: category,
-          points: points,
-          validForProgram,
+          points: validForArcade ? points : 0,
+          // validForProgram is true only for facilitator-eligible badges (<= Sept 14)
+          validForProgram: validForFacilitator,
+          validForArcade: validForArcade,
           _debugCleanDate: cleanDateStr,
           _debugParsedDate: parsedDate ? parsedDate.toISOString() : null,
           _debugStartDate: START_DATE ? START_DATE.toISOString() : null
-
         });
       });
 
+      // Overall Arcade Points: past points + current points
       const arcadePoints = gameBadges + triviaBadges + specialBadges + (skillBadges * 0.5);
 
       // Determine avatar URL
@@ -622,6 +641,8 @@ app.post("/api/notify-query", async (req, res) => {
         triviaBadges,
         specialBadges,
         skillBadges,
+        facilitatorGameBadges,
+        facilitatorSkillBadges,
         badges: badgesList
       });
     } catch (e) {
@@ -800,9 +821,19 @@ Return the response in JSON format as an array of objects. Each object should ha
     app.use(vite.middlewares);
   } else {
     const distPath = path.join(process.cwd(), 'dist');
+    const indexHtmlPath = path.join(distPath, 'index.html');
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
+      try {
+        let html = fs.readFileSync(indexHtmlPath, 'utf8');
+        const proto = (req.headers['x-forwarded-proto'] as string) || req.protocol || 'https';
+        const host = req.get('host') || 'localhost:3000';
+        html = injectPageMetadata(html, req.path, host, proto);
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.send(html);
+      } catch (err) {
+        res.sendFile(indexHtmlPath);
+      }
     });
   }
 

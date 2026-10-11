@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, CheckCircle, ExternalLink, Download, AlertCircle, Share2, Calendar, BellRing, X } from 'lucide-react';
+import { Search, CheckCircle, ExternalLink, Download, AlertCircle, Share2, Calendar, BellRing, X, LogIn, Sparkles, ShieldCheck, Gamepad2, Trophy, ArrowRight, Lock, Check } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -49,6 +49,39 @@ export function UserProgressDashboard() {
 
   const [isSharing, setIsSharing] = useState(false);
   const shareCardRef = useRef<HTMLDivElement>(null);
+
+  // Guest Quick Preview States
+  const [guestInputUrl, setGuestInputUrl] = useState('');
+  const [guestLoading, setGuestLoading] = useState(false);
+  const [guestError, setGuestError] = useState('');
+
+  const handleGuestCheck = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const target = guestInputUrl.trim();
+    if (!target) return;
+    setGuestLoading(true);
+    setGuestError('');
+    try {
+      const res = await fetch(`/api/calculator?url=${encodeURIComponent(target)}`);
+      if (!res.ok) throw new Error("Could not fetch profile. Please make sure your Google Skills Boost profile is public.");
+      const result = await res.json();
+      if (result.error) throw new Error(result.error);
+      setData(result);
+      setProfileUrl(target);
+      localStorage.setItem('arcadeProfileUrl', target);
+      localStorage.setItem('arcadeProgressData', JSON.stringify(result));
+      showNotification({
+        id: 'guest-progress-loaded',
+        message: 'Progress loaded! Sign in anytime to permanently sync your progress.',
+        type: 'success',
+        duration: 4000,
+      });
+    } catch (err: any) {
+      setGuestError(err.message || 'Failed to fetch profile. Make sure the profile URL is public.');
+    } finally {
+      setGuestLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (toastMessage) {
@@ -396,9 +429,169 @@ export function UserProgressDashboard() {
 
   if (!user) {
     return (
-      <div className="w-full max-w-7xl mx-auto pt-24 pb-20 px-4 text-center">
-        <h2 className="text-2xl font-bold mb-4 text-slate-800 dark:text-white">Please Sign In</h2>
-        <p className="text-slate-500">You need to sign in to view your progress tracker.</p>
+      <div className="w-full max-w-6xl mx-auto pt-6 pb-20 px-4 sm:px-6 font-sans">
+        {/* Main Hero Card for Unauthenticated Visitors */}
+        <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-8 sm:p-12 mb-10 text-center">
+          {/* Subtle Google RGBY Gradient Ambient Glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[260px] bg-gradient-to-r from-blue-500/15 via-indigo-500/15 to-emerald-500/15 rounded-full blur-3xl pointer-events-none -z-10" />
+
+          {/* Top Status Pill */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-800/60 text-xs font-semibold text-blue-700 dark:text-blue-300 mb-6 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+            <span>Google Cloud Arcade 2026 • Participant Progress Vault</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4 leading-tight">
+            Track Your Arcade Milestones{' '}
+            <span className="block mt-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-teal-500 bg-clip-text text-transparent">
+              In Real Time &amp; Sync Across Devices
+            </span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed mb-8">
+            Sign in with your Google account or email to link your Google Cloud Skills Boost profile, forecast your 2026/2027 swag tier, track completed Skill Badges, and view automated milestones.
+          </p>
+
+          {/* Primary Action Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3.5 sm:gap-4 mb-10">
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-login-modal'))}
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-semibold text-sm sm:text-base text-white bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:scale-95 transition-all cursor-pointer"
+            >
+              <LogIn className="w-5 h-5" />
+              <span>Sign In / Create Account</span>
+              <ArrowRight className="w-4 h-4 ml-0.5" />
+            </button>
+
+            <Link
+              to="/calculator"
+              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl font-semibold text-sm sm:text-base text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs hover:bg-slate-50 dark:hover:bg-slate-750 hover:-translate-y-0.5 active:scale-95 transition-all"
+            >
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span>Open Public Calculator</span>
+            </Link>
+
+            <Link
+              to="/syllabus"
+              className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+            >
+              <Gamepad2 className="w-4 h-4 text-emerald-500" />
+              <span>Explore Syllabus &amp; Games</span>
+            </Link>
+          </div>
+
+          {/* Guest Direct Quick-Check Card */}
+          <div className="max-w-2xl mx-auto bg-slate-50 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl p-5 sm:p-6 border border-slate-200 dark:border-slate-700 text-left">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300 flex items-center gap-1.5">
+                <Search className="w-3.5 h-3.5 text-blue-500" />
+                Quick Preview as Guest (No Sign In Required)
+              </span>
+              <Link to="/public-profile-help" className="text-xs text-blue-600 dark:text-blue-400 hover:underline">
+                Find public profile URL?
+              </Link>
+            </div>
+            <form onSubmit={handleGuestCheck} className="flex flex-col sm:flex-row gap-2.5">
+              <input
+                type="text"
+                placeholder="https://www.skills.google/public_profiles/..."
+                value={guestInputUrl}
+                onChange={(e) => setGuestInputUrl(e.target.value)}
+                className="flex-1 px-4 py-2.5 rounded-xl text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-2xs"
+              />
+              <button
+                type="submit"
+                disabled={guestLoading || !guestInputUrl.trim()}
+                className="px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {guestLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Analyzing...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Preview Progress</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </form>
+            {guestError && (
+              <p className="mt-2.5 text-xs text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <span>{guestError}</span>
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* 4 Feature Highlights Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-12">
+          <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+            <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4">
+              <Trophy className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Swag Tier Forecasting</h3>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Real-time point calculations across Trooper, Ranger, Champion, and Legend swag thresholds.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4">
+              <CheckCircle className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Live Badge Verification</h3>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Auto-validates your completed Google Cloud Skill Badges and monthly Arcade game badges.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+            <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4">
+              <Download className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">Exportable Certificates</h3>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Download high-res achievement cards and comprehensive PDF progress transcripts for your portfolio.
+            </p>
+          </div>
+
+          <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+            <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-4">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1.5">100% Private &amp; Secure</h3>
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+              Secured by Google Firebase. We only read your public Google Skills Boost credentials.
+            </p>
+          </div>
+        </div>
+
+        {/* Live Mockup Teaser */}
+        <div className="relative rounded-3xl bg-slate-900 text-white p-8 sm:p-10 overflow-hidden border border-slate-800 shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-transparent to-teal-500/10 pointer-events-none" />
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                <span>⭐ Participant Experience</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">Ready to see where you stand in 2026?</h2>
+              <p className="text-slate-400 text-sm max-w-xl">
+                Join thousands of Google Cloud learners tracking their points toward the 2027 Prize Counter.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-login-modal'))}
+              className="px-6 py-3.5 rounded-xl font-bold text-sm text-slate-900 bg-white hover:bg-slate-100 shadow-lg hover:scale-105 active:scale-95 transition-all whitespace-nowrap cursor-pointer"
+            >
+              Get Started Free &rarr;
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -418,7 +611,7 @@ export function UserProgressDashboard() {
         {data ? (
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              {data.avatar && <img src={data.avatar} alt="Profile" className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700" />}
+              {data.avatar && <img src={data.avatar} alt={`${data.name || 'Student'}'s profile picture`} className="w-12 h-12 rounded-full border border-slate-200 dark:border-slate-700" />}
               <div>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white">{data.name || 'Student'}</h2>
                 <a href={profileUrl} target="_blank" rel="noopener noreferrer" className="text-sm text-blue-500 hover:underline break-all max-w-[200px] sm:max-w-md block truncate">
@@ -429,17 +622,42 @@ export function UserProgressDashboard() {
             {/* Removed the Change URL button */}
           </div>
         ) : (
-          <div className="text-center py-6">
-            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="text-center py-8 px-4 max-w-xl mx-auto">
+            <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-sm">
               <Search className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">No Profile Found</h3>
-            <p className="text-slate-500 dark:text-slate-400 mb-6 max-w-md mx-auto">
-              Please check your progress using the calculator on the Home Page first. Once checked, your detailed progress will automatically appear here.
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Connect Your Skills Boost Profile</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+              Enter your public profile URL below. Once connected, your earned skill badges, game points, and milestones will automatically sync to your account.
             </p>
-            <Link to="/" className="inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-lg transition-colors">
-              Go to Home Page
-            </Link>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              if (profileUrl.trim()) fetchProgress(e, profileUrl.trim());
+            }} className="flex flex-col sm:flex-row gap-2.5 mb-4">
+              <input
+                type="text"
+                placeholder="https://www.skills.google/public_profiles/..."
+                value={profileUrl}
+                onChange={(e) => setProfileUrl(e.target.value)}
+                className="flex-1 px-4 py-3 rounded-xl text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
+              />
+              <button
+                type="submit"
+                disabled={loading || !profileUrl.trim()}
+                className="px-6 py-3 rounded-xl font-semibold text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              >
+                {loading ? 'Analyzing...' : 'Connect & Track'}
+              </button>
+            </form>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-500 dark:text-slate-400">
+              <Link to="/public-profile-help" className="text-blue-600 dark:text-blue-400 hover:underline">
+                How do I find my public profile URL?
+              </Link>
+              <span>•</span>
+              <Link to="/calculator" className="hover:underline">
+                Open Calculator
+              </Link>
+            </div>
           </div>
         )}
         {error && (
@@ -455,7 +673,7 @@ export function UserProgressDashboard() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
             <div className="flex items-center gap-4">
               {data.avatarUrl && (
-                <img src={data.avatarUrl} alt="Avatar" className="w-16 h-16 rounded-full border border-slate-200 dark:border-slate-700" crossOrigin="anonymous" />
+                <img src={data.avatarUrl} alt={`${data.name || 'Participant'}'s public profile avatar`} className="w-16 h-16 rounded-full border border-slate-200 dark:border-slate-700" crossOrigin="anonymous" />
               )}
               <div>
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white">{data.name || 'Profile'}</h2>
@@ -589,7 +807,7 @@ export function UserProgressDashboard() {
               
               <div className="relative z-10 flex items-start gap-4">
                 {data.avatarUrl && (
-                  <img src={data.avatarUrl} alt="Avatar" crossOrigin="anonymous" className="w-16 h-16 rounded-full border-2" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }} />
+                  <img src={data.avatarUrl} alt={`${data.name || 'Participant'}'s achievement poster avatar`} crossOrigin="anonymous" className="w-16 h-16 rounded-full border-2" style={{ borderColor: 'rgba(255, 255, 255, 0.2)' }} />
                 )}
                 <div>
                   <h1 className="text-2xl font-bold">{data.name}</h1>

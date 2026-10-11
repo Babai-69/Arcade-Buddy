@@ -10,7 +10,7 @@ The following versions of Arcade Buddy are currently supported with security upd
 | Previous releases | ❌ Not supported |
 
 > Arcade Buddy is continuously deployed. Always use the latest version at:
-> [arcade-buddy-385186531056.asia-southeast1.run.app](https://arcade-buddy-385186531056.asia-southeast1.run.app)
+> [arcade-buddy.onrender.com](https://arcade-buddy-onrender.com)
 
 ---
 
@@ -26,7 +26,7 @@ Instead, report privately through one of these channels:
 
 | Channel | Contact |
 |---------|---------|
-| 📧 Email | deya58690@gmail.com |
+| 📧 Email | abirdey.work@gmail.com |
 | 💼 LinkedIn | [Abir Dey](https://www.linkedin.com/in/abir-dey-a34914254/) |
 | 🐙 GitHub | [@Babai-69](https://github.com/Babai-69) |
 

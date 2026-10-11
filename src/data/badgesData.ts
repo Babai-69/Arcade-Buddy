@@ -1,5 +1,35 @@
 export const gameBadges = [
   {
+    "name": "Trick-or-Metric",
+    "image": "https://services.google.com/fh/files/events/gcaf26_trick_or_metric_oct.png",
+    "link": "https://www.skills.google/games/7488?utm_source=googleskills&utm_medium=lp&utm_campaign=trick-or-metric-Oct-arcade26"
+  },
+  {
+    "name": "Arcade Simulator: Site Reliability Engineer",
+    "image": "https://services.google.com/fh/files/events/gcaf26_arcade_sim_oct.png",
+    "link": "https://www.skills.google/games/7485?utm_source=googleskills&utm_medium=lp&utm_campaign=spegame-Oct-arcade26"
+  },
+  {
+    "name": "Arcade Base Camp October 2026",
+    "image": "https://services.google.com/fh/files/events/gcaf26_basecamp_oct.png",
+    "link": "https://www.skills.google/games/7484?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Oct-arcade26"
+  },
+  {
+    "name": "Arcade Adventure: Google Cloud ML APIs",
+    "image": "https://services.google.com/fh/files/events/gcaf26_adventure_oct.png",
+    "link": "https://www.skills.google/games/7481?utm_source=qwiklabs&utm_medium=lp&utm_campaign=adv-Oct-arcade26"
+  },
+  {
+    "name": "Arcade Voyage: Language, Voice, and Multimodal Processing",
+    "image": "https://services.google.com/fh/files/events/gcaf26_voyage_oct.png",
+    "link": "https://www.skills.google/games/7482?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Oct-arcade26"
+  },
+  {
+    "name": "Arcade Trail: Containers & Load Balancing",
+    "image": "https://services.google.com/fh/files/events/gcaf26_trail_oct.png",
+    "link": "https://www.skills.google/games/7483?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Oct-arcade26"
+  },
+  {
     "name": "Arcade Simulator: DevOps Engineer",
     "image": "https://services.google.com/fh/files/events/gcaf26_arcade_sim_sep.png",
     "link": "https://www.skills.google/games/7445?utm_source=googleskills&utm_medium=lp&utm_campaign=spegame-Sep-arcade26"
@@ -101,8 +131,8 @@ export const gameBadges = [
 export const skillBadges = [
   {
     "name": "Implement Sensitive Data Protection on Google Cloud",
-    "image": "No Image",
-    "link": "#"
+    "image": "https://cdn.qwiklabs.com/%2BVrQu7%2Bfm7hBi%2FI8OUUQmDMVS2c4nibG2IN7Q9Vv0rg%3D",
+    "link": "https://www.skills.google/course_templates/750"
   },
   {
     "name": "Use Functions, Formulas, and Charts in Google Sheet",

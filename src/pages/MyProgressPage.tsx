@@ -24,8 +24,8 @@ export function MyProgressPage() {
   }, [location]);
 
   return (
-    <main className="flex-grow pt-16">
+    <div className="w-full">
       <UserProgressDashboard />
-    </main>
+    </div>
   );
 }

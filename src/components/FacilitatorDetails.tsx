@@ -46,7 +46,7 @@ export function FacilitatorDetails() {
       </div>
       
       <div className="w-full">
-         <img src="https://services.google.com/fh/files/events/cf_site_progress_bar.png" alt="Google Cloud Colors Border" className="w-full h-auto object-contain rounded-md" />
+         <img src="https://services.google.com/fh/files/events/cf_site_progress_bar.png" alt="Google Cloud Brand Colors Decorative Border Banner" className="w-full h-auto object-contain rounded-md" />
       </div>
     </div>
   );

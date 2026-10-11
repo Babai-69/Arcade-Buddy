@@ -1,17 +1,15 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { LabLimitAnimation } from '../components/LabLimitAnimation';
-import { ChevronLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { BackToResourcesButton } from '../components/common/BackToResourcesButton';
 
 export function DailyLabLimitGuidePage() {
   return (
     <div className="min-h-screen pt-12 pb-24 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
-        <Link to="/resources" className="inline-flex items-center text-sm font-bold text-slate-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors mb-8">
-          <ChevronLeft className="w-4 h-4 mr-1" />
-          Back to Resources
-        </Link>
+        <div className="mb-8">
+          <BackToResourcesButton handwrittenNote="← 15 labs / 24h quota rules ⏱️" />
+        </div>
         
         <motion.div
           initial={{ opacity: 0, y: 20 }}

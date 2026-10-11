@@ -168,7 +168,8 @@ export function ArcadeWelcomeHero({
             href="https://go.cloudskillsboost.google/arcade"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-6 sm:px-7 py-3 rounded-md font-['Archivo_Black',sans-serif] text-xs sm:text-sm uppercase tracking-wider text-white bg-[var(--arcade-hero-magenta)] hover:opacity-95 shadow-[0_4px_16px_var(--arcade-hero-magenta-glow)] transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2"
+            className="btn-press btn-press--primary font-['Archivo_Black',sans-serif] text-xs sm:text-sm uppercase tracking-wider text-white flex items-center gap-2"
+            style={{ background: 'var(--arcade-hero-magenta, #1A73E8)' }}
           >
             <span>Continue Grinding</span>
             <span>→</span>
@@ -177,7 +178,7 @@ export function ArcadeWelcomeHero({
           <button
             type="button"
             onClick={scrollToMilestones}
-            className="px-6 sm:px-7 py-3 rounded-md font-['Archivo_Black',sans-serif] text-xs sm:text-sm uppercase tracking-wider text-[var(--arcade-hero-text)] border-2 border-[var(--arcade-hero-border)] bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-all transform hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            className="btn-press btn-press--secondary font-['Archivo_Black',sans-serif] text-xs sm:text-sm uppercase tracking-wider cursor-pointer inline-flex items-center justify-center px-8 sm:px-10 min-w-[210px] sm:min-w-[240px]"
           >
             View Milestones
           </button>

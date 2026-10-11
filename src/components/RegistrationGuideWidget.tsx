@@ -19,13 +19,12 @@ export function RegistrationGuideWidget() {
       {/* Floating Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 left-6 z-40 p-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center group"
+        className="btn-press btn-press--icon fixed bottom-6 left-6 z-40"
+        style={{ background: 'var(--card)', color: 'var(--ink)' }}
         aria-label="Completion Guide"
+        title="Completion Guide"
       >
-        <BookOpen className="w-6 h-6" />
-        <span className="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs transition-all duration-300 ease-in-out pl-0 group-hover:pl-2 font-medium">
-          Completion Guide
-        </span>
+        <BookOpen className="w-5 h-5 text-blue-600 dark:text-blue-400" />
       </button>
 
       {/* Modal */}
@@ -53,7 +52,7 @@ export function RegistrationGuideWidget() {
                     href="https://docs.google.com/document/d/1NDgPcOeDHYHkbIAFaXe0h-MaurN3zNUad2vm78UnEag/export?format=pdf" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="flex items-center gap-2 text-sm font-medium text-blue-700 bg-blue-100 hover:bg-blue-200 dark:text-blue-300 dark:bg-blue-900/30 dark:hover:bg-blue-800/40 px-3 py-1.5 rounded-lg transition-colors border border-blue-200 dark:border-blue-800/50"
+                    className="btn-press btn-press--sm btn-press--secondary flex items-center gap-2 text-sm font-medium"
                   >
                     <Download className="w-4 h-4" />
                     Download PDF
@@ -62,14 +61,16 @@ export function RegistrationGuideWidget() {
                     href="https://youtu.be/v8ZzN5sJzOs?si=qDXVzruVv1TooNRB" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="flex items-center gap-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-lg transition-colors"
+                    className="btn-press btn-press--sm btn-press--red flex items-center gap-2 text-sm font-medium"
                   >
                     <Youtube className="w-4 h-4" />
                     Watch Completion Guide
                   </a>
                   <button
                     onClick={() => setIsOpen(false)}
-                    className="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-500 dark:text-slate-400"
+                    className="btn-press btn-press--icon text-slate-500 dark:text-slate-400"
+                    style={{ background: 'var(--card)' }}
+                    aria-label="Close modal"
                   >
                     <X className="w-5 h-5" />
                   </button>

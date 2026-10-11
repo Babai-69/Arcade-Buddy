@@ -130,7 +130,7 @@ export function ArcadePointsSystem() {
           {/* Trooper */}
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center shadow-sm">
             <div className="bg-slate-50 dark:bg-slate-800/50 w-full rounded-xl flex justify-center items-center py-6 mb-4 h-32">
-               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Trooper.png?raw=true" alt="Trooper Tier" className="w-20 h-20 object-contain drop-shadow-md" referrerPolicy="no-referrer" />
+               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Trooper.png?raw=true" alt="Google Cloud Arcade Trooper Tier Swag Box" className="w-20 h-20 object-contain drop-shadow-md" referrerPolicy="no-referrer" />
             </div>
             <div className="flex items-center justify-between w-full mb-4">
               <h3 className="font-bold text-sm">Trooper Tier</h3>
@@ -145,7 +145,7 @@ export function ArcadePointsSystem() {
           {/* Ranger */}
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center shadow-sm">
             <div className="bg-slate-50 dark:bg-slate-800/50 w-full rounded-xl flex justify-center items-center py-6 mb-4 h-32">
-               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Ranger.png?raw=true" alt="Ranger Tier" className="w-20 h-20 object-contain drop-shadow-md" referrerPolicy="no-referrer" />
+               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Ranger.png?raw=true" alt="Google Cloud Arcade Ranger Tier Swag Box" className="w-20 h-20 object-contain drop-shadow-md" referrerPolicy="no-referrer" />
             </div>
             <div className="flex items-center justify-between w-full mb-4">
               <h3 className="font-bold text-sm">Ranger Tier</h3>
@@ -160,7 +160,7 @@ export function ArcadePointsSystem() {
           {/* Champion */}
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center shadow-sm">
             <div className="bg-slate-50 dark:bg-slate-800/50 w-full rounded-xl flex justify-center items-center py-6 mb-4 h-32">
-               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Champian.png?raw=true" alt="Champion Tier" className="w-20 h-20 object-contain drop-shadow-md" referrerPolicy="no-referrer" />
+               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Champian.png?raw=true" alt="Google Cloud Arcade Champion Tier Swag Box" className="w-20 h-20 object-contain drop-shadow-md" referrerPolicy="no-referrer" />
             </div>
             <div className="flex items-center justify-between w-full mb-4">
               <h3 className="font-bold text-sm">Champion Tier</h3>
@@ -176,7 +176,7 @@ export function ArcadePointsSystem() {
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center shadow-sm relative overflow-hidden">
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-yellow-400/20 rounded-full blur-2xl"></div>
             <div className="bg-slate-50 dark:bg-slate-800/50 w-full rounded-xl flex justify-center items-center py-6 mb-4 h-32 relative z-10">
-               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Legend.png?raw=true" alt="Legend Tier" className="w-20 h-20 object-contain drop-shadow-md" referrerPolicy="no-referrer" />
+               <img src="https://cdn.jsdelivr.net/gh/prateekrajput08/ArcadePointsCalci-jsDelivr@main/images/swags/Legend.png?raw=true" alt="Google Cloud Arcade Legend Tier Swag Box" className="w-20 h-20 object-contain drop-shadow-md" referrerPolicy="no-referrer" />
             </div>
             <div className="flex items-center justify-between w-full mb-4">
               <h3 className="font-bold text-sm">Legend Tier</h3>
@@ -203,13 +203,37 @@ export function ArcadePointsSystem() {
           <p className="text-slate-300 text-sm max-w-3xl mb-8 leading-relaxed">
             Why waste time manually counting game badges, skill badges, and milestone bonuses? ArcadeBuddy automatically parses your public Google Skills Boost profile, calculates your exact Arcade points in real-time, and predicts your swag prize tier eligibility instantly.
           </p>
-          <div className="flex flex-wrap items-center gap-4">
-            <Link to="/calculator" className="bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg">
-              Calculate My Points Now
-            </Link>
-            <Link to="/syllabus" className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl transition-colors border border-slate-700">
-              View Badge Catalog <ArrowRight className="inline-block w-4 h-4 ml-2" />
-            </Link>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex flex-col items-center sm:items-start gap-1 w-full sm:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-amber-400 text-lg font-bold -rotate-2 select-none"
+              >
+                ⚡ auto-syncs your public profile!
+              </span>
+              <Link 
+                to="/calculator" 
+                className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/35 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 border border-yellow-400/50"
+              >
+                <span>Calculate My Points Now</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+            <div className="flex flex-col items-center sm:items-start gap-1 w-full sm:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-slate-400 text-lg font-bold rotate-1 select-none"
+              >
+                📚 all active 2026 badges
+              </span>
+              <Link 
+                to="/syllabus" 
+                className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 border border-slate-700 hover:border-slate-600 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+              >
+                <span>View Badge Catalog</span>
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

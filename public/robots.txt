@@ -1,0 +1,86 @@
+# robots.txt for Arcade Buddy (Google Cloud Arcade Facilitator Hub)
+# Designed for search engines and AI assistants (Claude, ChatGPT, Perplexity, Google, Bing)
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+# OpenAI ChatGPT Crawlers (ChatGPT Search, Browse with Bing, GPT-4o)
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+# Anthropic Claude Crawlers (Claude 3.5 Sonnet, Claude Search)
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+# Perplexity AI Search Crawler
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+# Google Search & Googlebot-Mobile
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /og/
+Allow: /images/
+
+# Microsoft Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+# Apple Search
+User-agent: Applebot
+Allow: /
+Disallow: /api/
+Disallow: /admin-progress
+Disallow: /admin-feedback
+Disallow: /admin-queries
+
+# XML Sitemap
+Sitemap: https://ais-pre-pflgad73xzsoyh5n3pewa4-735276502020.asia-southeast1.run.app/sitemap.xml

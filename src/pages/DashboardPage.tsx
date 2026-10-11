@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { ChevronLeft, ChevronRight, RefreshCw, Zap, CheckCircle2, CloudOff } from 'lucide-react';
+import { ChevronLeft, ChevronRight, RefreshCw, Zap, CheckCircle2, CloudOff, Search, LogIn, Sparkles, ArrowRight, AlertCircle, HelpCircle } from 'lucide-react';
 import { PosterModal } from '../components/PosterModal';
 import { DashboardSkeleton } from '../components/DashboardSkeleton';
 import { Milestones } from '../components/Milestones';
@@ -46,6 +46,10 @@ export function DashboardPage({ participants }: { participants: any[] }) {
     legend: { spotsLeft: 2500, total: 2500 },
   });
 
+  const [connectUrl, setConnectUrl] = useState('');
+  const [connectError, setConnectError] = useState('');
+  const [connectLoading, setConnectLoading] = useState(false);
+
   const syncInProgressRef = useRef(false);
 
   // Auto-sync in background without blocking user
@@ -82,6 +86,15 @@ export function DashboardPage({ participants }: { participants: any[] }) {
           localStorage.setItem('arcadeLastSyncTime', timeStr);
           setLastSyncTime(timeStr);
           sessionStorage.setItem('arcadeSessionDashboardSynced', 'true');
+
+          if (user) {
+            try {
+              const userRef = doc(db, 'users', user.uid);
+              await setDoc(userRef, { profileUrl: url }, { merge: true });
+            } catch (err) {
+              console.warn('Failed to save profileUrl to Firestore:', err);
+            }
+          }
 
           // Retro success notification
           showNotification({
@@ -123,45 +136,55 @@ export function DashboardPage({ participants }: { participants: any[] }) {
   useEffect(() => {
     fetch('/api/arcade-spots').then(r => r.json()).then(d => setSpots(d)).catch(() => {});
 
-    const savedUrl = localStorage.getItem('arcadeProfileUrl') || (data && data.profileUrl);
     const sessionSynced = sessionStorage.getItem('arcadeSessionDashboardSynced') === 'true';
 
-    // If we have saved URL and session hasn't synced yet, start background update immediately
-    if (savedUrl && !sessionSynced) {
-      syncProfileData(savedUrl, false);
-    }
-    
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-      let targetUrl = savedUrl;
 
-      if (currentUser) {
-        try {
-          const userRef = doc(db, 'users', currentUser.uid);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists() && userSnap.data().profileUrl) {
-            targetUrl = userSnap.data().profileUrl;
-          }
-        } catch(e) {
-          console.error(e);
+      if (!currentUser) {
+        // When user logs out, purge cached progress data so dashboard never shows stale data
+        setData(null);
+        setLoading(false);
+        setIsOfflinePreview(false);
+        localStorage.removeItem('arcadeProgressData');
+        localStorage.removeItem('arcadeProfileUrl');
+        localStorage.removeItem('arcadeLastSyncTime');
+        sessionStorage.removeItem('arcadeSessionDashboardSynced');
+        return;
+      }
+
+      // When user is logged in, fetch their saved profile from Firestore
+      let targetUrl: string | null = null;
+      try {
+        const userRef = doc(db, 'users', currentUser.uid);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists() && userSnap.data().profileUrl) {
+          targetUrl = userSnap.data().profileUrl;
         }
+      } catch (e) {
+        console.warn('Could not load user profile from Firestore, using local session:', e);
+      }
+
+      if (!targetUrl) {
+        targetUrl = localStorage.getItem('arcadeProfileUrl');
       }
 
       if (targetUrl) {
+        setConnectUrl(targetUrl);
         if (!data) {
-          // Brand new visitor with no cache: load once
           setLoading(true);
           syncProfileData(targetUrl, true);
         } else if (!sessionSynced) {
-          // Has offline preview: auto-update in background silently
           syncProfileData(targetUrl, false);
         } else {
           setLoading(false);
         }
       } else {
+        setData(null);
         setLoading(false);
       }
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -169,6 +192,49 @@ export function DashboardPage({ participants }: { participants: any[] }) {
     const targetUrl = data?.profileUrl || localStorage.getItem('arcadeProfileUrl');
     if (targetUrl) {
       syncProfileData(targetUrl, true);
+    }
+  };
+
+  const handleConnectSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const urlToUse = connectUrl.trim();
+    if (!urlToUse) return;
+    setConnectLoading(true);
+    setConnectError('');
+    try {
+      const res = await fetch(`/api/calculator?url=${encodeURIComponent(urlToUse)}`);
+      if (!res.ok) throw new Error("Could not fetch profile. Ensure your Google Skills Boost profile is public.");
+      const result = await res.json();
+      if (result.error) throw new Error(result.error);
+
+      setData(result);
+      setIsOfflinePreview(false);
+      localStorage.setItem('arcadeProgressData', JSON.stringify(result));
+      localStorage.setItem('arcadeProfileUrl', urlToUse);
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      localStorage.setItem('arcadeLastSyncTime', timeStr);
+      setLastSyncTime(timeStr);
+      sessionStorage.setItem('arcadeSessionDashboardSynced', 'true');
+
+      if (user) {
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          await setDoc(userRef, { profileUrl: urlToUse }, { merge: true });
+        } catch (err) {
+          console.warn('Failed to update Firestore profileUrl:', err);
+        }
+      }
+
+      showNotification({
+        id: 'profile-sync',
+        message: 'Profile Data Updated!',
+        type: 'success',
+        duration: 2600,
+      });
+    } catch (err: any) {
+      setConnectError(err.message || 'Failed to analyze profile. Please make sure the URL is public.');
+    } finally {
+      setConnectLoading(false);
     }
   };
 
@@ -180,9 +246,95 @@ export function DashboardPage({ participants }: { participants: any[] }) {
 
   if (!data) {
     return (
-      <div className="min-h-screen pt-24 flex flex-col justify-center items-center text-center px-4">
-        <h2 className="text-2xl font-bold mb-4">No Profile Data Found</h2>
-        <p className="text-slate-500 mb-6">Please go to the Home page and calculate your progress first.</p>
+      <div className="dashboard-page-root min-h-[80vh] flex flex-col justify-center items-center text-center px-4 pt-24 pb-20 font-sans">
+        <div className="top-rgby-stripe" aria-hidden="true" />
+        
+        {/* Styled Card Container */}
+        <div className="relative max-w-xl w-full mx-auto p-8 sm:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-2xl text-center overflow-hidden">
+          {/* Subtle Google RGBY Gradient Ambient Glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[480px] h-[220px] bg-gradient-to-r from-blue-500/15 via-indigo-500/15 to-emerald-500/15 rounded-full blur-3xl pointer-events-none -z-10" />
+
+          {/* Eyebrow Status Pill */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200/80 dark:border-blue-800/60 text-xs font-semibold text-blue-700 dark:text-blue-300 mb-5 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse flex-shrink-0" />
+            <span>{user ? 'PARTICIPANT PROFILE' : 'NO PROFILE DATA LINKED'}</span>
+          </div>
+
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-3">
+            Connect Your <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-teal-500 bg-clip-text text-transparent">Skills Boost</span> Profile
+          </h2>
+
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 leading-relaxed max-w-md mx-auto mb-6">
+            Enter your public profile URL below. Your earned badges, milestone bonuses, and leaderboard standing will sync and display automatically.
+          </p>
+
+          {/* Direct Profile URL Input Form */}
+          <form onSubmit={handleConnectSubmit} className="flex flex-col sm:flex-row gap-2.5 mb-5 text-left">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="https://www.skills.google/public_profiles/..."
+                value={connectUrl}
+                onChange={(e) => setConnectUrl(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-inner"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={connectLoading || !connectUrl.trim()}
+              className="px-6 py-3 rounded-xl font-semibold text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+            >
+              {connectLoading ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Syncing...</span>
+                </>
+              ) : (
+                <>
+                  <span>Connect &amp; Sync</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+          </form>
+
+          {connectError && (
+            <p className="mb-4 text-xs text-red-600 dark:text-red-400 flex items-center justify-center gap-1.5">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{connectError}</span>
+            </p>
+          )}
+
+          {/* If user is not logged in, offer quick sign-in option */}
+          {!user && (
+            <div className="mb-6 pt-4 border-t border-slate-100 dark:border-slate-800">
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-login-modal'))}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm text-white bg-gradient-to-r from-blue-600 via-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/20 active:scale-95 transition-all cursor-pointer"
+              >
+                <LogIn className="w-4 h-4" />
+                <span>Sign In to Save Profile Permanently</span>
+              </button>
+            </div>
+          )}
+
+          {/* Secondary Shortcuts */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs text-slate-500 dark:text-slate-400">
+            <Link to="/calculator" className="font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Open Calculator &rarr;</span>
+            </Link>
+            <span>•</span>
+            <Link to="/public-profile-help" className="hover:underline">
+              How to find profile URL?
+            </Link>
+            <span>•</span>
+            <Link to="/" className="hover:underline">
+              Go to Home
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }
@@ -263,7 +415,86 @@ function DashboardContent({
   else if (totalPoints >= 50) currentTier = 'Trooper';
 
   return (
-    <div className="min-h-screen bg-[#F0F4F9] dark:bg-[#0B0F19] pt-24 pb-20 px-4 font-sans">
+    <div className="dashboard-page-root min-h-screen pt-24 pb-20 px-4">
+      {/* Google Fonts */}
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Caveat:wght@600&display=swap"
+        rel="stylesheet"
+      />
+
+      {/* Top 4-Color Stripe */}
+      <div className="top-rgby-stripe" aria-hidden="true" />
+
+      {/* Embedded CSS Style System */}
+      <style>{`
+        :root {
+          --ink: #E8EAED;
+          --mut: #9AA0A6;
+          --card: #141A2E;
+          --ln: rgba(255,255,255,.1);
+          --pill: rgba(20,26,46,.8);
+          --b: #4C8DFF;
+          --r: #EA4335;
+          --y: #FBBC05;
+          --yt: #FDD663;
+          --gr: #34A853;
+          --t1: #1C2848;
+          --t2: #12332B;
+          --t3: #3A2D1A;
+          --t4: #3A1F24;
+          --g1: #0C1022;
+          --g2: #0D1430;
+          --g3: #0A1D22;
+          --sh: rgba(0,0,0,.35);
+        }
+
+        :root[data-theme="light"],
+        html:not(.dark) {
+          --ink: #202124;
+          --mut: #5F6368;
+          --card: #fff;
+          --ln: #DADCE0;
+          --pill: rgba(255,255,255,.88);
+          --b: #1A73E8;
+          --r: #D93025;
+          --y: #FBBC05;
+          --yt: #B06000;
+          --gr: #1E8E3E;
+          --t1: #E8F0FE;
+          --t2: #E6F4EA;
+          --t3: #FEF7E0;
+          --t4: #FCE8E6;
+          --g1: #fff;
+          --g2: #F8F9FA;
+          --g3: #F1F6FE;
+          --sh: rgba(60,64,67,.16);
+        }
+
+        .dashboard-page-root {
+          font-family: "Space Grotesk", system-ui, sans-serif;
+          background: linear-gradient(120deg, var(--g1), var(--g2) 45%, var(--g3));
+          background-size: 200% 200%;
+          animation: driftDash 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes driftDash {
+          to { background-position: 100% 100%; }
+        }
+
+        .top-rgby-stripe {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          z-index: 9999;
+          background: linear-gradient(90deg, #4285F4 25%, #EA4335 25% 50%, #FBBC05 50% 75%, #34A853 75%);
+          pointer-events: none;
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto space-y-6">
         
         {/* Retro Arcade Zine Welcome Hero */}
@@ -292,7 +523,7 @@ function DashboardContent({
             
             <div className="flex flex-col items-center pt-8 pb-6 bg-gradient-to-b from-blue-50/50 to-purple-50/50 dark:from-slate-800 dark:to-slate-900 flex-grow relative">
               <div className="relative mb-4">
-                <img src={data.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'User')}&background=random`} alt="Avatar" className="w-24 h-24 rounded-full border-4 border-white shadow-lg" crossOrigin="anonymous" />
+                <img src={data.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'User')}&background=random`} alt={`${data.name || 'Participant'}'s avatar profile picture`} className="w-24 h-24 rounded-full border-4 border-white shadow-lg" crossOrigin="anonymous" />
                 <div className="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-6 h-6 border-2 border-white flex items-center justify-center shadow-md">
                    {/* Gold Medal Icon */} 🥇
                 </div>
@@ -313,7 +544,8 @@ function DashboardContent({
               
               <button 
                 onClick={() => setIsPosterOpen(true)}
-                className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold py-2 px-6 rounded-full shadow-md text-sm transition-transform hover:scale-105 flex items-center gap-2 relative"
+                className="btn-press btn-press--sm relative flex items-center gap-2 text-white font-bold"
+                style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', color: '#ffffff' }}
               >
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm animate-pulse">NEW</span>
                 ✨ Create Poster
@@ -412,7 +644,7 @@ function DashboardContent({
                 <div className="font-bold text-green-600 dark:text-green-400 text-lg">{currentTier}</div>
                 <div className="text-xs text-slate-500">{totalPoints} Total Arcade Points</div>
               </div>
-              <a href="/swags" className="bg-white dark:bg-slate-700 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 text-sm font-bold py-1.5 px-4 rounded-md shadow-sm hover:bg-green-50 transition-colors inline-block">
+              <a href="/swags" className="btn-press btn-press--sm btn-press--secondary text-green-700 dark:text-green-400 text-sm font-bold inline-flex items-center justify-center">
                 View Prizes
               </a>
             </div>
@@ -505,7 +737,7 @@ function DashboardContent({
               id="dashboard-manual-sync-btn"
               onClick={onManualSync}
               disabled={isSyncing}
-              className="flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-black text-white dark:bg-slate-700 dark:hover:bg-slate-600 text-xs md:text-sm font-bold rounded-xl shadow-sm transition-all transform active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-press btn-press--sm btn-press--secondary flex items-center gap-2 text-xs md:text-sm font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
               title="Refresh profile progress from Skills Boost"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin text-amber-400' : ''}`} />
@@ -595,7 +827,7 @@ function BadgesDistribution({ data, gameCount, skillCount }: { data: any, gameCo
 }
 
 function ActivityMonth({ badges }: { badges: any[] }) {
-  const [currentDate, setCurrentDate] = useState(new Date(2026, 8, 1)); // September 2026
+  const [currentDate, setCurrentDate] = useState(() => new Date());
   const [selectedDay, setSelectedDay] = useState<{day: number, count: number, dateStr: string} | null>(null);
 
   const handleBoxClick = (day: number, count: number) => {

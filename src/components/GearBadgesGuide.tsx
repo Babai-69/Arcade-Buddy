@@ -35,29 +35,57 @@ export function GearBadgesGuide() {
         {/* Badge 1 */}
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col items-start">
           <div className="w-full bg-indigo-50 dark:bg-indigo-900/20 rounded-xl h-40 flex items-center justify-center mb-6 border border-indigo-100 dark:border-indigo-800/50 relative overflow-hidden">
-             <img src="https://developers.google.com/static/profile/badges/community/gear/arcade/badge.png" alt="Arcade GEAR Badge" className="w-32 h-32 object-contain" />
+             <img src="https://developers.google.com/static/profile/badges/community/gear/arcade/badge.png" alt="Arcade - GEAR Community Enrolment Digital Badge" className="w-32 h-32 object-contain" />
           </div>
           <h3 className="text-xl font-bold mb-2">Arcade - GEAR Badge</h3>
           <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 flex-grow">
             An instant digital badge earned directly via Google Developer Profile page award link in under a minute.
           </p>
-          <a href="https://developers.google.com/profile/badges/community/gear/arcade/award" className="bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold py-2.5 px-6 rounded-lg flex items-center gap-2 text-sm transition-colors shadow-sm">
-            Claim Badge 1 <ExternalLink className="w-4 h-4" />
-          </a>
+          <div className="mt-auto pt-2 space-y-1.5 w-full">
+            <div className="text-right">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-amber-600 dark:text-amber-400 text-base font-bold -rotate-2 inline-block select-none"
+              >
+                awards in 1 click! ⚡
+              </span>
+            </div>
+            <a 
+              href="https://developers.google.com/profile/badges/community/gear/arcade/award" 
+              className="w-full bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-yellow-500/20 transform hover:-translate-y-0.5 active:translate-y-0 border border-yellow-500/40"
+            >
+              <span>Claim Badge 1</span>
+              <ExternalLink className="w-4 h-4 text-slate-800" />
+            </a>
+          </div>
         </div>
 
         {/* Badge 2 */}
         <div className="bg-white dark:bg-slate-900 border border-indigo-400 dark:border-indigo-500/50 rounded-2xl p-6 shadow-sm flex flex-col items-start">
           <div className="w-full bg-[#f0fdf4] dark:bg-emerald-900/20 rounded-xl h-40 flex items-center justify-center mb-6 relative overflow-hidden">
-             <img src="https://developers.google.com/static/profile/badges/community/gear/badge.svg" alt="GEAR Badge" className="w-20 h-20 object-contain drop-shadow-sm" />
+             <img src="https://developers.google.com/static/profile/badges/community/gear/badge.svg" alt="GEAR Program Official Community Emblem" className="w-20 h-20 object-contain drop-shadow-sm" />
           </div>
           <h3 className="text-xl font-bold mb-2 text-indigo-600 dark:text-indigo-400">GEAR Badge</h3>
           <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 flex-grow">
             Gemini Enterprise Agent Ready program badge earned by registering and completing the GEAR program enrollment.
           </p>
-          <a href="https://developers.google.com/program/gear/" className="bg-[#7b61ff] hover:bg-[#6a50e6] text-white font-bold py-2.5 px-6 rounded-lg flex items-center gap-2 text-sm transition-colors shadow-sm">
-            Claim Badge 2 <ExternalLink className="w-4 h-4" />
-          </a>
+          <div className="mt-auto pt-2 space-y-1.5 w-full">
+            <div className="text-right">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-indigo-600 dark:text-indigo-400 text-base font-bold rotate-2 inline-block select-none"
+              >
+                official Gemini enrollment 🤖
+              </span>
+            </div>
+            <a 
+              href="https://developers.google.com/program/gear/" 
+              className="w-full bg-[#7b61ff] hover:bg-[#6a50e6] text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-indigo-500/25 transform hover:-translate-y-0.5 active:translate-y-0 border border-indigo-400/30"
+            >
+              <span>Claim Badge 2</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
         </div>
       </div>
 
@@ -81,9 +109,23 @@ export function GearBadgesGuide() {
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 flex-grow text-center">
               Make sure you are signed in to your Google Developer Program account using your Facilitator email.
             </p>
-            <a href="https://me.developers.google.com/u/me" className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors">
-              Sign In to Google Developer <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="mt-auto pt-2 space-y-1.5 w-full">
+              <div className="text-center">
+                <span 
+                  style={{ fontFamily: "'Caveat', cursive" }} 
+                  className="text-purple-600 dark:text-purple-400 text-sm font-bold select-none"
+                >
+                  facilitator email login 🔑
+                </span>
+              </div>
+              <a 
+                href="https://me.developers.google.com/u/me" 
+                className="w-full bg-[#7C3AED] hover:bg-[#6D28D9] text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm transition-all duration-200 shadow-sm hover:shadow-md shadow-purple-500/20 transform hover:-translate-y-0.5 active:translate-y-0 border border-purple-400/30"
+              >
+                <span>Sign In to Google Developer</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
           {/* Step 2 */}
@@ -95,9 +137,23 @@ export function GearBadgesGuide() {
             <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 flex-grow text-center">
               Once signed in, click below to open the official direct badge award page:
             </p>
-            <a href="https://developers.google.com/profile/badges/community/gear/arcade/award" className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 text-sm transition-colors">
-              Open Award Page <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="mt-auto pt-2 space-y-1.5 w-full">
+              <div className="text-center">
+                <span 
+                  style={{ fontFamily: "'Caveat', cursive" }} 
+                  className="text-emerald-600 dark:text-emerald-400 text-sm font-bold select-none"
+                >
+                  direct award trigger 🏆
+                </span>
+              </div>
+              <a 
+                href="https://developers.google.com/profile/badges/community/gear/arcade/award" 
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center gap-2 text-sm transition-all duration-200 shadow-sm hover:shadow-md shadow-emerald-500/20 transform hover:-translate-y-0.5 active:translate-y-0 border border-emerald-400/30"
+              >
+                <span>Open Award Page</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
           </div>
 
           {/* Step 3 */}
@@ -122,7 +178,7 @@ export function GearBadgesGuide() {
              You should now see a notification toast at the bottom of the screen indicating that you have successfully earned the badge. Click on <strong>"View Profile"</strong> to confirm that the badge has been added to your Google Developer Profile.
            </p>
            <div className="w-full aspect-[2/1] bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-center p-4 overflow-hidden">
-              <img src="https://services.google.com/fh/files/misc/arcade_gear_badge_toast.png" alt="Toast confirmation" className="w-full h-full object-contain" />
+              <img src="https://services.google.com/fh/files/misc/arcade_gear_badge_toast.png" alt="Google Developer Profile GEAR Badge Confirmation Toast Notification" className="w-full h-full object-contain" />
            </div>
 
            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
@@ -134,10 +190,14 @@ export function GearBadgesGuide() {
              />
            </div>
 
-           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+           <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200/80 dark:border-slate-700/60">
              <span className="text-xs text-slate-500">Verify your earned digital badge on your official developer profile dashboard:</span>
-             <a href="https://me.developers.google.com/u/me" className="bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold py-2 px-6 rounded-lg flex items-center gap-2 text-xs transition-colors shadow-sm">
-                View Google Developer Profile <ExternalLink className="w-3 h-3" />
+             <a 
+               href="https://me.developers.google.com/u/me" 
+               className="bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold py-2.5 px-6 rounded-xl flex items-center gap-2 text-xs transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-yellow-500/20 transform hover:-translate-y-0.5 active:translate-y-0 border border-yellow-500/40 shrink-0"
+             >
+                <span>View Google Developer Profile</span>
+                <ExternalLink className="w-3.5 h-3.5 text-slate-800" />
              </a>
            </div>
         </div>
@@ -160,7 +220,7 @@ export function GearBadgesGuide() {
            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm flex flex-col">
               <div className="w-full bg-[#f4fcf6] dark:bg-emerald-900/20 rounded-xl py-6 px-4 sm:px-6 flex items-center justify-center sm:justify-start gap-4 mb-6 border border-emerald-100 dark:border-emerald-800/50">
                  <div className="shrink-0 bg-white rounded-full p-2 shadow-sm border border-slate-100 dark:border-slate-800">
-                   <img src="https://developers.google.com/static/profile/badges/community/gear/badge.svg" alt="GEAR Badge" className="w-14 h-14 object-contain drop-shadow-sm" />
+                   <img src="https://developers.google.com/static/profile/badges/community/gear/badge.svg" alt="GEAR Program Enrollment Official Badge" className="w-14 h-14 object-contain drop-shadow-sm" />
                  </div>
                  <div className="flex flex-col text-left">
                    <p className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest mb-1">GOOGLE DEVELOPER PROGRAM</p>
@@ -185,9 +245,25 @@ export function GearBadgesGuide() {
                     <span><strong className="text-slate-800 dark:text-slate-200">Facilitator Mandatory</strong> — Required for milestone bonus point validation</span>
                  </li>
               </ul>
-              <a href="https://developers.google.com/program/gear/" target="_blank" rel="noopener noreferrer" className="w-full bg-[#7b61ff] hover:bg-[#6a50e6] text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm transition-colors shadow-sm">
-                Sign Up for GEAR Program <ExternalLink className="w-4 h-4" />
-              </a>
+              <div className="space-y-1.5 w-full mt-auto">
+                <div className="text-right">
+                  <span 
+                    style={{ fontFamily: "'Caveat', cursive" }} 
+                    className="text-purple-600 dark:text-purple-400 text-base font-bold -rotate-1 inline-block select-none"
+                  >
+                    free enrollment badge ✨
+                  </span>
+                </div>
+                <a 
+                  href="https://developers.google.com/program/gear/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-full bg-[#7b61ff] hover:bg-[#6a50e6] text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 text-sm transition-all duration-200 shadow-sm hover:shadow-md hover:shadow-indigo-500/25 transform hover:-translate-y-0.5 active:translate-y-0 border border-indigo-400/30"
+                >
+                  <span>Sign Up for GEAR Program</span>
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
            </div>
 
            {/* Card 2 */}
@@ -196,7 +272,7 @@ export function GearBadgesGuide() {
                  <span className="flex items-center gap-1 text-[10px] font-bold text-red-500 uppercase tracking-wider bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded border border-red-200 dark:border-red-800/50">
                     <PlayCircle className="w-3 h-3" /> VIDEO WALKTHROUGH
                  </span>
-                 <a href="#" className="text-[10px] font-bold text-blue-600 hover:underline">Watch on YouTube</a>
+                 <a href="https://youtu.be/_vTVDxbVlhQ?si=64WDMmSi656jVnka" target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-blue-600 dark:text-blue-400 hover:underline">Watch on YouTube</a>
               </div>
               <h3 className="text-xl font-bold mb-3">Video Guide: How to Earn the GEAR Badge</h3>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-6">
@@ -208,8 +284,14 @@ export function GearBadgesGuide() {
                 title="How to create your Google Developer Profile & earn the GEAR badge?" 
                 className="w-full aspect-video rounded-xl mb-6 border border-slate-700" 
               />
-              <a href="https://youtu.be/_vTVDxbVlhQ?si=64WDMmSi656jVnka" target="_blank" rel="noopener noreferrer" className="w-full bg-[#111827] hover:bg-slate-800 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-sm transition-colors border border-slate-700 mt-auto shadow-sm">
-                <PlayCircle className="w-4 h-4" /> Open Video on YouTube
+              <a 
+                href="https://youtu.be/_vTVDxbVlhQ?si=64WDMmSi656jVnka" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="w-full bg-[#111827] hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 text-sm transition-all duration-200 border border-slate-700 hover:border-slate-600 mt-auto shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
+              >
+                <PlayCircle className="w-4 h-4 text-red-500" />
+                <span>Open Video on YouTube</span>
               </a>
            </div>
         </div>
@@ -241,12 +323,35 @@ export function GearBadgesGuide() {
             </p>
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:w-auto">
-            <Link to="/calculator" className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-6 py-3 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
-              Calculate My Points Now
-            </Link>
-            <Link to="/facilitator" className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-6 py-3 rounded-xl transition-colors border border-slate-700">
-              Learn more about Facilitator Program <ArrowRight className="inline-block w-4 h-4 ml-1" />
-            </Link>
+            <div className="flex flex-col items-center sm:items-start gap-1 w-full sm:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-amber-400 text-lg font-bold -rotate-2 hidden sm:inline-block select-none"
+              >
+                ⚡ checks GEAR & milestone bonus!
+              </span>
+              <Link 
+                to="/calculator" 
+                className="w-full sm:w-auto text-center bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/35 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 border border-yellow-400/50"
+              >
+                <span>Calculate My Points Now</span>
+              </Link>
+            </div>
+            <div className="flex flex-col items-center sm:items-start gap-1 w-full sm:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-slate-400 text-lg font-bold rotate-1 hidden sm:inline-block select-none"
+              >
+                cohort milestones & rewards 🎯
+              </span>
+              <Link 
+                to="/facilitator" 
+                className="w-full sm:w-auto text-center bg-slate-800 hover:bg-slate-700 text-white font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 border border-slate-700 hover:border-slate-600 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+              >
+                <span>Learn more about Facilitator Program</span>
+                <ArrowRight className="inline-block w-4 h-4 ml-1" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

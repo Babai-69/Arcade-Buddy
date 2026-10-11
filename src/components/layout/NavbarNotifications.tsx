@@ -191,10 +191,11 @@ export function NavbarNotifications() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+        className="btn-press btn-press--icon relative shrink-0 !rounded-full aspect-square"
+        style={{ background: 'var(--card)', borderRadius: '50%', flexShrink: 0 }}
         aria-label="Notifications"
       >
-        <Bell className="w-5 h-5" />
+        <Bell className="w-5 h-5" style={{ color: 'var(--ink)' }} />
         {unreadNotifications.length > 0 && (
           <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 border-2 border-white dark:border-slate-950 rounded-full"></span>
         )}
@@ -210,7 +211,8 @@ export function NavbarNotifications() {
               {unreadNotifications.length > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="p-1.5 text-slate-400 hover:text-white transition-colors"
+                  className="btn-press btn-press--sm p-1.5 text-slate-400 hover:text-white transition-colors"
+                  style={{ background: 'var(--card)' }}
                   title="Mark all as read"
                 >
                   <CheckCheck className="w-4 h-4" />
@@ -218,7 +220,8 @@ export function NavbarNotifications() {
               )}
               <button 
                 onClick={fetchLatestNotifications}
-                className="p-1.5 text-slate-400 hover:text-white transition-colors"
+                className="btn-press btn-press--sm p-1.5 text-slate-400 hover:text-white transition-colors"
+                style={{ background: 'var(--card)' }}
                 title="Refresh notifications"
                 disabled={isFetching}
               >
@@ -226,7 +229,8 @@ export function NavbarNotifications() {
               </button>
               <Link 
                 to="/swags" 
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#8b5cf6] hover:bg-[#7c3aed] text-white text-xs font-bold rounded-lg transition-colors"
+                className="btn-press btn-press--sm inline-flex items-center gap-1.5 text-white text-xs font-bold"
+                style={{ background: '#8b5cf6' }}
                 onClick={() => setIsOpen(false)}
               >
                 Swag Drops <ExternalLink className="w-3 h-3" />

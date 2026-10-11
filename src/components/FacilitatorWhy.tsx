@@ -18,13 +18,13 @@ export function FacilitatorWhy() {
         <div className="flex flex-col md:flex-row gap-6 justify-start py-2">
           {/* Default Unsplash images to be replaced by the user */}
           <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-transparent shadow-none flex items-center justify-center">
-            <img src="https://services.google.com/fh/files/misc/gcaf26_game_badge.png" alt="Game Badge" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-plus-lighter" />
+            <img src="https://services.google.com/fh/files/misc/gcaf26_game_badge.png" alt="Google Cloud Arcade Game Badge Example" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-plus-lighter" />
           </div>
           <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-center">
-            <img src="https://services.google.com/fh/files/misc/gcaf_site_skill_badge_image.png" alt="Skill Badge" className="w-full h-full object-contain" />
+            <img src="https://services.google.com/fh/files/misc/gcaf_site_skill_badge_image.png" alt="Google Cloud Skill Badge Example" className="w-full h-full object-contain" />
           </div>
           <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-transparent shadow-none flex items-center justify-center">
-            <img src="https://services.google.com/fh/files/misc/gcaf26_bc_game_badge.png" alt="Base Camp Badge" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-plus-lighter" />
+            <img src="https://services.google.com/fh/files/misc/gcaf26_bc_game_badge.png" alt="Google Cloud Base Camp Badge Example" className="w-full h-full object-contain mix-blend-multiply dark:mix-blend-plus-lighter" />
           </div>
         </div>
       </div>
@@ -37,13 +37,13 @@ export function FacilitatorWhy() {
         
         <div className="flex flex-col md:flex-row gap-6 justify-start mb-4">
           <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <img src="https://services.google.com/fh/files/misc/gcaf26_prizes_image4.png" alt="Swag Bundle 1" className="w-full h-full object-cover" />
+            <img src="https://services.google.com/fh/files/misc/gcaf26_prizes_image4.png" alt="Google Cloud Arcade Swag Bundle A Preview" className="w-full h-full object-cover" />
           </div>
           <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <img src="https://services.google.com/fh/files/misc/gcaf26_prizes_image5.png" alt="Swag Bundle 2" className="w-full h-full object-cover" />
+            <img src="https://services.google.com/fh/files/misc/gcaf26_prizes_image5.png" alt="Google Cloud Arcade Swag Bundle B Preview" className="w-full h-full object-cover" />
           </div>
           <div className="w-full md:w-1/3 aspect-[4/3] rounded-3xl overflow-hidden bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-800 shadow-sm">
-            <img src="https://services.google.com/fh/files/misc/gcaf26_prizes_image6.png" alt="Swag Bundle 3" className="w-full h-full object-cover" />
+            <img src="https://services.google.com/fh/files/misc/gcaf26_prizes_image6.png" alt="Google Cloud Arcade Swag Bundle C Preview" className="w-full h-full object-cover" />
           </div>
         </div>
         

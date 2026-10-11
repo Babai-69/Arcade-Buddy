@@ -1,12 +1,19 @@
 import React from 'react';
 import { Gift, Video, Link as LinkIcon, CheckCircle2, ArrowRight, AlertTriangle, Lightbulb, PlayCircle, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { BackToResourcesButton } from '../components/common/BackToResourcesButton';
 
 export function FreeCreditsPage() {
   return (
-    <div className="min-h-screen bg-[#0f172a] pt-16">
+    <div className="min-h-screen bg-[#0f172a] pt-8">
+      {/* Top Navigation */}
+      <div className="max-w-4xl mx-auto px-4 mb-6">
+        <BackToResourcesButton handwrittenNote="← 309 complimentary credits guide 🎁" />
+      </div>
+
       {/* Header */}
-      <div className="w-full bg-[#8b5cf6] py-16 px-4 text-center">
-        <div className="max-w-4xl mx-auto flex flex-col items-center">
+      <div className="w-full bg-[#8b5cf6] py-16 px-4 text-center rounded-3xl max-w-5xl mx-auto shadow-2xl relative overflow-hidden">
+        <div className="max-w-4xl mx-auto flex flex-col items-center relative z-10">
           <Gift className="w-12 h-12 text-white mb-6" />
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 font-display leading-tight">
             How to Claim Google Skills Credits<br />Worth $309 for FREE
@@ -14,9 +21,12 @@ export function FreeCreditsPage() {
           <p className="text-lg text-white/90 font-medium mb-8">
             Follow these simple steps to successfully claim your 309 free credits
           </p>
-          <a href="#steps" className="inline-flex items-center gap-2 px-6 py-3 bg-white/20 hover:bg-white/30 border border-white/30 text-white rounded-full font-medium transition-colors">
-            <CheckCircle2 className="w-5 h-5" />
-            Complete Step-by-Step Guide
+          <a 
+            href="#steps" 
+            className="inline-flex items-center gap-2.5 px-7 py-3 bg-white/20 hover:bg-white/30 border border-white/30 text-white rounded-full font-bold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 active:translate-y-0 backdrop-blur-sm"
+          >
+            <CheckCircle2 className="w-5 h-5 text-emerald-300" />
+            <span>Complete Step-by-Step Guide</span>
           </a>
         </div>
       </div>
@@ -59,18 +69,27 @@ export function FreeCreditsPage() {
             </div>
           </div>
           
-          <div className="mt-6 bg-[#0f172a] rounded-xl border border-slate-700 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="mt-6 bg-[#0f172a] rounded-2xl border border-slate-700/80 p-5 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="font-mono text-sm break-all w-full text-slate-300">
-              <span className="text-blue-400">https://www.skills.google/catalog?</span><span className="text-orange-400 bg-orange-500/10 px-1 py-0.5 rounded">qlcampaign=1m-cloud-39</span>
+              <span className="text-blue-400">https://www.skills.google/catalog?</span><span className="text-orange-400 bg-orange-500/10 px-1 py-0.5 rounded font-bold">qlcampaign=1m-cloud-39</span>
             </div>
-            <a 
-              href="https://www.cloudskillsboost.google/catalog?qlcampaign=1m-cloud-39"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="shrink-0 bg-orange-600 hover:bg-orange-700 text-white px-6 py-2.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 w-full md:w-auto justify-center"
-            >
-              Open Link <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="flex flex-col sm:flex-row items-center gap-2 shrink-0 w-full md:w-auto">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-orange-400 text-lg font-bold -rotate-1 select-none hidden sm:inline-block"
+              >
+                campaign promo link ⚡
+              </span>
+              <a 
+                href="https://www.cloudskillsboost.google/catalog?qlcampaign=1m-cloud-39"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white px-7 py-3 rounded-xl text-sm font-bold transition-all duration-200 shadow-md hover:shadow-orange-500/25 flex items-center gap-2 w-full md:w-auto justify-center transform hover:-translate-y-0.5 active:translate-y-0 border border-orange-400/30"
+              >
+                <span>Open Link</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         </div>
 
@@ -312,6 +331,35 @@ export function FreeCreditsPage() {
             <div className="bg-[#0f172a] border border-slate-700/50 rounded-lg p-4">
               <p className="text-sm text-slate-400"><strong className="text-white">Still having issues?</strong> Join our community channels for support and troubleshooting help.</p>
             </div>
+          </div>
+        </div>
+
+        {/* Footer CTA */}
+        <div className="bg-gradient-to-r from-purple-900/60 via-indigo-900/40 to-slate-900 border border-purple-500/30 rounded-3xl p-8 text-center flex flex-col items-center gap-4 shadow-xl">
+          <span 
+            style={{ fontFamily: "'Caveat', cursive" }} 
+            className="text-amber-400 text-2xl font-bold -rotate-1 select-none"
+          >
+            credits claimed? time to unlock free skill badges! 🚀✨
+          </span>
+          <h3 className="text-2xl font-black text-white">Start Building Your Arcade Points</h3>
+          <p className="text-slate-300 text-sm max-w-xl">
+            Browse our curated syllabus of active games and skill badges. Use your newly claimed credits to level up toward the top swag tiers.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
+            <Link 
+              to="/syllabus"
+              className="bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-8 py-3.5 rounded-2xl transition-all duration-200 shadow-lg shadow-yellow-500/20 hover:shadow-yellow-500/35 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 border border-yellow-400/50 text-sm"
+            >
+              <span>Explore Badge Syllabus</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+            <Link 
+              to="/resources/point-system"
+              className="bg-slate-800 hover:bg-slate-700 text-white font-bold px-8 py-3.5 rounded-2xl transition-all duration-200 border border-slate-700 hover:border-slate-600 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-2 text-sm"
+            >
+              <span>Points Calculation Guide</span>
+            </Link>
           </div>
         </div>
 

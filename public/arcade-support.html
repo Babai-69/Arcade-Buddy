@@ -375,7 +375,7 @@
   const submitBtn = document.getElementById('submitBtn');
   const successBox = document.getElementById('successBox');
   const formBrut = document.querySelector('.form-brut');
-  
+
   // Try to grab pre-fill data from parent if possible
   window.addEventListener('message', (e) => {
     if (e.data?.type === 'PREFILL_USER_DATA') {
@@ -397,6 +397,7 @@
   form.addEventListener('submit', (e)=>{
     e.preventDefault();
     if(!form.checkValidity()){ form.reportValidity(); return; }
+
     submitBtn.classList.add('loading');
     
     // We will use postMessage to send to React app
@@ -408,8 +409,6 @@
         profileUrl: document.getElementById('profileUrl').value,
         queryType: document.getElementById('queryType').value,
         detailMsg: document.getElementById('detailMsg').value
-        // Not sending file binaries directly due to postMessage limitations, 
-        // normally we would upload here or send a base64 encoded array. Let's ignore attachments for this.
       }
     }, '*');
   });

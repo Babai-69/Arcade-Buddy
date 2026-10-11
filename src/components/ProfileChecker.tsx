@@ -316,7 +316,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
               <button
                 type="submit"
                 disabled={isLoading || !url || !user}
-                className="bg-[#f59e0b] hover:bg-[#d97706] text-slate-900 font-bold px-6 py-3.5 rounded-xl transition-colors disabled:opacity-50 whitespace-nowrap flex items-center justify-center min-w-[150px]"
+                className="btn-press btn-press--yellow text-slate-900 font-bold px-8 py-3.5 rounded-xl disabled:opacity-50 whitespace-nowrap flex items-center justify-center min-w-[170px]"
               >
                 {isLoading && !isDemoAnimation ? (
                   <div className="w-5 h-5 border-2 border-slate-900/30 border-t-slate-900 rounded-full animate-spin" />
@@ -443,7 +443,8 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
             >
               {(() => {
                 const isBeforeStart = new Date() < new Date('2026-07-13T00:00:00Z');
-                const isAfterEnd = new Date() > new Date('2026-09-14T18:29:00Z');
+                const isFacilitatorEnded = new Date() > new Date('2026-09-14T18:29:00Z');
+                const isArcadeSeasonEnded = new Date() > new Date('2026-12-31T23:59:59Z');
                 const basePoints = isBeforeStart ? 0 : result.arcadePoints;
                 const displaySkillBadges = isBeforeStart ? 0 : result.skillBadges;
                 const displayGameBadges = isBeforeStart ? 0 : result.gameBadges;
@@ -501,7 +502,7 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                                 <div className="relative">
                                   <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-green-400 to-blue-500 opacity-50 blur-[8px] animate-pulse"></div>
                                   {result.avatarUrl ? (
-                                    <img src={result.avatarUrl} alt="Avatar" className="relative w-16 h-16 rounded-full object-cover border-2 border-white/50" />
+                                    <img src={result.avatarUrl} alt={`${result.name || 'Participant'}'s Google Cloud Skills Boost avatar`} className="relative w-16 h-16 rounded-full object-cover border-2 border-white/50" />
                                   ) : (
                                     <div className="relative w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 border-2 border-white/50 flex items-center justify-center text-[#2563eb] dark:text-blue-400 font-bold text-xl">
                                       {avatarInitials}
@@ -535,29 +536,28 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                           </div>
                           <div className="flex flex-col gap-3">
                             <div className="flex gap-3 w-full">
-                              <a href={result.profileUrl} target="_blank" rel="noopener noreferrer" className="flex-1 text-center py-2.5 px-2 rounded-xl border border-gray-300 dark:border-slate-600 text-xs sm:text-sm font-semibold text-gray-700 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-700 transition-all shadow-sm flex items-center justify-center">
+                              <a href={result.profileUrl} target="_blank" rel="noopener noreferrer" className="btn-press btn-press--secondary flex-1 text-center py-2.5 px-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center">
                                 View Profile
                               </a>
                               <Link 
                                 to="/dashboard"
-                                className="flex-1 text-center py-2.5 px-2 rounded-xl border border-emerald-400/50 text-xs sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-all shadow-sm flex items-center justify-center gap-1"
+                                className="btn-press btn-press--green flex-1 text-center py-2.5 px-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1 text-white"
                               >
                                 📊 Dashboard
                               </Link>
                             </div>
                             <Link 
                               to="/my-progress"
-                              className="w-full text-center py-2.5 px-4 rounded-xl border border-blue-400/50 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm flex items-center justify-center gap-2"
+                              className="btn-press btn-press--secondary w-full text-center py-2.5 px-4 rounded-xl text-sm font-semibold flex items-center justify-center gap-2"
                             >
                               📈 My Progress
                             </Link>
                             <Link 
                               to="/roadmap"
                               state={{ participant: result }}
-                              className="w-full text-center py-2.5 px-4 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-sm font-bold text-white transition-all shadow-[0_4px_15px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.4)] relative overflow-hidden group"
+                              className="btn-press btn-press--primary w-full text-center py-2.5 px-4 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2"
                             >
-                              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                              <span className="relative z-10">🚀 Your Personalised Roadmap</span>
+                              🚀 Your Personalised Roadmap
                             </Link>
                           </div>
                         </div>
@@ -578,19 +578,31 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                         
                         {isBeforeStart ? (
                           <p className="text-[#EA4335] font-bold text-sm relative z-10 bg-red-50 dark:bg-red-900/20 px-3 py-1 rounded-full">Program Not Started</p>
-                        ) : isAfterEnd ? (
+                        ) : isArcadeSeasonEnded ? (
                           <div className="flex flex-col items-center relative z-10">
-                            <p className="text-[#4285F4] font-bold text-sm mb-2 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full">Program has Ended</p>
+                            <p className="text-[#4285F4] font-bold text-sm mb-2 bg-blue-50 dark:bg-blue-900/20 px-3 py-1 rounded-full">Season Closed</p>
                             <p className="text-sm font-medium bg-white/50 dark:bg-slate-900/50 px-4 py-1.5 rounded-full border border-gray-200 dark:border-slate-700">
                               <span className="text-[#6b7280] dark:text-slate-400">Base: {basePoints} + </span>
                               <span className={totalBonus > 0 ? 'text-[#34A853] dark:text-green-400 font-bold' : 'text-[#6b7280] dark:text-slate-400'}>{totalBonus} bonus</span>
                             </p>
                           </div>
                         ) : (
-                          <p className="text-sm font-medium bg-white/50 dark:bg-slate-900/50 px-4 py-1.5 rounded-full border border-gray-200 dark:border-slate-700 relative z-10">
-                            <span className="text-[#6b7280] dark:text-slate-400">Base: {basePoints} + </span>
-                            <span className={totalBonus > 0 ? 'text-[#34A853] dark:text-green-400 font-bold' : 'text-[#6b7280] dark:text-slate-400'}>{totalBonus} bonus</span>
-                          </p>
+                          <div className="flex flex-col items-center relative z-10">
+                            <div className="flex items-center gap-2 mb-2 flex-wrap justify-center">
+                              <span className="text-emerald-700 dark:text-emerald-300 font-bold text-xs bg-emerald-50 dark:bg-emerald-900/20 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800">
+                                Arcade Active thru Dec 2026
+                              </span>
+                              {isFacilitatorEnded && (
+                                <span className="text-slate-600 dark:text-slate-400 font-medium text-xs bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700" title="Facilitator cohort closed Sept 14">
+                                  Facilitator Bonus Locked
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-sm font-medium bg-white/50 dark:bg-slate-900/50 px-4 py-1.5 rounded-full border border-gray-200 dark:border-slate-700">
+                              <span className="text-[#6b7280] dark:text-slate-400">Base: {basePoints} + </span>
+                              <span className={totalBonus > 0 ? 'text-[#34A853] dark:text-green-400 font-bold' : 'text-[#6b7280] dark:text-slate-400'}>{totalBonus} bonus</span>
+                            </p>
+                          </div>
                         )}
                       </motion.div>
                     </div>

@@ -5,6 +5,7 @@ export interface BadgeRecord {
   category: 'Game' | 'Skill' | 'Lab-free' | 'Special' | 'Other';
   points: number;
   validForProgram?: boolean;
+  validForArcade?: boolean;
 }
 
 export interface Participant {

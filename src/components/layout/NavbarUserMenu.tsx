@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, LogOut, ChartBar, Settings, Upload, Award, Bell, Clock } from 'lucide-react';
+import { User, LogOut, ChartBar, Settings, Upload, Award, Bell, Clock, Compass } from 'lucide-react';
 import { auth, db, loginWithGoogleRedirect, logout } from '../../lib/firebase';
 import { ensureUserExists } from '../../lib/userProgressService';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -63,6 +63,10 @@ export function NavbarUserMenu() {
   }, []);
 
   const handleLogout = async () => {
+    localStorage.removeItem('arcadeProgressData');
+    localStorage.removeItem('arcadeProfileUrl');
+    localStorage.removeItem('arcadeLastSyncTime');
+    sessionStorage.removeItem('arcadeSessionDashboardSynced');
     await logout();
     setIsOpen(false);
     navigate('/');
@@ -70,94 +74,163 @@ export function NavbarUserMenu() {
 
   if (!user) {
     return (
-      <>
+      <div className="relative flex items-center" ref={dropdownRef}>
         <button 
-          onClick={() => setIsLoginModalOpen(true)}
-          className="relative p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-sm border border-slate-200 dark:border-slate-700"
-          title="Sign In to Track Progress"
+          onClick={() => setIsOpen(!isOpen)}
+          className="btn-press btn-press--icon shrink-0 !rounded-full aspect-square"
+          style={{ background: 'var(--card)', borderRadius: '50%', flexShrink: 0 }}
+          title="Profile & Tour"
+          aria-label="Profile & Tour"
         >
-          <User className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+          <User className="w-5 h-5" style={{ color: 'var(--ink)' }} />
         </button>
+
+        {isOpen && (
+          <div className="absolute right-0 top-full mt-3 w-52 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl py-2 z-50">
+            <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Profile &amp; Help</p>
+            </div>
+            <div className="p-2 space-y-1">
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  setIsLoginModalOpen(true);
+                }}
+                className="btn-press btn-press--sm btn-press--primary w-full text-left flex items-center gap-3"
+              >
+                <User className="w-4 h-4 text-white" />
+                Sign In to Track
+              </button>
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  window.dispatchEvent(new Event('start-welcome-tour'));
+                }}
+                className="btn-press btn-press--sm btn-press--secondary w-full text-left flex items-center gap-3"
+              >
+                <Compass className="w-4 h-4 text-amber-500" />
+                Guided Tour
+              </button>
+            </div>
+          </div>
+        )}
+
         <LoginModal 
           isOpen={isLoginModalOpen} 
           onClose={() => setIsLoginModalOpen(false)} 
         />
-      </>
+      </div>
     );
   }
 
   const isAdmin = user.email === 'deya58690@gmail.com' || user.email === 'tripti.arcade.25@gmail.com';
 
   return (
-    <div className="relative flex items-center gap-4" ref={dropdownRef}>
+    <div className="relative flex items-center" ref={dropdownRef}>
       
       <div
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(!isOpen);
+          }
+        }}
         style={{
           position: 'relative',
-          width: '36px',
-          height: '36px',
+          width: '44px',
+          height: '44px',
+          minWidth: '44px',
+          minHeight: '44px',
+          aspectRatio: '1 / 1',
           cursor: 'pointer',
-          flexShrink: 0
+          flexShrink: 0,
+          borderRadius: '50%',
+          padding: 0,
+          border: 'none',
+          background: 'none',
+          outline: 'none',
+          display: 'inline-grid',
+          placeItems: 'center'
         }}
         onClick={() => setIsOpen(!isOpen)}
         title={user?.displayName || user?.email || 'Profile'}
+        aria-label="User Profile"
+        className="focus:outline-none transition-transform active:scale-95"
       >
-        {/* Rotating glow ring */}
-        <div style={{
-          position: 'absolute',
-          inset: '-2px',
-          borderRadius: '50%',
-          overflow: 'hidden'
-        }}>
-          <div style={{
+        {/* Rotating rainbow border ring */}
+        <div 
+          style={{
             position: 'absolute',
-            width: '200%',
-            height: '200%',
-            top: '-50%',
-            left: '-50%',
-            background: 'conic-gradient(#4285F4,#34A853,#FBBC05,#EA4335,#7c3aed,#4285F4)',
-            animation: 'spinCW 3s linear infinite'
-          }}/>
+            inset: 0,
+            borderRadius: '50%',
+            overflow: 'hidden',
+            transform: 'translateZ(0)',
+            isolation: 'isolate',
+            pointerEvents: 'none'
+          }}
+        >
+          <div 
+            style={{
+              position: 'absolute',
+              width: '200%',
+              height: '200%',
+              top: '-50%',
+              left: '-50%',
+              background: 'conic-gradient(#4285F4,#34A853,#FBBC05,#EA4335,#7c3aed,#4285F4)',
+              animation: 'spinCW 3s linear infinite',
+              willChange: 'transform'
+            }}
+          />
         </div>
 
-        {/* Dark gap between ring and photo */}
-        <div style={{
-          position: 'absolute',
-          inset: '2px',
-          borderRadius: '50%',
-          background: '#0f1117',
-          zIndex: 1
-        }}/>
+        {/* Clean background circle separating the image */}
+        <div 
+          style={{
+            position: 'absolute',
+            inset: '2.5px',
+            borderRadius: '50%',
+            background: 'var(--card)',
+            zIndex: 1
+          }}
+        />
 
         {/* User photo OR initials fallback */}
         {user?.photoURL ? (
           <img
             src={user.photoURL}
-            alt={user.displayName || 'User'}
+            alt={user.displayName ? `${user.displayName}'s profile photo` : 'User profile avatar'}
+            className="rounded-full object-cover"
             style={{
               position: 'absolute',
-              inset: '2px',
-              width: 'calc(100% - 4px)',
-              height: 'calc(100% - 4px)',
+              inset: '2.5px',
+              width: 'calc(100% - 5px)',
+              height: 'calc(100% - 5px)',
               borderRadius: '50%',
               objectFit: 'cover',
-              zIndex: 2
+              zIndex: 2,
+              display: 'block'
             }}
           />
         ) : (
-          <div style={{
-            position: 'absolute',
-            inset: '2px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #4285F4, #34A853)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '12px',
-            fontWeight: 500,
-            color: '#fff',
-            zIndex: 2
-          }}>
+          <div 
+            style={{
+              position: 'absolute',
+              inset: '2.5px',
+              width: 'calc(100% - 5px)',
+              height: 'calc(100% - 5px)',
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #4285F4, #34A853)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '15px',
+              fontWeight: 600,
+              color: '#fff',
+              zIndex: 2
+            }}
+          >
             {user?.displayName?.charAt(0).toUpperCase()
               || user?.email?.charAt(0).toUpperCase()
               || 'A'}
@@ -165,32 +238,37 @@ export function NavbarUserMenu() {
         )}
 
         {/* Green online dot */}
-        <span style={{
-          position: 'absolute',
-          bottom: 0,
-          right: 0,
-          width: '9px',
-          height: '9px',
-          borderRadius: '50%',
-          background: '#34A853',
-          border: '2px solid #0f1117',
-          zIndex: 3,
-          animation: 'pulse 2.5s ease-in-out infinite'
-        }}/>
+        <span 
+          style={{
+            position: 'absolute',
+            bottom: '0px',
+            right: '0px',
+            width: '11px',
+            height: '11px',
+            borderRadius: '50%',
+            background: '#34A853',
+            border: '2px solid var(--card)',
+            zIndex: 3,
+            animation: 'pulse 2.5s ease-in-out infinite'
+          }}
+        />
         
         {/* Red notification dot if pending queries */}
         {isAdmin && pendingQueries.length > 0 && (
-          <span style={{
-            position: 'absolute',
-            top: -2,
-            right: -2,
-            width: '12px',
-            height: '12px',
-            borderRadius: '50%',
-            background: '#ef4444',
-            border: '2px solid #0f1117',
-            zIndex: 4,
-          }}/>
+          <span 
+            style={{
+              position: 'absolute',
+              top: '0px',
+              right: '0px',
+              width: '11px',
+              height: '11px',
+              borderRadius: '50%',
+              background: '#ef4444',
+              border: '2px solid var(--card)',
+              zIndex: 4,
+              animation: 'pulse 1.5s ease-in-out infinite'
+            }}
+          />
         )}
       </div>
 
@@ -223,6 +301,16 @@ export function NavbarUserMenu() {
             >
               <ChartBar className="w-4 h-4 text-blue-500" />
               My Progress
+            </button>
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                window.dispatchEvent(new Event('start-welcome-tour'));
+              }}
+              className="w-full text-left px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 flex items-center gap-3 transition-colors"
+            >
+              <Compass className="w-4 h-4 text-amber-500" />
+              Guided Tour
             </button>
             
             {isAdmin && (

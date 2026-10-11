@@ -3,14 +3,19 @@ import { motion } from 'framer-motion';
 import { ChevronRight, ArrowLeft, Award, Clock, AlertCircle, CheckCircle2, UserCheck, ShieldCheck, Target, Layers, Cloud, Sparkles, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { BackToResourcesButton } from '../components/common/BackToResourcesButton';
+
 export function BonusMilestonePage() {
   return (
     <div className="pt-24 pb-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Link to="/facilitator" className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-[#4285F4] dark:text-slate-400 dark:hover:text-[#4285F4] mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4" />
-          Back to Facilitator Program
-        </Link>
+        <div className="mb-8">
+          <BackToResourcesButton 
+            to="/facilitator" 
+            label="Back to Facilitator Program" 
+            handwrittenNote="← earn extra 10 bonus points 🚀" 
+          />
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -106,7 +111,7 @@ export function BonusMilestonePage() {
                 <div className="flex-1">
                   <h3 className="font-bold text-slate-900 dark:text-white mb-1">Reached Milestone 1</h3>
                   <p className="text-slate-600 dark:text-slate-400 text-sm mb-3">You've reached Milestone 1 in the regular points system.</p>
-                  <Link to="/facilitator" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#4285F4] bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 px-3 py-1.5 rounded-md transition-colors">
+                  <Link to="/facilitator" className="btn-press btn-press--sm btn-press--primary inline-flex items-center gap-1.5 text-xs font-bold">
                     Check Points System <ChevronRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
@@ -209,9 +214,23 @@ export function BonusMilestonePage() {
                     <li><strong className="text-slate-900 dark:text-white">Project ID</strong> — the same project where you built your agent</li>
                     <li><strong className="text-slate-900 dark:text-white">Billing Account ID</strong> — from your project's Billing section (format: <code className="bg-slate-200 dark:bg-slate-800 px-1 py-0.5 rounded text-[#EA4335]">XXXXXX-XXXXXX-XXXXXX</code>)</li>
                   </ul>
-                  <div className="mt-4">
-                    <a href="https://forms.gle/MMfH5RKp83TfRtXj9" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600 text-white px-5 py-2.5 rounded-xl font-bold transition-colors shadow-sm">
-                      <Send className="w-4 h-4" /> Go to Submission Form
+                  <div className="mt-5 space-y-2">
+                    <div className="text-left">
+                      <span 
+                        style={{ fontFamily: "'Caveat', cursive" }} 
+                        className="text-amber-600 dark:text-amber-400 text-base font-bold -rotate-1 inline-block select-none"
+                      >
+                        official Google submission form ✨
+                      </span>
+                    </div>
+                    <a 
+                      href="https://forms.gle/MMfH5RKp83TfRtXj9" 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="bg-[#FBBC04] hover:bg-[#F9AB00] text-slate-900 font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg shadow-yellow-500/20 transform hover:-translate-y-0.5 active:translate-y-0 border border-yellow-400/50 inline-flex items-center gap-2 text-sm"
+                    >
+                      <Send className="w-4 h-4" />
+                      <span>Go to Submission Form</span>
                     </a>
                   </div>
                 </div>

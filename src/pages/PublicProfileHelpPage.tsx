@@ -1,10 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AlertCircle, CheckCircle2, Ban, ExternalLink, Siren } from 'lucide-react';
+import { AlertCircle, CheckCircle2, Ban, ExternalLink, Siren, ArrowRight } from 'lucide-react';
+import { BackToResourcesButton } from '../components/common/BackToResourcesButton';
 
 export function PublicProfileHelpPage() {
   return (
-    <div className="pt-32 pb-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="pt-24 pb-20 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Top Navigation */}
+      <div className="mb-8">
+        <BackToResourcesButton handwrittenNote="← public URL troubleshooting guide 🔍" />
+      </div>
+
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-display font-bold text-violet-600 dark:text-violet-400 mb-4">
           Find Your Public Profile URL
@@ -37,15 +43,23 @@ export function PublicProfileHelpPage() {
             <p className="text-slate-600 dark:text-slate-400 mb-6">
               Start by accessing your Google Cloud Skills Boost profile page. You'll need to be signed in to proceed.
             </p>
-            <a 
-              href="https://www.cloudskillsboost.google/my_account/profile" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-violet-600 hover:bg-violet-700 text-white font-medium px-6 py-3 rounded-xl transition-colors"
-            >
-              Open Profile Page
-              <ExternalLink className="w-4 h-4" />
-            </a>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <a 
+                href="https://www.cloudskillsboost.google/my_account/profile" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white font-bold px-7 py-3.5 rounded-2xl transition-all duration-200 shadow-md hover:shadow-lg shadow-violet-500/25 transform hover:-translate-y-0.5 active:translate-y-0 border border-violet-400/30"
+              >
+                <span>Open Profile Page</span>
+                <ExternalLink className="w-4 h-4" />
+              </a>
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-violet-600 dark:text-violet-400 text-lg font-bold -rotate-1 select-none"
+              >
+                opens official Skills Boost ↗
+              </span>
+            </div>
           </div>
         </div>
 
@@ -106,12 +120,21 @@ export function PublicProfileHelpPage() {
             <p className="text-green-400 mb-8 max-w-2xl text-sm leading-relaxed">
               Now that you have your public profile URL, you can use it with our Arcade Points Calculator to track your progress and see how many points you've earned!
             </p>
-            <Link 
-              to="/calculator"
-              className="inline-flex items-center gap-2 bg-[#1a7f37] hover:bg-[#1a7f37]/80 text-white font-medium px-6 py-3 rounded-xl transition-colors"
-            >
-              🔗 Go to Points Calculator
-            </Link>
+            <div className="flex flex-col items-center gap-2">
+              <span 
+                style={{ fontFamily: "'Caveat', cursive" }} 
+                className="text-emerald-400 text-xl font-bold -rotate-2 select-none"
+              >
+                paste your link to audit badges & points! ✨
+              </span>
+              <Link 
+                to="/calculator"
+                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold px-8 py-3.5 rounded-2xl transition-all duration-200 shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/40 transform hover:-translate-y-0.5 active:translate-y-0 border border-emerald-400/30 text-base"
+              >
+                <span>Go to Points Calculator</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
           </div>
         </div>
 

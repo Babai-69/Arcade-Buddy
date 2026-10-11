@@ -30,9 +30,42 @@ export function useGlobalShortcuts() {
         // Dispatch a custom event that any modal can listen to
         window.dispatchEvent(new CustomEvent('close-all-modals'));
       }
+
+      // Enter and Space trigger the same pressed look on <a> and <button>
+      if (!isInput && (e.code === 'Space' || e.key === ' ' || e.key === 'Enter')) {
+        const activeEl = document.activeElement as HTMLElement | null;
+        if (activeEl) {
+          const btn = activeEl.classList.contains('btn-press')
+            ? activeEl
+            : activeEl.closest('.btn-press');
+          if (btn) {
+            btn.classList.add('is-pressed');
+          }
+        }
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.code === 'Space' || e.key === ' ' || e.key === 'Enter') {
+        document.querySelectorAll('.btn-press.is-pressed').forEach((el) => {
+          el.classList.remove('is-pressed');
+        });
+      }
+    };
+
+    const handleBlur = () => {
+      document.querySelectorAll('.btn-press.is-pressed').forEach((el) => {
+        el.classList.remove('is-pressed');
+      });
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('blur', handleBlur, true);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+      window.removeEventListener('blur', handleBlur, true);
+    };
   }, []);
 }

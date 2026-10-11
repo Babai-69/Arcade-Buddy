@@ -93,7 +93,7 @@ export function AdminProgressDashboard() {
           <ArrowLeft className="w-4 h-4" /> Back to All Students
         </button>
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 mb-8 flex items-center gap-4 shadow-sm">
-          <img src={selectedStudent.photoURL || `https://ui-avatars.com/api/?name=${selectedStudent.email}`} alt="" className="w-16 h-16 rounded-full" />
+          <img src={selectedStudent.photoURL || `https://ui-avatars.com/api/?name=${selectedStudent.email}`} alt={`${selectedStudent.name || selectedStudent.email}'s avatar profile picture`} className="w-16 h-16 rounded-full" />
           <div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{selectedStudent.name}</h2>
             <p className="text-slate-500">{selectedStudent.email}</p>
@@ -165,7 +165,7 @@ export function AdminProgressDashboard() {
               <tr key={s.uid} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer" onClick={() => handleSelectStudent(s)}>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <img src={s.photoURL || `https://ui-avatars.com/api/?name=${s.email}`} alt="" className="w-8 h-8 rounded-full" />
+                    <img src={s.photoURL || `https://ui-avatars.com/api/?name=${s.email}`} alt={`${s.name || s.email}'s profile photo`} className="w-8 h-8 rounded-full" />
                     <span className="font-medium text-slate-800 dark:text-slate-200">{s.name}</span>
                   </div>
                 </td>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Menu, X, Moon, Sun, Home, LayoutGrid, User, BookOpen, Folder, Gift, Info, Trophy } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import logoImage from '../../assets/images/regenerated_image_1782145505916.png';
+import brandLogo from '../../assets/images/logo.png';
 
 import { NavbarUserMenu } from './NavbarUserMenu';
 import { NavbarNotifications } from './NavbarNotifications';
@@ -21,9 +21,11 @@ export function Navbar() {
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
       localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
       localStorage.setItem('theme', 'light');
     }
   }, [isDarkMode]);
@@ -49,9 +51,18 @@ export function Navbar() {
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center relative">
           {/* Logo - Left */}
-          <Link to="/" className="flex items-center gap-2 z-10 w-[180px]">
-            <img src={logoImage} alt="Google Cloud" className="w-[43px] h-[37px] object-contain" />
-            <span className="font-display font-bold text-xl tracking-tight text-[#4285F4] ml-1 hidden lg:block whitespace-nowrap">Arcade Buddy</span>
+          <Link to="/" className="flex items-center gap-2.5 z-10 w-[200px] select-none group">
+            <img
+              src={brandLogo}
+              alt="Arcade Buddy"
+              className="w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] object-contain drop-shadow-[0_2px_8px_rgba(66,133,244,0.35)] dark:drop-shadow-[0_0_14px_rgba(91,141,239,0.7)] transition-transform duration-200 group-hover:scale-105"
+            />
+            <span
+              style={{ fontFamily: "'Caveat', cursive, sans-serif" }}
+              className="text-2xl sm:text-[28px] font-bold tracking-tight bg-gradient-to-r from-[#4285F4] via-[#6366f1] to-[#34A853] dark:from-[#5B8DEF] dark:via-[#818cf8] dark:to-[#4ADE80] bg-clip-text text-transparent hidden sm:inline-block leading-none select-none transition-all duration-200 group-hover:brightness-110"
+            >
+              Arcade Buddy
+            </span>
           </Link>
           
           {/* Navigation - Center Pill Style */}
@@ -86,26 +97,33 @@ export function Navbar() {
           </div>
 
           {/* Actions - Right */}
-          <div className="hidden md:flex items-center space-x-4 z-10 w-[240px] justify-end">
+          <div className="hidden md:flex items-center space-x-3.5 z-10 min-w-[240px] justify-end">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+              className="btn-press btn-press--icon shrink-0 !rounded-full aspect-square"
+              style={{ background: 'var(--card)', borderRadius: '50%', flexShrink: 0 }}
               aria-label="Toggle theme"
             >
               {isDarkMode ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-indigo-500" />}
             </button>
-            <Link id="nav-calc" to="/calculator" className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2 rounded-full font-bold transition-all shadow-md text-sm">
+            <Link
+              id="nav-calc"
+              to="/calculator"
+              className="btn-press btn-press--sm inline-flex items-center justify-center font-bold text-sm shrink-0"
+              style={{ background: 'var(--ink)', color: 'var(--card)' }}
+            >
               Calculator
             </Link>
-            <div id="nav-notif"><NavbarNotifications /></div>
-            <div id="nav-profile"><NavbarUserMenu /></div>
+            <div id="nav-notif" className="shrink-0"><NavbarNotifications /></div>
+            <div id="nav-profile" className="shrink-0"><NavbarUserMenu /></div>
           </div>
 
           {/* Mobile Actions */}
           <div className="md:hidden flex items-center gap-2 z-10">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className="p-2 text-slate-800 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+              className="btn-press btn-press--icon shrink-0 !rounded-full aspect-square"
+              style={{ background: 'var(--card)', borderRadius: '50%', flexShrink: 0 }}
               aria-label="Toggle theme"
             >
               {isDarkMode ? <Sun className="w-5 h-5 text-yellow-500" /> : <Moon className="w-5 h-5 text-blue-500" />}
@@ -113,8 +131,10 @@ export function Navbar() {
             <NavbarNotifications />
             <NavbarUserMenu />
             <button 
-              className="p-2 text-slate-800 dark:text-white"
+              className="btn-press btn-press--icon text-slate-800 dark:text-white"
+              style={{ background: 'var(--card)' }}
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -142,7 +162,12 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 px-3">
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/calculator" className="block text-center w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-xl font-bold transition-all shadow-md">
+              <Link
+                onClick={() => setIsMobileMenuOpen(false)}
+                to="/calculator"
+                className="btn-press btn-press--sm block text-center w-full font-bold text-sm"
+                style={{ background: 'var(--ink)', color: 'var(--card)' }}
+              >
                 Calculator
               </Link>
             </div>
