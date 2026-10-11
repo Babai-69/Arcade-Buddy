@@ -162,8 +162,11 @@ export function LearnWithCommunitiesPage() {
   const [leaderboardData, setLeaderboardData] = useState<CommunityLeaderboardData | null>(null);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(true);
   
-  // Admin upload state
-  const [isAdminUser, setIsAdminUser] = useState(false);
+  // Admin upload state — strictly restricted to authorized admin emails
+  const [isAdminUser, setIsAdminUser] = useState(() => {
+    const email = auth.currentUser?.email?.toLowerCase() || '';
+    return ADMIN_EMAILS.includes(email);
+  });
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [rawCsvText, setRawCsvText] = useState('');
   const [parsedPreview, setParsedPreview] = useState<CommunityParticipant[]>([]);
@@ -1217,28 +1220,30 @@ export function LearnWithCommunitiesPage() {
                     </p>
                   </div>
 
-                  <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
-                    {/* Admin Trigger Button */}
-                    <button
-                      onClick={() => setShowUploadModal(true)}
-                      className="btn-ghost btn-press btn-press--secondary"
-                      style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', border: '2px solid rgba(255,255,255,0.4)', minHeight: '40px' }}
-                    >
-                      <Upload className="w-4 h-4" />
-                      <span>{isAdminUser ? 'Admin: Upload Daily CSV' : 'Admin: Upload Standings CSV'}</span>
-                    </button>
-
-                    {leaderboardData && leaderboardData.participants.length > 0 && isAdminUser && (
+                  {/* Admin Actions: ONLY shown to authenticated admins (deya58690@gmail.com) */}
+                  {isAdminUser && (
+                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-3">
                       <button
-                        onClick={handleClearStandings}
-                        className="btn-press btn-press--red inline-flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold text-xs bg-red-600/80 hover:bg-red-600 text-white border border-red-400/40 transition-all cursor-pointer"
-                        title="Reset / Lock Leaderboard"
+                        onClick={() => setShowUploadModal(true)}
+                        className="btn-ghost btn-press btn-press--secondary"
+                        style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', border: '2px solid rgba(255,255,255,0.4)', minHeight: '40px' }}
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
-                        <span>Lock</span>
+                        <Upload className="w-4 h-4" />
+                        <span>Admin: Upload Daily CSV</span>
                       </button>
-                    )}
-                  </div>
+
+                      {leaderboardData && leaderboardData.participants.length > 0 && (
+                        <button
+                          onClick={handleClearStandings}
+                          className="btn-press btn-press--red inline-flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold text-xs bg-red-600/80 hover:bg-red-600 text-white border border-red-400/40 transition-all cursor-pointer"
+                          title="Reset / Lock Leaderboard"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>Lock</span>
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -1305,21 +1310,24 @@ export function LearnWithCommunitiesPage() {
                     <div className="p-4 rounded-2xl bg-slate-100/80 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-400 text-left space-y-1.5 mb-6">
                       <p className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                        <span>Separate Firebase store: Keeps community rankings 100% isolated.</span>
+                        <span>Learner standings will be updated daily based on completed Skill Badges count.</span>
                       </p>
                       <p className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                        <span>Admin daily CSV upload: Fast one-click batch sync.</span>
+                        <span>Verified rankings are synchronized directly by your campus GDGC organizer.</span>
                       </p>
                     </div>
 
-                    <button
-                      onClick={() => setShowUploadModal(true)}
-                      className="btn-cta btn-press btn-press--primary"
-                    >
-                      <Upload className="w-4 h-4" />
-                      <span>Admin: Upload First CSV File</span>
-                    </button>
+                    {/* Upload button ONLY for admins */}
+                    {isAdminUser && (
+                      <button
+                        onClick={() => setShowUploadModal(true)}
+                        className="btn-cta btn-press btn-press--primary"
+                      >
+                        <Upload className="w-4 h-4" />
+                        <span>Admin: Upload First CSV File</span>
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
@@ -1419,7 +1427,7 @@ export function LearnWithCommunitiesPage() {
       {/* ADMIN CSV UPLOAD MODAL */}
       {/* ========================================================================= */}
       <AnimatePresence>
-        {showUploadModal && (
+        {showUploadModal && isAdminUser && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
