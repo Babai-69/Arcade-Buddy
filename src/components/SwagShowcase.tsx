@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 export function SwagShowcase() {
   const swagsGallery = [
+    "https://www.google.com/url?sa=E&q=https%3A%2F%2Fcdn.jsdelivr.net%2Fgh%2Fdeepanshu-prajapati01%2Fimage-host%40main%2FArcadeCalc%2Fversion-2%2Fswags-gallery%2Farcade-season-1-2025-trooper-swags.jpg",
     "https://media.licdn.com/dms/image/v2/D4D22AQECxW1pKRz08Q/feedshare-shrink_800/feedshare-shrink_800/0/1704548452062?e=1790208000&v=beta&t=dm2sPnEmXS3qqduSAtEQCXhr-LW7ufdiN1EVuj87HvE",
     "https://media.licdn.com/dms/image/v2/D4D22AQFS4btTeQNHHg/feedshare-shrink_800/feedshare-shrink_800/0/1711896520626?e=2147483647&v=beta&t=GzYFFMyHZSOXL9pMTgYtPDxvoLbr21Q_qjdYYp4JSWo",
     "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-2-2025-legend-swags.jpg",

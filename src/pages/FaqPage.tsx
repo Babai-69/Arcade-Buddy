@@ -880,6 +880,40 @@ export function FaqPage() {
         aria-hidden="true"
       />
 
+      {/* Scoped High-Contrast Typography Styles for FAQ Answers */}
+      <style>{`
+        .faq-answer-content {
+          color: #334155;
+        }
+        .faq-answer-content strong {
+          color: #0f172a;
+        }
+        .dark .faq-answer-content {
+          color: #e2e8f0 !important;
+        }
+        .dark .faq-answer-content p {
+          color: #e2e8f0 !important;
+        }
+        .dark .faq-answer-content li {
+          color: #e2e8f0 !important;
+        }
+        .dark .faq-answer-content span:not([class*="bg-"]):not([class*="text-red"]):not([class*="text-emerald"]):not([class*="text-amber"]):not([class*="text-blue"]):not([class*="text-purple"]) {
+          color: #e2e8f0;
+        }
+        .dark .faq-answer-content strong {
+          color: #ffffff !important;
+          font-weight: 700;
+        }
+        .dark .faq-answer-content em {
+          color: #cbd5e1;
+        }
+        .dark .faq-answer-content kbd {
+          color: #f1f5f9 !important;
+          background-color: #1e293b !important;
+          border-color: #334155 !important;
+        }
+      `}</style>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         {/* Navigation & Breadcrumb */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
@@ -1063,7 +1097,7 @@ export function FaqPage() {
                   className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer border ${
                     isActive
                       ? 'bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-slate-900 dark:border-white shadow-md'
-                      : 'bg-white dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:bg-slate-50 dark:hover:bg-slate-750'
+                      : 'bg-white dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:bg-slate-50 dark:hover:bg-slate-700'
                   }`}
                 >
                   <Icon className={`w-4 h-4 ${isActive ? 'text-inherit' : 'text-slate-500 dark:text-slate-400'}`} />
@@ -1143,15 +1177,15 @@ export function FaqPage() {
                   id={faq.id}
                   className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
                     isOpen
-                      ? 'bg-white dark:bg-slate-850 border-slate-300 dark:border-slate-600 shadow-md ring-1 ring-blue-500/10'
-                      : 'bg-white/80 dark:bg-slate-800/80 border-slate-200/90 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 shadow-2xs'
+                      ? 'bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 shadow-md ring-1 ring-blue-500/20'
+                      : 'bg-white/90 dark:bg-slate-900/70 border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-2xs'
                   }`}
                 >
                   {/* Header / Question Button */}
                   <button
                     type="button"
                     onClick={() => toggleFAQ(faq.id)}
-                    className="w-full p-5 sm:p-6 text-left flex items-start justify-between gap-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800 transition-colors"
+                    className="w-full p-5 sm:p-6 text-left flex items-start justify-between gap-4 cursor-pointer hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors"
                   >
                     <div className="flex items-start gap-4">
                       {/* Left Category Icon Pill */}
@@ -1225,7 +1259,7 @@ export function FaqPage() {
                       >
                         <div className="px-5 sm:px-6 pb-6 pt-2 border-t border-slate-100 dark:border-slate-800">
                           {/* Answer Content */}
-                          <div className="pl-0 sm:pl-14 text-sm sm:text-base text-slate-700 dark:text-slate-300 leading-relaxed space-y-3">
+                          <div className="pl-0 sm:pl-14 text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed space-y-3.5 faq-answer-content">
                             {faq.answer}
                           </div>
 

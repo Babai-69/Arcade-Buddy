@@ -43,7 +43,7 @@ const SWAG_TIERS: SwagTier[] = [
     accent: "var(--y)",
     tagColor: "var(--y)",
     tagBg: "var(--t3)",
-    items: ["Weather-Shield Jacket", "Wireless Audio Earbuds", "Ranger Swag Collection"]
+    items: ["Weather-Shield Jacket", "The Arcade PopUp Pro", "Wireless Audio Earbuds", "Ranger Swag Collection"]
   },
   {
     name: "Arcade Legend",
@@ -53,13 +53,27 @@ const SWAG_TIERS: SwagTier[] = [
     accent: "var(--r)",
     tagColor: "var(--r)",
     tagBg: "var(--t4)",
-    items: ["Executive Duffel Bag / Smartwatch", "Exclusive Legend Hoodie", "Complete Champion Kit"]
+    items: ["Executive Duffel Bag / Smartwatch", "Exclusive Legend Hoodie", "The Arcade PopUp Pro", "Complete Champion Kit"]
   }
 ];
 
 const SWAG_DROPS = [
   {
     id: 1,
+    name: "The Arcade PopUp Pro",
+    image: "/pop-up-pro.png",
+    tiers: ["Champion", "Legend"],
+    accent: "var(--b)",
+    specs: [
+      { title: "Every connector you actually need", desc: "A tough braided USB-C to USB-C fast-charging cable, plus swappable adapters for Lightning, Micro-USB, and USB-A. Whatever port you run into, you’re covered." },
+      { title: "Fidget-friendly click", desc: "It opens with a spring-loaded pop that is honestly just fun to click open and shut while you’re thinking through a problem." },
+      { title: "Built-in phone stand", desc: "Pops open to hold your phone upright or sideways, so you can prop it up next to your monitor or watch something hands-free on a flight." },
+      { title: "The little things you always lose", desc: "Built-in slots for a spare Nano SIM and Micro SD card, plus an ejector pin right where you can find it when you travel." },
+      { title: "Zero bulk", desc: "It’s barely an inch thick, weighs next to nothing, and has a sturdy little braided loop so you can clip it to your pack or slide it into your pocket." }
+    ]
+  },
+  {
+    id: 2,
     name: "The Arcade Weather-Shield Jacket",
     image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1789493091/ChatGPT_Image_Sep_15_2026_10_52_46_PM_gwx7aq.png",
     tiers: ["Champion", "Legend"],
@@ -73,7 +87,7 @@ const SWAG_DROPS = [
     ]
   },
   {
-    id: 2,
+    id: 3,
     name: "The Arcade Performance Backpack",
     image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1790234352/ChatGPT_Image_Sep_24_2026_12_44_20_PM_iss75e.png",
     tiers: ["Ranger"],
@@ -89,7 +103,7 @@ const SWAG_DROPS = [
 ];
 
 const RECENT_GALLERY = [
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYKOTdyK-DMDIua53xSITMiQHcBb2BFOKSV0Uj15lAUigMAxqfCe4GCq8&s=10",
+  "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-1-2025-trooper-swags.jpg",
   "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/version-2/swags-gallery/arcade-season-2-2025-legend-swags.jpg",
   "https://media.licdn.com/dms/image/v2/D4D22AQFJEtmTj9qrPA/feedshare-shrink_800/B4DZXCO6ZUG4Ak-/0/1742720447177?e=2147483647&v=beta&t=G2v_3TILQPkocjR98A-neAKVFVFvftr-4xmkk3QD2mY",
   "https://d8it4huxumps7.cloudfront.net/uploads/images/festival/gallery/69e7e490907b2_screenshot_2026_0420_121818.jpg?d=600x600",
@@ -618,7 +632,10 @@ export function SwagsPage() {
               <div
                 key={drop.id}
                 className="bento-card"
-                style={{ gridColumn: 'span 6', padding: '24px' }}
+                style={{
+                  gridColumn: filteredDrops.length >= 3 ? 'span 4' : filteredDrops.length === 2 ? 'span 6' : 'span 12',
+                  padding: '24px'
+                }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
                   <div style={{ display: 'flex', gap: '6px' }}>
