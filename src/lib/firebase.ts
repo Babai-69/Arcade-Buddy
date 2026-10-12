@@ -1,10 +1,10 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut } from 'firebase/auth';
 import { initializeFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
+// Official project configuration for Arcade Buddy
+export const firebaseConfig = {
   apiKey: "AIzaSyDRkHhRkGqrRhl259Ku9pntsEEf5D3GDWo",
   authDomain: "arcade-buddy.firebaseapp.com",
   projectId: "arcade-buddy",
@@ -13,11 +13,13 @@ const firebaseConfig = {
   appId: "1:140747124352:web:0d729910b53b4b3f654065"
 };
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+// Initialize Firebase App
+export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+
+// Initialize Firestore with default database and long polling for reliability
 export const db = initializeFirestore(app, {
-  experimentalForceLongPolling: true
+  experimentalForceLongPolling: true,
 });
 export const storage = getStorage(app);
 
