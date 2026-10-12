@@ -56,6 +56,15 @@ const RESOURCES: ResourceItem[] = [
     image: "https://d2yds90mtvelsl.cloudfront.net/original/3X/a/b/ab1726e7ea048576b7df5c7762269cebd445a122.gif",
   },
   {
+    category: "CHALLENGE",
+    title: "Untrackable Badges List",
+    description: "Explore the Work Meets Play series, how monthly limited badges work, why they cannot be auto-tracked on public profiles, and the 7 bonus points reward.",
+    linkText: "View Untrackable Badges",
+    link: "/resources/untrackable-badges",
+    internal: true,
+    image: "https://d2yds90mtvelsl.cloudfront.net/original/3X/7/f/7fd46f23ee6895d3889b600b8b17e185defc750e.gif",
+  },
+  {
     category: "GUIDE",
     title: "GEAR Badges - Facilitator 2026",
     description: "Understand how to claim the 2 essential GEAR Badges on your Google Developer Profile to qualify for facilitator milestone bonuses.",

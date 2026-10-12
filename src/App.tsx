@@ -18,6 +18,7 @@ import { PointSystemPage } from './pages/PointSystemPage';
 import { PrizeCounterGuidePage } from './pages/PrizeCounterGuidePage';
 import { GearBadgesPage } from './pages/GearBadgesPage';
 import { SwagShowcasePage } from './pages/SwagShowcasePage';
+import { UntrackableBadgesPage } from './pages/UntrackableBadgesPage';
 import { QuickStartPage } from './pages/QuickStartPage';
 import { FreeCreditsPage } from './pages/FreeCreditsPage';
 import { SwagsPage } from './pages/SwagsPage';
@@ -87,6 +88,8 @@ export default function App() {
               <Route path="/resources/bonus-milestone" element={<PageTransition><BonusMilestonePage /></PageTransition>} />
               <Route path="/resources/daily-lab-limit-guide" element={<PageTransition><DailyLabLimitGuidePage /></PageTransition>} />
               <Route path="/resources/swag-distribution-system" element={<PageTransition><SwagDistributionSystemPage /></PageTransition>} />
+              <Route path="/resources/untrackable-badges" element={<PageTransition><UntrackableBadgesPage /></PageTransition>} />
+              <Route path="/untrackable-badges" element={<PageTransition><UntrackableBadgesPage /></PageTransition>} />
               <Route path="/quick-start" element={<PageTransition><QuickStartPage /></PageTransition>} />
               <Route path="/free-credits" element={<PageTransition><FreeCreditsPage /></PageTransition>} />
               <Route path="/public-profile-help" element={<PageTransition><PublicProfileHelpPage /></PageTransition>} />
