@@ -81,11 +81,39 @@ async function startServer() {
     res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
     next();
   });
-  const PORT = 3000;
+  const PORT = Number(process.env.PORT) || 3000;
 
   app.set('trust proxy', 1);
 
-  app.use(cors());
+  // Enable CORS with support for Vercel frontend, previews, and localhost
+  const allowedOrigins = [
+    'https://arcade-buddy.vercel.app',
+    'https://arcade-buddy.onrender.com',
+    'http://localhost:3000',
+    'http://localhost:5173',
+  ];
+
+  const corsOptions: cors.CorsOptions = {
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. server-to-server, mobile, curl)
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.includes(origin) ||
+        /^https:\/\/arcade-buddy(-[a-z0-9-]+)?\.vercel\.app$/.test(origin) ||
+        /^https:\/\/.*\.onrender\.com$/.test(origin)
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
+  };
+
+  app.use(cors(corsOptions));
+  app.options('*', cors(corsOptions));
+
   app.use(helmet({
     contentSecurityPolicy: false, // disabled for Vite to work properly in dev
     crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
@@ -104,9 +132,14 @@ async function startServer() {
   app.use(express.urlencoded({ limit: '50mb', extended: true }));
   app.use(express.static(path.join(process.cwd(), 'public')));
 
-  // API Configuration
-  app.get("/api/health", (req, res) => {
-    res.json({ status: "ok" });
+  // Health check endpoints for pinging and Render uptime monitoring
+  app.get(["/health", "/api/health"], (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.json({
+      status: "ok",
+      service: "arcade-buddy",
+      timestamp: new Date().toISOString()
+    });
   });
 
   
@@ -470,14 +503,48 @@ app.post("/api/notify-query", async (req, res) => {
   app.get("/api/calculator", async (req, res) => {
     let { url, startDate, endDate } = req.query;
     if (!url || typeof url !== "string") {
-      return res.status(400).json({ error: "Missing url parameter" });
-    }
-    
-    // Rewrite skills.google to cloudskillsboost.google as it is more stable and prevents timeouts
-    if (url.includes('skills.google/public_profiles/')) {
-       url = url.replace('skills.google/public_profiles/', 'cloudskillsboost.google/public_profiles/');
+      return res.status(400).json({ error: "Missing required 'url' query parameter" });
     }
 
+    const rawUrl = url.trim();
+
+    // 1. SSRF Protection & URL format validation
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(rawUrl);
+    } catch {
+      return res.status(400).json({ error: "Invalid URL format. Please provide a valid HTTP/HTTPS URL." });
+    }
+
+    const allowedHosts = [
+      'www.skills.google',
+      'skills.google',
+      'www.cloudskillsboost.google',
+      'cloudskillsboost.google'
+    ];
+
+    const hostnameLower = parsedUrl.hostname.toLowerCase();
+    if (!allowedHosts.includes(hostnameLower)) {
+      return res.status(400).json({
+        error: `Invalid domain '${parsedUrl.hostname}'. Profile URL host must be www.skills.google or cloudskillsboost.google.`
+      });
+    }
+
+    if (!parsedUrl.pathname.startsWith('/public_profiles/')) {
+      return res.status(400).json({
+        error: "Invalid profile URL path. Path must begin with '/public_profiles/<id>'."
+      });
+    }
+
+    const profileId = parsedUrl.pathname.replace(/^\/public_profiles\//, '').replace(/\/$/, '').trim();
+    if (!profileId || profileId.length < 3) {
+      return res.status(400).json({
+        error: "Invalid profile ID. Profile path must include a valid profile identifier."
+      });
+    }
+
+    // Construct upstream URL on cloudskillsboost.google CDN
+    const upstreamUrl = `https://www.cloudskillsboost.google/public_profiles/${encodeURIComponent(profileId)}`;
 
     const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T00:00:00Z');
     const FACILITATOR_END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T18:29:00Z');
@@ -485,15 +552,91 @@ app.post("/api/notify-query", async (req, res) => {
     const ARCADE_END_DATE = new Date('2026-12-31T23:59:59Z');
 
     try {
-      const response = await fetch(url, { signal: AbortSignal.timeout(20000) });
-      if (!response.ok) {
-        return res.status(404).json({ error: "Profile not found or invalid URL" });
-      }
-      
+      console.log(`[Scraper] Fetching upstream profile: ${upstreamUrl}`);
+
+      const response = await fetch(upstreamUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.9',
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        },
+        signal: AbortSignal.timeout(25000)
+      });
+
+      const status = response.status;
       const html = await response.text();
+
+      // Log status, response length, and the first 200 characters of the upstream response on server for debugging
+      console.log(`[Scraper] Upstream status: ${status}, length: ${html.length}, preview: ${JSON.stringify(html.slice(0, 200))}`);
+
+      // Distinct HTTP status codes
+      if (status === 404) {
+        return res.status(404).json({
+          error: "Profile not found on Google Cloud Skills Boost. Please verify your profile ID/URL."
+        });
+      }
+
+      if (status === 403) {
+        return res.status(403).json({
+          error: "Access blocked by skills.google (HTTP 403 Forbidden). Upstream rate-limiting or security check active."
+        });
+      }
+
+      if (status === 429) {
+        return res.status(429).json({
+          error: "Rate-limited by skills.google (HTTP 429 Too Many Requests). Please wait a moment and try again."
+        });
+      }
+
+      if (status >= 500) {
+        return res.status(502).json({
+          error: `Upstream error from skills.google (HTTP ${status}). Google Cloud Skills Boost is temporarily unavailable.`
+        });
+      }
+
+      if (!response.ok) {
+        return res.status(502).json({
+          error: `Upstream request failed with HTTP ${status}.`
+        });
+      }
+
       const $ = cheerio.load(html);
 
-      const profileName = $("ql-avatar").attr("title") || $("title").text().replace(" | Google Cloud Skills Boost", "").trim();
+      // Check if truly private profile
+      const isExplicitlyPrivate =
+        html.includes("This profile is private") ||
+        html.includes("profile is not public") ||
+        html.includes("Private Profile") ||
+        $(".profile-private").length > 0;
+
+      const profileAvatar = $("ql-avatar").attr("src") || "";
+      const profileAvatarTitle = $("ql-avatar").attr("title");
+      const h1Text = $("h1").text().trim();
+      const pageTitle = $("title").text().replace(" | Google Cloud Skills Boost", "").trim();
+      const profileName = profileAvatarTitle || h1Text || pageTitle;
+
+      const badgesCount = $(".profile-badge").length;
+
+      // Check if upstream returned or redirected to the generic homepage (profile not found)
+      const isHomepageFallback =
+        pageTitle.includes("Build AI skills") ||
+        pageTitle === "Google Cloud Skills Boost" ||
+        (badgesCount === 0 && !profileAvatarTitle && !profileAvatar && !html.includes("ql-avatar"));
+
+      if (isHomepageFallback && !profileAvatarTitle && badgesCount === 0) {
+        return res.status(404).json({
+          error: "Profile not found on Google Cloud Skills Boost. Please verify your profile ID/URL."
+        });
+      }
+
+      // 422: Profile is truly private (page loaded with 200 OK but has no public data)
+      if (isExplicitlyPrivate || (!profileName && badgesCount === 0 && !profileAvatar)) {
+        return res.status(422).json({
+          error: "Profile is private. Please set your Google Cloud Skills Boost profile to Public in account settings."
+        });
+      }
 
       let triviaBadges = 0;
       let gameBadges = 0;
@@ -645,9 +788,16 @@ app.post("/api/notify-query", async (req, res) => {
         facilitatorSkillBadges,
         badges: badgesList
       });
-    } catch (e) {
-      console.error(e);
-      res.status(500).json({ error: "Failed to fetch profile" });
+    } catch (e: any) {
+      console.error("[Scraper Error]", e);
+      if (e.name === 'TimeoutError' || e.name === 'AbortError' || e.code === 'UND_ERR_CONNECT_TIMEOUT') {
+        return res.status(504).json({
+          error: "Gateway timeout: skills.google took too long to respond (>25s). Please try again."
+        });
+      }
+      return res.status(502).json({
+        error: `Upstream failure: Could not connect to skills.google (${e.message || 'Network error'}).`
+      });
     }
   });
 
@@ -807,9 +957,17 @@ Return the response in JSON format as an array of objects. Each object should ha
   });
 
   // API 404 fallback to prevent index.html being sent for API requests
-
   app.all('/api/*', (req, res) => {
     res.status(404).json({ error: 'API route not found' });
+  });
+
+  // Express error handler for API routes to guarantee JSON on all error paths
+  app.use('/api', (err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('[API Error Handler]', err);
+    res.status(err.status || 500).json({
+      error: err.message || 'Internal Server Error',
+      status: err.status || 500
+    });
   });
 
   // Vite middleware for development

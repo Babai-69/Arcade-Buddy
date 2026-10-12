@@ -11,6 +11,7 @@ import { DashboardSkeleton } from '../components/DashboardSkeleton';
 import { Milestones } from '../components/Milestones';
 import { ArcadeWelcomeHero } from '../components/ArcadeWelcomeHero';
 import { showNotification } from '../components/ArcadeNotification';
+import { fetchProfileCalculator } from '../services/arcadeApiService';
 
 export function DashboardPage({ participants }: { participants: any[] }) {
   const [user, setUser] = useState<any>(null);
@@ -74,43 +75,33 @@ export function DashboardPage({ participants }: { participants: any[] }) {
     });
 
     try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(url)}`);
-      if (res.ok) {
-        const result = await res.json();
-        if (!result.error && (result.badges || result.arcadePoints !== undefined)) {
-          setData(result);
-          setIsOfflinePreview(false);
-          localStorage.setItem('arcadeProgressData', JSON.stringify(result));
-          localStorage.setItem('arcadeProfileUrl', url);
-          const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          localStorage.setItem('arcadeLastSyncTime', timeStr);
-          setLastSyncTime(timeStr);
-          sessionStorage.setItem('arcadeSessionDashboardSynced', 'true');
+      const result = await fetchProfileCalculator(url, { maxRetries: 1 });
+      if (result && (result.badges || result.arcadePoints !== undefined)) {
+        setData(result);
+        setIsOfflinePreview(false);
+        localStorage.setItem('arcadeProgressData', JSON.stringify(result));
+        localStorage.setItem('arcadeProfileUrl', url);
+        const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        localStorage.setItem('arcadeLastSyncTime', timeStr);
+        setLastSyncTime(timeStr);
+        sessionStorage.setItem('arcadeSessionDashboardSynced', 'true');
 
-          if (user) {
-            try {
-              const userRef = doc(db, 'users', user.uid);
-              await setDoc(userRef, { profileUrl: url }, { merge: true });
-            } catch (err) {
-              console.warn('Failed to save profileUrl to Firestore:', err);
-            }
+        if (user) {
+          try {
+            const userRef = doc(db, 'users', user.uid);
+            await setDoc(userRef, { profileUrl: url }, { merge: true });
+          } catch (err) {
+            console.warn('Failed to save profileUrl to Firestore:', err);
           }
-
-          // Retro success notification
-          showNotification({
-            id: 'profile-sync',
-            message: 'Profile Data Updated!',
-            type: 'success',
-            duration: 2600,
-          });
-        } else {
-          showNotification({
-            id: 'profile-sync',
-            message: 'Showing Offline Preview',
-            type: 'info',
-            duration: 2400,
-          });
         }
+
+        // Retro success notification
+        showNotification({
+          id: 'profile-sync',
+          message: 'Profile Data Updated!',
+          type: 'success',
+          duration: 2600,
+        });
       } else {
         showNotification({
           id: 'profile-sync',
@@ -202,10 +193,13 @@ export function DashboardPage({ participants }: { participants: any[] }) {
     setConnectLoading(true);
     setConnectError('');
     try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(urlToUse)}`);
-      if (!res.ok) throw new Error("Could not fetch profile. Ensure your Google Skills Boost profile is public.");
-      const result = await res.json();
-      if (result.error) throw new Error(result.error);
+      const result = await fetchProfileCalculator(urlToUse, {
+        maxRetries: 2,
+        retryDelayMs: 3500,
+        onRetry: (attempt, max) => {
+          setConnectError(`Connecting to backend service (Attempt ${attempt}/${max})... Render server may be waking up.`);
+        }
+      });
 
       setData(result);
       setIsOfflinePreview(false);
@@ -232,7 +226,7 @@ export function DashboardPage({ participants }: { participants: any[] }) {
         duration: 2600,
       });
     } catch (err: any) {
-      setConnectError(err.message || 'Failed to analyze profile. Please make sure the URL is public.');
+      setConnectError(err.message || 'Failed to analyze profile. Please verify your URL.');
     } finally {
       setConnectLoading(false);
     }

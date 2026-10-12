@@ -6,6 +6,7 @@ import QRCode from 'qrcode';
 import { toPng, toBlob } from 'html-to-image';
 import { CertificateTemplate } from '../CertificateTemplate';
 import { useRef, useEffect } from 'react';
+import { fetchProfileCalculator } from '../../services/arcadeApiService';
 
 interface CertificateModalProps {
   isOpen: boolean;
@@ -69,11 +70,7 @@ export function CertificateModal({ isOpen, onClose, userEmail }: CertificateModa
     setStats(null);
 
     try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(profileUrl)}`);
-      if (!res.ok) {
-        throw new Error('Could not fetch profile. Ensure your profile is public.');
-      }
-      const data = await res.json();
+      const data = await fetchProfileCalculator(profileUrl, { maxRetries: 1 });
       
       setStats({
         gameBadges: data.gameBadges || 0,

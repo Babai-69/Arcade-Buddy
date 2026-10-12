@@ -8,6 +8,7 @@ import { InlineBadgeTracker } from './InlineBadgeTracker';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import { fetchProfileCalculator, ArcadeApiError } from '../services/arcadeApiService';
 
 interface ProfileCheckerProps {
   participants: Participant[];
@@ -49,7 +50,8 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
   const [url, setUrl] = useState('');
   const [result, setResult] = useState<Participant | null>(null);
   const [error, setError] = useState('');
-      const [isRegistered, setIsRegistered] = useState(true);
+  const [retryNotice, setRetryNotice] = useState('');
+  const [isRegistered, setIsRegistered] = useState(true);
   const [rememberProfile, setRememberProfile] = useState(false);
   const [isDemoAnimation, setIsDemoAnimation] = useState(false);
 
@@ -156,11 +158,13 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
     }
 
     try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(url)}`);
-      if (!res.ok) {
-        throw new Error('Profile is private or invalid URL.');
-      }
-      const data = await res.json();
+      const data = await fetchProfileCalculator(url, {
+        maxRetries: 2,
+        retryDelayMs: 3500,
+        onRetry: (attempt, max) => {
+          setRetryNotice(`Waking up server from idle (Attempt ${attempt}/${max}). Please wait a few seconds...`);
+        }
+      });
       
       const newResult = {
         id: 'fetched',
@@ -229,9 +233,10 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
 
     } catch (err: any) {
       setResult(null);
-      setError('Profile is private or invalid URL. Please set your profile to public on Cloud Skills Boost and try again.');
+      setError(err.message || 'Failed to fetch profile. Please check the URL and try again.');
     } finally {
       setIsLoading(false);
+      setRetryNotice('');
     }
   };
 
@@ -325,6 +330,12 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                 )}
               </button>
             </div>
+            {retryNotice && (
+              <div className="mt-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300 text-xs sm:text-sm font-medium flex items-center gap-2 animate-pulse">
+                <RefreshCw className="w-4 h-4 animate-spin text-amber-600 dark:text-amber-400 shrink-0" />
+                <span>{retryNotice}</span>
+              </div>
+            )}
             {error && <p className="text-[#EA4335] mt-3 text-sm font-medium">{error}</p>}
           </form>
         </div>

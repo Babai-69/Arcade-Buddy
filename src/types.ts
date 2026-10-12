@@ -2,7 +2,7 @@ export interface BadgeRecord {
   id: string;
   title: string;
   earnedDate: string;
-  category: 'Game' | 'Skill' | 'Lab-free' | 'Special' | 'Other';
+  category: 'Game' | 'Skill' | 'Lab-free' | 'Special' | 'Trivia' | 'Other';
   points: number;
   validForProgram?: boolean;
   validForArcade?: boolean;

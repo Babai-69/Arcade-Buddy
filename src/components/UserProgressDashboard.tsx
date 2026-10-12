@@ -20,6 +20,7 @@ import { MilestoneProgress } from './MilestoneProgress';
 import { BonusMilestoneTracker } from './BonusMilestoneTracker';
 import { WeeklyProgress } from './WeeklyProgress';
 import { showNotification } from './ArcadeNotification';
+import { fetchProfileCalculator } from '../services/arcadeApiService';
 
 export function UserProgressDashboard() {
   const [user, setUser] = useState<any>(null);
@@ -62,10 +63,13 @@ export function UserProgressDashboard() {
     setGuestLoading(true);
     setGuestError('');
     try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(target)}`);
-      if (!res.ok) throw new Error("Could not fetch profile. Please make sure your Google Skills Boost profile is public.");
-      const result = await res.json();
-      if (result.error) throw new Error(result.error);
+      const result = await fetchProfileCalculator(target, {
+        maxRetries: 2,
+        retryDelayMs: 3500,
+        onRetry: (attempt, max) => {
+          setGuestError(`Connecting to backend service (Attempt ${attempt}/${max})... Server waking up.`);
+        }
+      });
       setData(result);
       setProfileUrl(target);
       localStorage.setItem('arcadeProfileUrl', target);
@@ -198,14 +202,7 @@ export function UserProgressDashboard() {
         await setDoc(userRef, { profileUrl: targetUrl }, { merge: true });
       }
 
-      let queryStr = `url=${encodeURIComponent(targetUrl)}`;
-      
-      const res = await fetch(`/api/calculator?${queryStr}`);
-      if (!res.ok) throw new Error("Could not fetch profile. Ensure your profile is public.");
-      
-      const result = await res.json();
-      if (result.error) throw new Error(result.error);
-      
+      const result = await fetchProfileCalculator(targetUrl, { maxRetries: 1 });
       setData(result);
       if (isBackground) {
         showNotification({

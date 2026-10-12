@@ -3,6 +3,7 @@ import { getAdminAllStudents, getUserProgress, UserProfile, UserBadgeProgress } 
 import { auth } from '../lib/firebase';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, User } from 'lucide-react';
+import { fetchProfileCalculator } from '../services/arcadeApiService';
 
 export function AdminProgressDashboard() {
   const [students, setStudents] = useState<UserProfile[]>([]);
@@ -17,10 +18,8 @@ export function AdminProgressDashboard() {
     if (!student.profileUrl) return;
     setSyncingUid(student.uid);
     try {
-      const res = await fetch(`/api/calculator?url=${encodeURIComponent(student.profileUrl)}`);
-      if (res.ok) {
-        const data = await res.json();
-        if (!data.error) {
+      const data = await fetchProfileCalculator(student.profileUrl, { maxRetries: 1 });
+      if (data && !data.error) {
           const updates = {
             gameBadges: data.gameBadges || 0,
             triviaBadges: data.triviaBadges || 0,
@@ -38,7 +37,6 @@ export function AdminProgressDashboard() {
           
           setStudents(prev => prev.map(s => s.uid === student.uid ? { ...s, ...updates } : s));
         }
-      }
     } catch (err) {
       console.error('Failed to sync student:', err);
     } finally {
