@@ -93,74 +93,111 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.6 }}
-      className="mt-8 relative bg-[#f8fafc] dark:bg-[#0f172a] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl overflow-hidden"
+      className="mt-8 relative bg-[var(--card)] rounded-3xl border-2 border-[var(--edge)] overflow-hidden shadow-[5px_5px_0_var(--edge)]"
     >
-      <div className="flex justify-between items-center px-6 py-5 border-b border-slate-200 dark:border-slate-800 bg-white/95 backdrop-blur dark:bg-slate-900/95 shrink-0">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-6 py-5 border-b-2 border-[var(--edge)] bg-[var(--card)] shrink-0 gap-3">
         <div>
-          <h2 className="text-2xl font-display font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <Trophy className="w-6 h-6 text-[#4285F4]" />
-            Arcade & Facilitator Badge Tracker
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300 mb-1">
+            VERIFIED BADGE AUDIT
+          </div>
+          <h2 className="text-xl sm:text-2xl font-display font-black text-[var(--ink)] flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-[#4285F4]" />
+            Arcade &amp; Facilitator Badge Tracker
           </h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-[var(--mut)] mt-0.5">
             Arcade 2026 Season: Jul 13 → Dec 31, 2026 &middot; Facilitator Milestone Window: Jul 13 → Sep 14, 2026
           </p>
         </div>
       </div>
       
-      <div className="p-6">
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 mb-8 flex items-start gap-3">
+      <div className="p-5 sm:p-6">
+        <div className="bg-blue-50/80 dark:bg-blue-950/30 border-2 border-blue-200 dark:border-blue-800/80 rounded-2xl p-4 mb-6 flex items-start gap-3">
           <AlertCircle className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-          <p className="text-blue-900 dark:text-blue-200 text-sm font-medium">
-            Arcade program runs through December 31, 2026. All active games (+1 Pt) and verified skill badges (+0.5 Pt) continuously accumulate toward your total Arcade points and Swag Tiers. (Facilitator bonus milestones were evaluated on badges earned by Sep 14).
+          <p className="text-blue-900 dark:text-blue-200 text-xs sm:text-sm font-medium leading-relaxed">
+            Arcade program runs through December 31, 2026. All active games (+1 Pt) and verified skill badges (+0.5 Pt) continuously accumulate toward your total Arcade points and Swag Tiers.
           </p>
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
-            <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">Eligible Badges</p>
-            <p className="text-3xl font-bold text-slate-900 dark:text-white"><AnimatedPoints endVal={stats.total} /></p>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-6">
+          <div className="bg-[var(--bg)] p-4 rounded-2xl border-2 border-[var(--edge)] text-center shadow-[3px_3px_0_var(--edge)]">
+            <p className="text-[11px] text-[var(--mut)] uppercase tracking-wider font-bold mb-1">Eligible Badges</p>
+            <p className="text-2xl sm:text-3xl font-black text-[var(--ink)] font-mono"><AnimatedPoints endVal={stats.total} /></p>
           </div>
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
-            <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">Game Badges</p>
-            <p className="text-3xl font-bold text-[#4285F4]"><AnimatedPoints endVal={stats.games} /></p>
+          <div className="bg-[var(--bg)] p-4 rounded-2xl border-2 border-[var(--edge)] text-center shadow-[3px_3px_0_var(--edge)]">
+            <p className="text-[11px] text-[var(--mut)] uppercase tracking-wider font-bold mb-1">Game Badges</p>
+            <p className="text-2xl sm:text-3xl font-black text-[#4285F4] font-mono"><AnimatedPoints endVal={stats.games} /></p>
           </div>
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
-            <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">Skill Badges</p>
-            <p className="text-3xl font-bold text-[#FBBC05]"><AnimatedPoints endVal={stats.skills} /></p>
+          <div className="bg-[var(--bg)] p-4 rounded-2xl border-2 border-[var(--edge)] text-center shadow-[3px_3px_0_var(--edge)]">
+            <p className="text-[11px] text-[var(--mut)] uppercase tracking-wider font-bold mb-1">Skill Badges</p>
+            <p className="text-2xl sm:text-3xl font-black text-[#FBBC05] font-mono"><AnimatedPoints endVal={stats.skills} /></p>
           </div>
-          <div className="bg-white dark:bg-slate-800 p-4 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
-            <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-semibold mb-1">Eligible Points</p>
-            <p className="text-3xl font-bold text-[#34A853]"><AnimatedPoints endVal={stats.points} /></p>
+          <div className="bg-[var(--bg)] p-4 rounded-2xl border-2 border-[var(--edge)] text-center shadow-[3px_3px_0_var(--edge)]">
+            <p className="text-[11px] text-[var(--mut)] uppercase tracking-wider font-bold mb-1">Eligible Points</p>
+            <p className="text-2xl sm:text-3xl font-black text-[#34A853] font-mono"><AnimatedPoints endVal={stats.points} /></p>
           </div>
         </div>
 
         {eligibleBadges.length === 0 ? (
-          <div className="text-center py-12 bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-slate-700/50">
-            <p className="text-slate-600 dark:text-slate-400 mb-2">No badges found in the Jul 13 – Sep 14 window.</p>
-            <p className="font-medium text-slate-800 dark:text-slate-200">Keep earning badges to qualify for the facilitator bonus!</p>
+          <div className="text-center py-10 bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)]">
+            <p className="text-[var(--mut)] mb-2 text-sm">No badges found in the tracked window.</p>
+            <p className="font-bold text-[var(--ink)] text-sm">Complete active skill badges and games on Skills Boost to earn points!</p>
           </div>
         ) : (
-          <div className="bg-white dark:bg-slate-800/60 backdrop-blur border border-slate-200 dark:border-slate-700/50 rounded-3xl overflow-hidden mb-8 shadow-sm">
-            <div className="flex border-b border-slate-200 dark:border-slate-700 overflow-x-auto hide-scrollbar">
+          <div className="bg-[var(--bg)] border-2 border-[var(--edge)] rounded-2xl overflow-hidden mb-6 shadow-[3px_3px_0_var(--edge)]">
+            {/* Tactile Press Tabs Bar */}
+            <div className="flex border-b-2 border-[var(--edge)] overflow-x-auto hide-scrollbar p-2.5 gap-2 bg-[var(--card)]">
               <button 
+                type="button"
                 onClick={() => setActiveTab('game')}
-                className={`flex-1 min-w-[120px] py-4 px-6 text-sm font-bold border-b-2 transition-colors flex items-center justify-center gap-2 ${activeTab === 'game' ? 'border-[#4285F4] text-[#4285F4] bg-blue-50/50 dark:bg-blue-900/10' : 'border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                className={`btn-press btn-press--sm px-4 py-2 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                  activeTab === 'game' 
+                    ? 'btn-press--primary is-pressed text-white' 
+                    : 'btn-press--secondary text-[var(--ink)]'
+                }`}
+                style={{
+                  border: '2px solid var(--edge)',
+                  boxShadow: activeTab === 'game' ? '0 0 0 var(--edge)' : '3px 3px 0 var(--edge)',
+                  transform: activeTab === 'game' ? 'translate(3px, 3px)' : 'none'
+                }}
               >
-                <Gamepad2 className="w-4 h-4" /> Game Badges ({gameBadges.length})
+                <Gamepad2 className="w-4 h-4 text-blue-400" />
+                <span>Game Badges ({gameBadges.length})</span>
               </button>
               <button 
+                type="button"
                 onClick={() => setActiveTab('skill')}
-                className={`flex-1 min-w-[120px] py-4 px-6 text-sm font-bold border-b-2 transition-colors flex items-center justify-center gap-2 ${activeTab === 'skill' ? 'border-[#FBBC05] text-[#FBBC05] bg-amber-50/50 dark:bg-amber-900/10' : 'border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                className={`btn-press btn-press--sm px-4 py-2 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                  activeTab === 'skill' 
+                    ? 'btn-press--yellow is-pressed text-slate-900' 
+                    : 'btn-press--secondary text-[var(--ink)]'
+                }`}
+                style={{
+                  border: '2px solid var(--edge)',
+                  boxShadow: activeTab === 'skill' ? '0 0 0 var(--edge)' : '3px 3px 0 var(--edge)',
+                  transform: activeTab === 'skill' ? 'translate(3px, 3px)' : 'none'
+                }}
               >
-                <Target className="w-4 h-4" /> Skill Badges ({skillBadges.length})
+                <Target className="w-4 h-4 text-amber-500" />
+                <span>Skill Badges ({skillBadges.length})</span>
               </button>
               {labFreeBadges.length > 0 && (
                 <button 
+                  type="button"
                   onClick={() => setActiveTab('labfree')}
-                  className={`flex-1 min-w-[120px] py-4 px-6 text-sm font-bold border-b-2 transition-colors flex items-center justify-center gap-2 ${activeTab === 'labfree' ? 'border-slate-800 text-slate-800 dark:border-slate-200 dark:text-slate-200 bg-slate-50 dark:bg-slate-700/30' : 'border-transparent text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50'}`}
+                  className={`btn-press btn-press--sm px-4 py-2 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                    activeTab === 'labfree' 
+                      ? 'btn-press--primary is-pressed text-white' 
+                      : 'btn-press--secondary text-[var(--ink)]'
+                  }`}
+                  style={{
+                    border: '2px solid var(--edge)',
+                    boxShadow: activeTab === 'labfree' ? '0 0 0 var(--edge)' : '3px 3px 0 var(--edge)',
+                    transform: activeTab === 'labfree' ? 'translate(3px, 3px)' : 'none'
+                  }}
                 >
-                  <BookOpen className="w-4 h-4" /> Lab-free Courses ({labFreeBadges.length})
+                  <BookOpen className="w-4 h-4 text-purple-400" />
+                  <span>Lab-free Courses ({labFreeBadges.length})</span>
                 </button>
               )}
             </div>
@@ -269,15 +306,18 @@ export function InlineBadgeTracker({ participant }: InlineBadgeTrackerProps) {
 
         {/* Excluded Badges Section */}
         {excludedBadges.length > 0 && (
-          <div className="border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-800 overflow-hidden">
+          <div className="border-2 border-[var(--edge)] rounded-2xl bg-[var(--card)] overflow-hidden shadow-[3px_3px_0_var(--edge)]">
             <button 
+              type="button"
               onClick={() => setShowExcluded(!showExcluded)}
-              className="w-full px-6 py-4 flex items-center justify-between bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-left"
+              className="w-full px-5 py-3.5 flex items-center justify-between bg-[var(--card)] hover:bg-[var(--bg)] transition-colors text-left cursor-pointer"
             >
-              <span className="font-semibold text-slate-700 dark:text-slate-300 text-sm">
-                {excludedBadges.length} badges earned outside the program window — not eligible for bonus
+              <span className="font-bold text-[var(--ink)] text-xs sm:text-sm">
+                ⚠️ {excludedBadges.length} badges earned outside the program window — not eligible for bonus
               </span>
-              {showExcluded ? <ChevronUp className="w-5 h-5 text-slate-400" /> : <ChevronDown className="w-5 h-5 text-slate-400" />}
+              <div className="w-7 h-7 rounded-lg border border-[var(--edge)] bg-[var(--bg)] flex items-center justify-center">
+                {showExcluded ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+              </div>
             </button>
             
             <AnimatePresence>

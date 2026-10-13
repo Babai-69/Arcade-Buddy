@@ -621,34 +621,65 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                     {/* Tier Progress Card */}
                     <motion.div 
                       initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
-                      className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-xl border border-white/40 dark:border-white/10 rounded-3xl p-6 md:p-8 shadow-xl hover:shadow-2xl transition-all"
+                      className="bg-white/80 dark:bg-slate-800/90 backdrop-blur-xl border-2 border-[var(--edge)] rounded-3xl p-6 md:p-8 shadow-[5px_5px_0_var(--edge)] transition-all"
                     >
-                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                        <h3 className="font-bold text-xl text-gray-900 dark:text-white flex items-center gap-2">
-                          Swags Tier Progress <Info className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                        </h3>
-                        <div className="flex items-center gap-3">
-                          <div className="flex bg-gray-100/80 dark:bg-slate-800/80 p-1.5 rounded-full border border-gray-200 dark:border-slate-700">
-                            <button
-                              onClick={() => setIsRegistered(true)}
-                              className={`px-5 py-2 text-sm rounded-full transition-all ${isRegistered ? 'bg-white dark:bg-slate-600 shadow-md text-purple-600 dark:text-purple-400 font-bold' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium bg-transparent'}`}
-                            >
-                              Registered
-                            </button>
-                            <button
-                              onClick={() => setIsRegistered(false)}
-                              className={`px-5 py-2 text-sm rounded-full transition-all ${!isRegistered ? 'bg-white dark:bg-slate-600 shadow-md text-purple-600 dark:text-purple-400 font-bold' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium bg-transparent'}`}
-                            >
-                              Not Registered
-                            </button>
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b-2 border-[var(--edge)]">
+                        <div>
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300 mb-1">
+                            OFFICIAL REDEMPTION TIERS
                           </div>
+                          <h3 className="font-black text-xl sm:text-2xl text-[var(--ink)] flex items-center gap-2">
+                            Swags Tier Progress <Info className="w-4 h-4 text-slate-400" />
+                          </h3>
+                        </div>
+
+                        {/* Tactile Cohort Registration Buttons */}
+                        <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-[var(--bg)] border-2 border-[var(--edge)] shadow-[2px_2px_0_var(--edge)]">
+                          <button
+                            type="button"
+                            onClick={() => setIsRegistered(true)}
+                            className={`btn-press btn-press--sm px-4 py-2 text-xs font-bold rounded-xl cursor-pointer transition-all ${
+                              isRegistered
+                                ? 'btn-press--primary is-pressed text-white'
+                                : 'bg-transparent text-[var(--mut)] hover:text-[var(--ink)] border-transparent shadow-none'
+                            }`}
+                            style={isRegistered ? {
+                              border: '2px solid var(--edge)',
+                              boxShadow: '0 0 0 var(--edge)',
+                              transform: 'translate(2px, 2px)'
+                            } : {}}
+                          >
+                            <span>Cohort Registered</span>
+                            {milestoneBonus > 0 && <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-400 text-slate-950 font-black">+{milestoneBonus}</span>}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setIsRegistered(false)}
+                            className={`btn-press btn-press--sm px-3.5 py-2 text-xs font-bold rounded-xl cursor-pointer transition-all ${
+                              !isRegistered
+                                ? 'btn-press--secondary is-pressed text-[var(--ink)]'
+                                : 'bg-transparent text-[var(--mut)] hover:text-[var(--ink)] border-transparent shadow-none'
+                            }`}
+                            style={!isRegistered ? {
+                              border: '2px solid var(--edge)',
+                              boxShadow: '0 0 0 var(--edge)',
+                              transform: 'translate(2px, 2px)'
+                            } : {}}
+                          >
+                            <span>Standard Arcade</span>
+                          </button>
                         </div>
                       </div>
 
                       {isRegistered && milestoneBonus > 0 && (
-                        <div className="mb-10 relative overflow-hidden bg-[#F0FDF4] dark:bg-green-900/20 border border-[#86EFAC] dark:border-green-800 rounded-full px-4 py-3.5 flex items-center justify-center text-[#15803D] dark:text-green-400 font-bold text-sm shadow-sm">
-                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
-                          <span className="mr-2 text-lg">🎁</span> Includes +{milestoneBonus} facilitator bonus points
+                        <div className="mb-8 relative overflow-hidden bg-emerald-50 dark:bg-emerald-950/30 border-2 border-emerald-400 dark:border-emerald-700 rounded-2xl px-4 py-3 flex items-center justify-between text-emerald-800 dark:text-emerald-300 font-bold text-xs sm:text-sm shadow-sm">
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">🎁</span>
+                            <span>Includes +{milestoneBonus} facilitator bonus points based on verified cohort badges</span>
+                          </div>
+                          <span className="text-[10px] font-mono font-black px-2 py-0.5 rounded bg-emerald-500 text-white">
+                            BONUS ACTIVE
+                          </span>
                         </div>
                       )}
 
@@ -659,11 +690,11 @@ export function ProfileChecker({ participants = [] }: ProfileCheckerProps) {
                             style={{ 
                               width: `${(() => {
                                 const m = MILESTONES;
-                                if (totalPoints <= m[0].requiredPoints) return (totalPoints / m[0].requiredPoints) * 12.5;
-                                else if (totalPoints <= m[1].requiredPoints) return 12.5 + ((totalPoints - m[0].requiredPoints) / (m[1].requiredPoints - m[0].requiredPoints)) * 25;
-                                else if (totalPoints <= m[2].requiredPoints) return 37.5 + ((totalPoints - m[1].requiredPoints) / (m[2].requiredPoints - m[1].requiredPoints)) * 25;
-                                else if (totalPoints <= m[3].requiredPoints) return 62.5 + ((totalPoints - m[2].requiredPoints) / (m[3].requiredPoints - m[2].requiredPoints)) * 25;
-                                else return Math.min(100, 87.5 + ((totalPoints - m[3].requiredPoints) / 30) * 12.5);
+                                if (totalPoints <= m[0].requiredPoints) return (totalPoints / m[0].requiredPoints) * 25;
+                                else if (totalPoints <= m[1].requiredPoints) return 25 + ((totalPoints - m[0].requiredPoints) / (m[1].requiredPoints - m[0].requiredPoints)) * 25;
+                                else if (totalPoints <= m[2].requiredPoints) return 50 + ((totalPoints - m[1].requiredPoints) / (m[2].requiredPoints - m[1].requiredPoints)) * 25;
+                                else if (totalPoints <= m[3].requiredPoints) return 75 + ((totalPoints - m[2].requiredPoints) / (m[3].requiredPoints - m[2].requiredPoints)) * 25;
+                                else return 100;
                               })()}%`
                             }}
                           >

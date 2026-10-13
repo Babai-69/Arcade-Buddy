@@ -19,9 +19,13 @@ export function BackToResourcesButton({
     <div className={`inline-flex items-center gap-3 ${className}`}>
       <Link
         to={to}
-        className="inline-flex items-center gap-2.5 text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white text-sm font-bold bg-white dark:bg-slate-900 px-5 py-2.5 rounded-full border border-slate-200/90 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-200 transform hover:-translate-x-0.5 group active:scale-[0.98]"
+        className="btn-press btn-press--sm inline-flex items-center gap-2.5 text-sm font-bold bg-[var(--card)] text-[var(--ink)] px-4 py-2 rounded-xl border-2 border-[var(--edge)] shadow-[4px_4px_0_var(--edge)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_var(--edge)] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75 group select-none no-underline cursor-pointer"
+        style={{
+          border: '2px solid var(--edge)',
+          boxShadow: '4px 4px 0 var(--edge)',
+        }}
       >
-        <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-slate-800 dark:text-slate-400 dark:group-hover:text-white transition-colors shrink-0" />
+        <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-blue-600 dark:text-slate-400 dark:group-hover:text-blue-400 group-hover:-translate-x-1 transition-all duration-150 shrink-0" />
         <span>{label}</span>
       </Link>
       {handwrittenNote && (

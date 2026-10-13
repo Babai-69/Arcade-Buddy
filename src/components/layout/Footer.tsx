@@ -110,7 +110,7 @@ export function Footer() {
               <span className="text-slate-300 dark:text-slate-600">|</span>
               <div className="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
                 <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                <span><strong className="font-semibold text-slate-900 dark:text-white">4.5</strong>/5 Rating</span>
+                <span><strong className="font-semibold text-slate-900 dark:text-white">4.7</strong>/5 Rating</span>
               </div>
             </div>
 

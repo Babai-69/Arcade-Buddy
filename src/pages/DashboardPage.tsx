@@ -12,6 +12,7 @@ import { Milestones } from '../components/Milestones';
 import { ArcadeWelcomeHero } from '../components/ArcadeWelcomeHero';
 import { showNotification } from '../components/ArcadeNotification';
 import { fetchProfileCalculator } from '../services/arcadeApiService';
+import { SwagTierProgressSection } from '../components/SwagTierProgressSection';
 
 export function DashboardPage({ participants }: { participants: any[] }) {
   const [user, setUser] = useState<any>(null);
@@ -232,6 +233,49 @@ export function DashboardPage({ participants }: { participants: any[] }) {
     }
   };
 
+  const handleDashboardCalculate = async (urlToUse: string) => {
+    if (!urlToUse) return;
+    setIsSyncing(true);
+    try {
+      const result = await fetchProfileCalculator(urlToUse, {
+        maxRetries: 2,
+        retryDelayMs: 3500,
+      });
+
+      setData(result);
+      setIsOfflinePreview(false);
+      localStorage.setItem('arcadeProgressData', JSON.stringify(result));
+      localStorage.setItem('arcadeProfileUrl', urlToUse);
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      localStorage.setItem('arcadeLastSyncTime', timeStr);
+      setLastSyncTime(timeStr);
+      sessionStorage.setItem('arcadeSessionDashboardSynced', 'true');
+
+      if (user) {
+        try {
+          const userRef = doc(db, 'users', user.uid);
+          await setDoc(userRef, { profileUrl: urlToUse }, { merge: true });
+        } catch (err) {
+          console.warn('Failed to update Firestore profileUrl:', err);
+        }
+      }
+
+      showNotification({
+        id: 'profile-calc',
+        message: 'Profile Calculated! Swag Tier Updated.',
+        type: 'success',
+        duration: 3000,
+      });
+
+      setTimeout(() => {
+        document.getElementById('swag-tier-progress')?.scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+      return result;
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   if (loading) {
     return (
       <DashboardSkeleton />
@@ -276,16 +320,17 @@ export function DashboardPage({ participants }: { participants: any[] }) {
             <button
               type="submit"
               disabled={connectLoading || !connectUrl.trim()}
-              className="px-6 py-3 rounded-xl font-semibold text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 transition-colors shadow-sm flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap"
+              className="btn-press btn-press--primary text-sm font-bold flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[3px_3px_0_var(--edge)] disabled:opacity-50"
             >
               {connectLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Syncing...</span>
+                  <span>Calculating...</span>
                 </>
               ) : (
                 <>
-                  <span>Connect &amp; Sync</span>
+                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <span>Calculate &amp; Sync</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -342,6 +387,7 @@ export function DashboardPage({ participants }: { participants: any[] }) {
       isSyncing={isSyncing}
       lastSyncTime={lastSyncTime}
       onManualSync={handleManualSync}
+      onCalculateProfile={handleDashboardCalculate}
     />
   );
 }
@@ -354,6 +400,7 @@ function DashboardContent({
   isSyncing,
   lastSyncTime,
   onManualSync,
+  onCalculateProfile,
 }: {
   data: any;
   spots: any;
@@ -362,9 +409,31 @@ function DashboardContent({
   isSyncing?: boolean;
   lastSyncTime?: string | null;
   onManualSync?: () => void;
+  onCalculateProfile?: (url: string) => Promise<any>;
 }) {
   const [isEnrolled, setIsEnrolled] = useState(true);
   const [isPosterOpen, setIsPosterOpen] = useState(false);
+  const [showCalculatorBar, setShowCalculatorBar] = useState(false);
+  const [calcInputUrl, setCalcInputUrl] = useState('');
+  const [calcLoading, setCalcLoading] = useState(false);
+  const [calcError, setCalcError] = useState('');
+
+  const submitCalculate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const url = calcInputUrl.trim();
+    if (!url || !onCalculateProfile) return;
+    setCalcLoading(true);
+    setCalcError('');
+    try {
+      await onCalculateProfile(url);
+      setShowCalculatorBar(false);
+      setCalcInputUrl('');
+    } catch (err: any) {
+      setCalcError(err.message || 'Failed to calculate profile. Please verify your public profile URL.');
+    } finally {
+      setCalcLoading(false);
+    }
+  };
 
   // Compute basic stats
   const gameBadgesCount = data.badges?.filter((b: any) => b.validForProgram && b.category === 'Game').length || 0;
@@ -726,7 +795,19 @@ function DashboardContent({
             )}
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              type="button"
+              onClick={() => setShowCalculatorBar(!showCalculatorBar)}
+              className={`btn-press btn-press--sm flex items-center gap-2 text-xs md:text-sm font-bold cursor-pointer transition-all ${
+                showCalculatorBar ? 'btn-press--primary is-pressed text-white' : 'btn-press--primary text-white'
+              }`}
+              title="Calculate another public profile URL"
+            >
+              <Search className="w-3.5 h-3.5 text-white" />
+              <span>{showCalculatorBar ? 'Close Calculator' : 'Calculate Profile URL'}</span>
+            </button>
+
             <button
               id="dashboard-manual-sync-btn"
               onClick={onManualSync}
@@ -740,8 +821,62 @@ function DashboardContent({
           </div>
         </div>
 
-        {/* Swag Milestones (Tier Spots & Rewards) - Positioned at bottom below status bar */}
-        <div className="pt-2">
+        {/* Inline Public Profile URL Calculator Bar */}
+        {showCalculatorBar && (
+          <div className="p-5 sm:p-6 rounded-3xl bg-[var(--card)] border-2 border-[var(--edge)] shadow-[5px_5px_0_var(--edge)] transition-all">
+            <div className="flex items-center gap-2 mb-2">
+              <Sparkles className="w-4 h-4 text-amber-400" />
+              <h4 className="font-black text-sm sm:text-base text-[var(--ink)]">
+                Calculate Any Public Profile URL
+              </h4>
+            </div>
+            <p className="text-xs sm:text-sm text-[var(--mut)] mb-4">
+              Enter any Google Cloud Skills Boost public profile URL to audit completed badges and instantly view live Swag Tier progress across Trooper (50 pts), Ranger (75 pts), Champion (95 pts), and Legend (120 pts).
+            </p>
+            <form onSubmit={submitCalculate} className="flex flex-col sm:flex-row gap-3">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  placeholder="https://www.skills.google/public_profiles/..."
+                  value={calcInputUrl}
+                  onChange={(e) => setCalcInputUrl(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl text-xs sm:text-sm bg-[var(--bg)] border-2 border-[var(--edge)] text-[var(--ink)] placeholder-[var(--mut)] focus:outline-none shadow-inner"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={calcLoading || !calcInputUrl.trim()}
+                className="btn-press btn-press--primary text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[3px_3px_0_var(--edge)] disabled:opacity-50"
+              >
+                {calcLoading ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Analyzing Badges...</span>
+                  </>
+                ) : (
+                  <>
+                    <Zap className="w-4 h-4 text-amber-300" />
+                    <span>Calculate &amp; View Swag Tier</span>
+                  </>
+                )}
+              </button>
+            </form>
+            {calcError && (
+              <p className="mt-3 text-xs text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <span>{calcError}</span>
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Swag Tier Progress & Detailed Badge Completion Report */}
+        <div className="pt-6">
+          <SwagTierProgressSection data={data} spots={spots} defaultEnrolled={isEnrolled} />
+        </div>
+
+        {/* Swag Milestones (Tier Spots & Rewards) - Positioned below Swag Tier Progress */}
+        <div className="pt-4">
           <Milestones />
         </div>
         

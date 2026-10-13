@@ -30,7 +30,11 @@ import {
   KeyRound,
   LogIn,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  MapPin,
+  Navigation,
+  Maximize2,
+  Building2
 } from 'lucide-react';
 import { BackToResourcesButton } from '../components/common/BackToResourcesButton';
 import { auth, loginWithGoogle } from '../lib/firebase';
@@ -116,6 +120,11 @@ const LEARN_WITH_COMMUNITIES_SYLLABUS: SyllabusCourse[] = [
 
 const FAQ_ITEMS = [
   {
+    category: 'Rewards',
+    question: 'How and where do I claim my physical swags and milestone rewards?',
+    answer: 'Important: All the recognition and milestones will be shared with the GDG/Community Organizer. The program team will not be responsible for rewards for individual participants. So participants have to claim their physical prizes from Dr. B.C. Roy Engineering College, Durgapur.'
+  },
+  {
     category: 'General',
     question: 'Is there any group or channel which I need to join?',
     answer: 'Yes, it is recommended to join the official community Telegram channel or campus discussion group to receive daily updates, lab solutions, and milestone notices.'
@@ -151,7 +160,10 @@ const ADMIN_EMAILS = ['deya58690@gmail.com', 'tripti.arcade.25@gmail.com'];
 
 export function LearnWithCommunitiesPage() {
   const [copiedCode, setCopiedCode] = useState(false);
-  const [faqFilter, setFaqFilter] = useState<'All' | 'General' | 'Registration'>('All');
+  const [copiedAddress, setCopiedAddress] = useState(false);
+  const [mapType, setMapType] = useState<'m' | 'k'>('m'); // 'm' = Map, 'k' = Satellite
+  const [mapZoom, setMapZoom] = useState<number>(16);
+  const [faqFilter, setFaqFilter] = useState<'All' | 'General' | 'Registration' | 'Rewards'>('All');
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
   
   // Sequence requested: 1. 6-step roadmap, 2. claim 200 credits, 3. program syllabus, 4. community leaderboard
@@ -224,6 +236,12 @@ export function LearnWithCommunitiesPage() {
     navigator.clipboard.writeText('GDGC-BCREC');
     setCopiedCode(true);
     setTimeout(() => setCopiedCode(false), 2500);
+  };
+
+  const handleCopyAddress = () => {
+    navigator.clipboard.writeText('Dr. B. C. Roy Engineering College, Jemua Road, Fuljhore, Durgapur, West Bengal 713206');
+    setCopiedAddress(true);
+    setTimeout(() => setCopiedAddress(false), 2500);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -329,7 +347,7 @@ export function LearnWithCommunitiesPage() {
               className="text-amber-600 dark:text-amber-400 font-semibold text-lg hidden md:inline-block -rotate-1 select-none"
               style={{ fontFamily: "'Caveat', cursive" }}
             >
-              official GDGC BCREC cohort 🎓
+              official GDSC BCREC cohort 🎓
             </span>
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold text-xs border border-rose-500/20 shadow-xs">
               <Flame className="w-3.5 h-3.5" />
@@ -347,7 +365,7 @@ export function LearnWithCommunitiesPage() {
               <div className="lg:col-span-7">
                 <div className="flex flex-wrap items-center gap-2 mb-4">
                   <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
-                    GDGC | BCREC
+                    GDSC | BCREC
                   </span>
                   <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
                     #LearnWithCommunities
@@ -442,6 +460,199 @@ export function LearnWithCommunitiesPage() {
                     </p>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ========================================================================= */}
+        {/* IMPORTANT NOTICE & PRIZE CLAIM VENUE (DR. B.C. ROY ENGINEERING COLLEGE)   */}
+        {/* ========================================================================= */}
+        <div
+          className="mb-10 rounded-3xl bg-[var(--card)] border-2 border-[var(--edge)] overflow-hidden"
+          style={{ boxShadow: '6px 6px 0 var(--edge)' }}
+        >
+          {/* Header Warning Ribbon */}
+          <div className="px-6 py-3.5 bg-gradient-to-r from-amber-500 via-rose-500 to-blue-600 text-white flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 font-black text-xs sm:text-sm uppercase tracking-wider">
+              <AlertTriangle className="w-5 h-5 text-amber-200 animate-bounce shrink-0" />
+              <span>OFFICIAL PRIZE CLAIM &amp; RECOGNITION POLICY</span>
+            </div>
+            <span className="text-xs font-black px-3 py-1 rounded-full bg-black/25 backdrop-blur-xs border border-white/20 tracking-wide">
+              CAMPUS COLLECTION ONLY
+            </span>
+          </div>
+
+          <div className="p-6 sm:p-8">
+            {/* The Notice Callout Box */}
+            <div className="p-5 sm:p-6 rounded-2xl bg-amber-50 dark:bg-amber-950/25 border-2 border-amber-400 dark:border-amber-600/80 mb-8 flex flex-col md:flex-row items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-400/50 flex items-center justify-center shrink-0 shadow-xs">
+                <ShieldCheck className="w-6 h-6 stroke-[2.5]" />
+              </div>
+              <div className="flex-1">
+                <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200 mb-2">
+                  CRITICAL PARTICIPANT NOTICE
+                </div>
+                <h3 className="text-base sm:text-lg md:text-xl font-black font-display text-slate-900 dark:text-white leading-snug mb-2.5">
+                  Important: All the recognition and milestones will be shared with the GDG/Community Organizer. The program team will not be responsible for rewards for individual participants. So participants have to claim their physical prizes from Dr. B.C. Roy Engineering College.
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs text-slate-700 dark:text-slate-300 font-medium">
+                  <div className="flex items-start gap-2 bg-white/60 dark:bg-slate-900/40 p-2.5 rounded-xl border border-amber-200 dark:border-amber-900/40">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 mt-1 shrink-0" />
+                    <span><strong>Organizer Delivery:</strong> Swag kits are delivered in bulk to the campus community organizer.</span>
+                  </div>
+                  <div className="flex items-start gap-2 bg-white/60 dark:bg-slate-900/40 p-2.5 rounded-xl border border-amber-200 dark:border-amber-900/40">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 mt-1 shrink-0" />
+                    <span><strong>No Doorstep Courier:</strong> No individual parcel delivery by Google Cloud team.</span>
+                  </div>
+                  <div className="flex items-start gap-2 bg-white/60 dark:bg-slate-900/40 p-2.5 rounded-xl border border-amber-200 dark:border-amber-900/40">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 mt-1 shrink-0" />
+                    <span><strong>Physical Verification:</strong> Bring your college ID and Skills Boost profile to claim.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* The Location Map Box — Styled directly after the uploaded Google Maps layout */}
+            <div
+              className="rounded-2xl border-2 border-[var(--edge)] bg-[var(--bg)] overflow-hidden"
+              style={{ boxShadow: '4px 4px 0 var(--edge)' }}
+            >
+              {/* Map Box Header with Address Details & Action Buttons */}
+              <div className="p-4 sm:p-5 bg-[var(--card)] border-b-2 border-[var(--edge)] flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-xs border-2 border-[var(--edge)]">
+                    <MapPin className="w-6 h-6 stroke-[2.5]" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h4 className="font-black text-base sm:text-lg text-[var(--ink)]">
+                        Dr. B. C. Roy Engineering College (BCREC)
+                      </h4>
+                      <span className="px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300 border border-rose-200 dark:border-rose-800">
+                        OFFICIAL VENUE
+                      </span>
+                    </div>
+                    <p className="text-xs text-[var(--mut)] mt-1 font-medium flex items-center gap-1.5 flex-wrap">
+                      <span>Jemua Road, Fuljhore, Durgapur, West Bengal 713206</span>
+                      <span className="text-slate-300 dark:text-slate-600 hidden sm:inline">•</span>
+                      <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 font-bold">23.544417° N, 87.341693° E</span>
+                    </p>
+                  </div>
+                </div>
+
+                {/* Tactile Action Buttons */}
+                <div className="flex items-center gap-2.5 flex-wrap w-full md:w-auto">
+                  <button
+                    type="button"
+                    onClick={handleCopyAddress}
+                    className="btn-press btn-press--sm inline-flex items-center gap-1.5 text-xs font-bold bg-[var(--card)] text-[var(--ink)] px-3 py-2 rounded-xl border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
+                  >
+                    {copiedAddress ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
+                    <span>{copiedAddress ? 'Address Copied!' : 'Copy Address'}</span>
+                  </button>
+
+                  <a
+                    href="https://maps.app.goo.gl/A22NGtazEbNDLCqW7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-press btn-press--sm inline-flex items-center gap-1.5 text-xs font-bold bg-[#1A73E8] text-white px-3.5 py-2 rounded-xl border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer no-underline"
+                  >
+                    <Navigation className="w-3.5 h-3.5 text-white" />
+                    <span>Open in Google Maps</span>
+                    <ExternalLink className="w-3 h-3 ml-0.5 opacity-80" />
+                  </a>
+                </div>
+              </div>
+
+              {/* Map Display Box with Google Maps Controls (Matches uploaded screenshot) */}
+              <div className="relative w-full h-[360px] sm:h-[430px] bg-slate-200 dark:bg-slate-800 overflow-hidden">
+                {/* Top-Left Floating Control: Map / Satellite Switcher (Matches uploaded image exactly) */}
+                <div className="absolute top-3 left-3 z-10 flex rounded-md overflow-hidden shadow-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold">
+                  <button
+                    type="button"
+                    onClick={() => setMapType('m')}
+                    className={`px-3.5 py-1.5 transition-colors cursor-pointer select-none ${
+                      mapType === 'm'
+                        ? 'bg-slate-900 text-white dark:bg-blue-600'
+                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    Map
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMapType('k')}
+                    className={`px-3.5 py-1.5 transition-colors cursor-pointer select-none border-l border-slate-200 dark:border-slate-700 ${
+                      mapType === 'k'
+                        ? 'bg-slate-900 text-white dark:bg-blue-600'
+                        : 'bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    Satellite
+                  </button>
+                </div>
+
+                {/* Top-Right Floating Control: Fullscreen button */}
+                <div className="absolute top-3 right-3 z-10">
+                  <a
+                    href="https://maps.app.goo.gl/A22NGtazEbNDLCqW7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-md bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 shadow-md border border-slate-300 dark:border-slate-700 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                    title="View Fullscreen on Google Maps"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                  </a>
+                </div>
+
+                {/* Bottom-Right Floating Controls: Zoom In / Zoom Out */}
+                <div className="absolute bottom-6 right-3 z-10 flex flex-col rounded-md overflow-hidden shadow-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900">
+                  <button
+                    type="button"
+                    onClick={() => setMapZoom(prev => Math.min(prev + 1, 19))}
+                    className="w-8 h-8 text-slate-800 dark:text-slate-200 font-black text-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer border-b border-slate-200 dark:border-slate-700"
+                    title="Zoom in"
+                  >
+                    +
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setMapZoom(prev => Math.max(prev - 1, 12))}
+                    className="w-8 h-8 text-slate-800 dark:text-slate-200 font-black text-lg flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                    title="Zoom out"
+                  >
+                    −
+                  </button>
+                </div>
+
+                {/* Embedded Google Maps Frame for Dr. B.C. Roy Engineering College */}
+                <iframe
+                  title="Dr. B. C. Roy Engineering College Location Map"
+                  src={`https://maps.google.com/maps?q=Dr.+B.+C.+Roy+Engineering+College,+Fuljhore,+Durgapur&t=${mapType}&z=${mapZoom}&ie=UTF8&iwloc=&output=embed`}
+                  className="w-full h-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+
+              {/* Bottom Venue Help Footer */}
+              <div className="p-3.5 sm:p-4 bg-[var(--card)] border-t border-[var(--edge)] flex flex-wrap items-center justify-between gap-3 text-xs text-[var(--mut)]">
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-4 h-4 text-blue-500 shrink-0" />
+                  <span>
+                    <strong>Campus Hub:</strong> Dr. B. C. Roy Engineering College, Main Campus • GDG on Campus BCREC
+                  </span>
+                </div>
+                <a
+                  href="https://maps.app.goo.gl/A22NGtazEbNDLCqW7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 dark:text-blue-400 font-bold hover:underline inline-flex items-center gap-1"
+                >
+                  <span>Direct Google Maps Navigation Link</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
               </div>
             </div>
           </div>
@@ -833,6 +1044,17 @@ export function LearnWithCommunitiesPage() {
                   >
                     Registration &amp; Eligibility
                   </button>
+
+                  <button
+                    onClick={() => setFaqFilter('Rewards')}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all border cursor-pointer ${
+                      faqFilter === 'Rewards'
+                        ? 'bg-[#EA4335] text-white border-[#EA4335] shadow-xs'
+                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:border-slate-400'
+                    }`}
+                  >
+                    Rewards &amp; Prizes
+                  </button>
                 </div>
               </div>
 
@@ -1210,7 +1432,7 @@ export function LearnWithCommunitiesPage() {
                   <div>
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-xs font-bold uppercase tracking-wider mb-2">
                       <Trophy className="w-3.5 h-3.5 text-amber-300" />
-                      GDGC | BCREC CAMPUS LEADERBOARD
+                      GDSC | BCREC CAMPUS LEADERBOARD
                     </div>
                     <h3 className="text-2xl sm:text-3xl font-display font-black tracking-tight">
                       Learn with Communities Standings
@@ -1254,7 +1476,7 @@ export function LearnWithCommunitiesPage() {
                   <span>
                     {leaderboardData && leaderboardData.participants.length > 0
                       ? `Live Standings: ${leaderboardData.participants.length} learners synced in Firebase • Updated ${leaderboardData.updatedAt ? new Date(leaderboardData.updatedAt).toLocaleDateString() : 'Today'}`
-                      : 'Standings locked: Awaiting initial campus CSV dataset upload from GDGC organizer.'}
+                      : 'Standings locked: Awaiting initial campus CSV dataset upload from GDSC organizer.'}
                   </span>
                 </div>
                 <span
@@ -1314,7 +1536,7 @@ export function LearnWithCommunitiesPage() {
                       </p>
                       <p className="flex items-center gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-blue-500 shrink-0" />
-                        <span>Verified rankings are synchronized directly by your campus GDGC organizer.</span>
+                        <span>Verified rankings are synchronized directly by your campus GDSC organizer.</span>
                       </p>
                     </div>
 
