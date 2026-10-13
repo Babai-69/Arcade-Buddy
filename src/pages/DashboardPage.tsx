@@ -493,9 +493,11 @@ function DashboardContent({
       {/* Embedded CSS Style System */}
       <style>{`
         :root {
+          --edge: #EDEFF4;
           --ink: #E8EAED;
           --mut: #9AA0A6;
           --card: #141A2E;
+          --bg: #0C1022;
           --ln: rgba(255,255,255,.1);
           --pill: rgba(20,26,46,.8);
           --b: #4C8DFF;
@@ -515,9 +517,11 @@ function DashboardContent({
 
         :root[data-theme="light"],
         html:not(.dark) {
+          --edge: #202124;
           --ink: #202124;
           --mut: #5F6368;
           --card: #fff;
+          --bg: #F8F9FA;
           --ln: #DADCE0;
           --pill: rgba(255,255,255,.88);
           --b: #1A73E8;
@@ -572,125 +576,150 @@ function DashboardContent({
         <div className="flex flex-col lg:flex-row gap-6">
           
           {/* Profile Card */}
-          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm overflow-hidden lg:w-1/3 border border-slate-200 dark:border-slate-700 flex flex-col">
-            <div className="flex w-full">
-              <div className="w-1/2 bg-blue-600 text-white text-center py-3">
-                <div className="text-[10px] font-bold tracking-wider opacity-80">ARCADE POINTS</div>
-                <div className="text-3xl font-black">{totalPoints}</div>
+          <div className="bg-[var(--card)] rounded-3xl border-2 border-[var(--edge)] shadow-[5px_5px_0_var(--edge)] overflow-hidden lg:w-1/3 flex flex-col transition-all">
+            <div className="flex w-full border-b-2 border-[var(--edge)]">
+              <div className="w-1/2 bg-[#1A73E8] text-white text-center py-3.5 border-r-2 border-[var(--edge)]">
+                <div className="text-[10px] font-black tracking-widest uppercase opacity-90">ARCADE POINTS</div>
+                <div className="text-3xl font-black font-mono tracking-tight">{totalPoints}</div>
               </div>
-              <div className="w-1/2 bg-purple-600 text-white text-center py-3">
-                <div className="text-[10px] font-bold tracking-wider opacity-80">RANK</div>
-                <div className="text-3xl font-black">{rank}</div>
+              <div className="w-1/2 bg-[#7c3aed] text-white text-center py-3.5">
+                <div className="text-[10px] font-black tracking-widest uppercase opacity-90">RANK</div>
+                <div className="text-3xl font-black font-mono tracking-tight">{rank}</div>
               </div>
             </div>
             
-            <div className="flex flex-col items-center pt-8 pb-6 bg-gradient-to-b from-blue-50/50 to-purple-50/50 dark:from-slate-800 dark:to-slate-900 flex-grow relative">
+            <div className="flex flex-col items-center pt-8 pb-7 px-6 bg-[var(--card)] flex-grow relative">
               <div className="relative mb-4">
-                <img src={data.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'User')}&background=random`} alt={`${data.name || 'Participant'}'s avatar profile picture`} className="w-24 h-24 rounded-full border-4 border-white shadow-lg" crossOrigin="anonymous" />
-                <div className="absolute bottom-0 right-0 bg-yellow-400 rounded-full w-6 h-6 border-2 border-white flex items-center justify-center shadow-md">
-                   {/* Gold Medal Icon */} 🥇
+                <img
+                  src={data.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'User')}&background=random`}
+                  alt={`${data.name || 'Participant'}'s avatar profile picture`}
+                  className="w-24 h-24 rounded-full border-3 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] object-cover bg-white"
+                  crossOrigin="anonymous"
+                />
+                <div className="absolute bottom-0 right-0 bg-[#FBBC05] text-slate-950 rounded-full w-7 h-7 border-2 border-[var(--edge)] flex items-center justify-center text-sm shadow-[2px_2px_0_var(--edge)] font-black">
+                  🥇
                 </div>
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6">{data.name || 'Student'}</h2>
+              <h2 className="text-2xl font-black font-display text-[var(--ink)] mb-6 text-center tracking-tight">{data.name || 'Student'}</h2>
               
-              <div className="flex w-full max-w-[80%] mx-auto bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 mb-6 overflow-hidden">
-                <div className="w-1/2 text-center py-3 border-r border-slate-100 dark:border-slate-700">
-                  <div className="text-[10px] font-bold text-blue-500 flex items-center justify-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span> EARNED</div>
-                  <div className="text-xl font-bold text-blue-600 dark:text-blue-400">{basePoints}</div>
+              <div className="flex w-full max-w-[85%] mx-auto bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] mb-6 overflow-hidden">
+                <div className="w-1/2 text-center py-3.5 border-r-2 border-[var(--edge)]">
+                  <div className="text-[10px] font-black text-blue-600 dark:text-blue-400 flex items-center justify-center gap-1.5 uppercase tracking-wider">
+                    <span className="w-2 h-2 rounded-full bg-blue-500"></span> EARNED
+                  </div>
+                  <div className="text-2xl font-black font-mono text-[var(--ink)] mt-0.5">{basePoints}</div>
                 </div>
-                <div className="w-1/2 text-center py-3">
-                  <div className="text-[10px] font-bold text-purple-500 flex items-center justify-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-purple-500"></span> BONUS</div>
-                  <div className="text-xl font-bold text-purple-600 dark:text-purple-400">{milestoneBonus}</div>
+                <div className="w-1/2 text-center py-3.5">
+                  <div className="text-[10px] font-black text-purple-600 dark:text-purple-400 flex items-center justify-center gap-1.5 uppercase tracking-wider">
+                    <span className="w-2 h-2 rounded-full bg-purple-500"></span> BONUS
+                  </div>
+                  <div className="text-2xl font-black font-mono text-[var(--ink)] mt-0.5">{milestoneBonus}</div>
                 </div>
               </div>
-              
               
               <button 
                 onClick={() => setIsPosterOpen(true)}
-                className="btn-press btn-press--sm relative flex items-center gap-2 text-white font-bold"
-                style={{ background: 'linear-gradient(135deg, #8b5cf6, #6366f1)', color: '#ffffff' }}
+                className="btn-press btn-press--cta relative flex items-center justify-center gap-2 text-white font-black text-xs sm:text-sm px-6 py-3 rounded-2xl cursor-pointer"
+                style={{ background: 'linear-gradient(135deg, #7c3aed, #4f46e5)', border: '2px solid var(--edge)', boxShadow: '4px 4px 0 var(--edge)' }}
               >
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full shadow-sm animate-pulse">NEW</span>
-                ✨ Create Poster
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full border border-[var(--edge)] shadow-xs animate-pulse">NEW</span>
+                <span>✨ Create Poster</span>
               </button>
-
             </div>
           </div>
           
           {/* Right Stats */}
           <div className="lg:w-2/3 flex flex-col gap-4">
             
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm p-6 border border-slate-200 dark:border-slate-700">
+            <div className="bg-[var(--card)] rounded-3xl p-6 sm:p-7 border-2 border-[var(--edge)] shadow-[5px_5px_0_var(--edge)]">
               <div className="flex flex-col md:flex-row justify-between gap-8">
                 <div className="flex-1">
-                  <h3 className="text-center font-bold text-blue-600 dark:text-blue-400 mb-1">The Arcade</h3>
-                  <p className="text-center text-xs text-slate-500 mb-4">Jan, 2026 - Dec, 2026</p>
-                  
-                  <div className="w-full h-3 rounded-full overflow-hidden flex bg-slate-100 mb-6">
-                    <div className="h-full bg-blue-500" style={{ width: '45%' }}></div>
-                    <div className="h-full bg-purple-500" style={{ width: '20%' }}></div>
-                    <div className="h-full bg-green-500" style={{ width: '35%' }}></div>
+                  <div className="text-center md:text-left mb-1">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 mb-1">
+                      ARCADE TRACK
+                    </span>
+                    <h3 className="font-black font-display text-xl text-[var(--ink)]">The Arcade</h3>
+                    <p className="text-xs text-[var(--mut)] font-medium mb-4">Jan, 2026 - Dec, 2026</p>
                   </div>
                   
-                  <div className="flex justify-between px-2">
-                    <div className="text-center">
-                      <div className="text-xs text-slate-500 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span> Arcade Games</div>
-                      <div className="text-xl font-bold text-blue-600">{gameBadgesCount}</div>
+                  <div className="w-full h-3.5 rounded-full overflow-hidden flex bg-[var(--bg)] border-2 border-[var(--edge)] shadow-inner mb-6">
+                    <div className="h-full bg-[#1A73E8]" style={{ width: '45%' }} title="Arcade Games"></div>
+                    <div className="h-full bg-[#7c3aed]" style={{ width: '20%' }} title="Sprint (Trivia)"></div>
+                    <div className="h-full bg-[#34A853]" style={{ width: '35%' }} title="Skill Badges"></div>
+                  </div>
+                  
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
+                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)]">
+                      <div className="text-[10px] font-black text-[var(--mut)] flex items-center justify-center gap-1 uppercase tracking-wider mb-0.5">
+                        <span className="w-2 h-2 rounded-full bg-[#1A73E8]"></span> Games
+                      </div>
+                      <div className="text-xl sm:text-2xl font-black font-mono text-[#1A73E8]">{gameBadgesCount}</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-xs text-slate-500 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-purple-500"></span> Sprint (Trivia)</div>
-                      <div className="text-xl font-bold text-purple-600">{triviaBadgesCount}</div>
+                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)]">
+                      <div className="text-[10px] font-black text-[var(--mut)] flex items-center justify-center gap-1 uppercase tracking-wider mb-0.5">
+                        <span className="w-2 h-2 rounded-full bg-[#7c3aed]"></span> Trivia
+                      </div>
+                      <div className="text-xl sm:text-2xl font-black font-mono text-[#7c3aed]">{triviaBadgesCount}</div>
                     </div>
-                    <div className="text-center">
-                      <div className="text-xs text-slate-500 flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-green-500"></span> Skill Badges</div>
-                      <div className="text-xl font-bold text-green-600">{skillBadgesCount}</div>
+                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)]">
+                      <div className="text-[10px] font-black text-[var(--mut)] flex items-center justify-center gap-1 uppercase tracking-wider mb-0.5">
+                        <span className="w-2 h-2 rounded-full bg-[#34A853]"></span> Skills
+                      </div>
+                      <div className="text-xl sm:text-2xl font-black font-mono text-[#34A853]">{skillBadgesCount}</div>
                     </div>
                   </div>
                 </div>
                 
-                <div className="w-px bg-slate-200 dark:bg-slate-700 hidden md:block"></div>
+                <div className="w-0.5 bg-[var(--edge)] hidden md:block self-stretch"></div>
                 
                 <div className="md:w-64">
-                  <h3 className="text-center font-bold text-blue-600 dark:text-blue-400 mb-1">Facilitator Program</h3>
-                  <p className="text-center text-xs text-slate-500 mb-4">Jul 13, 2026 - Sept 14, 2026</p>
+                  <div className="text-center md:text-left mb-1">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 mb-1">
+                      COHORT TRACK
+                    </span>
+                    <h3 className="font-black font-display text-xl text-[var(--ink)]">Facilitator Program</h3>
+                    <p className="text-xs text-[var(--mut)] font-medium mb-4">Jul 13, 2026 - Sept 14, 2026</p>
+                  </div>
                   
-                  <div className="flex justify-center items-center gap-2 mb-6 text-sm font-medium">
-                     Status 
+                  <div className="flex justify-between items-center gap-2 mb-4 p-2 rounded-2xl bg-[var(--bg)] border-2 border-[var(--edge)] shadow-[2px_2px_0_var(--edge)] text-xs font-bold text-[var(--ink)]">
+                    <span>Cohort Status</span>
                     <div 
                       onClick={() => setIsEnrolled(!isEnrolled)}
-                      className={`w-10 h-5 rounded-full flex items-center p-0.5 cursor-pointer transition-colors ${isEnrolled ? 'bg-blue-500' : 'bg-slate-300 dark:bg-slate-600'}`}
+                      className={`w-11 h-6 rounded-full flex items-center p-0.5 cursor-pointer transition-colors border-2 border-[var(--edge)] ${isEnrolled ? 'bg-blue-600' : 'bg-slate-300 dark:bg-slate-700'}`}
+                      role="button"
+                      aria-label="Toggle Facilitator enrollment status"
                     >
                       <div className={`w-4 h-4 bg-white rounded-full shadow-sm transform transition-transform ${isEnrolled ? 'translate-x-5' : 'translate-x-0'}`}></div>
                     </div> 
-                    {isEnrolled ? 'Enrolled' : 'Not Enrolled'}
+                    <span className="text-[11px] font-black">{isEnrolled ? 'Enrolled' : 'Not Enrolled'}</span>
                   </div>
                   
-                  <div className="space-y-2">
-                    <div className={`rounded-md p-2 flex justify-between items-center ${milestoneBonus > 0 ? 'bg-[#EA4335] text-white' : 'bg-slate-100 dark:bg-slate-700 text-slate-400'}`}>
+                  <div className="space-y-2.5">
+                    <div className={`rounded-2xl p-3 border-2 border-[var(--edge)] shadow-[2px_2px_0_var(--edge)] flex justify-between items-center ${milestoneBonus > 0 ? 'bg-[#EA4335] text-white' : 'bg-[var(--bg)] text-[var(--mut)]'}`}>
                       <div className="flex items-center gap-2">
-                        <span>👑</span>
+                        <span className="text-base">👑</span>
                         <div className="leading-tight">
-                          <div className="font-bold text-sm">{milestoneName}</div>
-                          <div className="text-[10px] opacity-80">Milestone Achieved</div>
+                          <div className="font-black text-sm">{milestoneName}</div>
+                          <div className="text-[10px] opacity-80 uppercase tracking-wider">Milestone Achieved</div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[10px] opacity-80">Earned</div>
-                        <div className="font-bold text-sm">✓</div>
+                        <div className="text-[10px] opacity-80 uppercase tracking-wider">Earned</div>
+                        <div className="font-black text-sm">{milestoneBonus > 0 ? '✓' : '—'}</div>
                       </div>
                     </div>
                     
-                    <div className="rounded-md p-2 flex justify-between items-center bg-gradient-to-r from-orange-400 to-orange-500 text-white">
+                    <div className="rounded-2xl p-3 border-2 border-[var(--edge)] shadow-[2px_2px_0_var(--edge)] flex justify-between items-center bg-gradient-to-r from-orange-400 via-amber-500 to-orange-500 text-slate-950 font-bold">
                       <div className="flex items-center gap-2">
-                        <span>⭐</span>
+                        <span className="text-base">⭐</span>
                         <div className="leading-tight">
-                          <div className="font-bold text-sm">Bonus Points</div>
-                          <div className="text-[10px] opacity-80">Milestone Reward</div>
+                          <div className="font-black text-sm">Bonus Points</div>
+                          <div className="text-[10px] opacity-80 uppercase tracking-wider">Milestone Reward</div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-[10px] opacity-80">Points</div>
-                        <div className="font-bold text-sm">+{milestoneBonus}</div>
+                        <div className="text-[10px] opacity-80 uppercase tracking-wider">Points</div>
+                        <div className="font-black text-base font-mono">+{milestoneBonus}</div>
                       </div>
                     </div>
                   </div>
@@ -698,22 +727,24 @@ function DashboardContent({
               </div>
             </div>
             
-            <div className="bg-[#E8F0FE] dark:bg-slate-800 rounded-xl shadow-sm p-4 border border-[#D2E3FC] dark:border-slate-700 flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-600">🏆</div>
-                <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Prize Tier</span>
+            <div className="bg-[#E8F0FE] dark:bg-slate-900/90 rounded-2xl p-4 border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] flex flex-col sm:flex-row justify-between items-center gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-green-500/15 border border-green-500/30 flex items-center justify-center text-xl text-green-600">🏆</div>
+                <div>
+                  <span className="text-xs font-black uppercase tracking-wider text-[var(--mut)]">Prize Tier</span>
+                  <div className="font-black text-green-600 dark:text-green-400 text-lg leading-tight">{currentTier} Tier</div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="font-bold text-green-600 dark:text-green-400 text-lg">{currentTier}</div>
-                <div className="text-xs text-slate-500">{totalPoints} Total Arcade Points</div>
+              <div className="text-center sm:text-right">
+                <div className="text-xs font-mono font-bold text-[var(--mut)]">{totalPoints} Total Arcade Points</div>
               </div>
-              <a href="/swags" className="btn-press btn-press--sm btn-press--secondary text-green-700 dark:text-green-400 text-sm font-bold inline-flex items-center justify-center">
-                View Prizes
+              <a href="/swags" className="btn-press btn-press--sm bg-emerald-600 text-white text-xs sm:text-sm font-bold inline-flex items-center justify-center gap-1.5 no-underline">
+                View Prizes →
               </a>
             </div>
             
-            <a href="https://discuss.google.dev/t/google-skills-arcade-2026-tiers/371066" target="_blank" rel="noopener noreferrer" className="block bg-yellow-50 dark:bg-yellow-900/20 rounded-md py-2 border border-yellow-200 dark:border-yellow-700/50 text-center cursor-pointer hover:bg-yellow-100 transition-colors">
-              <span className="text-sm font-medium text-yellow-700 dark:text-yellow-500">How the 2026 Prize Tiers Work →</span>
+            <a href="https://discuss.google.dev/t/google-skills-arcade-2026-tiers/371066" target="_blank" rel="noopener noreferrer" className="block bg-yellow-50 dark:bg-yellow-950/30 rounded-2xl py-2.5 px-4 border-2 border-[var(--edge)] shadow-[2px_2px_0_var(--edge)] text-center cursor-pointer hover:-translate-x-0.5 hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 transition-all no-underline">
+              <span className="text-xs sm:text-sm font-black text-yellow-800 dark:text-yellow-300">How the 2026 Prize Tiers Work →</span>
             </a>
             
           </div>
@@ -727,9 +758,12 @@ function DashboardContent({
         
         {/* Facilitator Milestones */}
         <div className="mt-12 text-center">
-          <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">Facilitator Milestones</h2>
-          <p className="text-blue-500 font-medium mb-1">Your progress between 13th Jul. & 14th Sept. 2026</p>
-          <p className="text-xs text-slate-500 italic mb-8">You will only receive bonus points for the milestone that you earn and not for the ones before that.</p>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/30 mb-2">
+            <span>OFFICIAL FACILITATOR TIERS</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black font-display text-[var(--ink)] mb-1 tracking-tight">Facilitator Milestones</h2>
+          <p className="text-blue-600 dark:text-blue-400 font-bold text-sm mb-1">Your progress between 13th Jul. &amp; 14th Sept. 2026</p>
+          <p className="text-xs text-[var(--mut)] italic mb-8 max-w-xl mx-auto font-medium">You will only receive bonus points for the milestone that you earn and not for the ones before that.</p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
             <MilestoneCard name="Milestone 1" bonus={5} gamesReq={6} skillsReq={18} games={gameBadgesCount} skills={skillBadgesCount} color="blue" />
@@ -900,16 +934,18 @@ function BadgesDistribution({ data, gameCount, skillCount }: { data: any, gameCo
   ];
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 flex-1">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="font-bold text-slate-700 dark:text-slate-300 tracking-wider">BADGES DISTRIBUTION</h3>
-        <div className="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold px-3 py-1 rounded-full">
+    <div className="bg-[var(--card)] rounded-3xl border-2 border-[var(--edge)] shadow-[5px_5px_0_var(--edge)] p-6 sm:p-7 flex-1 flex flex-col justify-between">
+      <div className="flex justify-between items-center border-b-2 border-[var(--edge)] pb-4 mb-6">
+        <h3 className="font-black font-display text-[var(--ink)] tracking-tight text-base sm:text-lg flex items-center gap-2">
+          <span>🎯</span> BADGES DISTRIBUTION
+        </h3>
+        <div className="bg-[var(--edge)] text-white text-xs font-mono font-black px-3.5 py-1 rounded-full shadow-xs">
           {total} Total
         </div>
       </div>
       
-      <div className="flex flex-col items-center">
-        <div className="w-48 h-24 relative overflow-hidden mb-4">
+      <div className="flex flex-col items-center my-auto">
+        <div className="w-52 h-26 relative overflow-hidden mb-4">
           <ResponsiveContainer width="100%" height="200%">
             <PieChart>
               <Pie
@@ -918,9 +954,9 @@ function BadgesDistribution({ data, gameCount, skillCount }: { data: any, gameCo
                 cy="50%"
                 startAngle={180}
                 endAngle={0}
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={2}
+                innerRadius={65}
+                outerRadius={88}
+                paddingAngle={3}
                 dataKey="value"
                 stroke="none"
               >
@@ -931,23 +967,23 @@ function BadgesDistribution({ data, gameCount, skillCount }: { data: any, gameCo
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute bottom-0 left-0 w-full text-center pb-2">
-            <div className="text-3xl font-black text-slate-900 dark:text-white leading-none">{total}</div>
-            <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wide">Total Badges</div>
+            <div className="text-3xl font-black font-mono text-[var(--ink)] leading-none">{total}</div>
+            <div className="text-[10px] text-[var(--mut)] font-black uppercase tracking-widest mt-1">Total Badges</div>
           </div>
         </div>
         
-        <div className="flex gap-4 w-full">
-          <div className="flex-1 bg-blue-50 dark:bg-slate-900 rounded-lg p-4 text-center border border-blue-100 dark:border-slate-700">
-            <div className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-center gap-2 mb-1">
+        <div className="grid grid-cols-2 gap-3.5 w-full mt-4">
+          <div className="bg-[var(--bg)] rounded-2xl p-4 text-center border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)]">
+            <div className="text-xs font-black text-blue-600 dark:text-blue-400 flex items-center justify-center gap-1.5 mb-1 uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-blue-500"></span> Skill Badges
             </div>
-            <div className="text-2xl font-black text-slate-900 dark:text-white">{skillCount}</div>
+            <div className="text-2xl font-black font-mono text-[var(--ink)]">{skillCount}</div>
           </div>
-          <div className="flex-1 bg-red-50 dark:bg-slate-900 rounded-lg p-4 text-center border border-red-100 dark:border-slate-700">
-            <div className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-center gap-2 mb-1">
+          <div className="bg-[var(--bg)] rounded-2xl p-4 text-center border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)]">
+            <div className="text-xs font-black text-red-600 dark:text-red-400 flex items-center justify-center gap-1.5 mb-1 uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-red-500"></span> Game Badges
             </div>
-            <div className="text-2xl font-black text-slate-900 dark:text-white">{gameCount}</div>
+            <div className="text-2xl font-black font-mono text-[var(--ink)]">{gameCount}</div>
           </div>
         </div>
       </div>
@@ -1007,66 +1043,103 @@ function ActivityMonth({ badges }: { badges: any[] }) {
   }
 
   const getColorClass = (count: number) => {
-    if (count === 0) return 'bg-slate-900 dark:bg-black';
-    if (count === 1) return 'bg-slate-300 dark:bg-slate-700';
-    if (count <= 5) return 'bg-sky-400';
-    if (count <= 7) return 'bg-blue-600';
-    return 'bg-green-500';
+    if (count === 0) return 'bg-slate-200 dark:bg-slate-800';
+    if (count === 1) return 'bg-blue-300 dark:bg-blue-900/60';
+    if (count <= 5) return 'bg-blue-500';
+    if (count <= 7) return 'bg-indigo-600';
+    return 'bg-emerald-500';
   };
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 flex-1">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="font-bold text-slate-700 dark:text-slate-300 tracking-wider">ACTIVITY MONTH</h3>
+    <div className="bg-[var(--card)] rounded-3xl border-2 border-[var(--edge)] shadow-[5px_5px_0_var(--edge)] p-6 sm:p-7 flex-1 flex flex-col justify-between">
+      <div className="flex justify-between items-center border-b-2 border-[var(--edge)] pb-4 mb-6">
+        <h3 className="font-black font-display text-[var(--ink)] tracking-tight text-base sm:text-lg flex items-center gap-2">
+          <span>📅</span> ACTIVITY MONTH
+        </h3>
         <div className="flex items-center gap-2">
-          <div className="bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 text-sm font-medium px-3 py-1 rounded-full flex items-center gap-1 border border-blue-200 dark:border-blue-800">
-            📅 {month} {currentDate.getFullYear()}
+          <div className="rounded-xl border-2 border-[var(--edge)] bg-[var(--bg)] text-xs font-black px-3 py-1.5 text-[var(--ink)] shadow-[2px_2px_0_var(--edge)] flex items-center gap-1.5">
+            <span>🗓️</span> {month} {currentDate.getFullYear()}
           </div>
-          <button onClick={goToPrevMonth} className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50"><ChevronLeft className="w-4 h-4" /></button>
-          <button onClick={goToNextMonth} className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50"><ChevronRight className="w-4 h-4" /></button>
+          <button 
+            type="button"
+            onClick={goToPrevMonth} 
+            className="btn-press flex items-center justify-center cursor-pointer text-slate-900 dark:text-slate-100 text-[var(--ink)] bg-[var(--card)] hover:bg-[var(--bg)] font-bold text-sm select-none leading-none active:translate-x-0.5 active:translate-y-0.5"
+            style={{
+              width: '32px',
+              height: '32px',
+              minWidth: '32px',
+              minHeight: '32px',
+              padding: 0,
+              borderRadius: '10px',
+              boxShadow: '2px 2px 0 var(--edge)'
+            }}
+            title="Previous Month"
+            aria-label="Previous Month"
+          >
+            <span className="font-mono font-black text-base leading-none select-none" aria-hidden="true">&lt;</span>
+          </button>
+          <button 
+            type="button"
+            onClick={goToNextMonth} 
+            className="btn-press flex items-center justify-center cursor-pointer text-slate-900 dark:text-slate-100 text-[var(--ink)] bg-[var(--card)] hover:bg-[var(--bg)] font-bold text-sm select-none leading-none active:translate-x-0.5 active:translate-y-0.5"
+            style={{
+              width: '32px',
+              height: '32px',
+              minWidth: '32px',
+              minHeight: '32px',
+              padding: 0,
+              borderRadius: '10px',
+              boxShadow: '2px 2px 0 var(--edge)'
+            }}
+            title="Next Month"
+            aria-label="Next Month"
+          >
+            <span className="font-mono font-black text-base leading-none select-none" aria-hidden="true">&gt;</span>
+          </button>
         </div>
       </div>
       
-      <div className="flex items-center gap-8 justify-center h-full pb-4">
+      <div className="flex flex-col sm:flex-row items-center gap-6 justify-center h-full pb-2">
         <div className="text-center flex items-center gap-4">
-          <div className="w-16 h-16 bg-red-50 dark:bg-red-900/20 rounded-2xl flex items-center justify-center text-3xl border border-red-100 dark:border-red-900/50">
+          <div className="w-16 h-16 bg-red-500/10 text-red-500 rounded-2xl border-2 border-[var(--edge)] flex items-center justify-center text-3xl shadow-[3px_3px_0_var(--edge)] shrink-0">
             🔥
           </div>
           <div className="text-left">
-            <div className="text-5xl font-black text-slate-900 dark:text-white leading-none">{activeDaysCount}</div>
-            <div className="text-xs font-bold text-slate-500 uppercase tracking-widest mt-1">ACTIVE DAYS</div>
+            <div className="text-5xl font-black font-mono text-[var(--ink)] leading-none">{activeDaysCount}</div>
+            <div className="text-[10px] font-black text-[var(--mut)] uppercase tracking-widest mt-1">ACTIVE DAYS</div>
           </div>
         </div>
         
-        <div className="flex flex-col ml-8">
-          <div className="grid grid-cols-7 gap-1.5 w-[200px]">
+        <div className="flex flex-col sm:ml-4">
+          <div className="grid grid-cols-7 gap-1.5 w-[210px]">
             {grid.map((count, i) => {
               const day = i - firstDay + 1;
               return (
               <div 
                 key={i} 
                 onClick={() => count !== null && handleBoxClick(day, count)}
-                className={`w-5 h-5 rounded-sm ${count === null ? 'opacity-0' : getColorClass(count)} ${count !== null ? 'cursor-pointer hover:ring-2 hover:ring-slate-400 transition-all' : ''} ${count !== null && count > 0 ? 'border border-black/10' : ''}`}
-                title={count !== null ? `${count} badges` : undefined}
+                className={`w-5 h-5 rounded-md ${count === null ? 'opacity-0' : getColorClass(count)} ${count !== null ? 'cursor-pointer hover:scale-110 border border-[var(--edge)] shadow-2xs transition-all' : ''}`}
+                title={count !== null ? `${count} badges earned on ${month} ${day}` : undefined}
               />
             )})}
           </div>
           
-          
-          <div className="min-h-[20px] mt-2 text-xs text-center text-slate-600 dark:text-slate-300 font-medium">
+          <div className="min-h-[22px] mt-2 text-xs text-center font-bold text-[var(--ink)]">
             {selectedDay ? (
-              <span><span className="font-bold text-slate-900 dark:text-white">{selectedDay.count} badges</span> on {selectedDay.dateStr}</span>
+              <span className="inline-block bg-[var(--bg)] px-2.5 py-0.5 rounded-lg border border-[var(--edge)] shadow-2xs">
+                <strong>{selectedDay.count} badges</strong> on {selectedDay.dateStr}
+              </span>
             ) : (
-              <span className="text-slate-400 italic">Click a day to see details</span>
+              <span className="text-[var(--mut)] italic text-[11px]">Click a day to see details</span>
             )}
           </div>
-          <div className="flex items-center justify-end gap-1 mt-1 text-[9px] font-bold text-slate-400 uppercase tracking-wider">
+          <div className="flex items-center justify-end gap-1.5 mt-1.5 text-[9px] font-black text-[var(--mut)] uppercase tracking-wider">
             LESS
-            <div className="w-3 h-3 rounded-sm bg-slate-900 dark:bg-black ml-1"></div>
-            <div className="w-3 h-3 rounded-sm bg-slate-300 dark:bg-slate-700"></div>
-            <div className="w-3 h-3 rounded-sm bg-sky-400"></div>
-            <div className="w-3 h-3 rounded-sm bg-blue-600"></div>
-            <div className="w-3 h-3 rounded-sm bg-green-500 mr-1"></div>
+            <div className="w-3 h-3 rounded-sm bg-slate-200 dark:bg-slate-800 border border-[var(--edge)] ml-1"></div>
+            <div className="w-3 h-3 rounded-sm bg-blue-300 dark:bg-blue-900/60 border border-[var(--edge)]"></div>
+            <div className="w-3 h-3 rounded-sm bg-blue-500 border border-[var(--edge)]"></div>
+            <div className="w-3 h-3 rounded-sm bg-indigo-600 border border-[var(--edge)]"></div>
+            <div className="w-3 h-3 rounded-sm bg-emerald-500 border border-[var(--edge)] mr-1"></div>
             MORE
           </div>
         </div>
@@ -1081,63 +1154,81 @@ function MilestoneCard({ name, bonus, gamesReq, skillsReq, games, skills, color 
   const isComplete = gamesDone >= gamesReq && skillsDone >= skillsReq;
   
   let headerBg;
-  if (color === 'blue') headerBg = 'bg-blue-500';
-  else if (color === 'purple') headerBg = 'bg-purple-500';
-  else if (color === 'green') headerBg = 'bg-green-500';
-  else headerBg = 'bg-orange-500';
+  if (color === 'blue') headerBg = 'bg-[#1A73E8]';
+  else if (color === 'purple') headerBg = 'bg-[#7c3aed]';
+  else if (color === 'green') headerBg = 'bg-[#34A853]';
+  else headerBg = 'bg-[#EA4335]';
   
   const overallPercent = Math.round(((gamesDone / gamesReq) + (skillsDone / skillsReq)) / 2 * 100);
 
   return (
-    <div className="rounded-xl overflow-hidden bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
-      <div className={`${headerBg} p-4 text-white`}>
-        <div className="flex justify-between items-start mb-4">
-          <div className="flex gap-2">
-             <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center text-xs">🏆</div>
+    <div className="rounded-3xl overflow-hidden bg-[var(--card)] border-2 border-[var(--edge)] shadow-[4px_4px_0_var(--edge)] hover:shadow-[6px_6px_0_var(--edge)] hover:-translate-y-0.5 transition-all flex flex-col">
+      <div className={`${headerBg} p-4 text-white font-display border-b-2 border-[var(--edge)]`}>
+        <div className="flex justify-between items-start mb-3">
+          <div className="flex items-center gap-2">
+             <div className="w-7 h-7 rounded-full bg-white/20 border border-white/40 flex items-center justify-center text-xs shadow-xs">🏆</div>
              <div>
-               <div className="font-bold">{name}</div>
-               <div className="text-xs text-white/80">{isComplete ? '✓ Completed!' : 'In Progress'}</div>
+               <div className="font-black text-base tracking-tight">{name}</div>
+               <div className="text-[10px] font-black uppercase tracking-wider opacity-90">
+                 {isComplete ? '✓ Completed!' : 'In Progress'}
+               </div>
              </div>
           </div>
           <div className="text-right">
-            <div className="font-black text-xl">+{bonus}</div>
-            <div className="text-[10px] text-white/80 uppercase">Bonus Points</div>
+            <div className="font-black font-mono text-2xl leading-none">+{bonus}</div>
+            <div className="text-[9px] font-black uppercase tracking-widest opacity-85 mt-0.5">Bonus Pts</div>
           </div>
         </div>
-        <div className="flex justify-between items-end mb-1">
-          <div className="text-xs">Overall Progress</div>
-          <div className="text-xs font-bold">{overallPercent}%</div>
+        <div className="flex justify-between items-end mb-1 text-xs font-bold">
+          <span className="opacity-90">Overall Progress</span>
+          <span className="font-mono">{overallPercent}%</span>
         </div>
-        <div className="w-full h-1.5 bg-white/30 rounded-full overflow-hidden">
-          <div className="h-full bg-white" style={{ width: `${overallPercent}%` }}></div>
+        <div className="w-full h-2 bg-black/25 rounded-full overflow-hidden border border-white/40">
+          <div className="h-full bg-white transition-all duration-500 rounded-full" style={{ width: `${overallPercent}%` }}></div>
         </div>
       </div>
       
-      <div className="p-4 space-y-3">
-        <div className="flex justify-between items-center text-sm">
-          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-            <span className="text-blue-500 text-xs">🎮</span> Games
+      <div className="p-4 sm:p-5 space-y-3.5 bg-[var(--card)] flex-1 flex flex-col justify-between">
+        <div className="space-y-3">
+          <div>
+            <div className="flex justify-between items-center text-xs font-black text-[var(--ink)] mb-1">
+              <span className="flex items-center gap-1.5">
+                <span className="text-[#1A73E8]">🎮</span> Arcade Games
+              </span>
+              <span className={`font-mono ${gamesDone >= gamesReq ? 'text-emerald-500' : 'text-[var(--mut)]'}`}>
+                {gamesDone} / {gamesReq} {gamesDone >= gamesReq && '✓'}
+              </span>
+            </div>
+            <div className="w-full h-2 bg-[var(--bg)] rounded-full overflow-hidden border border-[var(--edge)]">
+              <div className="h-full bg-[#1A73E8] rounded-full transition-all duration-500" style={{ width: `${(gamesDone / gamesReq) * 100}%` }}></div>
+            </div>
           </div>
-          <div className="font-bold text-slate-800 dark:text-white">
-            <span className={gamesDone >= gamesReq ? 'text-green-500' : ''}>{gamesDone}</span> / {gamesReq} {gamesDone >= gamesReq && <span className="text-green-500">✓</span>}
+          
+          <div>
+            <div className="flex justify-between items-center text-xs font-black text-[var(--ink)] mb-1">
+              <span className="flex items-center gap-1.5">
+                <span className="text-[#34A853]">🏅</span> Skill Badges
+              </span>
+              <span className={`font-mono ${skillsDone >= skillsReq ? 'text-emerald-500' : 'text-[var(--mut)]'}`}>
+                {skillsDone} / {skillsReq} {skillsDone >= skillsReq && '✓'}
+              </span>
+            </div>
+            <div className="w-full h-2 bg-[var(--bg)] rounded-full overflow-hidden border border-[var(--edge)]">
+              <div className="h-full bg-[#34A853] rounded-full transition-all duration-500" style={{ width: `${(skillsDone / skillsReq) * 100}%` }}></div>
+            </div>
           </div>
         </div>
-        
-        <div className="w-full h-1 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-          <div className="h-full bg-blue-500" style={{ width: `${(gamesDone/gamesReq)*100}%` }}></div>
-        </div>
-        
-        <div className="flex justify-between items-center text-sm pt-2">
-          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-            <span className="text-green-500 text-xs">🏅</span> Skills
-          </div>
-          <div className="font-bold text-slate-800 dark:text-white">
-            <span className={skillsDone >= skillsReq ? 'text-green-500' : ''}>{skillsDone}</span> / {skillsReq} {skillsDone >= skillsReq && <span className="text-green-500">✓</span>}
-          </div>
-        </div>
-        
-        <div className="w-full h-1 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-          <div className="h-full bg-green-500" style={{ width: `${(skillsDone/skillsReq)*100}%` }}></div>
+
+        <div className="pt-2">
+          {isComplete ? (
+            <div className="text-center py-2 rounded-xl bg-emerald-500/15 border-2 border-emerald-500 text-emerald-600 dark:text-emerald-400 font-black text-xs shadow-xs">
+              ✓ Milestone Achieved (+{bonus} Pts)
+            </div>
+          ) : (
+            <div className="text-center py-2 rounded-xl bg-[var(--bg)] border-2 border-[var(--edge)] text-[var(--mut)] font-bold text-xs">
+              {Math.max(0, gamesReq - gamesDone)} Games &bull; {Math.max(0, skillsReq - skillsDone)} Skills to go
+            </div>
+          )}
         </div>
       </div>
     </div>

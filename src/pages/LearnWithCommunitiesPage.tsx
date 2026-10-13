@@ -81,10 +81,10 @@ const LEARN_WITH_COMMUNITIES_SYLLABUS: SyllabusCourse[] = [
     credits: 0
   },
   {
-    name: 'Build Real World AI Applications with Gemini and Imagen',
-    url: 'https://www.skills.google/course_templates/1076',
+    name: 'Analyze Images with the Cloud Vision API',
+    url: 'https://www.skills.google/course_templates/633',
     type: 'Skill Badge',
-    credits: 0
+    credits: 12
   },
   {
     name: 'Build a Website on Google Cloud',
