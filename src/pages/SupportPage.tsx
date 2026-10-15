@@ -64,13 +64,15 @@ export function SupportPage() {
       
       try {
         if (type === 'SUBMIT_QUERY') {
-          // Save to firestore
+          // Save to firestore including images
           const docRef = await addDoc(collection(db, 'queries'), {
             name: payload.fullName,
             email: payload.emailAddr,
             profileUrl: payload.profileUrl,
             queryType: payload.queryType,
             message: payload.detailMsg,
+            images: payload.images || [],
+            attachments: payload.images || [],
             status: 'pending',
             createdAt: serverTimestamp()
           });
@@ -84,7 +86,8 @@ export function SupportPage() {
               email: payload.emailAddr,
               profileUrl: payload.profileUrl,
               queryType: payload.queryType,
-              message: payload.detailMsg
+              message: payload.detailMsg,
+              hasAttachments: (payload.images?.length || 0) > 0
             })
           }).catch((err) => console.warn('Could not dispatch query notification:', err));
           

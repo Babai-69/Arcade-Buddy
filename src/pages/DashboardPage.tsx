@@ -435,20 +435,65 @@ function DashboardContent({
     }
   };
 
-  // Compute basic stats
-  const gameBadgesCount = data.badges?.filter((b: any) => b.validForProgram && b.category === 'Game').length || 0;
-  const skillBadgesCount = data.badges?.filter((b: any) => b.validForProgram && b.category === 'Skill').length || 0;
-  const triviaBadgesCount = data.badges?.filter((b: any) => b.validForProgram && b.category === 'Trivia').length || 0;
+  // Accurate Arcade Badge counts across all profile formats:
+  const badgesSkillCount = data.badges?.filter((b: any) => {
+    const cat = (b.category || '').toLowerCase();
+    const title = (b.title || '').toLowerCase();
+    return (cat === 'skill' || title.includes('skill badge') || b.points === 0.5) && b.validForArcade !== false;
+  }).length || 0;
 
-  const basePoints = data.arcadePoints || 0;
-  
+  const badgesGameCount = data.badges?.filter((b: any) => {
+    const cat = (b.category || '').toLowerCase();
+    return cat === 'game' && b.validForArcade !== false;
+  }).length || 0;
+
+  const badgesTriviaCount = data.badges?.filter((b: any) => {
+    const cat = (b.category || '').toLowerCase();
+    return cat === 'trivia' && b.validForArcade !== false;
+  }).length || 0;
+
+  // Resolve best count so completed skill badges (e.g. 8 skill badges) and game badges are always reflected
+  const skillBadgesCount = Math.max(
+    typeof data.skillBadges === 'number' ? data.skillBadges : 0,
+    badgesSkillCount,
+    (data.badges || []).filter((b: any) => {
+      const cat = (b.category || '').toLowerCase();
+      const title = (b.title || '').toLowerCase();
+      return cat === 'skill' || title.includes('skill badge') || b.points === 0.5;
+    }).length
+  );
+
+  const gameBadgesCount = Math.max(
+    typeof data.gameBadges === 'number' ? data.gameBadges : 0,
+    badgesGameCount,
+    (data.badges || []).filter((b: any) => (b.category || '').toLowerCase() === 'game').length || 0
+  );
+
+  const triviaBadgesCount = Math.max(
+    typeof data.triviaBadges === 'number' ? data.triviaBadges : 0,
+    badgesTriviaCount,
+    (data.badges || []).filter((b: any) => (b.category || '').toLowerCase() === 'trivia').length || 0
+  );
+
+  // Facilitator Cohort track (Jul 13 - Sept 14, 2026)
+  const facilitatorGameBadges = typeof data.facilitatorGameBadges === 'number'
+    ? data.facilitatorGameBadges
+    : (data.badges?.filter((b: any) => b.validForProgram && (b.category || '').toLowerCase() === 'game').length || 0);
+
+  const facilitatorSkillBadges = typeof data.facilitatorSkillBadges === 'number'
+    ? data.facilitatorSkillBadges
+    : (data.badges?.filter((b: any) => b.validForProgram && ((b.category || '').toLowerCase() === 'skill' || (b.title || '').toLowerCase().includes('skill badge'))).length || 0);
+
+  // Standard Arcade calculation: 1 pt per game, 1 pt per trivia, 0.5 pt per skill badge (2 skill badges = 1 pt)
+  const calculatedBasePoints = gameBadgesCount + triviaBadgesCount + Math.floor(skillBadgesCount / 2);
+  const basePoints = Math.max(typeof data.arcadePoints === 'number' ? data.arcadePoints : 0, calculatedBasePoints);
   
   let rawMilestoneBonus = 0;
   let rawMilestoneName = 'None';
-  if (gameBadgesCount >= 12 && skillBadgesCount >= 66) { rawMilestoneBonus = 35; rawMilestoneName = 'Ultimate'; }
-  else if (gameBadgesCount >= 8 && skillBadgesCount >= 42) { rawMilestoneBonus = 25; rawMilestoneName = 'Milestone 3'; }
-  else if (gameBadgesCount >= 4 && skillBadgesCount >= 22) { rawMilestoneBonus = 15; rawMilestoneName = 'Milestone 2'; }
-  else if (gameBadgesCount >= 2 && skillBadgesCount >= 10) { rawMilestoneBonus = 5; rawMilestoneName = 'Milestone 1'; }
+  if (facilitatorGameBadges >= 12 && facilitatorSkillBadges >= 66) { rawMilestoneBonus = 35; rawMilestoneName = 'Ultimate'; }
+  else if (facilitatorGameBadges >= 8 && facilitatorSkillBadges >= 42) { rawMilestoneBonus = 25; rawMilestoneName = 'Milestone 3'; }
+  else if (facilitatorGameBadges >= 4 && facilitatorSkillBadges >= 22) { rawMilestoneBonus = 15; rawMilestoneName = 'Milestone 2'; }
+  else if (facilitatorGameBadges >= 2 && facilitatorSkillBadges >= 10) { rawMilestoneBonus = 5; rawMilestoneName = 'Milestone 1'; }
   
   let milestoneBonus = isEnrolled ? rawMilestoneBonus : 0;
   let milestoneName = rawMilestoneName;
@@ -642,30 +687,54 @@ function DashboardContent({
                     <p className="text-xs text-[var(--mut)] font-medium mb-4">Jan, 2026 - Dec, 2026</p>
                   </div>
                   
-                  <div className="w-full h-3.5 rounded-full overflow-hidden flex bg-[var(--bg)] border-2 border-[var(--edge)] shadow-inner mb-6">
-                    <div className="h-full bg-[#1A73E8]" style={{ width: '45%' }} title="Arcade Games"></div>
-                    <div className="h-full bg-[#7c3aed]" style={{ width: '20%' }} title="Sprint (Trivia)"></div>
-                    <div className="h-full bg-[#34A853]" style={{ width: '35%' }} title="Skill Badges"></div>
-                  </div>
+                  {/* Dynamic smooth animated badge distribution bar */}
+                  {(() => {
+                    const totalArcade = gameBadgesCount + triviaBadgesCount + skillBadgesCount;
+                    const gameW = totalArcade > 0 ? (gameBadgesCount / totalArcade) * 100 : 33.3;
+                    const triviaW = totalArcade > 0 ? (triviaBadgesCount / totalArcade) * 100 : 33.3;
+                    const skillW = totalArcade > 0 ? (skillBadgesCount / totalArcade) * 100 : 33.4;
+                    return (
+                      <div className="w-full h-3.5 rounded-full overflow-hidden flex bg-[var(--bg)] border-2 border-[var(--edge)] shadow-inner mb-6 relative">
+                        <div
+                          className="h-full bg-[#1A73E8] transition-all duration-1000 ease-out"
+                          style={{ width: `${gameW}%` }}
+                          title={`Games: ${gameBadgesCount} (${Math.round(gameW)}%)`}
+                        />
+                        <div
+                          className="h-full bg-[#7c3aed] transition-all duration-1000 ease-out"
+                          style={{ width: `${triviaW}%` }}
+                          title={`Trivia: ${triviaBadgesCount} (${Math.round(triviaW)}%)`}
+                        />
+                        <div
+                          className="h-full bg-[#34A853] transition-all duration-1000 ease-out"
+                          style={{ width: `${skillW}%` }}
+                          title={`Skills: ${skillBadgesCount} (${Math.round(skillW)}%)`}
+                        />
+                      </div>
+                    );
+                  })()}
                   
                   <div className="grid grid-cols-3 gap-2 sm:gap-3">
-                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)]">
+                    {/* Games Card (CSS selector 3) */}
+                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--edge)] transition-all duration-300">
                       <div className="text-[10px] font-black text-[var(--mut)] flex items-center justify-center gap-1 uppercase tracking-wider mb-0.5">
                         <span className="w-2 h-2 rounded-full bg-[#1A73E8]"></span> Games
                       </div>
-                      <div className="text-xl sm:text-2xl font-black font-mono text-[#1A73E8]">{gameBadgesCount}</div>
+                      <div className="text-xl sm:text-2xl font-black font-mono text-[#1A73E8] transition-all duration-700">{gameBadgesCount}</div>
                     </div>
-                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)]">
+                    {/* Trivia Card */}
+                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--edge)] transition-all duration-300">
                       <div className="text-[10px] font-black text-[var(--mut)] flex items-center justify-center gap-1 uppercase tracking-wider mb-0.5">
                         <span className="w-2 h-2 rounded-full bg-[#7c3aed]"></span> Trivia
                       </div>
-                      <div className="text-xl sm:text-2xl font-black font-mono text-[#7c3aed]">{triviaBadgesCount}</div>
+                      <div className="text-xl sm:text-2xl font-black font-mono text-[#7c3aed] transition-all duration-700">{triviaBadgesCount}</div>
                     </div>
-                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)]">
+                    {/* Skills Card (CSS selector 2) */}
+                    <div className="bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] p-3 text-center shadow-[2px_2px_0_var(--edge)] hover:-translate-y-0.5 hover:shadow-[3px_3px_0_var(--edge)] transition-all duration-300">
                       <div className="text-[10px] font-black text-[var(--mut)] flex items-center justify-center gap-1 uppercase tracking-wider mb-0.5">
                         <span className="w-2 h-2 rounded-full bg-[#34A853]"></span> Skills
                       </div>
-                      <div className="text-xl sm:text-2xl font-black font-mono text-[#34A853]">{skillBadgesCount}</div>
+                      <div className="text-xl sm:text-2xl font-black font-mono text-[#34A853] transition-all duration-700">{skillBadgesCount}</div>
                     </div>
                   </div>
                 </div>
@@ -928,24 +997,29 @@ function DashboardContent({
 
 function BadgesDistribution({ data, gameCount, skillCount }: { data: any, gameCount: number, skillCount: number }) {
   const total = gameCount + skillCount;
-  const pieData = [
+  const skillPct = total > 0 ? Math.round((skillCount / total) * 100) : 0;
+  const gamePct = total > 0 ? Math.round((gameCount / total) * 100) : 0;
+
+  const pieData = total > 0 ? [
     { name: 'Skill Badges', value: skillCount, fill: '#4285F4' },
     { name: 'Game Badges', value: gameCount, fill: '#EA4335' }
+  ] : [
+    { name: 'No Badges Yet', value: 1, fill: 'rgba(150, 150, 150, 0.2)' }
   ];
 
   return (
-    <div className="bg-[var(--card)] rounded-3xl border-2 border-[var(--edge)] shadow-[5px_5px_0_var(--edge)] p-6 sm:p-7 flex-1 flex flex-col justify-between">
+    <div className="bg-[var(--card)] rounded-3xl border-2 border-[var(--edge)] shadow-[5px_5px_0_var(--edge)] p-6 sm:p-7 flex-1 flex flex-col justify-between hover:shadow-[7px_7px_0_var(--edge)] transition-all duration-300">
       <div className="flex justify-between items-center border-b-2 border-[var(--edge)] pb-4 mb-6">
         <h3 className="font-black font-display text-[var(--ink)] tracking-tight text-base sm:text-lg flex items-center gap-2">
           <span>🎯</span> BADGES DISTRIBUTION
         </h3>
-        <div className="bg-[var(--edge)] text-white text-xs font-mono font-black px-3.5 py-1 rounded-full shadow-xs">
+        <div className="bg-[var(--edge)] text-white text-xs font-mono font-black px-3.5 py-1 rounded-full shadow-xs transition-all duration-500">
           {total} Total
         </div>
       </div>
       
       <div className="flex flex-col items-center my-auto">
-        <div className="w-52 h-26 relative overflow-hidden mb-4">
+        <div className="w-56 h-28 relative overflow-hidden mb-4">
           <ResponsiveContainer width="100%" height="200%">
             <PieChart>
               <Pie
@@ -955,10 +1029,13 @@ function BadgesDistribution({ data, gameCount, skillCount }: { data: any, gameCo
                 startAngle={180}
                 endAngle={0}
                 innerRadius={65}
-                outerRadius={88}
-                paddingAngle={3}
+                outerRadius={92}
+                paddingAngle={total > 0 ? 3 : 0}
                 dataKey="value"
                 stroke="none"
+                isAnimationActive={true}
+                animationDuration={900}
+                animationEasing="ease-out"
               >
                 {pieData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />
@@ -966,24 +1043,49 @@ function BadgesDistribution({ data, gameCount, skillCount }: { data: any, gameCo
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          <div className="absolute bottom-0 left-0 w-full text-center pb-2">
-            <div className="text-3xl font-black font-mono text-[var(--ink)] leading-none">{total}</div>
+          <div className="absolute bottom-0 left-0 w-full text-center pb-2 pointer-events-none">
+            <div className="text-3xl font-black font-mono text-[var(--ink)] leading-none transition-all duration-700">{total}</div>
             <div className="text-[10px] text-[var(--mut)] font-black uppercase tracking-widest mt-1">Total Badges</div>
           </div>
         </div>
         
         <div className="grid grid-cols-2 gap-3.5 w-full mt-4">
-          <div className="bg-[var(--bg)] rounded-2xl p-4 text-center border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)]">
+          {/* Skill Badges Breakdown */}
+          <div className="bg-[var(--bg)] rounded-2xl p-4 text-center border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--edge)] transition-all duration-300">
             <div className="text-xs font-black text-blue-600 dark:text-blue-400 flex items-center justify-center gap-1.5 mb-1 uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-blue-500"></span> Skill Badges
             </div>
-            <div className="text-2xl font-black font-mono text-[var(--ink)]">{skillCount}</div>
+            <div className="text-2xl font-black font-mono text-[var(--ink)] transition-all duration-700">{skillCount}</div>
+            
+            {/* Smooth animated percentage bar */}
+            <div className="w-full bg-slate-200 dark:bg-slate-700/60 h-1.5 rounded-full overflow-hidden mt-2.5">
+              <div
+                className="h-full bg-blue-500 rounded-full transition-all duration-1000 ease-out"
+                style={{ width: `${total > 0 ? (skillCount / total) * 100 : 0}%` }}
+              />
+            </div>
+            <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1">
+              {total > 0 ? `${skillPct}% of total` : '0%'}
+            </div>
           </div>
-          <div className="bg-[var(--bg)] rounded-2xl p-4 text-center border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)]">
+
+          {/* Game Badges Breakdown */}
+          <div className="bg-[var(--bg)] rounded-2xl p-4 text-center border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] hover:-translate-y-0.5 hover:shadow-[4px_4px_0_var(--edge)] transition-all duration-300">
             <div className="text-xs font-black text-red-600 dark:text-red-400 flex items-center justify-center gap-1.5 mb-1 uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-red-500"></span> Game Badges
             </div>
-            <div className="text-2xl font-black font-mono text-[var(--ink)]">{gameCount}</div>
+            <div className="text-2xl font-black font-mono text-[var(--ink)] transition-all duration-700">{gameCount}</div>
+            
+            {/* Smooth animated percentage bar */}
+            <div className="w-full bg-slate-200 dark:bg-slate-700/60 h-1.5 rounded-full overflow-hidden mt-2.5">
+              <div
+                className="h-full bg-red-500 rounded-full transition-all duration-1000 ease-out"
+                style={{ width: `${total > 0 ? (gameCount / total) * 100 : 0}%` }}
+              />
+            </div>
+            <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1">
+              {total > 0 ? `${gamePct}% of total` : '0%'}
+            </div>
           </div>
         </div>
       </div>

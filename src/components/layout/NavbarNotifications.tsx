@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bell, ExternalLink, Pin, RefreshCw, X, CheckCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+import { isInsiderAnnouncementActive } from '../../utils/announcementUtils';
+
 interface Notification {
   id: string;
   title: string;
@@ -12,15 +14,8 @@ interface Notification {
   pinned?: boolean;
 }
 
-const initialNotifications: Notification[] = [
-  {
-    id: 'sub',
-    title: 'Subscribe to The Arcade',
-    description: 'Subscription to the Arcade is necessary to receive important email updates and perks. However, you can unsubscribe anytime you want.',
-    linkText: 'Subscribe Here',
-    linkUrl: 'https://forms.gle/2h6xCvY3sW29pw4p7',
-    pinned: true,
-  },
+
+const standardNotifications: Notification[] = [
   {
     id: 'infocus-july',
     title: 'InFocus This Week: Google Skills Arcade July 2026',
@@ -87,9 +82,39 @@ const initialNotifications: Notification[] = [
   },
 ];
 
+const getInitialNotifications = (): Notification[] => {
+  const isInsiderActive = isInsiderAnnouncementActive();
+  const list: Notification[] = [];
+
+  // October Insider announcement: active for 7 days only from launch
+  if (isInsiderActive) {
+    list.push({
+      id: 'oct-insider-emails',
+      title: 'Arcade Insider Emails (October) Rolled Out! 📬',
+      date: '15 October 2026',
+      description: 'The Arcade Insider emails for the October months have been rolled out! Go check your inbox, spam, and promotions folders to verify your points tally and milestone standing.',
+      linkText: 'Check Dashboard',
+      linkUrl: '/dashboard',
+      pinned: true,
+    });
+  }
+
+  // Pinned "Subscribe to The Arcade" with Google Form link (at top when insider expires, or second while active)
+  list.push({
+    id: 'sub',
+    title: 'Subscribe to The Arcade',
+    description: 'Subscription to the Arcade is necessary to receive important email updates and perks. However, you can unsubscribe anytime you want.',
+    linkText: 'Subscribe Here',
+    linkUrl: 'https://forms.gle/2h6xCvY3sW29pw4p7',
+    pinned: true,
+  });
+
+  return [...list, ...standardNotifications];
+};
+
 export function NavbarNotifications() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>(getInitialNotifications);
   const [isFetching, setIsFetching] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   

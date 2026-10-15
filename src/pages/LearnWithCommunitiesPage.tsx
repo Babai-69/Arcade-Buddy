@@ -34,7 +34,10 @@ import {
   MapPin,
   Navigation,
   Maximize2,
-  Building2
+  Building2,
+  Terminal,
+  FolderGit2,
+  Code2
 } from 'lucide-react';
 import { BackToResourcesButton } from '../components/common/BackToResourcesButton';
 import { auth, loginWithGoogle } from '../lib/firebase';
@@ -118,6 +121,111 @@ const LEARN_WITH_COMMUNITIES_SYLLABUS: SyllabusCourse[] = [
   }
 ];
 
+interface BadgeSolutionInfo {
+  id: number;
+  badgeName: string;
+  courseUrl: string;
+  type: string;
+  credits: number;
+  solutionUrl?: string;
+  extraCommand?: string;
+  isAvailable: boolean;
+  notes?: string;
+}
+
+const COMMUNITY_BADGE_SOLUTIONS: BadgeSolutionInfo[] = [
+  {
+    id: 1,
+    badgeName: 'The Basics of Google Cloud Compute',
+    courseUrl: 'https://www.skills.google/course_templates/754',
+    type: 'Skill Badge',
+    credits: 4,
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/The%20Basics%20of%20Google%20Cloud%20Compute%3A%20Challenge%20Lab/Readme.md',
+    isAvailable: true
+  },
+  {
+    id: 2,
+    badgeName: 'Configure Service Accounts and IAM Roles for Google Cloud',
+    courseUrl: 'https://www.skills.google/course_templates/702',
+    type: 'Skill Badge',
+    credits: 4,
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/Configure%20Service%20Accounts%20and%20IAM%20for%20Google%20Cloud%3A%20Challenge%20Lab/Readme.md',
+    isAvailable: true
+  },
+  {
+    id: 3,
+    badgeName: 'Implement Speech and Language Solutions with Pre-trained APIs',
+    courseUrl: 'https://www.skills.google/course_templates/700',
+    type: 'Skill Badge',
+    credits: 4,
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/Implement%20Speech%20and%20Language%20Solutions%20with%20Pre-trained%20APIs%3A%20Challenge%20Lab/Readme.md',
+    isAvailable: true
+  },
+  {
+    id: 4,
+    badgeName: 'Develop AI-Powered Prototypes in Google AI Studio',
+    courseUrl: 'https://www.skills.google/course_templates/1426',
+    type: 'Skill Badge',
+    credits: 0,
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/Develop%20AI-Powered%20Prototypes%20in%20Google%20AI%20Studio:%20Challenge%20Lab/GSP529.md',
+    isAvailable: true
+  },
+  {
+    id: 5,
+    badgeName: 'Analyze Images with the Cloud Vision API',
+    courseUrl: 'https://www.skills.google/course_templates/633',
+    type: 'Skill Badge',
+    credits: 12,
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/Analyze%20Images%20with%20the%20Cloud%20Vision%20API%3A%20Challenge%20Lab/Readme.md',
+    isAvailable: true
+  },
+  {
+    id: 6,
+    badgeName: 'Build a Website on Google Cloud',
+    courseUrl: 'https://www.skills.google/course_templates/638',
+    type: 'Skill Badge',
+    credits: 13,
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/Build%20a%20Website%20on%20Google%20Cloud%3A%20Challenge%20Lab/Reaadme.md',
+    isAvailable: true
+  },
+  {
+    id: 7,
+    badgeName: 'Create Your First Gemini Enterprise Application',
+    courseUrl: 'https://www.skills.google/course_templates/1586/',
+    type: 'Skill Badge',
+    credits: 0,
+    solutionUrl: 'https://sharetext.io/fb31o7b8',
+    isAvailable: true
+  },
+  {
+    id: 8,
+    badgeName: 'Store, Process, and Manage Data on Google Cloud - Console',
+    courseUrl: 'https://www.skills.google/course_templates/658',
+    type: 'Skill Badge',
+    credits: 3,
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/Store%2C%20Process%2C%20and%20Manage%20Data%20on%20Google%20Cloud%3A%20Challenge%20Lab/Readme.md',
+    isAvailable: true
+  },
+  {
+    id: 9,
+    badgeName: 'Using the Google Cloud Speech API',
+    courseUrl: 'https://www.skills.google/course_templates/756',
+    type: 'Skill Badge',
+    credits: 4,
+    isAvailable: false,
+    notes: 'Solution available soon'
+  },
+  {
+    id: 10,
+    badgeName: 'Explore Generative AI in Agent Platform',
+    courseUrl: 'https://www.skills.google/course_templates/959',
+    type: 'Skill Badge',
+    credits: 16,
+    isAvailable: false,
+    notes: 'Solution available soon'
+  }
+];
+
 const FAQ_ITEMS = [
   {
     category: 'Rewards',
@@ -165,6 +273,11 @@ export function LearnWithCommunitiesPage() {
   const [mapZoom, setMapZoom] = useState<number>(16);
   const [faqFilter, setFaqFilter] = useState<'All' | 'General' | 'Registration' | 'Rewards'>('All');
   const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
+
+  // Badge solutions interactive states
+  const [selectedSolutionId, setSelectedSolutionId] = useState<number>(1);
+  const [copiedSolutionUrl, setCopiedSolutionUrl] = useState(false);
+  const [copiedCommand, setCopiedCommand] = useState(false);
   
   // Sequence requested: 1. 6-step roadmap, 2. claim 200 credits, 3. program syllabus, 4. community leaderboard
   const [activeTab, setActiveTab] = useState<'roadmap' | 'credits' | 'syllabus' | 'leaderboard'>('roadmap');
@@ -242,6 +355,20 @@ export function LearnWithCommunitiesPage() {
     navigator.clipboard.writeText('Dr. B. C. Roy Engineering College, Jemua Road, Fuljhore, Durgapur, West Bengal 713206');
     setCopiedAddress(true);
     setTimeout(() => setCopiedAddress(false), 2500);
+  };
+
+  const activeSolution = COMMUNITY_BADGE_SOLUTIONS.find(s => s.id === selectedSolutionId) || COMMUNITY_BADGE_SOLUTIONS[0];
+
+  const handleCopySolutionLink = (url: string) => {
+    navigator.clipboard.writeText(url);
+    setCopiedSolutionUrl(true);
+    setTimeout(() => setCopiedSolutionUrl(false), 2500);
+  };
+
+  const handleCopyCommand = (cmd: string) => {
+    navigator.clipboard.writeText(cmd);
+    setCopiedCommand(true);
+    setTimeout(() => setCopiedCommand(false), 2500);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1414,6 +1541,255 @@ export function LearnWithCommunitiesPage() {
                 >
                   no outside courses will be counted! ⚠️
                 </span>
+              </div>
+            </div>
+
+            {/* ========================================================================= */}
+            {/* SOLUTION DROPDOWN SECTION (FOR ALL 10 SYLLABUS BADGES) */}
+            {/* ========================================================================= */}
+            <div id="challenge-lab-solutions" className="rounded-3xl bg-white dark:bg-slate-800/95 border-2 border-[var(--edge,#202124)] shadow-[6px_6px_0_var(--edge,#202124)] overflow-hidden mt-8 mb-12">
+              {/* Header Box */}
+              <div className="p-6 sm:p-8 border-b-2 border-[var(--edge,#202124)] bg-gradient-to-r from-emerald-50/80 via-blue-50/50 to-slate-50 dark:from-slate-800 dark:to-slate-900">
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
+                        ⚡ STEP-BY-STEP LAB SOLUTIONS
+                      </span>
+                      <span className="text-xs font-mono font-bold text-slate-500 dark:text-slate-400">
+                        10 Repositories &amp; Solution Guides
+                      </span>
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-display font-black text-slate-900 dark:text-white">
+                      Challenge Lab Solutions
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 max-w-2xl">
+                      Choose any badge from the 10 syllabus badges in the dropdown below to view its GitHub solution repository. Copy the link or open it directly in a new tab, and follow the steps provided there.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold font-mono px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 shadow-2xs">
+                      Badge {activeSolution.id} of 10
+                    </span>
+                  </div>
+                </div>
+
+                {/* Dropdown Selector Controls */}
+                <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                  <div className="relative flex-1">
+                    <label htmlFor="badge-solution-dropdown" className="sr-only">Select Badge Solution</label>
+                    <select
+                      id="badge-solution-dropdown"
+                      value={selectedSolutionId}
+                      onChange={(e) => setSelectedSolutionId(Number(e.target.value))}
+                      className="w-full appearance-none px-4 py-3.5 pr-10 rounded-2xl bg-white dark:bg-slate-900 border-2 border-[var(--edge,#202124)] text-slate-900 dark:text-white font-bold text-sm shadow-[3px_3px_0_var(--edge,#202124)] focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                    >
+                      {COMMUNITY_BADGE_SOLUTIONS.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          #{item.id} – {item.badgeName} ({item.credits} Credits){!item.isAvailable ? ' [Solution soon]' : ''}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400">
+                      <ChevronDown className="w-5 h-5" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Quick Badges 1-10 Badges Horizontal Ribbon */}
+                <div className="mt-4 flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">Quick Pick:</span>
+                  {COMMUNITY_BADGE_SOLUTIONS.map((item) => {
+                    const isSelected = item.id === selectedSolutionId;
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => setSelectedSolutionId(item.id)}
+                        className={`px-3 py-1 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer ${
+                          isSelected
+                            ? 'bg-blue-600 text-white shadow-[2px_2px_0_var(--edge,#202124)] -translate-y-0.5'
+                            : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 hover:border-blue-400'
+                        }`}
+                        title={item.badgeName}
+                      >
+                        #{item.id}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Popped Solution Detail Card */}
+              <div className="p-6 sm:p-8 space-y-6">
+                {/* Active Badge Info Header */}
+                <div className="flex flex-wrap items-start justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
+                  <div className="flex items-start gap-3.5">
+                    <span className="w-10 h-10 rounded-2xl bg-blue-600 text-white font-black font-mono flex items-center justify-center shrink-0 text-lg shadow-[2px_2px_0_var(--edge,#202124)]">
+                      {activeSolution.id}
+                    </span>
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+                          {activeSolution.type}
+                        </span>
+                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono">
+                          {activeSolution.credits} Credits
+                        </span>
+                        {activeSolution.isAvailable ? (
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3" /> Solution Ready
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300">
+                            (Solution available soon)
+                          </span>
+                        )}
+                      </div>
+                      <h4 className="text-lg sm:text-xl font-black font-display text-slate-900 dark:text-white">
+                        {activeSolution.badgeName}
+                      </h4>
+                    </div>
+                  </div>
+
+                  <a
+                    href={activeSolution.courseUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline px-3.5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xs"
+                  >
+                    <span>Open Official Course</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+
+                {/* Core Instruction Notice Banner */}
+                <div className="p-4 sm:p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border-2 border-amber-300 dark:border-amber-800/60 flex items-start gap-3.5 text-amber-950 dark:text-amber-200">
+                  <div className="w-9 h-9 rounded-xl bg-amber-200 dark:bg-amber-900/60 flex items-center justify-center shrink-0 text-amber-800 dark:text-amber-300 text-lg">
+                    📌
+                  </div>
+                  <div className="text-sm">
+                    <p className="font-black text-amber-900 dark:text-amber-200 text-base">
+                      Follow the steps mentioned there:
+                    </p>
+                    <p className="text-xs sm:text-sm text-amber-800 dark:text-amber-300/90 mt-1 leading-relaxed">
+                      Open the repository guide below in a new tab, read through the challenge lab steps carefully, and follow the exact instructions provided in the README / markdown file to earn your badge credit.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Solution URL Box & Actions (when available) */}
+                {activeSolution.isAvailable && activeSolution.solutionUrl ? (
+                  <div className="space-y-4">
+                    {/* Repository Link Container */}
+                    <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-[var(--edge,#202124)] shadow-[4px_4px_0_var(--edge,#202124)] space-y-3.5">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                          <FolderGit2 className="w-4 h-4 text-slate-700 dark:text-slate-300" />
+                          Solution Repository Link:
+                        </span>
+                        <span className="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                          <CheckCircle2 className="w-3.5 h-3.5" /> GitHub Verified
+                        </span>
+                      </div>
+
+                      <div className="p-3.5 rounded-xl bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 font-mono text-xs sm:text-sm text-slate-800 dark:text-slate-200 break-all select-all flex items-center justify-between gap-3">
+                        <span className="truncate">{activeSolution.solutionUrl}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleCopySolutionLink(activeSolution.solutionUrl!)}
+                          className="shrink-0 p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                          title="Copy Link"
+                        >
+                          {copiedSolutionUrl ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                        </button>
+                      </div>
+
+                      {/* Action Buttons: Copy & Open in New Tab */}
+                      <div className="flex flex-wrap items-center gap-3 pt-1">
+                        <a
+                          href={activeSolution.solutionUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-press btn-press--primary py-2.5 px-6 text-sm font-bold flex items-center gap-2 cursor-pointer shadow-sm text-white"
+                        >
+                          <span>Open in New Tab</span>
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+
+                        <button
+                          type="button"
+                          onClick={() => handleCopySolutionLink(activeSolution.solutionUrl!)}
+                          className="btn-press btn-press--secondary py-2.5 px-6 text-sm font-bold flex items-center gap-2 cursor-pointer transition border border-slate-300 dark:border-slate-700"
+                        >
+                          {copiedSolutionUrl ? (
+                            <>
+                              <Check className="w-4 h-4 text-emerald-500" />
+                              <span className="text-emerald-600 dark:text-emerald-400 font-bold">Copied to Clipboard!</span>
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="w-4 h-4" />
+                              <span>Copy Solution Link</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Extra Command block (e.g. ./ARC120.sh for Badge 1) */}
+                    {activeSolution.extraCommand && (
+                      <div className="p-5 rounded-2xl bg-slate-900 text-slate-100 border-2 border-[var(--edge,#202124)] shadow-[4px_4px_0_var(--edge,#202124)] space-y-3">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+                            <Terminal className="w-4 h-4" />
+                            Quick Cloud Shell Execution Script:
+                          </span>
+                          <span className="text-[11px] font-mono text-slate-400">
+                            Run inside Google Cloud Shell
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-3.5 rounded-xl bg-black/60 border border-slate-700 font-mono text-sm text-emerald-400">
+                          <code>{activeSolution.extraCommand}</code>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyCommand(activeSolution.extraCommand!)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                            title="Copy Command"
+                          >
+                            {copiedCommand ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Coming Soon Placeholder (Badges 9 & 10) */
+                  <div className="p-8 sm:p-10 rounded-2xl bg-slate-50 dark:bg-slate-900 border-2 border-dashed border-slate-300 dark:border-slate-700 text-center space-y-3">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto text-3xl shadow-sm">
+                      ⏳
+                    </div>
+                    <h5 className="text-xl font-bold text-slate-900 dark:text-white">
+                      (Solution available soon)
+                    </h5>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md mx-auto">
+                      Our community facilitators are actively testing and validating the automated steps for <span className="font-semibold text-slate-700 dark:text-slate-300">&ldquo;{activeSolution.badgeName}&rdquo;</span>. The solution will be updated here shortly before your submission deadline.
+                    </p>
+                    <div className="pt-2">
+                      <a
+                        href={activeSolution.courseUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn-press btn-press--secondary inline-flex items-center gap-2 py-2.5 px-5 text-xs font-bold"
+                      >
+                        <span>Preview Lab Syllabus</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </motion.div>

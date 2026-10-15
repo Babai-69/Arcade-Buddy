@@ -546,10 +546,10 @@ app.post("/api/notify-query", async (req, res) => {
     // Construct upstream URL on cloudskillsboost.google CDN
     const upstreamUrl = `https://www.cloudskillsboost.google/public_profiles/${encodeURIComponent(profileId)}`;
 
-    const START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T00:00:00Z');
-    const FACILITATOR_END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T18:29:00Z');
-    // The Arcade program continues until December 31, 2026
+    const ARCADE_START_DATE = new Date('2026-01-01T00:00:00Z');
     const ARCADE_END_DATE = new Date('2026-12-31T23:59:59Z');
+    const FACILITATOR_START_DATE = startDate ? new Date(startDate as string) : new Date('2026-07-13T00:00:00Z');
+    const FACILITATOR_END_DATE = endDate ? new Date(endDate as string) : new Date('2026-09-14T18:29:00Z');
 
     try {
       console.log(`[Scraper] Fetching upstream profile: ${upstreamUrl}`);
@@ -648,12 +648,14 @@ app.post("/api/notify-query", async (req, res) => {
       const seenBadges = new Set<string>();
       const badgesList: any[] = [];
 
+      const normalizeStr = (s: string) => s.toLowerCase().replace(/[:\-_,.]/g, ' ').replace(/\s+/g, ' ').trim();
+
       $(".profile-badge").each((i, el) => {
         const rawText = $(el).text() || "";
         const badgeText   = $(el).text();
         const altText     = $(el).find('img').attr('alt') || '';
         const ariaLabel   = $(el).attr('aria-label') || '';
-        const allText     = (badgeText + altText + ariaLabel).toLowerCase();
+        const allText     = (badgeText + " " + altText + " " + ariaLabel).toLowerCase();
 
         // Skip Completion Badges entirely
         if (allText.includes("completion badge")) {
@@ -662,6 +664,7 @@ app.post("/api/notify-query", async (req, res) => {
 
         const title = $(el).find(".badge-title, .ql-title-medium").text().trim() || $(el).attr('alt') || rawText || "";
         const titleLower = title.toLowerCase().trim();
+        const normTitle = normalizeStr(titleLower);
 
         // Extract the date and check timeline
         const dateText = $(el).find(".ql-body-medium.l-mbs, .ql-body-medium").text().trim();
@@ -674,10 +677,10 @@ app.post("/api/notify-query", async (req, res) => {
           cleanDateStr = dateText.replace("Earned ", "").replace(/ EDT| EST| PDT| PST/g, "").trim();
           parsedDate = new Date(cleanDateStr + " UTC");
           if (!isNaN(parsedDate.getTime())) {
-            if (parsedDate < START_DATE || parsedDate > ARCADE_END_DATE) {
+            if (parsedDate < ARCADE_START_DATE || parsedDate > ARCADE_END_DATE) {
               validForArcade = false;
             }
-            if (parsedDate < START_DATE || parsedDate > FACILITATOR_END_DATE) {
+            if (parsedDate < FACILITATOR_START_DATE || parsedDate > FACILITATOR_END_DATE) {
               validForFacilitator = false;
             }
           } else {
@@ -698,13 +701,25 @@ app.post("/api/notify-query", async (req, res) => {
         let category = "Lab-free";
         let points = 0;
 
-        const isSyllabusGame = syllabusGameBadges.some(
-          gb => gb.name.toLowerCase().trim() === titleLower
-        );
+        const isSyllabusGame = syllabusGameBadges.some(gb => {
+          const normGb = normalizeStr(gb.name);
+          return normGb === normTitle || normTitle.includes(normGb) || normGb.includes(normTitle);
+        });
 
         // Check if title matches valid skill badges
-        const isValidSkillBadge = SKILL_BADGES.some(b => b.name.toLowerCase().trim() === titleLower) ||
-                                  syllabusSkillBadges.some(b => b.name.toLowerCase().trim() === titleLower);
+        const isMatchedSkillBadge = SKILL_BADGES.some(b => {
+          const nb = normalizeStr(b.name);
+          return nb === normTitle || normTitle.includes(nb) || nb.includes(normTitle);
+        }) || syllabusSkillBadges.some(b => {
+          const nb = normalizeStr(b.name);
+          return nb === normTitle || normTitle.includes(nb) || nb.includes(normTitle);
+        });
+
+        const isExplicitSkillBadge = 
+          isMatchedSkillBadge ||
+          allText.includes("skill badge") ||
+          titleLower.includes("skill badge") ||
+          $(el).find('img[alt*="Skill Badge"], .badge-icon[alt*="Skill Badge"]').length > 0;
 
         // Classify badges
         if (
@@ -744,7 +759,7 @@ app.post("/api/notify-query", async (req, res) => {
           category = "Special";
           points = 1;
           if (validForArcade) specialBadges++;
-        } else if (isValidSkillBadge) {
+        } else if (isExplicitSkillBadge) {
           category = "Skill";
           points = 0.5;
           if (validForArcade) skillBadges += 1;
@@ -766,7 +781,7 @@ app.post("/api/notify-query", async (req, res) => {
           validForArcade: validForArcade,
           _debugCleanDate: cleanDateStr,
           _debugParsedDate: parsedDate ? parsedDate.toISOString() : null,
-          _debugStartDate: START_DATE ? START_DATE.toISOString() : null
+          _debugStartDate: ARCADE_START_DATE.toISOString()
         });
       });
 

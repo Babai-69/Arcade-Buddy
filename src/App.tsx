@@ -48,6 +48,7 @@ import { Participant } from './types';
 import { RoadmapPage } from './pages/RoadmapPage';
 import { DisclaimerPage } from './pages/DisclaimerPage';
 import { WelcomeTour } from './components/WelcomeTour';
+import { AppModals } from './components/AppModals';
 import { useGlobalShortcuts } from './hooks/useGlobalShortcuts';
 import { ArcadeNotificationContainer } from './components/ArcadeNotification';
 import { SEO } from './components/SEO';
@@ -66,6 +67,7 @@ export default function App() {
       <ThreeBackground />
       <Navbar />
       <WelcomeTour />
+      <AppModals />
       <ArcadeNotificationContainer position="bottom-right" />
       
       <main className="flex-grow pt-16">

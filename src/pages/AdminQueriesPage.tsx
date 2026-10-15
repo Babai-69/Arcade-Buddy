@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { db, auth } from '../lib/firebase';
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import { AlertCircle, Clock, CheckCircle2, ExternalLink, Search, Filter, Download, CheckSquare, Square, X, Maximize2 } from 'lucide-react';
+import { AlertCircle, Clock, CheckCircle2, ExternalLink, Search, Filter, Download, CheckSquare, Square, X, Maximize2, Mail, Paperclip, Image as ImageIcon, ZoomIn } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from 'recharts';
 
 export function AdminQueriesPage() {
@@ -10,6 +10,31 @@ export function AdminQueriesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentUserEmail, setCurrentUserEmail] = useState<string | null>(null);
+  const [lightboxImage, setLightboxImage] = useState<{ url: string; name: string } | null>(null);
+
+  const handleReplyEmail = (q: any, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (!q || !q.email) return;
+
+    const recipient = q.email;
+    const querySummary = q.queryType || (q.message ? q.message.slice(0, 40) : 'query');
+    const subject = `Reply on your ${querySummary}`;
+    
+    const body = `Hi ${q.name || 'there'},
+
+Thank you for reaching out to Arcade Buddy Support regarding your query:
+"${q.message || ''}"
+
+[Type your response here]
+
+---
+Best regards,
+Arcade Buddy Support Team
+support.arcadebuddy@gmail.com`;
+
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+  };
   
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -364,10 +389,32 @@ export function AdminQueriesPage() {
                     <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-xs font-medium shrink-0">
                       {q.queryType}
                     </span>
+                    {((q.images && q.images.length > 0) || (q.attachments && q.attachments.length > 0) || q.imageUrl) && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-800 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60 text-[11px] font-bold shrink-0">
+                        <Paperclip className="w-3 h-3" />
+                        <span>{(q.images?.length || q.attachments?.length || 1)} Screenshot{(q.images?.length || q.attachments?.length || 1) > 1 ? 's' : ''}</span>
+                      </span>
+                    )}
                   </div>
                   <p className="text-sm text-slate-500 dark:text-slate-400 truncate">
                     {q.email} • {q.message}
                   </p>
+
+                  {/* Reply Button Section */}
+                  <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-700/60 flex flex-wrap items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={(e) => handleReplyEmail(q, e)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 active:scale-95 shadow-sm transition cursor-pointer"
+                      title={`Reply to ${q.email} from support.arcadebuddy@gmail.com`}
+                    >
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>Reply via Email</span>
+                    </button>
+                    <span className="text-[11px] text-slate-400 dark:text-slate-500 font-mono">
+                      To: {q.email}
+                    </span>
+                  </div>
                 </div>
                 
                 <div className="shrink-0 flex items-center gap-3">
@@ -426,34 +473,182 @@ export function AdminQueriesPage() {
               </div>
 
               {selectedQuery.profileUrl && (
-                <div>
+                <div className="mb-6">
                   <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2 uppercase tracking-wider">Profile Link</h4>
                   <a href={selectedQuery.profileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline bg-blue-50 dark:bg-blue-900/20 px-4 py-2 rounded-lg">
                     <ExternalLink className="w-4 h-4" /> Open Cloud Skills Profile
                   </a>
                 </div>
               )}
+
+              {/* Uploaded Attachments / Screenshots Section */}
+              {(() => {
+                const rawImages: any[] = [
+                  ...(Array.isArray(selectedQuery.images) ? selectedQuery.images : []),
+                  ...(Array.isArray(selectedQuery.attachments) ? selectedQuery.attachments : [])
+                ];
+                if (selectedQuery.imageUrl && !rawImages.some(i => (i.dataUrl || i.url) === selectedQuery.imageUrl)) {
+                  rawImages.push({ name: 'Screenshot', dataUrl: selectedQuery.imageUrl, url: selectedQuery.imageUrl });
+                }
+
+                if (rawImages.length === 0) return null;
+
+                return (
+                  <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700/80">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                        <Paperclip className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                        <span>Uploaded Proof / Screenshots ({rawImages.length})</span>
+                      </h4>
+                      <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Click image to inspect / enlarge</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
+                      {rawImages.map((img: any, idx: number) => {
+                        const src = img.dataUrl || img.url || '';
+                        const name = img.name || `Screenshot ${idx + 1}`;
+                        const sizeKb = img.size ? `${Math.round(img.size / 1024)} KB` : '';
+                        return (
+                          <div
+                            key={idx}
+                            className="group relative bg-white dark:bg-slate-900 rounded-xl border-2 border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col"
+                          >
+                            <div
+                              className="w-full aspect-[4/3] bg-slate-100 dark:bg-slate-800 relative cursor-pointer overflow-hidden flex items-center justify-center"
+                              onClick={() => setLightboxImage({ url: src, name })}
+                              title="Click to view full image"
+                            >
+                              {src ? (
+                                <img
+                                  src={src}
+                                  alt={name}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition duration-200"
+                                />
+                              ) : (
+                                <ImageIcon className="w-8 h-8 text-slate-400" />
+                              )}
+                              <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition gap-1.5 text-white text-xs font-bold backdrop-blur-[1px]">
+                                <ZoomIn className="w-4 h-4" />
+                                <span>Inspect</span>
+                              </div>
+                            </div>
+
+                            <div className="p-2.5 flex-1 flex flex-col justify-between bg-slate-50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800">
+                              <div className="flex items-center justify-between gap-1 mb-1.5">
+                                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 truncate" title={name}>
+                                  {name}
+                                </span>
+                                {sizeKb && <span className="text-[10px] text-slate-400 font-mono shrink-0">{sizeKb}</span>}
+                              </div>
+
+                              <div className="flex gap-1.5 pt-1">
+                                <button
+                                  type="button"
+                                  onClick={() => setLightboxImage({ url: src, name })}
+                                  className="flex-1 py-1 px-2 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 text-[11px] font-bold text-center transition cursor-pointer"
+                                >
+                                  Preview
+                                </button>
+                                <a
+                                  href={src}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  download={name}
+                                  className="py-1 px-2 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-[11px] font-bold text-center transition flex items-center gap-1 cursor-pointer"
+                                  title="Open in new window"
+                                >
+                                  <ExternalLink className="w-3 h-3" />
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
             
-            <div className="p-6 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 rounded-b-2xl flex justify-end gap-3">
-              <button 
-                onClick={() => setSelectedQuery(null)}
-                className="px-4 py-2 text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition"
+            <div className="p-6 border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 rounded-b-2xl flex flex-wrap items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={() => handleReplyEmail(selectedQuery)}
+                className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-bold transition flex items-center gap-2 cursor-pointer shadow-sm active:scale-95"
+                title={`Opens compose to ${selectedQuery.email} using support.arcadebuddy@gmail.com`}
               >
-                Close
+                <Mail className="w-4 h-4" />
+                Reply via Email (support.arcadebuddy@gmail.com)
               </button>
-              <button 
-                onClick={() => {
-                  toggleStatus(selectedQuery.id, selectedQuery.status || 'pending');
-                  setSelectedQuery({
-                    ...selectedQuery,
-                    status: selectedQuery.status === 'resolved' ? 'pending' : 'resolved'
-                  });
-                }}
-                className={`px-6 py-2 text-white font-bold rounded-lg transition ${selectedQuery.status === 'resolved' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
-              >
-                {selectedQuery.status === 'resolved' ? 'Mark as Pending' : 'Mark as Resolved'}
-              </button>
+
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={() => setSelectedQuery(null)}
+                  className="px-4 py-2 text-slate-600 dark:text-slate-400 font-medium hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition"
+                >
+                  Close
+                </button>
+                <button 
+                  onClick={() => {
+                    toggleStatus(selectedQuery.id, selectedQuery.status || 'pending');
+                    setSelectedQuery({
+                      ...selectedQuery,
+                      status: selectedQuery.status === 'resolved' ? 'pending' : 'resolved'
+                    });
+                  }}
+                  className={`px-6 py-2 text-white font-bold rounded-lg transition ${selectedQuery.status === 'resolved' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
+                >
+                  {selectedQuery.status === 'resolved' ? 'Mark as Pending' : 'Mark as Resolved'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Full-resolution Attachment Lightbox Modal */}
+      {lightboxImage && (
+        <div
+          className="fixed inset-0 z-[120] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setLightboxImage(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] bg-slate-900 rounded-2xl border border-slate-700 overflow-hidden p-2 flex flex-col shadow-2xl w-full"
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="p-3 flex items-center justify-between text-white border-b border-slate-800">
+              <div className="flex items-center gap-2 font-bold text-sm truncate pr-4">
+                <ImageIcon className="w-4 h-4 text-blue-400 shrink-0" />
+                <span className="truncate">{lightboxImage.name}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={lightboxImage.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download={lightboxImage.name}
+                  className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download</span>
+                </a>
+                <button
+                  onClick={() => setLightboxImage(null)}
+                  className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition cursor-pointer"
+                  title="Close screenshot"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+            </div>
+            <div className="p-3 overflow-auto flex items-center justify-center flex-1 max-h-[75vh]">
+              <img
+                src={lightboxImage.url}
+                alt={lightboxImage.name}
+                className="max-w-full max-h-[75vh] object-contain rounded-lg border border-slate-800"
+              />
             </div>
           </div>
         </div>

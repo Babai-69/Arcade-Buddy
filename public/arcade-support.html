@@ -139,7 +139,7 @@
   input::placeholder, textarea::placeholder{ color:var(--ink-dim); opacity:.7; }
 
   .file-drop{
-    border:2px dashed var(--bg); padding:24px; text-align:center; cursor:pointer; position:relative;
+    border:2px dashed var(--bg); padding:20px; text-align:center; cursor:pointer; position:relative;
     transition:background .2s ease;
   }
   .file-drop:hover, .file-drop.drag{ background:rgba(15,15,15,.06); }
@@ -147,6 +147,20 @@
   .file-drop .ic{ font-size:26px; display:block; margin-bottom:8px; }
   .file-drop .txt{ font-size:13px; font-family:var(--body); opacity:.75; }
   .file-drop .fname{ font-size:12.5px; font-weight:700; margin-top:8px; word-break:break-all; }
+  
+  .file-previews{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(80px, 1fr)); gap:10px; margin-top:14px;
+  }
+  .preview-item{
+    position:relative; width:100%; aspect-ratio:1; border:2px solid var(--bg); background:#fff; overflow:hidden;
+    box-shadow:2px 2px 0 var(--bg);
+  }
+  .preview-item img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .preview-remove{
+    position:absolute; top:2px; right:2px; width:20px; height:20px; background:#ff5c4d; color:#fff;
+    border:1px solid #000; border-radius:50%; font-size:12px; font-weight:900; line-height:18px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+  }
 
   .char-count{ text-align:right; font-size:11px; opacity:.65; margin-top:8px; font-family:var(--mono); }
 
@@ -290,14 +304,14 @@
         </div>
 
         <div class="field">
-          <label for="fileInput">Proof Attachments</label>
+          <label for="fileInput">Proof Attachments / Screenshots</label>
           <div class="file-drop" id="fileDrop">
-            <!-- No file input natively processing here, just text. We won't handle actual files via postMessage for simplicity unless we use base64, but let's just ignore the file logic for this HTML mockup or only send the filenames to the parent. -->
-            <input type="file" id="fileInput" multiple>
+            <input type="file" id="fileInput" multiple accept="image/*">
             <span class="ic">📎</span>
-            <div class="txt">Choose files or drag & drop screenshots here</div>
+            <div class="txt">Choose images or drag &amp; drop screenshots here (PNG, JPG)</div>
             <div class="fname" id="fileName"></div>
           </div>
+          <div id="filePreviews" class="file-previews"></div>
         </div>
 
         <div class="field">
@@ -357,14 +371,108 @@
   const fileInput = document.getElementById('fileInput');
   const fileDrop = document.getElementById('fileDrop');
   const fileNameEl = document.getElementById('fileName');
-  fileInput.addEventListener('change', ()=>{
-    const files = Array.from(fileInput.files).map(f=>f.name);
-    fileNameEl.textContent = files.length ? `${files.length} file(s): ${files.join(', ')}` : '';
+  const filePreviewsEl = document.getElementById('filePreviews');
+  
+  let attachedImages = [];
+
+  function updatePreviews() {
+    filePreviewsEl.innerHTML = '';
+    if (attachedImages.length === 0) {
+      fileNameEl.textContent = '';
+      return;
+    }
+    fileNameEl.textContent = `${attachedImages.length} image(s) attached`;
+    attachedImages.forEach((imgObj, idx) => {
+      const item = document.createElement('div');
+      item.className = 'preview-item';
+      item.innerHTML = `
+        <img src="${imgObj.dataUrl}" alt="${imgObj.name}" title="${imgObj.name}">
+        <button type="button" class="preview-remove" data-index="${idx}" title="Remove image">×</button>
+      `;
+      filePreviewsEl.appendChild(item);
+    });
+
+    filePreviewsEl.querySelectorAll('.preview-remove').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const index = parseInt(btn.getAttribute('data-index'), 10);
+        attachedImages.splice(index, 1);
+        updatePreviews();
+      });
+    });
+  }
+
+  function processImageFile(file) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const rawUrl = e.target.result;
+        if (!file.type.startsWith('image/')) {
+          resolve({ name: file.name, type: file.type, size: file.size, dataUrl: rawUrl });
+          return;
+        }
+
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          const maxDim = 1200;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedUrl = canvas.toDataURL('image/jpeg', 0.82);
+          resolve({
+            name: file.name,
+            type: 'image/jpeg',
+            size: Math.round(compressedUrl.length * 0.75),
+            dataUrl: compressedUrl
+          });
+        };
+        img.onerror = () => {
+          resolve({ name: file.name, type: file.type, size: file.size, dataUrl: rawUrl });
+        };
+        img.src = rawUrl;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function handleFiles(files) {
+    const validFiles = Array.from(files).filter(f => f.type.startsWith('image/') || f.name.match(/\.(jpg|jpeg|png|webp|gif)$/i));
+    for (const f of validFiles) {
+      if (attachedImages.length >= 6) {
+        alert('You can attach up to 6 screenshots/images per query.');
+        break;
+      }
+      const processed = await processImageFile(f);
+      attachedImages.push(processed);
+    }
+    updatePreviews();
+  }
+
+  fileInput.addEventListener('change', async () => {
+    if (fileInput.files?.length) {
+      await handleFiles(fileInput.files);
+    }
   });
-  ['dragenter','dragover'].forEach(ev=> fileDrop.addEventListener(ev, e=>{ e.preventDefault(); fileDrop.classList.add('drag'); }));
-  ['dragleave','drop'].forEach(ev=> fileDrop.addEventListener(ev, e=>{ e.preventDefault(); fileDrop.classList.remove('drag'); }));
-  fileDrop.addEventListener('drop', e=>{
-    if(e.dataTransfer.files.length){ fileInput.files = e.dataTransfer.files; fileInput.dispatchEvent(new Event('change')); }
+
+  ['dragenter','dragover'].forEach(ev => fileDrop.addEventListener(ev, e => { e.preventDefault(); fileDrop.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev => fileDrop.addEventListener(ev, e => { e.preventDefault(); fileDrop.classList.remove('drag'); }));
+  fileDrop.addEventListener('drop', async e => {
+    e.preventDefault();
+    if (e.dataTransfer.files?.length) {
+      await handleFiles(e.dataTransfer.files);
+    }
   });
 
   const detailMsg = document.getElementById('detailMsg');
@@ -408,7 +516,8 @@
         emailAddr: document.getElementById('emailAddr').value,
         profileUrl: document.getElementById('profileUrl').value,
         queryType: document.getElementById('queryType').value,
-        detailMsg: document.getElementById('detailMsg').value
+        detailMsg: document.getElementById('detailMsg').value,
+        images: attachedImages
       }
     }, '*');
   });

@@ -17,7 +17,6 @@ const steps = [
 ];
 
 export function WelcomeTour() {
-  const [showWelcome, setShowWelcome] = useState(false);
   const [tourActive, setTourActive] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [lbFilter, setLbFilter] = useState('');
@@ -27,54 +26,24 @@ export function WelcomeTour() {
 
   useEffect(() => {
     const handleCloseAll = () => {
-      if (showWelcome) setShowWelcome(false);
       if (tourActive) setTourActive(false);
     };
     window.addEventListener('close-all-modals', handleCloseAll);
     return () => window.removeEventListener('close-all-modals', handleCloseAll);
-  }, [showWelcome, tourActive]);
-
-  useEffect(() => {
-    const dismissedTime = localStorage.getItem('arcadeBuddyWelcomeDismissedTime');
-    const now = Date.now();
-    let shouldShow = true;
-    
-    if (dismissedTime) {
-      const timePassed = now - parseInt(dismissedTime, 10);
-      const daysPassed = timePassed / (1000 * 60 * 60 * 24);
-      if (daysPassed < 10) {
-        shouldShow = false;
-      }
-    }
-    
-    if (shouldShow) {
-      const timer = setTimeout(() => {
-        // Show entry welcome card modal first when user opens the website
-        setShowWelcome(true);
-      }, 800);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
-  const closeWelcome = () => {
-    setShowWelcome(false);
-  };
-
-  const dontShowAgain = () => {
-    localStorage.setItem('arcadeBuddyWelcomeDismissedTime', Date.now().toString());
-    closeWelcome();
-  };
+  }, [tourActive]);
 
   const startTour = () => {
-    closeWelcome();
     setTourActive(true);
     setCurrentStep(0);
   };
 
   const endTour = () => {
     setTourActive(false);
-    // When they finish or skip the tour, don't show it for 10 days
-    localStorage.setItem('arcadeBuddyWelcomeDismissedTime', Date.now().toString());
+    try {
+      localStorage.setItem('arcadeBuddyWelcomeDismissedTime', Date.now().toString());
+    } catch (e) {
+      // ignore
+    }
   };
 
   useEffect(() => {
@@ -198,88 +167,6 @@ export function WelcomeTour() {
       >
         <MessageCircle size={22} />
       </button>
-
-      {showWelcome && createPortal(
-        <div id="welcome" className="fixed inset-0 z-[700] flex items-start justify-center pt-10 px-4 overflow-y-auto" style={{ background: 'radial-gradient(1200px 600px at 50% -10%, rgba(26,115,232,.10), transparent 60%), rgba(20,22,26,.45)', backdropFilter: 'blur(6px)' }}>
-          <div className="relative w-full max-w-[432px] mx-auto bg-white rounded-[26px] shadow-[0_30px_80px_rgba(20,22,26,.35),_0_4px_14px_rgba(20,22,26,.08)] overflow-hidden text-left animate-[welcomeIn_0.5s_cubic-bezier(0.2,0.8,0.2,1)] mb-10">
-            <div className="h-[6px] w-full" style={{ background: 'linear-gradient(90deg,#1A73E8,#34A853,#FBBC04,#EA4335,#1A73E8)', backgroundSize: '200% 100%', animation: 'shimmer 5s linear infinite' }}></div>
-            <button onClick={closeWelcome} className="absolute top-4 right-4 btn-press btn-press--icon" style={{ width: '32px', height: '32px', background: 'var(--card)' }} aria-label="Close">✕</button>
-            <div className="pt-[26px] px-[28px] pb-[22px] max-sm:px-5">
-              
-              <div className="flex justify-center">
-                <svg className="w-[96px] h-[96px]" style={{ filter: 'drop-shadow(0 10px 18px rgba(26,115,232,.25))' }} viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="60" y="16" width="8" height="14" rx="4" fill="#5F6368"/>
-                  <circle cx="64" cy="12" r="6" style={{ animation: 'antennaPulse 1.8s ease-in-out infinite' }}/>
-                  <rect x="28" y="30" width="72" height="56" rx="22" fill="#1A73E8"/>
-                  <rect x="37" y="38" width="54" height="36" rx="15" fill="#E8F0FE"/>
-                  <ellipse cx="45" cy="64" rx="5" ry="3.5" fill="#FBBC04" opacity=".55"/>
-                  <ellipse cx="83" cy="64" rx="5" ry="3.5" fill="#FBBC04" opacity=".55"/>
-                  <g style={{ animation: 'blink 3.2s ease-in-out infinite', transformOrigin: 'center' }}><circle cx="53" cy="55" r="5.6" fill="#174EA6"/><circle cx="55" cy="53" r="1.6" fill="#fff"/></g>
-                  <g style={{ animation: 'blink 3.2s ease-in-out infinite', transformOrigin: 'center', animationDelay: '.15s' }}><circle cx="75" cy="55" r="5.6" fill="#174EA6"/><circle cx="77" cy="53" r="1.6" fill="#fff"/></g>
-                  <path d="M55 65 Q64 71 73 65" stroke="#174EA6" strokeWidth="2.8" fill="none" strokeLinecap="round"/>
-                  <rect x="38" y="88" width="52" height="30" rx="14" fill="#34A853"/>
-                  <circle cx="64" cy="103" r="6" fill="#fff" opacity=".85"/>
-                  <rect x="14" y="92" width="16" height="9" rx="4.5" fill="#EA4335"/>
-                  <g style={{ transformOrigin: '92px 94.5px', transformBox: 'view-box', animation: 'wave 1.2s ease-in-out infinite' }}>
-                    <rect x="92" y="90" width="18" height="9" rx="4.5" fill="#EA4335"/>
-                    <circle cx="108" cy="94.5" r="7.5" fill="#FBBC04"/>
-                  </g>
-                  <rect x="44" y="114" width="12" height="9" rx="4" fill="#5F6368"/>
-                  <rect x="72" y="114" width="12" height="9" rx="4" fill="#5F6368"/>
-                </svg>
-              </div>
-
-              <div className="flex justify-center mt-0.5">
-                <span className="inline-flex items-center gap-[6px] bg-[#E8F0FE] text-[#174EA6] font-display font-bold text-[11px] tracking-[0.04em] uppercase py-[7px] px-[14px] rounded-full">🤝 Facilitator-led community</span>
-              </div>
-
-              <div className="font-display font-bold text-[21px] leading-[1.28] mt-3 text-center text-[#202124]">
-                Hi, I'm your Arcade Buddy! 👋<br/>Let's <span className="text-transparent bg-clip-text" style={{ backgroundImage: 'linear-gradient(90deg,#1A73E8,#34A853)' }}>get you set up</span>.
-              </div>
-
-              <div className="mt-[22px] bg-[#F6F8FC] border border-[#DADCE0] rounded-[18px] p-[18px]">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#E9F9EF] flex items-center justify-center text-[19px] shrink-0">💬</div>
-                  <div>
-                    <div className="font-display font-bold text-[14.5px] text-[#202124]">Join the WhatsApp Community</div>
-                    <div className="mt-0.5 text-[12.5px] text-[#5F6368] leading-[1.5]">Updates, reminders, guidance, and participant discussions.</div>
-                    <div className="mt-[9px] inline-flex items-center gap-1.5 text-xs font-medium text-[#1A73E8]">👥 1000+ Members</div>
-                  </div>
-                </div>
-                <a href="https://whatsapp.com/channel/0029VbCahmFFCCoVQMV7ix1s" target="_blank" rel="noopener" className="btn-press btn-press--green mt-3.5 w-full flex justify-center py-[13px] font-bold text-[14.5px]">Join on WhatsApp</a>
-              </div>
-
-              <div className="mt-3 bg-[#F6F8FC] border border-[#DADCE0] rounded-[18px] py-[15px] px-4 flex items-center justify-between gap-3">
-                <div>
-                  <div className="font-display font-bold text-[13.5px] text-[#202124]">Prefer Telegram?</div>
-                  <div className="mt-[3px] text-xs text-[#5F6368] leading-[1.5]">Receive the same essential community updates.</div>
-                </div>
-                <a href="https://t.me/arcadebuddy" target="_blank" rel="noopener" className="btn-press btn-press--sm btn-press--secondary shrink-0 inline-flex items-center gap-[7px] whitespace-nowrap">
-                  <span className="w-5 h-5 rounded-full bg-[#229ED9] text-white flex items-center justify-center text-[11px]">➤</span>
-                  Join Telegram
-                </a>
-              </div>
-
-              <div className="mt-[22px]">
-                <button onClick={startTour} className="btn-press btn-press--primary w-full flex justify-center py-[14px] font-medium text-[14.5px]">🧭 Take the quick tour with me</button>
-              </div>
-
-              <div className="mt-5 text-center text-[12.5px] font-medium text-[#1A73E8]">
-                <a href="https://rsvp.withgoogle.com/events/arcade-facilitator/home">View official Facilitator '26 program details</a>
-              </div>
-              <div className="mt-1.5 text-center text-[11.5px] text-[#80868B] leading-[1.5]">
-                This is an independent facilitator-led community hub.<br/>Official program rules and updates are provided by Google.
-              </div>
-
-              <div className="mt-[18px] pt-4 border-t border-[#DADCE0] flex justify-between items-center">
-                <span onClick={closeWelcome} className="text-[12.5px] text-[#80868B] cursor-pointer hover:text-[#5F6368] hover:underline">Remind Me Later</span>
-                <span onClick={dontShowAgain} className="text-[12.5px] text-[#80868B] cursor-pointer hover:text-[#5F6368] hover:underline">Don't Show Again</span>
-              </div>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
 
       {tourActive && createPortal(
         <div id="tour-overlay" className="fixed inset-0 z-[500] block">
