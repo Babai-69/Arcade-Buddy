@@ -522,6 +522,72 @@ function DashboardContent({
   else if (totalPoints >= 75) currentTier = 'Ranger';
   else if (totalPoints >= 50) currentTier = 'Trooper';
 
+  // Determine user's League or Medal (Bronze, Silver, Gold, Diamond)
+  const profileLeague = useMemo(() => {
+    const raw = (data?.league || data?.leagueName || '').toLowerCase();
+    if (raw.includes('diamond')) return 'diamond';
+    if (raw.includes('gold')) return 'gold';
+    if (raw.includes('silver')) return 'silver';
+    if (raw.includes('bronze')) return 'bronze';
+
+    // Dynamic resolution based on verified badges count & arcade points:
+    const totalBadges = (data?.badges?.length || 0) || (gameBadgesCount + triviaBadgesCount + skillBadgesCount);
+    if (totalBadges >= 50 || totalPoints >= 60) return 'diamond';
+    if (totalBadges >= 25 || totalPoints >= 30) return 'gold';
+    if (totalBadges >= 10 || totalPoints >= 10) return 'silver';
+    return 'bronze';
+  }, [data?.league, data?.leagueName, data?.badges, gameBadgesCount, triviaBadgesCount, skillBadgesCount, totalPoints]);
+
+  const leagueConfig = useMemo(() => {
+    switch (profileLeague) {
+      case 'diamond':
+        return {
+          name: 'Diamond',
+          label: 'Diamond League',
+          emoji: '💎',
+          badgeBg: 'bg-gradient-to-br from-cyan-400 via-sky-300 to-blue-500 text-slate-950',
+          border: 'border-2 border-[var(--edge)]',
+          pillBg: 'bg-cyan-50 dark:bg-cyan-950/40 text-cyan-800 dark:text-cyan-300 border-cyan-300 dark:border-cyan-800',
+          shadow: 'shadow-[2px_2px_0_var(--edge)]',
+          avatarRing: 'ring-3 ring-cyan-400 dark:ring-cyan-500'
+        };
+      case 'gold':
+        return {
+          name: 'Gold',
+          label: 'Gold League',
+          emoji: '🥇',
+          badgeBg: 'bg-gradient-to-br from-amber-300 via-yellow-400 to-amber-500 text-slate-950',
+          border: 'border-2 border-[var(--edge)]',
+          pillBg: 'bg-amber-50 dark:bg-amber-950/40 text-amber-900 dark:text-amber-300 border-amber-300 dark:border-amber-800',
+          shadow: 'shadow-[2px_2px_0_var(--edge)]',
+          avatarRing: 'ring-3 ring-amber-400 dark:ring-amber-500'
+        };
+      case 'silver':
+        return {
+          name: 'Silver',
+          label: 'Silver League',
+          emoji: '🥈',
+          badgeBg: 'bg-gradient-to-br from-slate-200 via-gray-300 to-slate-400 text-slate-950',
+          border: 'border-2 border-[var(--edge)]',
+          pillBg: 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700',
+          shadow: 'shadow-[2px_2px_0_var(--edge)]',
+          avatarRing: 'ring-3 ring-slate-300 dark:ring-slate-500'
+        };
+      case 'bronze':
+      default:
+        return {
+          name: 'Bronze',
+          label: 'Bronze League',
+          emoji: '🥉',
+          badgeBg: 'bg-gradient-to-br from-amber-700 via-orange-600 to-amber-800 text-white',
+          border: 'border-2 border-[var(--edge)]',
+          pillBg: 'bg-orange-50 dark:bg-orange-950/40 text-orange-900 dark:text-orange-300 border-orange-300 dark:border-orange-800',
+          shadow: 'shadow-[2px_2px_0_var(--edge)]',
+          avatarRing: 'ring-3 ring-amber-600 dark:ring-amber-700'
+        };
+    }
+  }, [profileLeague]);
+
   return (
     <div className="dashboard-page-root min-h-screen pt-24 pb-20 px-4">
       {/* Google Fonts */}
@@ -634,17 +700,31 @@ function DashboardContent({
             </div>
             
             <div className="flex flex-col items-center pt-8 pb-7 px-6 bg-[var(--card)] flex-grow relative">
-              <div className="relative mb-4">
+              <div className="relative mb-3">
                 <img
                   src={data.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'User')}&background=random`}
                   alt={`${data.name || 'Participant'}'s avatar profile picture`}
-                  className="w-24 h-24 rounded-full border-3 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] object-cover bg-white"
+                  className={`w-24 h-24 rounded-full border-3 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] object-cover bg-white ${leagueConfig.avatarRing} transition-all duration-300`}
                   crossOrigin="anonymous"
                 />
-                <div className="absolute bottom-0 right-0 bg-[#FBBC05] text-slate-950 rounded-full w-7 h-7 border-2 border-[var(--edge)] flex items-center justify-center text-sm shadow-[2px_2px_0_var(--edge)] font-black">
-                  🥇
+                {/* CSS Selector 1: Medal / League Indicator (Bronze, Silver, Gold, Diamond) */}
+                <div
+                  className={`absolute bottom-0 right-0 ${leagueConfig.badgeBg} ${leagueConfig.border} ${leagueConfig.shadow} rounded-full w-8 h-8 flex items-center justify-center text-sm font-black transition-all duration-300 hover:scale-110 cursor-help`}
+                  title={`${leagueConfig.label} (Determined from Google Cloud Skills Boost profile)`}
+                  aria-label={`${leagueConfig.label} medal`}
+                >
+                  <span className="select-none">{leagueConfig.emoji}</span>
                 </div>
               </div>
+
+              {/* League Badge Pill */}
+              <div className="mb-2">
+                <span className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider border shadow-xs ${leagueConfig.pillBg} transition-all duration-300`}>
+                  <span>{leagueConfig.emoji}</span>
+                  <span>{leagueConfig.label}</span>
+                </span>
+              </div>
+
               <h2 className="text-2xl font-black font-display text-[var(--ink)] mb-6 text-center tracking-tight">{data.name || 'Student'}</h2>
               
               <div className="flex w-full max-w-[85%] mx-auto bg-[var(--bg)] rounded-2xl border-2 border-[var(--edge)] shadow-[3px_3px_0_var(--edge)] mb-6 overflow-hidden">

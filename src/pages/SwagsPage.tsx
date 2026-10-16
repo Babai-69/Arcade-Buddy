@@ -23,7 +23,7 @@ const SWAG_TIERS: SwagTier[] = [
     accent: "var(--b)",
     tagColor: "var(--b)",
     tagBg: "var(--t1)",
-    items: ["Official Google Cloud T-Shirt", "Arcade Sticker Pack", "Branded Pen & Notebook"]
+    items: ["The Arcade Travel Bottle", "Official Google Cloud T-Shirt", "Arcade Sticker Pack", "Branded Pen & Notebook"]
   },
   {
     name: "Arcade Ranger",
@@ -33,7 +33,7 @@ const SWAG_TIERS: SwagTier[] = [
     accent: "var(--gr)",
     tagColor: "var(--gr)",
     tagBg: "var(--t2)",
-    items: ["Weather-Resistant Backpack", "Stainless Steel Bottle", "Trooper Welcome Kit"]
+    items: ["Weather-Resistant Backpack", "The Arcade Travel Bottle", "Trooper Welcome Kit"]
   },
   {
     name: "Arcade Champion",
@@ -64,6 +64,7 @@ const SWAG_DROPS = [
     image: "/pop-up-pro.png",
     tiers: ["Champion", "Legend"],
     accent: "var(--b)",
+    shortDesc: "Multi-head fast charging cable, fidget click opener & hands-free phone stand.",
     specs: [
       { title: "Every connector you actually need", desc: "A tough braided USB-C to USB-C fast-charging cable, plus swappable adapters for Lightning, Micro-USB, and USB-A. Whatever port you run into, you’re covered." },
       { title: "Fidget-friendly click", desc: "It opens with a spring-loaded pop that is honestly just fun to click open and shut while you’re thinking through a problem." },
@@ -78,6 +79,7 @@ const SWAG_DROPS = [
     image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1789493091/ChatGPT_Image_Sep_15_2026_10_52_46_PM_gwx7aq.png",
     tiers: ["Champion", "Legend"],
     accent: "var(--y)",
+    shortDesc: "Windproof & water-repellent performance outer layer with Google Cloud detailing.",
     specs: [
       { title: "Storm-ready weave", desc: "Repels light rain and shuts down gusting winds before they hit your layer." },
       { title: "Official branding", desc: "Clean Google Cloud logo on the left chest paired with the super cloud logo on the sleeve." },
@@ -92,12 +94,28 @@ const SWAG_DROPS = [
     image: "https://res.cloudinary.com/dqj9yaa0g/image/upload/v1790234352/ChatGPT_Image_Sep_24_2026_12_44_20_PM_iss75e.png",
     tiers: ["Ranger"],
     accent: "var(--gr)",
+    shortDesc: "Water-resistant commuter backpack with padded 15.6\" laptop compartment.",
     specs: [
       { title: "Weather-resistant fabric", desc: "Water-resistant polyester protects gear from sudden drizzle and rain." },
       { title: "Padded laptop sleeve", desc: "Dedicated cushioned sleeve securely fits laptops up to 15.6 inches." },
       { title: "All-day comfort", desc: "Ergonomic shoulder straps and ventilated mesh back panel for effortless carry." },
       { title: "Room for essentials", desc: "Dual zip compartments plus quick-access exterior pocket for daily gear." },
       { title: "Clean styling", desc: "Modern black-and-grey color blocking with subtle Google Cloud accents." }
+    ]
+  },
+  {
+    id: 4,
+    name: "The Arcade Travel Bottle",
+    image: "/bottle.png",
+    tiers: ["Trooper", "Ranger"],
+    accent: "var(--b)",
+    shortDesc: "Sleek 5.5 cm stainless steel leak-proof travel flask for hot & cold hydration.",
+    specs: [
+      { title: "Slim, packable shape", desc: "Features a sleek 5.5 cm profile that slides right into backpack side pockets or car cup holders without taking up a ton of space." },
+      { title: "Durable stainless steel", desc: "Made with lightweight steel that can take a beating during your daily commute without adding heavy bulk." },
+      { title: "Zero leaks", desc: "Solid sealing rings keep your drink locked down tight, even if your bag ends up sideways on the floor." },
+      { title: "Hot and cold ready", desc: "Keeps your morning brew hot or your afternoon water ice-cold for hours on end." },
+      { title: "Quick to wash", desc: "Comes with a wide mouth so you can actually clean it out fast instead of making a chore out of it." }
     ]
   }
 ];
@@ -461,6 +479,34 @@ export function SwagsPage() {
           position: relative;
         }
 
+        .drops-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 20px;
+        }
+
+        .drop-card {
+          background: var(--card);
+          border: 1px solid var(--ln);
+          border-radius: 18px;
+          overflow: hidden;
+          transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+          display: flex;
+          flex-direction: column;
+          padding: 18px;
+        }
+        .drop-card:hover {
+          transform: translateY(-3px);
+          border-color: rgba(66, 133, 244, 0.4);
+          box-shadow: 0 16px 36px var(--sh);
+        }
+
+        @media (max-width: 960px) {
+          .drops-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 640px) {
+          .drops-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 900px) {
           .bento-card { grid-column: span 12 !important; }
           .path-grid { grid-template-columns: 1fr; }
@@ -627,48 +673,78 @@ export function SwagsPage() {
             </div>
           </div>
 
-          <div className="bento-grid">
+          <div className="drops-grid">
             {filteredDrops.map(drop => (
               <div
                 key={drop.id}
-                className="bento-card"
-                style={{
-                  gridColumn: filteredDrops.length >= 3 ? 'span 4' : filteredDrops.length === 2 ? 'span 6' : 'span 12',
-                  padding: '24px'
-                }}
+                className="drop-card"
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                  <div style={{ display: 'flex', gap: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px', gap: '8px' }}>
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', alignItems: 'center' }}>
                     {drop.tiers.map((t: string) => (
-                      <span key={t} className="bento-tag" style={{ color: drop.accent, borderColor: drop.accent }}>
-                        {t} Tier
+                      <span
+                        key={t}
+                        className="bento-tag"
+                        style={{
+                          color: drop.accent,
+                          borderColor: drop.accent,
+                          padding: '3px 8px',
+                          fontSize: '10.5px',
+                          letterSpacing: '0.04em'
+                        }}
+                      >
+                        {t}
                       </span>
                     ))}
                   </div>
                   <button
                     onClick={() => setSelectedDrop(drop)}
                     className="btn-ghost btn-press btn-press--secondary"
-                    style={{ padding: '6px 12px', fontSize: '11px' }}
+                    style={{ padding: '4px 10px', fontSize: '11px', minHeight: '30px', flexShrink: 0 }}
                   >
                     View Specs
                   </button>
                 </div>
 
-                <div style={{ height: '220px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--card)', borderRadius: '16px', padding: '16px', marginBottom: '16px' }}>
+                <div
+                  style={{
+                    height: '145px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'var(--pill)',
+                    borderRadius: '14px',
+                    padding: '10px',
+                    marginBottom: '12px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => setSelectedDrop(drop)}
+                  title="Click to view full specifications"
+                >
                   <img
                     src={drop.image}
                     alt={`${drop.name} - Official Google Cloud Arcade Reward`}
                     style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
                     loading="lazy"
+                    referrerPolicy="no-referrer"
                   />
                 </div>
 
-                <h3 style={{ fontSize: '19px', fontWeight: 700, color: 'var(--ink)', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '16.5px', fontWeight: 700, color: 'var(--ink)', marginBottom: '6px', lineHeight: 1.3 }}>
                   {drop.name}
                 </h3>
 
-                <p style={{ fontSize: '13.5px', color: 'var(--mut)', lineHeight: 1.55, margin: 0 }}>
-                  {drop.specs[0].desc}
+                <p style={{
+                  fontSize: '12.5px',
+                  color: 'var(--mut)',
+                  lineHeight: 1.5,
+                  margin: 0,
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  overflow: 'hidden'
+                }}>
+                  {drop.shortDesc || drop.specs[0].desc}
                 </p>
               </div>
             ))}
@@ -817,7 +893,7 @@ export function SwagsPage() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
                 <div>
                   <span className="bento-tag" style={{ color: selectedDrop.accent, borderColor: selectedDrop.accent, marginBottom: '6px', display: 'inline-block' }}>
-                    {selectedDrop.tiers.join(' & ')} Tier
+                    {selectedDrop.tiers.join(' & ')}
                   </span>
                   <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--ink)', margin: 0 }}>
                     {selectedDrop.name}
@@ -836,6 +912,7 @@ export function SwagsPage() {
                   src={selectedDrop.image}
                   alt={`${selectedDrop.name} - Detailed Product Preview`}
                   style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                  referrerPolicy="no-referrer"
                 />
               </div>
 

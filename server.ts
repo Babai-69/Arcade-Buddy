@@ -81,7 +81,7 @@ async function startServer() {
     res.setHeader('Cross-Origin-Embedder-Policy', 'unsafe-none');
     next();
   });
-  const PORT = Number(process.env.PORT) || 3000;
+  const PORT = process.env.NODE_ENV === 'production' && process.env.PORT ? Number(process.env.PORT) : 3000;
 
   app.set('trust proxy', 1);
 
@@ -791,6 +791,70 @@ app.post("/api/notify-query", async (req, res) => {
       // Determine avatar URL
       const avatarUrl = $("ql-avatar").attr("src") || "";
 
+      // Determine user's League or Medal (Bronze, Silver, Gold, Diamond)
+      let league: 'bronze' | 'silver' | 'gold' | 'diamond' = 'bronze';
+      let leagueName = 'Bronze League';
+
+      const lowerHtml = html.toLowerCase();
+
+      if (
+        lowerHtml.includes('diamond league') ||
+        lowerHtml.includes('diamond medal') ||
+        lowerHtml.includes('diamond-league') ||
+        $('[alt*="Diamond" i]').length > 0 ||
+        $('[title*="Diamond" i]').length > 0 ||
+        $('.diamond, .league-diamond').length > 0
+      ) {
+        league = 'diamond';
+        leagueName = 'Diamond League';
+      } else if (
+        lowerHtml.includes('gold league') ||
+        lowerHtml.includes('gold medal') ||
+        lowerHtml.includes('gold-league') ||
+        $('[alt*="Gold" i]').length > 0 ||
+        $('[title*="Gold" i]').length > 0 ||
+        $('.gold, .league-gold').length > 0
+      ) {
+        league = 'gold';
+        leagueName = 'Gold League';
+      } else if (
+        lowerHtml.includes('silver league') ||
+        lowerHtml.includes('silver medal') ||
+        lowerHtml.includes('silver-league') ||
+        $('[alt*="Silver" i]').length > 0 ||
+        $('[title*="Silver" i]').length > 0 ||
+        $('.silver, .league-silver').length > 0
+      ) {
+        league = 'silver';
+        leagueName = 'Silver League';
+      } else if (
+        lowerHtml.includes('bronze league') ||
+        lowerHtml.includes('bronze medal') ||
+        lowerHtml.includes('bronze-league') ||
+        $('[alt*="Bronze" i]').length > 0 ||
+        $('[title*="Bronze" i]').length > 0 ||
+        $('.bronze, .league-bronze').length > 0
+      ) {
+        league = 'bronze';
+        leagueName = 'Bronze League';
+      } else {
+        // Fallback: If not explicitly found in HTML strings, calculate from profile milestone & badges count
+        const totalCompletedBadges = badgesCount || (gameBadges + triviaBadges + specialBadges + skillBadges);
+        if (totalCompletedBadges >= 50 || arcadePoints >= 60) {
+          league = 'diamond';
+          leagueName = 'Diamond League';
+        } else if (totalCompletedBadges >= 25 || arcadePoints >= 30) {
+          league = 'gold';
+          leagueName = 'Gold League';
+        } else if (totalCompletedBadges >= 10 || arcadePoints >= 10) {
+          league = 'silver';
+          leagueName = 'Silver League';
+        } else {
+          league = 'bronze';
+          leagueName = 'Bronze League';
+        }
+      }
+
       res.json({
         name: profileName,
         avatarUrl,
@@ -801,6 +865,8 @@ app.post("/api/notify-query", async (req, res) => {
         skillBadges,
         facilitatorGameBadges,
         facilitatorSkillBadges,
+        league,
+        leagueName,
         badges: badgesList
       });
     } catch (e: any) {
@@ -1010,8 +1076,16 @@ Return the response in JSON format as an array of objects. Each object should ha
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  const server = app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
+  });
+
+  server.on('error', (err: any) => {
+    if (err.code === 'EADDRINUSE') {
+      console.warn(`Port ${PORT} in use, retrying...`);
+    } else {
+      console.error('Server listen error:', err);
+    }
   });
 }
 

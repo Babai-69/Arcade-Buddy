@@ -353,7 +353,7 @@ export const SWAG_TIER_METAS: SwagTierMeta[] = [
     milestonePoints: '50 PTS',
     accent: 'var(--b)',
     icon: 'game',
-    swagItems: 'Official T-Shirt, Stickers & Pen Pack',
+    swagItems: 'The Arcade Travel Bottle, Official T-Shirt & Stickers Pack',
     desc: 'Perfect milestone for beginners completing core labs and active arcade games.',
   },
   {
@@ -364,7 +364,7 @@ export const SWAG_TIER_METAS: SwagTierMeta[] = [
     milestonePoints: '75 PTS',
     accent: 'var(--gr)',
     icon: 'shield',
-    swagItems: 'Stainless Steel Bottle, Tote Bag & Laptop Sleeve',
+    swagItems: 'The Arcade Travel Bottle, Weather-Resistant Backpack & Swags',
     desc: 'Achieved by completing skill quests and cloud architecture scenarios.',
   },
   {

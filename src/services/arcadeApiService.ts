@@ -22,6 +22,8 @@ export interface ArcadeCalculatorResponse {
   facilitatorGameBadges: number;
   facilitatorSkillBadges: number;
   milestoneEarned?: string;
+  league?: 'bronze' | 'silver' | 'gold' | 'diamond' | string;
+  leagueName?: string;
   badges: ArcadeBadge[];
   error?: string;
 }

@@ -221,8 +221,8 @@ const COMMUNITY_BADGE_SOLUTIONS: BadgeSolutionInfo[] = [
     courseUrl: 'https://www.skills.google/course_templates/959',
     type: 'Skill Badge',
     credits: 16,
-    isAvailable: false,
-    notes: 'Solution available soon'
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/Explore%20Generative%20AI%20with%20the%20Gemini%20API%20in%20Vertex%20AI%3A%20Challenge%20Lab/GSP515.md',
+    isAvailable: true
   }
 ];
 
