@@ -52,12 +52,14 @@ export function AppModals() {
     }
   };
 
-  const handleWelcomeDismiss = () => {
+  const handleWelcomeDismiss = (markAsSeen: boolean = true) => {
     setShowWelcome(false);
-    try {
-      localStorage.setItem('arcade_welcome_modal_seen', 'true');
-    } catch (e) {
-      console.warn('Could not update localStorage', e);
+    if (markAsSeen) {
+      try {
+        localStorage.setItem('arcade_welcome_modal_seen', 'true');
+      } catch (e) {
+        console.warn('Could not update localStorage', e);
+      }
     }
   };
 

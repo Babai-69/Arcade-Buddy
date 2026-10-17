@@ -40,7 +40,7 @@ export function ArcadeInsiderModal({ onDismiss }: ArcadeInsiderModalProps) {
       aria-labelledby="insider-modal-title"
     >
       <div
-        className="relative w-full max-w-lg bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-900 dark:border-slate-700 shadow-[8px_8px_0_#1a73e8] overflow-hidden p-6 sm:p-8 text-left"
+        className="relative w-full max-w-lg max-h-[92vh] overflow-y-auto bg-white dark:bg-slate-900 rounded-3xl border-2 border-slate-900 dark:border-slate-700 shadow-[5px_5px_0_#1a73e8] sm:shadow-[8px_8px_0_#1a73e8] p-5 sm:p-8 text-left"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top colored accent strip */}

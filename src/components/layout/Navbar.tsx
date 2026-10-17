@@ -51,7 +51,7 @@ export function Navbar() {
       <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center relative">
           {/* Logo - Left */}
-          <Link to="/" className="flex items-center gap-2.5 z-10 w-[200px] select-none group">
+          <Link to="/" className="flex items-center gap-2.5 z-10 w-auto sm:w-[200px] shrink-0 select-none group">
             <img
               src={brandLogo}
               alt="Arcade Buddy"
@@ -119,7 +119,7 @@ export function Navbar() {
           </div>
 
           {/* Mobile Actions */}
-          <div className="md:hidden flex items-center gap-2 z-10">
+          <div className="md:hidden flex items-center gap-1.5 sm:gap-2 z-10 shrink-0">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="btn-press btn-press--icon shrink-0 !rounded-full aspect-square"

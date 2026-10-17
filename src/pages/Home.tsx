@@ -2423,6 +2423,21 @@ export function Home({ participants }: { participants?: any[] }) {
           .stat-note { margin-left: 0; }
         }
 
+        @media(max-width: 640px) {
+          .home-wrap { padding: 0 16px; }
+          .hero-shot { transform: none !important; margin-top: 16px; max-width: 100%; }
+          .hero-btn-explore,
+          .hero-btn-leaderboard {
+            width: 100%;
+            justify-content: center;
+            box-sizing: border-box;
+          }
+          .cd-boxes-grid { gap: 6px; }
+          .cd-stat-card { padding: 8px 2px 6px; }
+          .cd-stat-val { font-size: 20px; }
+          .hero-panel { padding: 16px 14px 14px; }
+        }
+
         @media(max-width: 560px) {
           .spots-track-grid,
           .path-grid,
@@ -2467,12 +2482,12 @@ export function Home({ participants }: { participants?: any[] }) {
 
             {/* Word-by-word Reveal H1 - Master Cloud Skills in 1 line */}
             <h1 className="home-h1">
-              <span className="block whitespace-nowrap">
+              <span className="block whitespace-normal sm:whitespace-nowrap">
                 <span className="w" style={{ animationDelay: '0.05s' }}>Master</span>{' '}
                 <span className="w" style={{ animationDelay: '0.12s' }}>Cloud</span>{' '}
                 <span className="w" style={{ animationDelay: '0.19s' }}>Skills.</span>
               </span>
-              <span className="block whitespace-nowrap">
+              <span className="block whitespace-normal sm:whitespace-nowrap">
                 <span className="w gt" style={{ animationDelay: '0.30s' }}>Track</span>{' '}
                 <span className="w gt" style={{ animationDelay: '0.37s' }}>Arcade</span>{' '}
                 <span className="w gt" style={{ animationDelay: '0.44s' }}>Rewards.</span>
@@ -3060,21 +3075,21 @@ export function Home({ participants }: { participants?: any[] }) {
             onMouseLeave={handleLeaderboardMouseLeave}
           >
             {/* Visual Podium: 5 Bars (4th, 2nd, 1st, 3rd, 5th) */}
-            <div className="pt-2 pb-4 px-1 sm:px-4">
-              <div className="relative flex justify-center items-end gap-2 sm:gap-4 md:gap-6 mx-auto pt-6 min-h-[310px] sm:min-h-[350px] max-w-3xl">
+            <div className="pt-2 pb-4 px-1 sm:px-4 overflow-x-auto no-scrollbar">
+              <div className="relative flex justify-center items-end gap-1.5 sm:gap-4 md:gap-6 mx-auto pt-6 min-h-[310px] sm:min-h-[350px] max-w-3xl min-w-[314px]">
                 {/* 4th Place: Subrat Kumar Mohanty */}
-                <div className="podium-col podium-col-4 flex flex-col items-center justify-end w-[64px] sm:w-[96px] md:w-[124px] group transition-transform hover:-translate-y-1">
+                <div className="podium-col podium-col-4 flex flex-col items-center justify-end w-[54px] sm:w-[96px] md:w-[124px] group transition-transform hover:-translate-y-1">
                   <div className="flex flex-col items-center justify-center mb-2.5 z-10 w-full text-center">
                     <div
-                      className="w-11 h-11 sm:w-14 sm:h-14 md:w-15 md:h-15 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-base shadow-md mb-1.5 border-2 border-cyan-300 dark:border-cyan-500/50"
+                      className="w-10 h-10 sm:w-14 sm:h-14 md:w-15 md:h-15 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-base shadow-md mb-1.5 border-2 border-cyan-300 dark:border-cyan-500/50"
                       style={{ background: top4.avatarBg || '#06B6D4' }}
                     >
                       {top4.initials || 'SM'}
                     </div>
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[10px] sm:text-xs md:text-sm capitalize truncate w-full px-0.5">
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[9px] sm:text-xs md:text-sm capitalize truncate w-full px-0.5">
                       {top4.name}
                     </span>
-                    <div className="mt-1 px-2 py-0.5 rounded-full font-semibold text-[9px] sm:text-[11px] bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 whitespace-nowrap shadow-xs">
+                    <div className="mt-1 px-1.5 sm:px-2 py-0.5 rounded-full font-semibold text-[8px] sm:text-[11px] bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 whitespace-nowrap shadow-xs">
                       {formatPts(p4Count)}
                     </div>
                   </div>
@@ -3086,18 +3101,18 @@ export function Home({ participants }: { participants?: any[] }) {
                 </div>
 
                 {/* 2nd Place: Bhaswati Mondal */}
-                <div className="podium-col podium-col-2 flex flex-col items-center justify-end w-[68px] sm:w-[104px] md:w-[136px] group transition-transform hover:-translate-y-1">
+                <div className="podium-col podium-col-2 flex flex-col items-center justify-end w-[58px] sm:w-[104px] md:w-[136px] group transition-transform hover:-translate-y-1">
                   <div className="flex flex-col items-center justify-center mb-2.5 z-10 w-full text-center">
                     <div
-                      className="w-12 h-12 sm:w-15 sm:h-15 md:w-17 md:h-17 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg shadow-md mb-1.5 border-2 border-purple-300 dark:border-purple-500/50"
+                      className="w-11 h-11 sm:w-15 sm:h-15 md:w-17 md:h-17 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-lg shadow-md mb-1.5 border-2 border-purple-300 dark:border-purple-500/50"
                       style={{ background: top2.avatarBg || '#7C3AED' }}
                     >
                       {top2.initials || 'BM'}
                     </div>
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[10px] sm:text-xs md:text-sm capitalize truncate w-full px-0.5">
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[9px] sm:text-xs md:text-sm capitalize truncate w-full px-0.5">
                       {top2.name}
                     </span>
-                    <div className="mt-1 px-2 py-0.5 rounded-full font-semibold text-[9px] sm:text-[11px] bg-[#F5F3FF] text-[#7C3AED] border border-[#DDD6FE] dark:bg-[#2e264d] dark:text-[#DDD6FE] dark:border-[#5b4d99] whitespace-nowrap shadow-xs">
+                    <div className="mt-1 px-1.5 sm:px-2 py-0.5 rounded-full font-semibold text-[8px] sm:text-[11px] bg-[#F5F3FF] text-[#7C3AED] border border-[#DDD6FE] dark:bg-[#2e264d] dark:text-[#DDD6FE] dark:border-[#5b4d99] whitespace-nowrap shadow-xs">
                       {formatPts(p2Count)}
                     </div>
                   </div>
@@ -3109,21 +3124,21 @@ export function Home({ participants }: { participants?: any[] }) {
                 </div>
 
                 {/* 1st Place: Pranjal (Center, Tallest, Crown) */}
-                <div className="podium-col podium-col-1 flex flex-col items-center justify-end w-[76px] sm:w-[118px] md:w-[152px] group transition-transform hover:-translate-y-1 z-10">
+                <div className="podium-col podium-col-1 flex flex-col items-center justify-end w-[66px] sm:w-[118px] md:w-[152px] group transition-transform hover:-translate-y-1 z-10">
                   <div className="flex flex-col items-center justify-center mb-2.5 z-10 w-full text-center relative">
                     <div className="text-amber-500 mb-0.5 animate-bounce" style={{ animationDuration: '3s' }}>
-                      <SvgIcon name="crown" className="w-6 h-6 sm:w-7 sm:h-7 mx-auto" />
+                      <SvgIcon name="crown" className="w-5 h-5 sm:w-7 sm:h-7 mx-auto" />
                     </div>
                     <div
-                      className="w-14 h-14 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white font-black text-base sm:text-xl md:text-2xl shadow-xl mb-1.5 border-3 border-amber-300 dark:border-amber-400"
+                      className="w-13 h-13 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white font-black text-sm sm:text-xl md:text-2xl shadow-xl mb-1.5 border-3 border-amber-300 dark:border-amber-400"
                       style={{ background: top1.avatarBg || '#EA580C' }}
                     >
                       {top1.initials || 'PR'}
                     </div>
-                    <span className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm md:text-base capitalize truncate w-full px-0.5">
+                    <span className="font-bold text-slate-900 dark:text-white text-[11px] sm:text-sm md:text-base capitalize truncate w-full px-0.5">
                       {top1.name}
                     </span>
-                    <div className="mt-1 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full font-bold text-[10px] sm:text-xs bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md whitespace-nowrap">
+                    <div className="mt-1 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-bold text-[9px] sm:text-xs bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-md whitespace-nowrap">
                       {formatPts(p1Count)}
                     </div>
                   </div>
@@ -3135,18 +3150,18 @@ export function Home({ participants }: { participants?: any[] }) {
                 </div>
 
                 {/* 3rd Place: Debayan Karar */}
-                <div className="podium-col podium-col-3 flex flex-col items-center justify-end w-[68px] sm:w-[104px] md:w-[136px] group transition-transform hover:-translate-y-1">
+                <div className="podium-col podium-col-3 flex flex-col items-center justify-end w-[58px] sm:w-[104px] md:w-[136px] group transition-transform hover:-translate-y-1">
                   <div className="flex flex-col items-center justify-center mb-2.5 z-10 w-full text-center">
                     <div
-                      className="w-12 h-12 sm:w-15 sm:h-15 md:w-17 md:h-17 rounded-full flex items-center justify-center text-white font-bold text-sm sm:text-lg shadow-md mb-1.5 border-2 border-amber-200 dark:border-amber-600/50"
+                      className="w-11 h-11 sm:w-15 sm:h-15 md:w-17 md:h-17 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-lg shadow-md mb-1.5 border-2 border-amber-200 dark:border-amber-600/50"
                       style={{ background: top3.avatarBg || '#F59E0B' }}
                     >
                       {top3.initials || 'DK'}
                     </div>
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[10px] sm:text-xs md:text-sm capitalize truncate w-full px-0.5">
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[9px] sm:text-xs md:text-sm capitalize truncate w-full px-0.5">
                       {top3.name}
                     </span>
-                    <div className="mt-1 px-2 py-0.5 rounded-full font-semibold text-[9px] sm:text-[11px] bg-[#FFFBEB] text-[#D97706] border border-[#FEF08A] dark:bg-[#433716] dark:text-[#FEF08A] dark:border-[#85712c] whitespace-nowrap shadow-xs">
+                    <div className="mt-1 px-1.5 sm:px-2 py-0.5 rounded-full font-semibold text-[8px] sm:text-[11px] bg-[#FFFBEB] text-[#D97706] border border-[#FEF08A] dark:bg-[#433716] dark:text-[#FEF08A] dark:border-[#85712c] whitespace-nowrap shadow-xs">
                       {formatPts(p3Count)}
                     </div>
                   </div>
@@ -3158,18 +3173,18 @@ export function Home({ participants }: { participants?: any[] }) {
                 </div>
 
                 {/* 5th Place: Anick Roy */}
-                <div className="podium-col podium-col-5 flex flex-col items-center justify-end w-[64px] sm:w-[96px] md:w-[124px] group transition-transform hover:-translate-y-1">
+                <div className="podium-col podium-col-5 flex flex-col items-center justify-end w-[54px] sm:w-[96px] md:w-[124px] group transition-transform hover:-translate-y-1">
                   <div className="flex flex-col items-center justify-center mb-2.5 z-10 w-full text-center">
                     <div
-                      className="w-11 h-11 sm:w-14 sm:h-14 md:w-15 md:h-15 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-base shadow-md mb-1.5 border-2 border-slate-300 dark:border-slate-600"
+                      className="w-10 h-10 sm:w-14 sm:h-14 md:w-15 md:h-15 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-base shadow-md mb-1.5 border-2 border-slate-300 dark:border-slate-600"
                       style={{ background: top5.avatarBg || '#5A6B82' }}
                     >
                       {top5.initials || 'AR'}
                     </div>
-                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[10px] sm:text-xs md:text-sm capitalize truncate w-full px-0.5">
+                    <span className="font-bold text-slate-800 dark:text-slate-100 text-[9px] sm:text-xs md:text-sm capitalize truncate w-full px-0.5">
                       {top5.name}
                     </span>
-                    <div className="mt-1 px-2 py-0.5 rounded-full font-semibold text-[9px] sm:text-[11px] bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 whitespace-nowrap shadow-xs">
+                    <div className="mt-1 px-1.5 sm:px-2 py-0.5 rounded-full font-semibold text-[8px] sm:text-[11px] bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 whitespace-nowrap shadow-xs">
                       {formatPts(p5Count)}
                     </div>
                   </div>

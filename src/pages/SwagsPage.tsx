@@ -505,7 +505,10 @@ export function SwagsPage() {
           .drops-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
         @media (max-width: 640px) {
+          .swags-wrap { padding: 0 16px; }
           .drops-grid { grid-template-columns: 1fr; }
+          .bento-card { padding: 16px !important; }
+          .drop-card { padding: 16px !important; }
         }
         @media (max-width: 900px) {
           .bento-card { grid-column: span 12 !important; }
