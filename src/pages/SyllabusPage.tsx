@@ -189,44 +189,44 @@ const SEPTEMBER_GAMES: GameItem[] = [
 const OCTOBER_GAMES: GameItem[] = [
   {
     title: "Trick-or-Metric",
-    img: "https://services.google.com/fh/files/events/gcaf26_trick_or_metric_oct.png",
+    img: "https://cdn.qwiklabs.com/egGXB2O1a%2FE9AyKSEhqR6VT%2B2q2IYzRUVpnKq01t8Vs%3D",
     code: "1q-spooky-33057",
-    link: "https://www.skills.google/games/7488?utm_source=googleskills&utm_medium=lp&utm_campaign=trick-or-metric-Oct-arcade26",
+    link: "https://www.skills.google/games/7501?utm_source=googleskills&utm_medium=lp&utm_campaign=trick-or-metric-Oct-arcade26",
     month: "October"
   },
   {
     title: "Arcade Simulator: Site Reliability Engineer",
-    img: "https://services.google.com/fh/files/events/gcaf26_arcade_sim_oct.png",
+    img: "https://cdn.qwiklabs.com/L1FH5LXPUmyNNjsh0wi7dvLLkEDrUKFi3eCr19ACahk%3D",
     code: "1q-reliability-21924",
-    link: "https://www.skills.google/games/7485?utm_source=googleskills&utm_medium=lp&utm_campaign=spegame-Oct-arcade26",
+    link: "https://www.skills.google/games/7500?utm_source=googleskills&utm_medium=lp&utm_campaign=spegame-Oct-arcade26",
     month: "October"
   },
   {
     title: "Arcade Base Camp October 2026",
-    img: "https://services.google.com/fh/files/events/gcaf26_basecamp_oct.png",
+    img: "https://cdn.qwiklabs.com/XX6TBY4WGw0qTQBzPkf5z8hpAPsIOfDbwNPwHp3LR%2FY%3D",
     code: "1q-basecamp-61332",
-    link: "https://www.skills.google/games/7484?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Oct-arcade26",
+    link: "https://www.skills.google/games/7499?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Oct-arcade26",
     month: "October"
   },
   {
     title: "Arcade Adventure: Google Cloud ML APIs",
-    img: "https://services.google.com/fh/files/events/gcaf26_adventure_oct.png",
+    img: "https://cdn.qwiklabs.com/mkoIY%2BWP3AjkE2pV28nDchQkvg3VDSxJ2Maf%2FEheDVc%3D",
     code: "1q-endpoint-01297",
-    link: "https://www.skills.google/games/7481?utm_source=qwiklabs&utm_medium=lp&utm_campaign=adv-Oct-arcade26",
+    link: "https://www.skills.google/games/7496?utm_source=qwiklabs&utm_medium=lp&utm_campaign=adv-Oct-arcade26",
     month: "October"
   },
   {
     title: "Arcade Voyage: Language, Voice, and Multimodal Processing",
-    img: "https://services.google.com/fh/files/events/gcaf26_voyage_oct.png",
+    img: "https://cdn.qwiklabs.com/Jd67MBegBqwMu3lOagKDHP0%2F9%2F%2FTPrS%2BVuLObJE63kc%3D",
     code: "1q-synthesis-10713",
-    link: "https://www.skills.google/games/7482?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Oct-arcade26",
+    link: "https://www.skills.google/games/7497?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Oct-arcade26",
     month: "October"
   },
   {
     title: "Arcade Trail: Containers & Load Balancing",
-    img: "https://services.google.com/fh/files/events/gcaf26_trail_oct.png",
+    img: "https://cdn.qwiklabs.com/hFJgxpXlvVjsfaiyu4L9VUhfwA169ubJBgyd76uAj%2Bg%3D",
     code: "1q-package-53921",
-    link: "https://www.skills.google/games/7483?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Oct-arcade26",
+    link: "https://www.skills.google/games/7498?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Oct-arcade26",
     month: "October"
   }
 ];
@@ -823,8 +823,13 @@ export function SyllabusPage() {
                       src={game.img}
                       alt={`${game.title} - Arcade game badge preview`}
                       style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = "https://cdn.qwiklabs.com/4U2vlpzq9reboYn5uEz23BcGACB2gzE7LYgjWcLnMj4%3D";
+                        const target = e.target as HTMLImageElement;
+                        if (!target.dataset.failed) {
+                          target.dataset.failed = 'true';
+                          target.src = "https://services.google.com/fh/files/misc/arcbc-oct.png";
+                        }
                       }}
                       loading="lazy"
                     />
@@ -834,17 +839,19 @@ export function SyllabusPage() {
                     {game.title}
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid var(--ln)', gap: '8px', flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--mut)', background: 'var(--bg)', padding: '4px 8px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
+                  <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid var(--ln)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: 'var(--mut)', background: 'var(--bg)', padding: '5px 9px', borderRadius: '7px', border: '1px solid var(--ln)', flex: 1, minWidth: 0 }}>
                         <Lock style={{ width: '12px', height: '12px', flexShrink: 0, color: '#10B981' }} />
-                        <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--ink)' }}>{game.code}</span>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--ink)', fontSize: '11.5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {game.code}
+                        </span>
                       </div>
                       {game.code && game.code !== 'LOCKED' && (
                         <button
                           onClick={() => handleCopyCode(game.code, `oct-${idx}`)}
                           className="btn-ghost"
-                          style={{ padding: '4px 7px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '3px', borderRadius: '6px', cursor: 'pointer' }}
+                          style={{ padding: '5px 9px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '7px', cursor: 'pointer', flexShrink: 0 }}
                           title="Copy access code"
                         >
                           {copiedCodeId === `oct-${idx}` ? (
@@ -853,7 +860,10 @@ export function SyllabusPage() {
                               <span style={{ color: '#10B981', fontSize: '10px', fontWeight: 700 }}>Copied</span>
                             </>
                           ) : (
-                            <Copy style={{ width: '12px', height: '12px' }} />
+                            <>
+                              <Copy style={{ width: '12px', height: '12px' }} />
+                              <span style={{ fontSize: '10px', fontWeight: 600 }}>Copy</span>
+                            </>
                           )}
                         </button>
                       )}
@@ -864,7 +874,7 @@ export function SyllabusPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-ghost btn-press btn-press--secondary"
-                      style={{ padding: '6px 12px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                      style={{ width: '100%', justifyContent: 'center', padding: '7px 12px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '6px', borderRadius: '8px', fontWeight: 600 }}
                     >
                       Play Game <ExternalLink style={{ width: '12px', height: '12px' }} />
                     </a>
@@ -1019,8 +1029,13 @@ export function SyllabusPage() {
                       src={game.img}
                       alt={`${game.title} - Arcade game badge preview`}
                       style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                      referrerPolicy="no-referrer"
                       onError={(e) => {
-                        (e.target as HTMLImageElement).src = "https://cdn.qwiklabs.com/4U2vlpzq9reboYn5uEz23BcGACB2gzE7LYgjWcLnMj4%3D";
+                        const target = e.target as HTMLImageElement;
+                        if (!target.dataset.failed) {
+                          target.dataset.failed = 'true';
+                          target.src = "https://cdn.qwiklabs.com/4U2vlpzq9reboYn5uEz23BcGACB2gzE7LYgjWcLnMj4%3D";
+                        }
                       }}
                       loading="lazy"
                     />
@@ -1030,17 +1045,17 @@ export function SyllabusPage() {
                     {game.title}
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid var(--ln)', gap: '8px', flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '11px', color: 'var(--mut)', background: 'var(--bg)', padding: '4px 8px', borderRadius: '6px', border: '1px solid var(--ln)' }}>
+                  <div style={{ marginTop: 'auto', paddingTop: '12px', borderTop: '1px solid var(--ln)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '11px', color: 'var(--mut)', background: 'var(--bg)', padding: '5px 9px', borderRadius: '7px', border: '1px solid var(--ln)', flex: 1, minWidth: 0 }}>
                         <Lock style={{ width: '12px', height: '12px', flexShrink: 0 }} />
-                        <span style={{ fontFamily: 'monospace', fontWeight: 600 }}>{game.code}</span>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 600, fontSize: '11.5px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{game.code}</span>
                       </div>
                       {game.code && game.code !== 'LOCKED' && (
                         <button
                           onClick={() => handleCopyCode(game.code, `past-${game.month}-${idx}`)}
                           className="btn-ghost"
-                          style={{ padding: '4px 7px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '3px', borderRadius: '6px', cursor: 'pointer' }}
+                          style={{ padding: '5px 9px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px', borderRadius: '7px', cursor: 'pointer', flexShrink: 0 }}
                           title="Copy access code"
                         >
                           {copiedCodeId === `past-${game.month}-${idx}` ? (
@@ -1049,7 +1064,10 @@ export function SyllabusPage() {
                               <span style={{ color: '#10B981', fontSize: '10px', fontWeight: 700 }}>Copied</span>
                             </>
                           ) : (
-                            <Copy style={{ width: '12px', height: '12px' }} />
+                            <>
+                              <Copy style={{ width: '12px', height: '12px' }} />
+                              <span style={{ fontSize: '10px', fontWeight: 600 }}>Copy</span>
+                            </>
                           )}
                         </button>
                       )}
@@ -1060,7 +1078,7 @@ export function SyllabusPage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn-ghost btn-press btn-press--secondary"
-                      style={{ padding: '6px 12px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                      style={{ width: '100%', justifyContent: 'center', padding: '7px 12px', fontSize: '12px', display: 'inline-flex', alignItems: 'center', gap: '6px', borderRadius: '8px', fontWeight: 600 }}
                     >
                       Play Game <ExternalLink style={{ width: '12px', height: '12px' }} />
                     </a>

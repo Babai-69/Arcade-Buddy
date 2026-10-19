@@ -7,6 +7,7 @@ import { RECOMMENDED_LABS } from '../data/roadmapData';
 import { SKILL_BADGES } from '../data/skillBadges';
 import { AnimatedNumber } from '../components/AnimatedNumber';
 import { AnimatedTimer } from '../components/AnimatedTimer';
+import { CohortLockedOverlay } from '../components/CohortLockedOverlay';
 
 const TIERS = [
   { name: 'No Tier', min: 0, max: 49.5 },
@@ -119,17 +120,24 @@ const WeeklyPlan = ({ gamesNeeded, skillsNeeded }: { gamesNeeded: number, skills
 export function RoadmapPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const participant = location.state?.participant as Participant;
-
-  useEffect(() => {
-    if (!participant) {
-      navigate('/calculator');
-    }
-  }, [participant, navigate]);
-
-  if (!participant) {
-    return null;
-  }
+  const rawParticipant = location.state?.participant as Participant | undefined;
+  const participant: Participant = rawParticipant || {
+    id: 'demo-learner',
+    name: 'Learner',
+    email: 'learner@googlecloud.arcade',
+    profileUrl: 'https://www.skills.google/public_profiles/sample',
+    arcadePoints: 32,
+    gameBadges: 4,
+    skillBadges: 24,
+    triviaBadges: 4,
+    milestoneEarned: 'Milestone 1',
+    dailyPoints: 0,
+    totalPoints: 32,
+    lastUpdated: new Date().toISOString(),
+    previousRank: 10,
+    currentRank: 8,
+    badges: []
+  };
 
   const { arcadePoints, gameBadges, skillBadges, name } = participant;
   const currentTotal = arcadePoints; // Total Arcade Score
@@ -246,8 +254,13 @@ export function RoadmapPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030509] text-[#EAEEF7] font-sans selection:bg-[#5B8DEF] selection:text-[#04070d] overflow-x-hidden">
-      <RoadmapGlobe />
+    <CohortLockedOverlay
+      title="AI-Powered Personalized Roadmap"
+      subtitle="The personalized study roadmap engine is currently locked in preparation for the upcoming Google Cloud Arcade Facilitator cohort. Only administrators can access this section during staging."
+      cohortTag="Upcoming Cohort • Staging Locked"
+    >
+      <div className="min-h-screen bg-[#030509] text-[#EAEEF7] font-sans selection:bg-[#5B8DEF] selection:text-[#04070d] overflow-x-hidden">
+        <RoadmapGlobe />
       
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-6 py-6 sm:px-14 sm:py-7 bg-[#04060b]/70 backdrop-blur-md border-b border-white/10 transition-all">
@@ -407,6 +420,7 @@ export function RoadmapPage() {
         <a href="#top" className="hover:text-white transition-colors">Back to top ↑</a>
       </footer>
 
-    </div>
+      </div>
+    </CohortLockedOverlay>
   );
 }

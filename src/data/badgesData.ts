@@ -1,33 +1,33 @@
 export const gameBadges = [
   {
     "name": "Trick-or-Metric",
-    "image": "https://services.google.com/fh/files/events/gcaf26_trick_or_metric_oct.png",
-    "link": "https://www.skills.google/games/7488?utm_source=googleskills&utm_medium=lp&utm_campaign=trick-or-metric-Oct-arcade26"
+    "image": "https://cdn.qwiklabs.com/egGXB2O1a%2FE9AyKSEhqR6VT%2B2q2IYzRUVpnKq01t8Vs%3D",
+    "link": "https://www.skills.google/games/7501?utm_source=googleskills&utm_medium=lp&utm_campaign=Special-oct-arcade26"
   },
   {
     "name": "Arcade Simulator: Site Reliability Engineer",
-    "image": "https://services.google.com/fh/files/events/gcaf26_arcade_sim_oct.png",
-    "link": "https://www.skills.google/games/7485?utm_source=googleskills&utm_medium=lp&utm_campaign=spegame-Oct-arcade26"
+    "image": "https://cdn.qwiklabs.com/L1FH5LXPUmyNNjsh0wi7dvLLkEDrUKFi3eCr19ACahk%3D",
+    "link": "https://www.skills.google/games/7500?utm_source=googleskills&utm_medium=lp&utm_campaign=spegame-Oct-arcade26"
   },
   {
     "name": "Arcade Base Camp October 2026",
-    "image": "https://services.google.com/fh/files/events/gcaf26_basecamp_oct.png",
-    "link": "https://www.skills.google/games/7484?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Oct-arcade26"
+    "image": "https://cdn.qwiklabs.com/XX6TBY4WGw0qTQBzPkf5z8hpAPsIOfDbwNPwHp3LR%2FY%3D",
+    "link": "https://www.skills.google/games/7499?utm_source=googleskills&utm_medium=lp&utm_campaign=basecamp-Oct-arcade26"
   },
   {
     "name": "Arcade Adventure: Google Cloud ML APIs",
-    "image": "https://services.google.com/fh/files/events/gcaf26_adventure_oct.png",
-    "link": "https://www.skills.google/games/7481?utm_source=qwiklabs&utm_medium=lp&utm_campaign=adv-Oct-arcade26"
+    "image": "https://cdn.qwiklabs.com/mkoIY%2BWP3AjkE2pV28nDchQkvg3VDSxJ2Maf%2FEheDVc%3D",
+    "link": "https://www.skills.google/games/7496?utm_source=qwiklabs&utm_medium=lp&utm_campaign=adv-Oct-arcade26"
   },
   {
     "name": "Arcade Voyage: Language, Voice, and Multimodal Processing",
-    "image": "https://services.google.com/fh/files/events/gcaf26_voyage_oct.png",
-    "link": "https://www.skills.google/games/7482?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Oct-arcade26"
+    "image": "https://cdn.qwiklabs.com/Jd67MBegBqwMu3lOagKDHP0%2F9%2F%2FTPrS%2BVuLObJE63kc%3D",
+    "link": "https://www.skills.google/games/7497?utm_source=googleskills&utm_medium=lp&utm_campaign=voyage-Oct-arcade26"
   },
   {
     "name": "Arcade Trail: Containers & Load Balancing",
-    "image": "https://services.google.com/fh/files/events/gcaf26_trail_oct.png",
-    "link": "https://www.skills.google/games/7483?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Oct-arcade26"
+    "image": "https://cdn.qwiklabs.com/hFJgxpXlvVjsfaiyu4L9VUhfwA169ubJBgyd76uAj%2Bg%3D",
+    "link": "https://www.skills.google/games/7498?utm_source=googleskills&utm_medium=lp&utm_campaign=trail-Oct-arcade26"
   },
   {
     "name": "Arcade Simulator: DevOps Engineer",
