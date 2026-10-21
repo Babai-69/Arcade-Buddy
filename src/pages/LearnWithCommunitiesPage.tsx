@@ -212,8 +212,8 @@ const COMMUNITY_BADGE_SOLUTIONS: BadgeSolutionInfo[] = [
     courseUrl: 'https://www.skills.google/course_templates/756',
     type: 'Skill Badge',
     credits: 4,
-    isAvailable: false,
-    notes: 'Solution available soon'
+    solutionUrl: 'https://github.com/Arcade-With-Us/Google-Cloud-Labs/blob/main/Using%20the%20Google%20Cloud%20Speech%20API:%20Challenge%20Lab/Readme.md',
+    isAvailable: true,
   },
   {
     id: 10,
