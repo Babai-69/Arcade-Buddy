@@ -23,7 +23,7 @@ const SWAG_TIERS: SwagTier[] = [
     accent: "var(--b)",
     tagColor: "var(--b)",
     tagBg: "var(--t1)",
-    items: ["The Arcade Travel Bottle", "Official Google Cloud T-Shirt", "Arcade Sticker Pack", "Branded Pen & Notebook"]
+    items: ["Arcade Magic Mug", "The Arcade Travel Bottle", "Official Google Cloud T-Shirt", "Arcade Sticker Pack", "Branded Pen & Notebook"]
   },
   {
     name: "Arcade Ranger",
@@ -33,7 +33,7 @@ const SWAG_TIERS: SwagTier[] = [
     accent: "var(--gr)",
     tagColor: "var(--gr)",
     tagBg: "var(--t2)",
-    items: ["Weather-Resistant Backpack", "The Arcade Travel Bottle", "Trooper Welcome Kit"]
+    items: ["Weather-Resistant Backpack", "Arcade Magic Mug", "The Arcade Travel Bottle", "Trooper Welcome Kit"]
   },
   {
     name: "Arcade Champion",
@@ -116,6 +116,28 @@ const SWAG_DROPS = [
       { title: "Zero leaks", desc: "Solid sealing rings keep your drink locked down tight, even if your bag ends up sideways on the floor." },
       { title: "Hot and cold ready", desc: "Keeps your morning brew hot or your afternoon water ice-cold for hours on end." },
       { title: "Quick to wash", desc: "Comes with a wide mouth so you can actually clean it out fast instead of making a chore out of it." }
+    ]
+  },
+  {
+    id: 5,
+    name: "Arcade Magic Mug",
+    image: "/mug.png",
+    tiers: ["Trooper", "Ranger"],
+    accent: "var(--y)",
+    shortDesc: "Heat-activated color-changing ceramic mug revealing hidden Google Cloud Arcade retro pixel art when filled with hot coffee or tea.",
+    specs: [
+      {
+        title: "Heat-activated pixel reveal",
+        desc: "Starts as a clean, minimal white finish off the shelf. The second you pour your hot coffee or tea in, the hidden Arcade retro graphics and Google Cloud pixel art bleed into vivid life right before your eyes the moment heat hits it."
+      },
+      {
+        title: "Solid, satisfying weight",
+        desc: "Engineered with a solid, satisfying weight in your hand that keeps your brew hot while feeling comforting and substantial with every sip."
+      },
+      {
+        title: "Desk-ready aesthetic & eco-friendly",
+        desc: "A sleek modern aesthetic that actually looks great on your desk, and it’s eco-friendly so you can sip sustainably every single day."
+      }
     ]
   }
 ];

@@ -6,7 +6,7 @@ const steps = [
   {
     num: '01',
     title: 'Activate Skills Boost Profile',
-    description: 'Create your account on Google Cloud Skills Boost, enable your public profile, and access hands-on lab credits.',
+    description: 'Create your account on Google Cloud Skills Boost, enable your public profile.',
     actionLabel: 'Skills Boost Portal',
     href: 'https://www.cloudskillsboost.google/',
     isExternal: true,

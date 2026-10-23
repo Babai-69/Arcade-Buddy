@@ -2,6 +2,26 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { SwagTierModal } from '../components/SwagTierModal';
+
+export const TIER_FLIP_IMAGES: Record<string, { img: string; fallback: string }> = {
+  trooper: {
+    img: "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/swags/2k26/trooper/group-v2.png",
+    fallback: "/swags/trooper-group.png"
+  },
+  ranger: {
+    img: "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/swags/2k26/ranger/group-v2.png",
+    fallback: "/swags/ranger-group.png"
+  },
+  champion: {
+    img: "https://cdn.jsdelivr.net/gh/deepanshu-prajapati01/image-host@main/ArcadeCalc/swags/2k26/champion/group-v1.png",
+    fallback: "/swags/champion-group.png"
+  },
+  legend: {
+    img: "https://raw.githubusercontent.com/deepanshu-prajapati01/image-host/main/ArcadeCalc/swags/2k26/legend/group-v1.png",
+    fallback: "/swags/legend-group.png"
+  }
+};
 
 /* -------------------------------------------------------------------------- */
 /*                               TYPED CONSTANTS                              */
@@ -169,12 +189,12 @@ export interface StepItem {
 
 export const STEPS: StepItem[] = [
   {
-    num: '01',
+     num: '01',
     title: 'Activate Skills Boost Profile',
-    desc: 'Create your account on Google Cloud Skills Boost, enable your public profile, and access hands-on lab credits.',
-    linkText: 'Skills Boost Portal',
+    description: 'Create your account on Google Cloud Skills Boost, enable your public profile.',
+    actionLabel: 'Skills Boost Portal',
     href: 'https://www.cloudskillsboost.google/',
-    isExternal: true,
+    isExternal: false,
   },
   {
     num: '02',
@@ -341,7 +361,7 @@ export interface SwagTierMeta {
   accent: string;
   icon: string;
   swagItems: string;
-  desc: string;
+  desc?: string;
 }
 
 export const SWAG_TIER_METAS: SwagTierMeta[] = [
@@ -353,8 +373,7 @@ export const SWAG_TIER_METAS: SwagTierMeta[] = [
     milestonePoints: '50 PTS',
     accent: 'var(--b)',
     icon: 'game',
-    swagItems: 'The Arcade Travel Bottle, Official T-Shirt & Stickers Pack',
-    desc: 'Perfect milestone for beginners completing core labs and active arcade games.',
+    swagItems: 'Arcade Magic Mug, The Arcade Travel Bottle, Official T-Shirt & Stickers',
   },
   {
     key: 'ranger',
@@ -364,8 +383,7 @@ export const SWAG_TIER_METAS: SwagTierMeta[] = [
     milestonePoints: '75 PTS',
     accent: 'var(--gr)',
     icon: 'shield',
-    swagItems: 'The Arcade Travel Bottle, Weather-Resistant Backpack & Swags',
-    desc: 'Achieved by completing skill quests and cloud architecture scenarios.',
+    swagItems: 'Arcade Magic Mug, Travel Bottle, Weather-Resistant Backpack & Swags',
   },
   {
     key: 'champion',
@@ -376,7 +394,6 @@ export const SWAG_TIER_METAS: SwagTierMeta[] = [
     accent: 'var(--yt)',
     icon: 'trophy',
     swagItems: 'Premium Executive Hoodie, Insulated Mug & Cap',
-    desc: 'Elite learners mastering Vertex AI, DevOps, and BigQuery skill tracks.',
   },
   {
     key: 'legend',
@@ -387,7 +404,6 @@ export const SWAG_TIER_METAS: SwagTierMeta[] = [
     accent: 'var(--r)',
     icon: 'crown',
     swagItems: 'Complete Ultimate Swag Box, Tech Backpack & Trophy',
-    desc: 'Top cohort achievers with maximum bonus multipliers and badge mastery.',
   },
 ];
 
@@ -636,6 +652,7 @@ export function Home({ participants }: { participants?: any[] }) {
 
   // Dashboard tier spots state fetched from /api/arcade-spots (same real-time source as Dashboard)
   const [dashboardSpots, setDashboardSpots] = useState<Record<string, TierSpotInfo>>(DEFAULT_DASHBOARD_SPOTS);
+  const [selectedTierModal, setSelectedTierModal] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchLatestSpots = () => {
@@ -1846,6 +1863,84 @@ export function Home({ participants }: { participants?: any[] }) {
           grid-template-columns: repeat(4, 1fr);
           gap: 16px;
         }
+        .spot-flip-wrapper {
+          perspective: 1200px;
+          min-height: 410px;
+          display: flex;
+          cursor: pointer;
+        }
+        .spot-flip-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          transform-style: preserve-3d;
+          transition: transform 0.65s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .spot-flip-wrapper:hover .spot-flip-inner {
+          transform: rotateY(180deg);
+        }
+        .spot-flip-front,
+        .spot-flip-back {
+          width: 100%;
+          height: 100%;
+          border-radius: 20px;
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          overflow: hidden;
+        }
+        .spot-flip-front {
+          position: relative;
+          transform: rotateY(0deg);
+          z-index: 2;
+        }
+        .spot-flip-back {
+          position: absolute;
+          inset: 0;
+          transform: rotateY(180deg);
+          z-index: 1;
+          background: var(--card);
+          border: 1.5px solid color-mix(in srgb, var(--c) 45%, var(--ln));
+          box-shadow: 0 16px 36px var(--sh);
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+        }
+        .spot-flip-back::before {
+          content: "";
+          position: absolute;
+          top: -30px;
+          right: -30px;
+          width: 130px;
+          height: 130px;
+          border-radius: 50%;
+          background: var(--c);
+          opacity: 0.14;
+          pointer-events: none;
+        }
+        .spot-flip-back-preview {
+          height: 190px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--pill);
+          border-radius: 16px;
+          padding: 12px;
+          margin: 10px 0;
+          border: 1px solid var(--ln);
+          position: relative;
+          overflow: hidden;
+        }
+        .spot-flip-back-img {
+          max-height: 100%;
+          max-width: 100%;
+          object-fit: contain;
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+          filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.12));
+        }
+        .spot-flip-wrapper:hover .spot-flip-back-img {
+          transform: scale(1.06);
+        }
         .track-spot-card {
           background: var(--card);
           border: 1px solid var(--ln);
@@ -1855,8 +1950,9 @@ export function Home({ participants }: { participants?: any[] }) {
           display: flex;
           flex-direction: column;
           gap: 12px;
-          transition: transform .25s, box-shadow .25s;
+          transition: box-shadow .25s;
           overflow: hidden;
+          height: 100%;
         }
         .track-spot-card:hover {
           transform: translateY(-4px);
@@ -2947,69 +3043,124 @@ export function Home({ participants }: { participants?: any[] }) {
               return (
                 <div
                   key={tier.id}
-                  className="track-spot-card"
+                  className="spot-flip-wrapper"
                   style={{ ['--c' as any]: tier.accent }}
+                  onClick={() => setSelectedTierModal(tier.key)}
+                  title="Hover to preview swag bundle, click to open full details"
                 >
-                  <div className="track-spot-head">
-                    <div className="track-spot-ic">
-                      <SvgIcon name={tier.icon} />
+                  <div className="spot-flip-inner">
+                    {/* Front Face: Tier Spots Tracker */}
+                    <div className="spot-flip-front">
+                      <div className="track-spot-card">
+                        <div className="track-spot-head">
+                          <div className="track-spot-ic">
+                            <SvgIcon name={tier.icon} />
+                          </div>
+                          <span className="track-spot-pill">{statusTag}</span>
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-[11px] font-bold tracking-wider uppercase text-[var(--mut)]">
+                              {tier.level}
+                            </span>
+                            <span
+                              className="px-2 py-0.5 rounded-full text-[11px] font-black"
+                              style={{ background: `color-mix(in srgb, ${tier.accent} 16%, transparent)`, color: tier.accent }}
+                            >
+                              {tier.milestonePoints}
+                            </span>
+                          </div>
+                          <h3>{tier.tierName}</h3>
+                        </div>
+
+                        <div className="p-2.5 rounded-xl bg-[var(--t1)] border border-[var(--ln)] text-xs">
+                          <span className="text-[var(--mut)] block text-[10px] uppercase font-semibold">Includes</span>
+                          <b className="text-[var(--ink)] block mt-0.5 line-clamp-2">{tier.swagItems}</b>
+                        </div>
+
+                        {tier.desc && <p>{tier.desc}</p>}
+
+                        {/* Spots Left Counter and Bar */}
+                        <div className="mt-auto pt-2">
+                          <div className="flex justify-between items-baseline mb-1">
+                            <span className="text-xs text-[var(--mut)] font-medium">Spots Left</span>
+                            <span className="text-base font-extrabold text-[var(--ink)]">
+                              {animatedLeft.toLocaleString()} <small className="text-xs font-normal text-[var(--mut)]">/ {capacity.toLocaleString()}</small>
+                            </span>
+                          </div>
+
+                          <div className="track-spot-bar">
+                            <div
+                              className="track-spot-bar-fill"
+                              style={{ width: secSpotsInView ? `${percentage}%` : '0%' }}
+                            />
+                          </div>
+                          <div className="flex justify-between items-center text-[10px] text-[var(--mut)] font-semibold mt-1">
+                            <span>{claimed.toLocaleString()} claimed</span>
+                            <span style={{ color: tier.accent }}>{percentage}% filled</span>
+                          </div>
+                        </div>
+
+                        <div className="track-spot-foot">
+                          <span className="text-[var(--mut)] text-[11px] flex items-center gap-1 font-medium">
+                            <span>Hover to flip</span>
+                            <span>↺</span>
+                          </span>
+                          <span
+                            className="inline-flex items-center gap-1 font-semibold text-xs"
+                            style={{ color: tier.accent }}
+                          >
+                            <span>Preview</span>
+                            <SvgIcon name="arrow" />
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <span className="track-spot-pill">{statusTag}</span>
-                  </div>
 
-                  <div>
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-[11px] font-bold tracking-wider uppercase text-[var(--mut)]">
-                        {tier.level}
-                      </span>
-                      <span
-                        className="px-2 py-0.5 rounded-full text-[11px] font-black"
-                        style={{ background: `color-mix(in srgb, ${tier.accent} 16%, transparent)`, color: tier.accent }}
-                      >
-                        {tier.milestonePoints}
-                      </span>
+                    {/* Back Face: Swag Group Image & Detailed CTA */}
+                    <div className="spot-flip-back">
+                      <div className="flex items-center justify-between">
+                        <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold text-white bg-[var(--c)] shadow-xs">
+                          {tier.tierName}
+                        </span>
+                        <span
+                          className="px-2 py-0.5 rounded-full text-[11px] font-black"
+                          style={{ background: `color-mix(in srgb, ${tier.accent} 16%, transparent)`, color: tier.accent }}
+                        >
+                          {tier.milestonePoints}
+                        </span>
+                      </div>
+
+                      <div className="spot-flip-back-preview">
+                        <img
+                          src={TIER_FLIP_IMAGES[tier.key]?.img}
+                          alt={`${tier.tierName} Swag Bundle`}
+                          className="spot-flip-back-img"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            const fallback = TIER_FLIP_IMAGES[tier.key]?.fallback;
+                            if (fallback && target.src !== fallback) {
+                              target.src = fallback;
+                            }
+                          }}
+                        />
+                      </div>
+
+                      <div className="text-center px-1">
+                        <span className="text-[11px] font-semibold text-[var(--mut)] line-clamp-1 block mb-2.5">
+                          {tier.swagItems}
+                        </span>
+
+                        <div
+                          className="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-white flex items-center justify-center gap-1.5 shadow-sm transition-transform active:scale-95 cursor-pointer"
+                          style={{ background: 'var(--c)' }}
+                        >
+                          <span>View Full Bundle Details</span>
+                          <SvgIcon name="ext" />
+                        </div>
+                      </div>
                     </div>
-                    <h3>{tier.tierName}</h3>
-                  </div>
-
-                  <div className="p-2.5 rounded-xl bg-[var(--t1)] border border-[var(--ln)] text-xs">
-                    <span className="text-[var(--mut)] block text-[10px] uppercase font-semibold">Includes</span>
-                    <b className="text-[var(--ink)] block mt-0.5">{tier.swagItems}</b>
-                  </div>
-
-                  <p>{tier.desc}</p>
-
-                  {/* Spots Left Counter and Bar */}
-                  <div className="mt-auto pt-2">
-                    <div className="flex justify-between items-baseline mb-1">
-                      <span className="text-xs text-[var(--mut)] font-medium">Spots Left</span>
-                      <span className="text-base font-extrabold text-[var(--ink)]">
-                        {animatedLeft.toLocaleString()} <small className="text-xs font-normal text-[var(--mut)]">/ {capacity.toLocaleString()}</small>
-                      </span>
-                    </div>
-
-                    <div className="track-spot-bar">
-                      <div
-                        className="track-spot-bar-fill"
-                        style={{ width: secSpotsInView ? `${percentage}%` : '0%' }}
-                      />
-                    </div>
-                    <div className="flex justify-between items-center text-[10px] text-[var(--mut)] font-semibold mt-1">
-                      <span>{claimed.toLocaleString()} claimed</span>
-                      <span style={{ color: tier.accent }}>{percentage}% filled</span>
-                    </div>
-                  </div>
-
-                  <div className="track-spot-foot">
-                    <span className="text-[var(--mut)] text-xs">January 2027</span>
-                    <Link
-                      to="/swags"
-                      className="inline-flex items-center gap-1 font-semibold text-xs transition-transform hover:translate-x-0.5"
-                      style={{ color: tier.accent }}
-                    >
-                      <span>Explore Swag</span>
-                      <SvgIcon name="arrow" />
-                    </Link>
                   </div>
                 </div>
               );
@@ -3376,6 +3527,13 @@ export function Home({ participants }: { participants?: any[] }) {
             <Link to="/faq">Visit the Full FAQ Directory</Link>
           </p>
         </section>
+
+        {/* Detailed Tier Modal rendered at root level */}
+        <SwagTierModal
+          tierKey={selectedTierModal}
+          isOpen={Boolean(selectedTierModal)}
+          onClose={() => setSelectedTierModal(null)}
+        />
       </div>
     </div>
   );
