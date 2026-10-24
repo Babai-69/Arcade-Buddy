@@ -674,7 +674,7 @@ app.post("/api/notify-query", async (req, res) => {
         let cleanDateStr = "";
         let parsedDate = null;
         if (dateText) {
-          cleanDateStr = dateText.replace("Earned ", "").replace(/ EDT| EST| PDT| PST/g, "").trim();
+          cleanDateStr = dateText.replace(/^Earned\s+/i, "").replace(/\s+(EDT|EST|PDT|PST|UTC|GMT.*)$/gi, "").trim();
           parsedDate = new Date(cleanDateStr + " UTC");
           if (!isNaN(parsedDate.getTime())) {
             if (parsedDate < ARCADE_START_DATE || parsedDate > ARCADE_END_DATE) {
@@ -684,6 +684,7 @@ app.post("/api/notify-query", async (req, res) => {
               validForFacilitator = false;
             }
           } else {
+            const dtLower = dateText.toLowerCase();
             const match = dateText.match(/(20\d\d)/);
             if (match) {
               const year = parseInt(match[1], 10);
@@ -691,6 +692,19 @@ app.post("/api/notify-query", async (req, res) => {
                 validForArcade = false;
                 validForFacilitator = false;
               }
+            }
+            if (
+              dtLower.includes("oct") || dtLower.includes("nov") || dtLower.includes("dec") ||
+              dtLower.includes("jan") || dtLower.includes("feb") || dtLower.includes("mar") ||
+              dtLower.includes("apr") || dtLower.includes("may") || dtLower.includes("jun")
+            ) {
+              validForFacilitator = false;
+            }
+            const dayMatch = dateText.match(/\b([1-3]?[0-9])\b/);
+            if (dayMatch) {
+              const day = parseInt(dayMatch[1], 10);
+              if (dtLower.includes("sep") && day > 14) validForFacilitator = false;
+              if (dtLower.includes("jul") && day < 13) validForFacilitator = false;
             }
           }
         }

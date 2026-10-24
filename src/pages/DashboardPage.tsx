@@ -475,29 +475,66 @@ function DashboardContent({
     (data.badges || []).filter((b: any) => (b.category || '').toLowerCase() === 'trivia').length || 0
   );
 
-  // Facilitator Cohort track (Jul 13 - Sept 14, 2026)
-  const facilitatorGameBadges = typeof data.facilitatorGameBadges === 'number'
-    ? data.facilitatorGameBadges
-    : (data.badges?.filter((b: any) => b.validForProgram && (b.category || '').toLowerCase() === 'game').length || 0);
+  // Helper to determine if a badge was earned within the official Facilitator Cohort window (13th July 2026 to 14th September 2026)
+  const isWithinFacilitatorDates = (b: any) => {
+    // If explicitly marked not valid for program by server, exclude it
+    if (b.validForProgram === false) return false;
+    
+    // Check earnedDate string if present
+    if (b.earnedDate) {
+      const cleanStr = b.earnedDate.replace(/^Earned\s+/i, '').replace(/\s+(EDT|EST|PDT|PST|UTC|GMT.*)$/gi, '').trim();
+      const parsed = new Date(cleanStr + ' UTC');
+      if (!isNaN(parsed.getTime())) {
+        const start = new Date('2026-07-13T00:00:00Z');
+        const end = new Date('2026-09-14T23:59:59Z');
+        if (parsed < start || parsed > end) return false;
+      } else {
+        const dtLower = b.earnedDate.toLowerCase();
+        if (
+          dtLower.includes('oct') || dtLower.includes('nov') || dtLower.includes('dec') ||
+          dtLower.includes('jan') || dtLower.includes('feb') || dtLower.includes('mar') ||
+          dtLower.includes('apr') || dtLower.includes('may') || dtLower.includes('jun')
+        ) {
+          return false;
+        }
+        const dayMatch = b.earnedDate.match(/\b([1-3]?[0-9])\b/);
+        if (dayMatch) {
+          const day = parseInt(dayMatch[1], 10);
+          if (dtLower.includes('sep') && day > 14) return false;
+          if (dtLower.includes('jul') && day < 13) return false;
+        }
+      }
+    }
+    return Boolean(b.validForProgram ?? true);
+  };
 
-  const facilitatorSkillBadges = typeof data.facilitatorSkillBadges === 'number'
-    ? data.facilitatorSkillBadges
-    : (data.badges?.filter((b: any) => b.validForProgram && ((b.category || '').toLowerCase() === 'skill' || (b.title || '').toLowerCase().includes('skill badge'))).length || 0);
+  // Facilitator Cohort track (Strictly July 13 - September 14, 2026)
+  const facilitatorGameBadges = (data.badges && Array.isArray(data.badges))
+    ? data.badges.filter((b: any) => isWithinFacilitatorDates(b) && (b.category || '').toLowerCase() === 'game').length
+    : (typeof data.facilitatorGameBadges === 'number' ? data.facilitatorGameBadges : 0);
+
+  const facilitatorSkillBadges = (data.badges && Array.isArray(data.badges))
+    ? data.badges.filter((b: any) => isWithinFacilitatorDates(b) && ((b.category || '').toLowerCase() === 'skill' || (b.title || '').toLowerCase().includes('skill badge'))).length
+    : (typeof data.facilitatorSkillBadges === 'number' ? data.facilitatorSkillBadges : 0);
 
   // Standard Arcade calculation: 1 pt per game, 1 pt per trivia, 0.5 pt per skill badge (2 skill badges = 1 pt)
   const calculatedBasePoints = gameBadgesCount + triviaBadgesCount + Math.floor(skillBadgesCount / 2);
   const basePoints = Math.max(typeof data.arcadePoints === 'number' ? data.arcadePoints : 0, calculatedBasePoints);
   
+  // Official Facilitator Milestone Bonus Criteria:
+  // Milestone 1: 6 Games, 18 Skills -> +5 Bonus
+  // Milestone 2: 8 Games, 34 Skills -> +15 Bonus
+  // Milestone 3: 10 Games, 50 Skills -> +25 Bonus
+  // Ultimate: 12 Games, 66 Skills -> +35 Bonus
   let rawMilestoneBonus = 0;
   let rawMilestoneName = 'None';
   if (facilitatorGameBadges >= 12 && facilitatorSkillBadges >= 66) { rawMilestoneBonus = 35; rawMilestoneName = 'Ultimate'; }
-  else if (facilitatorGameBadges >= 8 && facilitatorSkillBadges >= 42) { rawMilestoneBonus = 25; rawMilestoneName = 'Milestone 3'; }
-  else if (facilitatorGameBadges >= 4 && facilitatorSkillBadges >= 22) { rawMilestoneBonus = 15; rawMilestoneName = 'Milestone 2'; }
-  else if (facilitatorGameBadges >= 2 && facilitatorSkillBadges >= 10) { rawMilestoneBonus = 5; rawMilestoneName = 'Milestone 1'; }
+  else if (facilitatorGameBadges >= 10 && facilitatorSkillBadges >= 50) { rawMilestoneBonus = 25; rawMilestoneName = 'Milestone 3'; }
+  else if (facilitatorGameBadges >= 8 && facilitatorSkillBadges >= 34) { rawMilestoneBonus = 15; rawMilestoneName = 'Milestone 2'; }
+  else if (facilitatorGameBadges >= 6 && facilitatorSkillBadges >= 18) { rawMilestoneBonus = 5; rawMilestoneName = 'Milestone 1'; }
   
   let milestoneBonus = isEnrolled ? rawMilestoneBonus : 0;
   let milestoneName = rawMilestoneName;
- // Actually 9 in rules, but screenshot says +5 for MS1
 
   const totalPoints = basePoints + milestoneBonus;
   
@@ -915,10 +952,10 @@ function DashboardContent({
           <p className="text-xs text-[var(--mut)] italic mb-8 max-w-xl mx-auto font-medium">You will only receive bonus points for the milestone that you earn and not for the ones before that.</p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
-            <MilestoneCard name="Milestone 1" bonus={5} gamesReq={6} skillsReq={18} games={gameBadgesCount} skills={skillBadgesCount} color="blue" />
-            <MilestoneCard name="Milestone 2" bonus={15} gamesReq={8} skillsReq={34} games={gameBadgesCount} skills={skillBadgesCount} color="purple" />
-            <MilestoneCard name="Milestone 3" bonus={25} gamesReq={10} skillsReq={50} games={gameBadgesCount} skills={skillBadgesCount} color="green" />
-            <MilestoneCard name="Ultimate" bonus={35} gamesReq={12} skillsReq={66} games={gameBadgesCount} skills={skillBadgesCount} color="orange" />
+            <MilestoneCard name="Milestone 1" bonus={5} gamesReq={6} skillsReq={18} games={facilitatorGameBadges} skills={facilitatorSkillBadges} color="blue" />
+            <MilestoneCard name="Milestone 2" bonus={15} gamesReq={8} skillsReq={34} games={facilitatorGameBadges} skills={facilitatorSkillBadges} color="purple" />
+            <MilestoneCard name="Milestone 3" bonus={25} gamesReq={10} skillsReq={50} games={facilitatorGameBadges} skills={facilitatorSkillBadges} color="green" />
+            <MilestoneCard name="Ultimate" bonus={35} gamesReq={12} skillsReq={66} games={facilitatorGameBadges} skills={facilitatorSkillBadges} color="orange" />
           </div>
         </div>
 

@@ -181,8 +181,10 @@ export const FAQ_ITEMS: FaqItem[] = [
 export interface StepItem {
   num: string;
   title: string;
-  desc: string;
-  linkText: string;
+  desc?: string;
+  description?: string;
+  linkText?: string;
+  actionLabel?: string;
   href: string;
   isExternal?: boolean;
 }
@@ -3188,15 +3190,15 @@ export function Home({ participants }: { participants?: any[] }) {
               <div key={st.num} className="step-card">
                 <span className="step-num">{st.num}</span>
                 <h3>{st.title}</h3>
-                <p>{st.desc}</p>
+                <p>{st.desc || st.description}</p>
                 {st.isExternal ? (
                   <a href={st.href} target="_blank" rel="noopener noreferrer">
-                    <span>{st.linkText}</span>
+                    <span>{st.linkText || st.actionLabel}</span>
                     <SvgIcon name="ext" />
                   </a>
                 ) : (
                   <Link to={st.href}>
-                    <span>{st.linkText}</span>
+                    <span>{st.linkText || st.actionLabel}</span>
                     <SvgIcon name="arrow" />
                   </Link>
                 )}
